@@ -27,28 +27,66 @@ package org.sireum.awas.test.fptc
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.fptc.FptcGraph
-import org.sireum.test.{ TestDef, TestDefProvider, TestFramework}
+import org.sireum.test._
 import org.sireum.util._
+import org.sireum.util.jvm.FileUtil._
 
-
-object FptcGraphTestDefProvider {
-
-}
 
 final class FptcGraphTestDefProvider(tf: TestFramework)
 extends TestDefProvider {
-  override def testDefs: ISeq[TestDef] = ivector(
-//    ConditionTest("isolette_model", dotGraphPrinter(isolette_model))
-  )
 
-  def dotGraphPrinter(model: String, name : String) ={
+  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
+  val resultsDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/results/dot"
+  val expectedDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/expected/dot"
+
+  val generateExpected = true
+
+  override def testDefs: ISeq[TestDef] = {
+    val files = listFiles(toUri(testcaseDir), "awas")
+
+    val filesEqual = files.filter { p =>
+      p.toLowerCase.contains("pcashutoff") ||
+        p.toLowerCase.contains("isolette") ||
+        p.toLowerCase.contains("abcloop")
+    }
+
+    filesEqual.toVector.map { x =>
+      val inputFileName = filename(x)
+      val fileWithOutExt = extensor(inputFileName).toString
+      val outputFileName = fileWithOutExt + ".dot"
+      writeResult(outputFileName, dotGraphPrinter(readFile(x)._1, fileWithOutExt).get)
+
+      val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
+      EqualTest(filename(x), result ,
+        readFile(toUri(expectedDir+"/"+outputFileName))._1)
+    }
+
+  }
+
+  def extensor(orig: String) = (orig.split('.') match {
+    case xs @ Array(x) => xs
+    case y => y.init
+  }).mkString
+
+
+  def writeResult(fileName : String, content : String) ={
+    if(generateExpected) {
+      val expPath = expectedDir + "/" + fileName
+      writeFile(toUri(expPath), content)
+    }
+
+    val resPath = resultsDir + "/" + fileName
+    writeFile(toUri(resPath), content)
+  }
+
+
+
+  def dotGraphPrinter(model: String, name : String): Option[String] ={
     Builder(model) match {
       case None => None
-      case Some(m) => {
+      case Some(m) =>
         val graph = FptcGraph(m)
-        println(graph.toDot(name))
-      }
+        Some(graph.toDot(name))
     }
-    true
   }
 }

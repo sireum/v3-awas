@@ -95,11 +95,18 @@ class Fg[FptcNode] extends FptcGraph[FptcNode] {
       Some((root,
         DotNodeStmt(NodeId(innerNode.value.toString), Seq.empty[DotAttr])))
 
-    dotExporter.toDot(dotRoot = buildRoot(name),
+    val dot = dotExporter.toDot(dotRoot = buildRoot(name),
       edgeTransformer,None,
       cNodeTransformer = Some(nodeTransformer),
       iNodeTransformer = Some(nodeTransformer),
       spacing = Spacing(Indent.TwoSpaces)
     )
+
+    val dotSorted = {
+      val lines = dot.linesWithSeparators.toList
+      val mid = lines.tail.init
+      s"${lines.head}${mid.sorted.mkString}${lines.last}"
+    }
+    dotSorted
   }
 }

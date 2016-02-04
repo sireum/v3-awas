@@ -48,18 +48,18 @@ object FptcNode {
 }
 
 final case class FptcNode(node : Node, `type`: String) {
-   override def toString() : String  = {
+   override def toString : String  = {
 
     node match {
-      case n : ComponentDecl => PrettyPrinter.print(n.compName) +"\n"+ `type`
-      case n : ConnectionDecl => PrettyPrinter.print(n.connName) +"\n"+ `type`
+      case n : ComponentDecl => PrettyPrinter.print(n.compName) +"::"+ `type`
+      case n : ConnectionDecl => PrettyPrinter.print(n.connName) +"::"+ `type`
       case _ => "Error in node name"
     }
   }
 }
 
 object FptcNodeProperty {
-  val COMP_NODE = "Component Node"
-  val CONN_NODE = "Connection Node"
+  val COMP_NODE = "Component"
+  val CONN_NODE = "Connection"
   val ERROR_NODE = "Node type unknow"
 }
