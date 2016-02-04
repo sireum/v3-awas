@@ -1,0 +1,14 @@
+digraph abcloop {
+  "A2B::Connection"
+  "A2B::Connection" -> "B::Component"
+  "A::Component"
+  "A::Component" -> "A2B::Connection"
+  "B2C::Connection"
+  "B2C::Connection" -> "C::Component"
+  "B::Component"
+  "B::Component" -> "B2C::Connection"
+  "C2A::Connection"
+  "C2A::Connection" -> "A::Component"
+  "C::Component"
+  "C::Component" -> "C2A::Connection"
+}
