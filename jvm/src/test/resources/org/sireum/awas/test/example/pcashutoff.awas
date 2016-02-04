@@ -338,7 +338,7 @@ connections
 
   PulseoxFailLogic: PulseOx.DeviceError -> AppLogic.PulseOxError
 
-  Spo2Display: PulseOx.SpO2 -> appDisplay.SpO2
+  Spo2Display: PulseOx.SpO2 -> AppDisplay.SpO2
 
   RespiratoryRateDisplay: Capnograph.RespiratoryRate -> AppDisplay.RespiratoryRate
 
