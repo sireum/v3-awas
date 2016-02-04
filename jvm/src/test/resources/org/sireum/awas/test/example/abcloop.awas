@@ -1,0 +1,38 @@
+  /*
+
+      ┌──── A ────┐       ┌──── B ────┐
+      │           │       │           │
+  ┌───▷aIn    aOut▷───────▷bIn    bOut▷──┐
+  │   │           │       │           │  │
+  │   └───────────┘       └───────────┘  │
+  │                                      │
+  │                                      │
+  │             ┌──── C ────┐            │
+  │             │           │            │
+  └─────────────◁cOut    cIn◁────────────┘
+                │           │
+                └───────────┘
+
+*/
+components
+  A
+    ports
+      in aIn
+      out aOut
+
+  B
+    ports
+      in bIn
+      out bOut
+
+  C
+    ports
+      in cIn
+      out cOut
+
+connections
+  A2B : A.aOut -> B.bIn
+
+  B2C : B.bOut -> C.cIn
+
+  C2A : C.cOut -> A.aIn

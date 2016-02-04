@@ -25,6 +25,7 @@
 
 package org.sireum.awas.graph
 
+import scalax.collection.io.dot.DotGraph
 import scalax.collection.mutable.Graph
 import scalax.collection.GraphEdge._
 import scalax.collection.GraphPredef._
@@ -59,8 +60,9 @@ trait AwasGraph[Node] {
     node
   }
 
-  def addEdge (nodes : Product2[Node, Node]) = {
-    val edge = new AwasEdge[Node](this, nodes)
+  def addEdge (from : Node, to: Node) = {
+    val nodes : Product2[Node, Node]= (from, to)
+    val edge = new AwasEdge[Node](nodes)
     graph.add(edge)
     edge
   }
@@ -72,7 +74,7 @@ trait AwasGraph[Node] {
 final class AwasEdge[Node](nodes : Product)
   extends DiEdge[Node](nodes)
   with EdgeCopy[AwasEdge]
-  with OuterEdge[Node, AwasEdge] {
+  with OuterEdge[Node, AwasEdge]{
   override def copy[NodeNode](newNodes: Product) =
     new AwasEdge[NodeNode](newNodes)
 }

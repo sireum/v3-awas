@@ -23,46 +23,32 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.ftpc
+package org.sireum.awas.test.fptc
 
-import org.sireum.awas.ast.Model
-import org.sireum.awas.graph.{AwasEdge, AwasGraph}
-import org.sireum.awas.ast._
+import org.sireum.awas.ast.Builder
+import org.sireum.awas.fptc.FptcGraph
+import org.sireum.test.{ TestDef, TestDefProvider, TestFramework}
 import org.sireum.util._
-import scalax.collection.mutable.Graph
-
-/**
-  * Created by hariharan on 1/26/16.
-  */
-trait FptcGraph[Node] extends AwasGraph[Node]
 
 
-object FptcGraph {
-  type GNode = AwasGraphNode
-  type GEdge = AwasEdge[GNode]
+object FptcGraphTestDefProvider {
 
-  def apply(m: Model): FptcGraph[GNode] = {
-    val printer = PrettyPrinter
-
-    val result = new Fg[GNode]()
-
-    var compMap = imapEmpty[String, Node]
-
-
-    Visitor.build({
-      case cp : ComponentDecl => {
-        //todo
-      }
-        false
-    })(m)
-
-    result
-  }
-
-  private class Fg[Node] extends FptcGraph[Node] {
-    val graph = Graph[Node, AwasEdge]()
-  }
 }
 
+final class FptcGraphTestDefProvider(tf: TestFramework)
+extends TestDefProvider {
+  override def testDefs: ISeq[TestDef] = ivector(
+//    ConditionTest("isolette_model", dotGraphPrinter(isolette_model))
+  )
 
-final case class AwasGraphNode(node : Node)
+  def dotGraphPrinter(model: String, name : String) ={
+    Builder(model) match {
+      case None => None
+      case Some(m) => {
+        val graph = FptcGraph(m)
+        println(graph.toDot(name))
+      }
+    }
+    true
+  }
+}

@@ -1,0 +1,48 @@
+/*
+
+   ┌────────────────── sup::AB ────────────────────┐
+   │                                               │
+   │                                               │
+   │      ┌─ sub::A ──┐       ┌─ sub::B ──┐        │
+   │abIn  │           │       │           │   abOut│
+   ▷──────▷aIn    aOut▷───────▷bIn    bOut▷────────▷
+   │      │           │       │           │        │
+   │      └───────────┘       └───────────┘        │
+   │                                               │
+   │                                               │
+   └───────────────────────────────────────────────┘
+
+*/
+
+namespace sub
+
+enclosure MyEnclosure
+  ports
+    in enclosureIn
+    out enclosureOut
+
+component A
+  ports
+    in aIn
+    out aOut
+
+component B
+  ports
+    in bIn
+    out bOut
+
+connection MyEnclosure -> A
+connection A -> B
+connection B -> MyEnclosure
+
+namespace sup
+
+component AB
+  ports
+    in abIn
+    out abOut
+
+assembly AB for sub::MyEnclosure
+  ports
+    abIn as enclosureIn
+    abOut as enclosureOut

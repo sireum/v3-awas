@@ -28,24 +28,37 @@ package org.sireum.awas.test.ast
 import org.sireum.awas.ast.{PrettyPrinter, Builder}
 import org.sireum.test._
 import org.sireum.util._
-import org.sireum.awas.test.parser.Antlr4AwasParserTestDefProvider._
+import org.sireum.util.jvm.FileUtil._
 
-object PrettyPrinterTestDefProvider {
-}
 
 final class PrettyPrinterTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
 
-  override def testDefs: ISeq[TestDef] = ivector(
-    EqualOptTest("abcloop", printAndParse(abcloop), abcloop),
-    EqualOptTest("properties", printAndParse(properties), properties),
-    EqualOptTest("isolette_model", printAndParse(isolette_model), isolette_model),
-    EqualOptTest("isolette_accident_level", printAndParse(isolette_accident_level), isolette_accident_level),
-    EqualOptTest("isolette_accident", printAndParse(isolette_accident), isolette_accident),
-    ConditionTest("PcaShutoff", Builder(printAndParse(pcashutOff).get).isDefined)
-  )
+  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
 
-  def printAndParse(model: String) : Option[String]= {
+  override def testDefs: ISeq[TestDef] = {
+    val files = listFiles(toUri(testcaseDir), "awas")
+
+    //equals test by excluding some
+    val filesEqual = files.filterNot { p =>
+      p.toLowerCase.contains("nested") ||
+        p.toLowerCase.contains("pcashutoff") ||
+        p.toLowerCase.contains("abcloop")
+    }
+
+    //conditional test by filter
+    val filesConditional = files.filter { f =>
+      filename(f).equals("pcashutoff.awas") ||
+        filename(f).equals("abcloop.awas")
+    }
+
+    filesEqual.toVector.map { x =>
+      EqualOptTest(filename(x), printAndParse(readFile(x)._1), readFile(x)._1)
+    } ++ filesConditional.toVector.map {x =>
+    ConditionTest(filename(x), Builder(printAndParse(readFile(x)._1).get).isDefined)}
+  }
+
+  def printAndParse(model: String): Option[String] = {
     Builder(model) match {
       case None => None
       case Some(e) =>

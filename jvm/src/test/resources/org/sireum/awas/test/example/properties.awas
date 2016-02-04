@@ -1,0 +1,45 @@
+types
+  lattice Top
+
+  lattice Left extends Top
+
+  lattice Right extends Top
+
+  lattice Bottom extends Left, Right
+
+  enum Error
+
+  enum Failure {AFail, BFail, CFail}
+
+  record R
+    x : Integer
+    y : Integer
+
+components
+  A
+    ports
+      in aIn
+      out aOut
+    properties
+      b0 : Boolean
+      b3 : Boolean = true
+      b4 : Boolean = false
+      x : Integer
+      z : Integer = 5
+      r0 : Real
+      r1 : Real = 0.0
+      s0 : String
+      s1 : String = "bar"
+      lat0 : Top
+      lat1 : Top = Left
+      enum0 : Failure
+      enum1 : Failure = BFail
+      enum2 : Error = Disconnected
+      rec0 : R
+      rec2 : R = R(x = 1, y = 2)
+      set0 : Set[Integer]
+      set1 : Set[Integer] = Set[Integer](1, 2, 3)
+      seq0 : Seq[Integer]
+      seq1 : Seq[Integer] = Seq[Integer](1, 2, 3)
+      map0 : Map[Integer, Integer]
+      map1 : Map[Integer, Integer] = Map[Integer, Integer](1 -> 2, 2 -> 3, 3 -> 4)

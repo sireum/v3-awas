@@ -23,28 +23,32 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.parser
+package org.sireum.awas.test.fptc
 
-import org.sireum.awas.ast.Builder
-import org.sireum.test._
-import org.sireum.util._
-import org.sireum.util.jvm.FileUtil._
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
+import org.sireum.test.{JUnitTestFramework, TestDef}
 
-final class Antlr4AwasParserTestDefProvider(tf: TestFramework)
-  extends TestDefProvider {
-
-  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
-
-// TODO: nested component
-
-  override def testDefs: ISeq[TestDef] = {
-    val files = listFiles(toUri(testcaseDir), "awas").filterNot{p => p.toLowerCase.contains("nested")}
-    files.toVector.map{ x =>
-      ConditionTest(filename(x), parsePass(readFile(x)._1))
-    }
+@RunWith(value = classOf[Parameterized])
+final class FptcGraphTest(name: String, td: TestDef) {
+  @Test
+  def test(): Unit = {
+    td.test(JUnitTestFramework)
   }
+}
 
-  def parsePass(input: String): Boolean = {
-    Builder(input).isDefined
+object FptcGraphTest {
+  val provider = new FptcGraphTestDefProvider(JUnitTestFramework)
+
+  @Parameters(name = "{0}")
+  def parameters = {
+    val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
+    val r = new java.util.ArrayList[Array[Object]](ps.size)
+    for (p <- ps) {
+      r.add(p)
+    }
+    r
   }
 }

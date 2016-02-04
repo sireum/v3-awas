@@ -35,6 +35,17 @@ object PrettyPrinter {
     new PrettyPrinter(sb).print(m)
     sb.toString().trim
   }
+
+  def print(n : Node): String ={
+    val sb = new StringBuilder
+    Visitor.build({
+      case n : Name => {
+        new PrettyPrinter(sb).print(n)
+      }
+        false
+    })(n)
+    sb.toString().trim
+  }
 }
 
 final class PrettyPrinter(sb: StringBuilder) {

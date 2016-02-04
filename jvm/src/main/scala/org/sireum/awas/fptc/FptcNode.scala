@@ -23,28 +23,43 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.parser
+package org.sireum.awas.fptc
 
-import org.sireum.awas.ast.Builder
-import org.sireum.test._
-import org.sireum.util._
-import org.sireum.util.jvm.FileUtil._
+import org.sireum.awas.ast.{PrettyPrinter, ConnectionDecl, ComponentDecl, Node}
+import org.sireum.util
 
-final class Antlr4AwasParserTestDefProvider(tf: TestFramework)
-  extends TestDefProvider {
+object FptcNode {
+  private var nodepool = util.imapEmpty[Node,FptcNode]
 
-  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
-
-// TODO: nested component
-
-  override def testDefs: ISeq[TestDef] = {
-    val files = listFiles(toUri(testcaseDir), "awas").filterNot{p => p.toLowerCase.contains("nested")}
-    files.toVector.map{ x =>
-      ConditionTest(filename(x), parsePass(readFile(x)._1))
+  def createNode(awasNode : Node): FptcNode = {
+    if(nodepool.contains(awasNode)) {
+      nodepool(awasNode)
+    } else {
+      val node = new FptcNode(awasNode, awasNode match {
+        case awasNode: ComponentDecl => FptcNodeProperty.COMP_NODE
+        case awasNode: ConnectionDecl => FptcNodeProperty.CONN_NODE
+        case _ => FptcNodeProperty.ERROR_NODE
+      })
+      val elem = (awasNode, node)
+      nodepool = nodepool + elem
+      node
     }
   }
+}
 
-  def parsePass(input: String): Boolean = {
-    Builder(input).isDefined
+final case class FptcNode(node : Node, `type`: String) {
+   override def toString() : String  = {
+
+    node match {
+      case n : ComponentDecl => PrettyPrinter.print(n.compName) +"\n"+ `type`
+      case n : ConnectionDecl => PrettyPrinter.print(n.connName) +"\n"+ `type`
+      case _ => "Error in node name"
+    }
   }
+}
+
+object FptcNodeProperty {
+  val COMP_NODE = "Component Node"
+  val CONN_NODE = "Connection Node"
+  val ERROR_NODE = "Node type unknow"
 }
