@@ -42,7 +42,7 @@ object FptcGraph {
 
   def apply(m: Model): FptcGraph[FptcNode] = {
 
-    val result = new Fg[FptcNode]()
+    val result = new Fg()
 
     var compMap = imapEmpty[Name, Node]
 
@@ -69,19 +69,16 @@ object FptcGraph {
     })(m)
     result
   }
-
 }
 
-class Fg[FptcNode] extends FptcGraph[FptcNode] {
+class Fg extends FptcGraph[FptcNode] {
   val graph = mutable.Graph[FptcNode, AwasEdge]()
 
   def toDot(name : String): String = {
     val dotExporter = new Export(graph)
 
-    def buildRoot(name : String) = DotRootGraph(directed = true, id =
+    val root = DotRootGraph(directed = true, id =
       Some(scalax.collection.io.dot.Id(name)))
-
-    val root = buildRoot(name)
 
     def edgeTransformer(innerEdge: Graph[FptcNode, AwasEdge]#EdgeT):
     Option[(DotGraph, DotEdgeStmt)] = {
@@ -93,9 +90,12 @@ class Fg[FptcNode] extends FptcGraph[FptcNode] {
     def nodeTransformer(innerNode: Graph[FptcNode, AwasEdge]#NodeT):
     Option[(DotGraph, DotNodeStmt)] =
       Some((root,
-        DotNodeStmt(NodeId(innerNode.value.toString), Seq.empty[DotAttr])))
+        DotNodeStmt(NodeId(innerNode.value.toString), innerNode.value.getType match {
+          case FptcNodeProperty.CONN_NODE => Nil
+          case _ => List(DotAttr(io.dot.Id("shape"), io.dot.Id("box")))
+        })))
 
-    val dot = dotExporter.toDot(dotRoot = buildRoot(name),
+    val dot = dotExporter.toDot(root,
       edgeTransformer,None,
       cNodeTransformer = Some(nodeTransformer),
       iNodeTransformer = Some(nodeTransformer),
@@ -109,4 +109,16 @@ class Fg[FptcNode] extends FptcGraph[FptcNode] {
     }
     dotSorted
   }
+
+  def computeInSet(node : FptcNode): Unit = {
+    ???
+  }
+
+  def computeOutSet(): Unit ={
+    ???
+  }
+
+
+
+
 }

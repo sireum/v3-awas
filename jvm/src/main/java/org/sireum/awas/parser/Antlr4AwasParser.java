@@ -1,4 +1,4 @@
-// Generated from /Users/kdd/Documents/Workspace/sireum-v3/awas/jvm/src/main/resources/org/sireum/awas/parser/Antlr4Awas.g4 by ANTLR 4.5.1
+// Generated from /Volumes/User/hariharan/Documents/workspace-sireumV3/sireum-v3/awas/jvm/src/main/resources/org/sireum/awas/parser/Antlr4Awas.g4 by ANTLR 4.5.1
 package org.sireum.awas.parser;
 
 // @formatter:off
@@ -1272,11 +1272,13 @@ public class Antlr4AwasParser extends Parser {
 		public OptionTypeContext(TypeContext ctx) { copyFrom(ctx); }
 	}
 	public static class MapTypeContext extends TypeContext {
-		public BasicTypeContext basicType() {
-			return getRuleContext(BasicTypeContext.class,0);
+		public TypeContext key;
+		public TypeContext value;
+		public List<TypeContext> type() {
+			return getRuleContexts(TypeContext.class);
 		}
-		public TypeContext type() {
-			return getRuleContext(TypeContext.class,0);
+		public TypeContext type(int i) {
+			return getRuleContext(TypeContext.class,i);
 		}
 		public MapTypeContext(TypeContext ctx) { copyFrom(ctx); }
 	}
@@ -1352,11 +1354,11 @@ public class Antlr4AwasParser extends Parser {
 				setState(280);
 				match(T__23);
 				setState(281);
-				basicType();
+				((MapTypeContext)_localctx).key = type();
 				setState(282);
 				match(T__10);
 				setState(283);
-				type();
+				((MapTypeContext)_localctx).value = type();
 				setState(284);
 				match(T__24);
 				}
@@ -1665,11 +1667,13 @@ public class Antlr4AwasParser extends Parser {
 		public NoneContext(InitContext ctx) { copyFrom(ctx); }
 	}
 	public static class MapContext extends InitContext {
-		public BasicTypeContext basicType() {
-			return getRuleContext(BasicTypeContext.class,0);
+		public TypeContext key;
+		public TypeContext value;
+		public List<TypeContext> type() {
+			return getRuleContexts(TypeContext.class);
 		}
-		public TypeContext type() {
-			return getRuleContext(TypeContext.class,0);
+		public TypeContext type(int i) {
+			return getRuleContext(TypeContext.class,i);
 		}
 		public List<MapEntryContext> mapEntry() {
 			return getRuleContexts(MapEntryContext.class);
@@ -1925,11 +1929,11 @@ public class Antlr4AwasParser extends Parser {
 				setState(384);
 				match(T__23);
 				setState(385);
-				basicType();
+				((MapContext)_localctx).key = type();
 				setState(386);
 				match(T__10);
 				setState(387);
-				type();
+				((MapContext)_localctx).value = type();
 				setState(388);
 				match(T__24);
 				setState(389);
@@ -2169,15 +2173,15 @@ public class Antlr4AwasParser extends Parser {
 		"\u0112\5\36\20\2\u0112\u0113\7\33\2\2\u0113\u0121\3\2\2\2\u0114\u0115"+
 		"\7\35\2\2\u0115\u0116\7\32\2\2\u0116\u0117\5\36\20\2\u0117\u0118\7\33"+
 		"\2\2\u0118\u0121\3\2\2\2\u0119\u011a\7\36\2\2\u011a\u011b\7\32\2\2\u011b"+
-		"\u011c\5 \21\2\u011c\u011d\7\r\2\2\u011d\u011e\5\36\20\2\u011e\u011f\7"+
-		"\33\2\2\u011f\u0121\3\2\2\2\u0120\u0109\3\2\2\2\u0120\u010a\3\2\2\2\u0120"+
-		"\u010f\3\2\2\2\u0120\u0114\3\2\2\2\u0120\u0119\3\2\2\2\u0121\37\3\2\2"+
-		"\2\u0122\u0132\7\37\2\2\u0123\u012a\7 \2\2\u0124\u0125\7!\2\2\u0125\u0126"+
-		"\5\"\22\2\u0126\u0127\7\r\2\2\u0127\u0128\5\"\22\2\u0128\u0129\7\"\2\2"+
-		"\u0129\u012b\3\2\2\2\u012a\u0124\3\2\2\2\u012a\u012b\3\2\2\2\u012b\u0132"+
-		"\3\2\2\2\u012c\u0132\7#\2\2\u012d\u0132\7$\2\2\u012e\u0132\7%\2\2\u012f"+
-		"\u0132\7&\2\2\u0130\u0132\5(\25\2\u0131\u0122\3\2\2\2\u0131\u0123\3\2"+
-		"\2\2\u0131\u012c\3\2\2\2\u0131\u012d\3\2\2\2\u0131\u012e\3\2\2\2\u0131"+
+		"\u011c\5\36\20\2\u011c\u011d\7\r\2\2\u011d\u011e\5\36\20\2\u011e\u011f"+
+		"\7\33\2\2\u011f\u0121\3\2\2\2\u0120\u0109\3\2\2\2\u0120\u010a\3\2\2\2"+
+		"\u0120\u010f\3\2\2\2\u0120\u0114\3\2\2\2\u0120\u0119\3\2\2\2\u0121\37"+
+		"\3\2\2\2\u0122\u0132\7\37\2\2\u0123\u012a\7 \2\2\u0124\u0125\7!\2\2\u0125"+
+		"\u0126\5\"\22\2\u0126\u0127\7\r\2\2\u0127\u0128\5\"\22\2\u0128\u0129\7"+
+		"\"\2\2\u0129\u012b\3\2\2\2\u012a\u0124\3\2\2\2\u012a\u012b\3\2\2\2\u012b"+
+		"\u0132\3\2\2\2\u012c\u0132\7#\2\2\u012d\u0132\7$\2\2\u012e\u0132\7%\2"+
+		"\2\u012f\u0132\7&\2\2\u0130\u0132\5(\25\2\u0131\u0122\3\2\2\2\u0131\u0123"+
+		"\3\2\2\2\u0131\u012c\3\2\2\2\u0131\u012d\3\2\2\2\u0131\u012e\3\2\2\2\u0131"+
 		"\u012f\3\2\2\2\u0131\u0130\3\2\2\2\u0132!\3\2\2\2\u0133\u0137\7,\2\2\u0134"+
 		"\u0137\5(\25\2\u0135\u0137\7\30\2\2\u0136\u0133\3\2\2\2\u0136\u0134\3"+
 		"\2\2\2\u0136\u0135\3\2\2\2\u0137#\3\2\2\2\u0138\u0195\7\'\2\2\u0139\u0195"+
@@ -2203,7 +2207,7 @@ public class Antlr4AwasParser extends Parser {
 		"\u0176\3\2\2\2\u0179\u017c\3\2\2\2\u017a\u0178\3\2\2\2\u017a\u017b\3\2"+
 		"\2\2\u017b\u017e\3\2\2\2\u017c\u017a\3\2\2\2\u017d\u0175\3\2\2\2\u017d"+
 		"\u017e\3\2\2\2\u017e\u017f\3\2\2\2\u017f\u0180\7\"\2\2\u0180\u0195\3\2"+
-		"\2\2\u0181\u0182\7\36\2\2\u0182\u0183\7\32\2\2\u0183\u0184\5 \21\2\u0184"+
+		"\2\2\u0181\u0182\7\36\2\2\u0182\u0183\7\32\2\2\u0183\u0184\5\36\20\2\u0184"+
 		"\u0185\7\r\2\2\u0185\u0186\5\36\20\2\u0186\u0187\7\33\2\2\u0187\u0190"+
 		"\7!\2\2\u0188\u018d\5&\24\2\u0189\u018a\7\r\2\2\u018a\u018c\5&\24\2\u018b"+
 		"\u0189\3\2\2\2\u018c\u018f\3\2\2\2\u018d\u018b\3\2\2\2\u018d\u018e\3\2"+

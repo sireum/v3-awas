@@ -1,15 +1,15 @@
 digraph pcashutoff {
-  "AppDisplay::Component"
-  "AppLogic::Component"
+  "AppDisplay::Component" [shape = box]
   "AppLogic::Component" -> "PumpCommandDisplay::Connection"
   "AppLogic::Component" -> "PumpCommandLogic::Connection"
-  "Capnograph::Component"
+  "AppLogic::Component" [shape = box]
   "Capnograph::Component" -> "CapnographFailDisplay::Connection"
   "Capnograph::Component" -> "CapnographFailLogic::Connection"
   "Capnograph::Component" -> "ETCO2Display::Connection"
   "Capnograph::Component" -> "ETCO2Logic::Connection"
   "Capnograph::Component" -> "RespiratoryRateDisplay::Connection"
   "Capnograph::Component" -> "RespiratoryRateLogic::Connection"
+  "Capnograph::Component" [shape = box]
   "CapnographFailDisplay::Connection"
   "CapnographFailDisplay::Connection" -> "AppDisplay::Component"
   "CapnographFailLogic::Connection"
@@ -18,12 +18,12 @@ digraph pcashutoff {
   "ETCO2Display::Connection" -> "AppDisplay::Component"
   "ETCO2Logic::Connection"
   "ETCO2Logic::Connection" -> "AppLogic::Component"
-  "PcaPump::Component"
-  "PulseOx::Component"
+  "PcaPump::Component" [shape = box]
   "PulseOx::Component" -> "PulseOxFailDisplay::Connection"
   "PulseOx::Component" -> "PulseoxFailLogic::Connection"
   "PulseOx::Component" -> "Spo2Display::Connection"
   "PulseOx::Component" -> "Spo2Logic::Connection"
+  "PulseOx::Component" [shape = box]
   "PulseOxFailDisplay::Connection"
   "PulseOxFailDisplay::Connection" -> "AppDisplay::Component"
   "PulseoxFailLogic::Connection"

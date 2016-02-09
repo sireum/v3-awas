@@ -25,8 +25,14 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.ast.{PrettyPrinter, ConnectionDecl, ComponentDecl, Node}
+import org.sireum.awas.ast._
 import org.sireum.util
+import org.sireum.util.IMap
+
+trait FptcNode {
+  def getType : String
+  def toString : String
+}
 
 object FptcNode {
   private var nodepool = util.imapEmpty[Node,FptcNode]
@@ -35,7 +41,7 @@ object FptcNode {
     if(nodepool.contains(awasNode)) {
       nodepool(awasNode)
     } else {
-      val node = new FptcNode(awasNode, awasNode match {
+      val node = new FN(awasNode, awasNode match {
         case awasNode: ComponentDecl => FptcNodeProperty.COMP_NODE
         case awasNode: ConnectionDecl => FptcNodeProperty.CONN_NODE
         case _ => FptcNodeProperty.ERROR_NODE
@@ -47,15 +53,35 @@ object FptcNode {
   }
 }
 
-final case class FptcNode(node : Node, `type`: String) {
+final case class FN(node : Node, `type`: String) extends FptcNode {
    override def toString : String  = {
-
     node match {
       case n : ComponentDecl => PrettyPrinter.print(n.compName) +"::"+ `type`
       case n : ConnectionDecl => PrettyPrinter.print(n.connName) +"::"+ `type`
       case _ => "Error in node name"
     }
   }
+
+/*  def behaviour = {
+    var result :Option[IMap[Node.Seq[String], Node.Seq[String]]] = None
+
+    val temp = node match {
+      case n : ComponentDecl => n.properties.collectFirst{case p : Property
+        if p.id.value.equals("behaviour") => p.value}
+      case n : ConnectionDecl => n.properties.collectFirst{case p : Property
+        if p.id.value.equals("behaviour") => p.value}
+      case _ => None
+    }
+
+    if(temp.isDefined) {
+      result = Some(temp.get.toMap[Node.Seq[String], Node.Seq[String]])
+    }
+    result
+  }*/
+
+  def getType = `type`
+
+
 }
 
 object FptcNodeProperty {

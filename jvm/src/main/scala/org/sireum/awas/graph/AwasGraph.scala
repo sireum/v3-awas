@@ -24,8 +24,8 @@
  */
 
 package org.sireum.awas.graph
+import org.sireum.util._
 
-import scalax.collection.io.dot.DotGraph
 import scalax.collection.mutable.Graph
 import scalax.collection.GraphEdge._
 import scalax.collection.GraphPredef._
@@ -43,7 +43,7 @@ trait AwasGraph[Node] {
   def edges = graph.edges
 
   def hasEdge(n1 : Node, n2: Node) : Boolean = {
-    val edge  = new AwasEdge[Node](this,(n1,n2))
+    val edge  = new AwasEdge[Node]((n1,n2))
     graph.find(graph.having(node = _ == edge)).isDefined
   }
 
@@ -69,9 +69,25 @@ trait AwasGraph[Node] {
 
   protected def graph : Graph[Node, AwasEdge]
 
+/*  def predecessor(node : Node) : Set[Node] = {
+    graph.get(node).diPredecessors.flatten[Node]
+  }
+
+  def successor(node : Node) : Set[Node] = {
+    graph.get(node).diSuccessors.flatten[Node]
+  }
+
+  def inEdges(node : Node) : Set[Edge] = {
+    graph.get(node).incoming.flatten[Edge]
+  }
+
+  def outEdges(node : Node) : Set[Edge] = {
+    graph.get(node).outgoing.flatten[Edge]
+  }*/
+
 }
 
-final class AwasEdge[Node](nodes : Product)
+final class AwasEdge[Node](nodes : Product, faults: Seq[String] = Seq("*"))
   extends DiEdge[Node](nodes)
   with EdgeCopy[AwasEdge]
   with OuterEdge[Node, AwasEdge]{

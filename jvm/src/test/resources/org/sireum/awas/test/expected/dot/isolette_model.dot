@@ -1,21 +1,21 @@
 digraph isolette_model {
-  "Air::Component"
   "Air::Component" -> "h2::Connection"
   "Air::Component" -> "i1::Connection"
-  "HeatSource::Component"
+  "Air::Component" [shape = box]
   "HeatSource::Component" -> "h1::Connection"
-  "Infant::Component"
+  "HeatSource::Component" [shape = box]
   "Infant::Component" -> "i2::Connection"
-  "Nurse::Component"
+  "Infant::Component" [shape = box]
   "Nurse::Component" -> "o4::Connection"
-  "OperatorInterface::Component"
+  "Nurse::Component" [shape = box]
   "OperatorInterface::Component" -> "o1::Connection"
   "OperatorInterface::Component" -> "o3::Connection"
-  "TempSensor::Component"
+  "OperatorInterface::Component" [shape = box]
   "TempSensor::Component" -> "t2::Connection"
-  "Thermostat::Component"
+  "TempSensor::Component" [shape = box]
   "Thermostat::Component" -> "o2::Connection"
   "Thermostat::Component" -> "t1::Connection"
+  "Thermostat::Component" [shape = box]
   "h1::Connection"
   "h1::Connection" -> "Air::Component"
   "h2::Connection"

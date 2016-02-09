@@ -55,19 +55,16 @@ extends TestDefProvider {
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".dot"
       writeResult(outputFileName, dotGraphPrinter(readFile(x)._1, fileWithOutExt).get)
-
       val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
       EqualTest(filename(x), result ,
         readFile(toUri(expectedDir+"/"+outputFileName))._1)
     }
-
   }
 
   def extensor(orig: String) = (orig.split('.') match {
     case xs @ Array(x) => xs
     case y => y.init
   }).mkString
-
 
   def writeResult(fileName : String, content : String) ={
     if(generateExpected) {
@@ -78,8 +75,6 @@ extends TestDefProvider {
     val resPath = resultsDir + "/" + fileName
     writeFile(toUri(resPath), content)
   }
-
-
 
   def dotGraphPrinter(model: String, name : String): Option[String] ={
     Builder(model) match {

@@ -143,7 +143,7 @@ final class Builder private() {
       case ctx: OptionTypeContext => OptionTypeDecl(build(ctx.`type`())) at ctx
       case ctx: SetTypeContext => SetTypeDecl(build(ctx.`type`())) at ctx
       case ctx: SeqTypeContext => SeqTypeDecl(build(ctx.`type`())) at ctx
-      case ctx: MapTypeContext => MapTypeDecl(build(ctx.basicType()), build(ctx.`type`())) at ctx
+      case ctx: MapTypeContext => MapTypeDecl(build(ctx.key), build(ctx.value)) at ctx
     }
   }
 
@@ -190,7 +190,7 @@ final class Builder private() {
         ctx.mapEntry().forEach(mp => {
           mapinit = mapinit + (build(mp.key) -> build(mp.value))
         })
-        MapInit(build(ctx.basicType()), build(ctx.`type`()), mapinit) at ctx
+        MapInit(build(ctx.key), build(ctx.value), mapinit) at ctx
     }
   }
 

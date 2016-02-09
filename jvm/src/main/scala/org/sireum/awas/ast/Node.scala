@@ -127,7 +127,7 @@ final case class SetInit(typeInit: Type, value: ISet[Init]) extends Init
 
 final case class SeqInit(typeInit: Type, value: Node.Seq[Init]) extends Init
 
-final case class MapInit(keyType: BasicType,
+final case class MapInit(keyType: Type,
                          valueType: Type,
                          value: IMap[Init, Init]) extends Init
 
@@ -145,7 +145,7 @@ final case class SetTypeDecl(typeVal : Type) extends CompoundType
 
 final case class SeqTypeDecl(typeVal : Type) extends CompoundType
 
-final case class MapTypeDecl(keyType: BasicType,
+final case class MapTypeDecl(keyType: Type,
                              valueType: Type) extends CompoundType
 
 final case class BooleanTypeDecl() extends BasicType

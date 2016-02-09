@@ -90,7 +90,7 @@ type
   | 'Option' '[' type ']'                            #OptionType
   | 'Set' '[' type ']'                               #SetType
   | 'Seq' '[' type ']'                               #SeqType
-  | 'Map' '[' basicType ',' type ']'                 #MapType
+  | 'Map' '[' key=type ',' value=type ']'            #MapType
   ;
 
 basicType
@@ -125,7 +125,7 @@ init
   | 'Seq' '[' type ']'
     '(' ( init ( ',' init )* )? ')'                  #Seq
   | 'Map'
-     '[' basicType ',' type ']'
+     '[' key=type ',' value=type ']'
     '(' (  mapEntry ( ',' mapEntry )* )? ')'         #Map
   ;
 
