@@ -25,6 +25,7 @@
 
 package org.sireum.awas.fptc
 
+import org.sireum
 import org.sireum.awas.ast._
 import org.sireum.util
 import org.sireum.util.IMap
@@ -32,6 +33,15 @@ import org.sireum.util.IMap
 trait FptcNode {
   def getType : String
   def toString : String
+  def behaviour : Option[IMap[Tuple, Tuple]]
+  def getInPorts: Node.Seq[Port]
+  def getOutPorts: Node.Seq[Port]
+  def addToInSet(in : Tuple): Unit
+  def inSetContains(in : Tuple) : Boolean
+  def addToOutSet(out : Tuple): Unit
+  def outSetContains(out : Tuple): Boolean
+  def getInSet: Set[Tuple]
+  def getOutSet: Set[Tuple]
 }
 
 object FptcNode {
@@ -62,26 +72,63 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
     }
   }
 
-/*  def behaviour = {
-    var result :Option[IMap[Node.Seq[String], Node.Seq[String]]] = None
+  private var inSet = sireum.util.isetEmpty[Tuple]
+  private var outSet = sireum.util.isetEmpty[Tuple]
+
+  def behaviour : Option[IMap[Tuple, Tuple]] = {
+    var result :Option[IMap[Tuple, Tuple]] = None
 
     val temp = node match {
-      case n : ComponentDecl => n.properties.collectFirst{case p : Property
-        if p.id.value.equals("behaviour") => p.value}
-      case n : ConnectionDecl => n.properties.collectFirst{case p : Property
-        if p.id.value.equals("behaviour") => p.value}
+      case comp : ComponentDecl => comp.behaviour
+      case conn : ConnectionDecl => conn.behaviour
       case _ => None
     }
 
     if(temp.isDefined) {
-      result = Some(temp.get.toMap[Node.Seq[String], Node.Seq[String]])
+      result = Some(temp.get.expr)
     }
     result
-  }*/
+  }
 
   def getType = `type`
 
+  def getInPorts: Node.Seq[Port] = {
+    node match {
+      case comp : ComponentDecl => {
+        comp.ports.filter{p : Port => p.isIn}
+      }
+      case _ => Node.emptySeq[Port]
+    }
+  }
 
+  def getOutPorts: Node.Seq[Port] = {
+    node match {
+      case comp : ComponentDecl => {
+        comp.ports.filter{p : Port => !p.isIn}
+      }
+      case _ => Node.emptySeq[Port]
+    }
+  }
+
+  def addToInSet(in : Tuple): Unit = {
+    inSet = inSet + in
+  }
+
+  def inSetContains(in : Tuple) : Boolean = {
+    inSet.contains(in)
+  }
+
+  def addToOutSet(out : Tuple): Unit = {
+    outSet = outSet + out
+  }
+
+  def outSetContains(out : Tuple): Boolean = {
+    outSet.contains(out)
+  }
+
+  def getInSet: Set[Tuple] = inSet
+
+  def getOutSet: Set[Tuple] = outSet
 }
 
 object FptcNodeProperty {

@@ -41,18 +41,24 @@ object PrettyPrinter {
     Visitor.build({
       case n : Name => {
         new PrettyPrinter(sb).print(n)
-      }
         false
+      }
+      case t : Tuple => {
+        new PrettyPrinter(sb).print(t)
+        false
+      }
     })(n)
     sb.toString().trim
   }
+
+
 }
 
 final class PrettyPrinter(sb: StringBuilder) {
   def print(m: Model, indent: Natural = 0): Unit = {
     implicit val _indent = indent
 
-    if(!m.types.isEmpty) {
+    if(m.types.nonEmpty) {
       sb.append("types")
       println()
       print(m.types.head, indent+1)
@@ -63,7 +69,7 @@ final class PrettyPrinter(sb: StringBuilder) {
       println()
     }
 
-    if(!m.constants.isEmpty) {
+    if(m.constants.nonEmpty) {
       sb.append("constants")
       println()
       print(m.constants.head, indent + 1)
@@ -74,7 +80,7 @@ final class PrettyPrinter(sb: StringBuilder) {
       println()
     }
 
-    if(!m.components.isEmpty) {
+    if(m.components.nonEmpty) {
       sb.append("components")
       println()
       print(m.components.head, indent + 1)
@@ -85,7 +91,7 @@ final class PrettyPrinter(sb: StringBuilder) {
       println()
     }
 
-    if(!m.connections.isEmpty) {
+    if(m.connections.nonEmpty) {
       sb.append("connections")
       println()
       print(m.connections.head, indent+1)
@@ -110,7 +116,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     printIndent(indent)
     print(compd.compName)
     println()
-    if(!compd.ports.isEmpty) {
+    if(compd.ports.nonEmpty) {
       printIndent(indent+1)
       sb.append("ports")
       println()
@@ -121,7 +127,7 @@ final class PrettyPrinter(sb: StringBuilder) {
       }
      println()
     }
-    if(!compd.flows.isEmpty) {
+    if(compd.flows.nonEmpty) {
       printIndent(indent+1)
       sb.append("flows")
       println()
@@ -132,7 +138,14 @@ final class PrettyPrinter(sb: StringBuilder) {
       }
       println()
     }
-    if(!compd.properties.isEmpty) {
+    if(compd.behaviour.isDefined) {
+      printIndent(indent+1)
+      sb.append("behaviour")
+      println()
+      print(compd.behaviour.get, indent+2)
+      println()
+    }
+    if(compd.properties.nonEmpty) {
       printIndent(indent+1)
       sb.append("properties")
       println()
@@ -152,7 +165,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     print(cd.fromComp)
     sb.append(".")
     print(cd.fromPort)
-    if(!cd.fromE.isEmpty) {
+    if(cd.fromE.nonEmpty) {
       sb.append("{")
       print(cd.fromE.head)
       for(et <- cd.fromE.tail) {
@@ -166,7 +179,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     sb.append(".")
     print(cd.toPort)
 
-    if(!cd.toE.isEmpty) {
+    if(cd.toE.nonEmpty) {
       sb.append("{")
       print(cd.toE.head)
       for(et <- cd.toE.tail) {
@@ -176,7 +189,14 @@ final class PrettyPrinter(sb: StringBuilder) {
       sb.append("}")
     }
     println()
-    if(!cd.properties.isEmpty) {
+    if(cd.behaviour.isDefined) {
+      printIndent(indent+1)
+      sb.append("behaviour")
+      println()
+      print(cd.behaviour.get, indent+2)
+      println()
+    }
+    if(cd.properties.nonEmpty) {
       printIndent(indent+1)
       sb.append("properties")
       println()
@@ -187,7 +207,56 @@ final class PrettyPrinter(sb: StringBuilder) {
       }
       println()
     }
+  }
 
+  def print(b : Behaviour, indent: Natural) : Unit = {
+    printIndent(indent)
+    print(b.expr.head._1)
+    sb.append(" -> ")
+    print(b.expr.head._2)
+    for(exp <- b.expr.tail) {
+      println()
+      printIndent(indent)
+      print(exp._1)
+      sb.append(" -> ")
+      print(exp._2)
+    }
+  }
+
+  def print(t : Tuple) : Unit = {
+    if (t.tokens.size > 1) {
+      sb.append("(")
+      print(t.tokens.head)
+      for(tt <- t.tokens.tail) {
+        sb.append(" ,")
+        print(tt)
+      }
+      sb.append(")")
+    } else {
+      print(t.tokens.head)
+    }
+  }
+
+  def print(o : One) : Unit = {
+    o match {
+      case o : NoFailure => sb.append("*")
+      case o : Wildcard => sb.append("_")
+      case o : Variable => print(o.id)
+      case o : Fault => {
+        print(o.enum)
+        sb.append(".")
+        print(o.id)
+      }
+      case o : FaultSet => {
+        sb.append("{")
+        print(o.value.head)
+        for(vt <- o.value.tail) {
+          sb.append(" ,")
+          print(vt)
+        }
+        sb.append("}")
+      }
+    }
   }
 
   def print(ad : AliasDecl, indent: Natural) : Unit ={
@@ -203,7 +272,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     printIndent(indent)
     sb.append("enum ")
     print(ed.name)
-    if(!ed.superEnums.isEmpty) {
+    if(ed.superEnums.nonEmpty) {
       sb.append(" extends ")
       print(ed.superEnums.head)
       for(edt<-ed.superEnums.tail) {
@@ -211,7 +280,7 @@ final class PrettyPrinter(sb: StringBuilder) {
         print(edt)
       }
     }
-    if(!ed.elements.isEmpty) {
+    if(ed.elements.nonEmpty) {
       sb.append(" {")
       print(ed.elements.head)
       for(et <- ed.elements.tail) {
@@ -227,7 +296,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     printIndent(indent)
     sb.append("lattice ")
     print(ld.name)
-    if(!ld.superLattice.isEmpty) {
+    if(ld.superLattice.nonEmpty) {
       sb.append(" extends ")
       print(ld.superLattice.head)
       for(ldt<-ld.superLattice.tail) {
@@ -302,6 +371,8 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
   }
 
+
+
   def print(p : Property, indent: Natural) : Unit={
     printIndent(indent)
     print(p.id)
@@ -313,8 +384,6 @@ final class PrettyPrinter(sb: StringBuilder) {
         sb.append(" = ")
         print(p.value.get)
     }
-
-
   }
 
   def print(cd: ConstantDecl, indent:Natural): Unit = {

@@ -24,6 +24,8 @@
  */
 
 package org.sireum.awas.graph
+
+import org.sireum.awas.ast.{NoFailure, One}
 import org.sireum.util._
 
 import scalax.collection.mutable.Graph
@@ -38,14 +40,14 @@ trait AwasGraph[Node] {
 
   def numOfNodes : Int = graph.nodes.size
 
-  def nodes = graph.nodes
+  def nodes[Node]  = graph.nodes
 
   def edges = graph.edges
 
-  def hasEdge(n1 : Node, n2: Node) : Boolean = {
-    val edge  = new AwasEdge[Node]((n1,n2))
-    graph.find(graph.having(node = _ == edge)).isDefined
-  }
+//  def hasEdge(n1 : Node, n2: Node) : Boolean = {
+//    val edge  = new AwasEdge[Node]((n1,n2),_)
+//    graph.exists(graph.having(node = _ == edge))
+//  }
 
   def numOfEdges : Int = graph.edges.size
 
@@ -60,52 +62,71 @@ trait AwasGraph[Node] {
     node
   }
 
+  def getEdge (edge : Edge) = {
+    graph.get(edge)
+  }
+
+
+
   def addEdge (from : Node, to: Node) = {
     val nodes : Product2[Node, Node]= (from, to)
-    val edge = new AwasEdge[Node](nodes)
+    val edge = new AwasEdge[Node](nodes, NoFailure())
     graph.add(edge)
     edge
   }
 
   protected def graph : Graph[Node, AwasEdge]
 
-/*  def predecessor(node : Node) : Set[Node] = {
-    graph.get(node).diPredecessors.flatten[Node]
+  def predecessor(node : Node) : Set[Node] = {
+    graph.get(node).diPredecessors.map(t => t.value)
   }
 
   def successor(node : Node) : Set[Node] = {
-    graph.get(node).diSuccessors.flatten[Node]
+    graph.get(node).diSuccessors.map(t => t.value)
   }
 
   def inEdges(node : Node) : Set[Edge] = {
-    graph.get(node).incoming.flatten[Edge]
+    graph.get(node).incoming.map(t => t.toOuter)
   }
 
   def outEdges(node : Node) : Set[Edge] = {
-    graph.get(node).outgoing.flatten[Edge]
-  }*/
+    graph.get(node).outgoing.map(t => t.toOuter)
+  }
 
 }
 
-final class AwasEdge[Node](nodes : Product, faults: Seq[String] = Seq("*"))
+class AwasEdge[Node](nodes : Product, var fault : One)
   extends DiEdge[Node](nodes)
   with EdgeCopy[AwasEdge]
   with OuterEdge[Node, AwasEdge]{
+
+
+//  var fault : One = NoFailure()
+//  def getFault:One = fault
+//
+  def setFault(f : One) = {
+    this.fault = f
+  }
+
   override def copy[NodeNode](newNodes: Product) =
-    new AwasEdge[NodeNode](newNodes)
+     new AwasEdge[NodeNode](newNodes, fault)
+
+
 }
 
-object AwasEdge extends EdgeCompanion[AwasEdge] {
+object AwasEdge {
   val ~> = AwasEdge
 
-  def apply[Node](from: Node, to: Node):AwasEdge[Node] = new AwasEdge[Node](NodeProduct(from, to))
+  def apply[Node](from: Node, to: Node, fault : One):AwasEdge[Node] = new AwasEdge[Node](NodeProduct(from, to), fault)
 
 //  protected[Collection]
-  def from [Node](nodes : Product) = new AwasEdge[Node](nodes)
+//  def from [Node](nodes : Product) = new AwasEdge[Node](nodes)
 
-  def apply[Node](nodes: Product2[Node, Node]):AwasEdge[Node] = new AwasEdge[Node](nodes)
+//  def apply[Node](nodes: Product2[Node, Node]):AwasEdge[Node] = new AwasEdge[Node](nodes)
 
-  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node)] = if (e eq null) None else Some((e.source, e.target))
+  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node, One)] = if (e eq null) None else Some((e.source, e.target, e.fault))
+
+
 }
 
 

@@ -65,7 +65,9 @@ final class Builder private() {
     ComponentDecl(build(ctx.name()),
       ctx.port().map(build),
       ctx.flow().map(build),
-      ctx.property().map(build)) at ctx
+      if(ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
+      ctx.property().map(build)
+    ) at ctx
   }
 
   def build(ctx: ConnectionDeclContext): ConnectionDecl = {
@@ -76,6 +78,7 @@ final class Builder private() {
       build(ctx.toComponent),
       buildId(ctx.toPort),
       ctx.toE.map(build),
+      if(ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
       ctx.property().map(build)) at ctx
   }
 
@@ -127,6 +130,28 @@ final class Builder private() {
   def build(ctx: PropertyContext): Property = {
     Property(buildId(ctx.ID()), build(ctx.`type`()),
       if (ctx.init() != null) Some(build(ctx.init())) else None) at ctx
+  }
+
+  def build(ctx: BehaviourContext): Behaviour = {
+    var value = imapEmpty[Tuple, Tuple]
+    ctx.expression().forEach{e => {
+      value = value + (build(e.key) -> build(e.value))
+    }}
+    Behaviour(value)
+  }
+
+  def build(ctx: TupleContext): Tuple = {
+    Tuple(ctx.one().map(build))
+  }
+
+  def build(ctx: OneContext): One = {
+    ctx match {
+      case ctx : NoFailureContext => NoFailure()
+      case ctx : WildCardContext => Wildcard()
+      case ctx : VariableContext => Variable(buildId(ctx.ID()))
+      case ctx : FaultRefContext => Fault(build(ctx.name()), buildId(ctx.ID()))
+      case ctx : FaultSetContext => FaultSet(ctx.one().map(build).toSet[One])
+    }
   }
 
   def build(ctx: NameContext): Name = {

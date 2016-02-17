@@ -1,17 +1,22 @@
+types
+  enum Fault {late, value}
+
 components
   A
     ports
       in aIn
       out aOut
-    properties
-      behaviour : Map[Seq[String], Seq[String]] = Map[Seq[String], Seq[String]](Seq[String]("late") -> Seq[String]("late"), Seq[String]("*") -> Seq[String]("value"))
+    behaviour
+      Fault.late -> Fault.late
+      * -> Fault.value
 
   B
     ports
       in bIn
       out bOut
-    properties
-      behaviour : Map[Seq[String], Seq[String]] = Map[Seq[String], Seq[String]](Seq[String]("value") -> Seq[String]("*"), Seq[String]("*") -> Seq[String]("late"))
+    behaviour
+      Fault.value -> *
+      * -> Fault.late
 
 connections
   A2B : A.aOut -> B.bIn

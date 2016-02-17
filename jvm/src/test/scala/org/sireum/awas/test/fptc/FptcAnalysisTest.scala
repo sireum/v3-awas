@@ -29,17 +29,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import org.sireum.test.{JUnitTestFramework, TestDef}
+import org.sireum.test.{TestDef, JUnitTestFramework}
 
 @RunWith(value = classOf[Parameterized])
-final class FptcGraphTest(name: String, td: TestDef) {
+final class FptcAnalysisTest(name: String, td: TestDef)  {
   @Test
   def test(): Unit = {
     td.test(JUnitTestFramework)
   }
 }
 
-object FptcGraphTest {
+object FptcAnalysisTest {
   val provider = new FptcAnalysisTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")

@@ -26,7 +26,9 @@ componentDecl
   : name
       ( 'ports' port* )?
       ( 'flows' flow* )?
+      ( 'behaviour' behaviour)?
       ( 'properties' property* )?
+
   ;
 
 connectionDecl
@@ -36,7 +38,8 @@ connectionDecl
     '->'
     toComponent=name '.' toPort=ID
     ( '{' toE+=name ( ',' toE+=name )* '}' )?
-      ( 'properties' property* )?
+    ( 'behaviour' behaviour)?
+    ( 'properties' property* )?
   ;
 
 typeAliasDecl
@@ -83,6 +86,27 @@ property
 
 constantDecl
   : name ':' type '=' init
+  ;
+
+behaviour
+  : expression+
+  ;
+
+expression
+  : key=tuple '->' value=tuple
+  ;
+
+tuple
+  : one
+  | '(' one (',' one)+ ')'
+  ;
+
+one
+  : '*'                                              #NoFailure
+  | '_'                                              #WildCard
+  | ID                                               #variable
+  | name '.' ID                                      #FaultRef
+  | '{' one (',' one)+ '}'                           #FaultSet
   ;
 
 type

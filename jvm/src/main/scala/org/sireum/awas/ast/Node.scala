@@ -53,6 +53,7 @@ final case class ConstantDecl(name: Name, constType: Type, init: Init) extends N
 final case class ComponentDecl(compName: Name,
                                ports: Node.Seq[Port],
                                flows: Node.Seq[Flow],
+                               behaviour: Option[Behaviour],
                                properties: Node.Seq[Property]) extends Node
 
 final case class ConnectionDecl(connName: Name,
@@ -62,6 +63,7 @@ final case class ConnectionDecl(connName: Name,
                                 toComp: Name,
                                 toPort: Id,
                                 toE:Node.Seq[Name],
+                                behaviour: Option[Behaviour],
                                 properties:Node.Seq[Property]) extends Node
 
 final case class Port(isIn : Boolean, id : Id, name: Option[Name]) extends Node
@@ -105,6 +107,25 @@ _Id(value: String) extends Id {
 
 final case class Name(value: Node.Seq[Id]) extends Node
 
+//-----------------------Behaviour---------------------------//
+
+final case class Behaviour(expr : IMap[Tuple, Tuple]) extends Node
+
+final case class Tuple(tokens : Node.Seq[One]) extends Node
+
+sealed trait One extends Node
+
+final case class NoFailure() extends One
+
+final case class Wildcard() extends One
+
+final case class Variable(id : Id) extends One
+
+final case class Fault(enum : Name, id : Id) extends One
+
+final case class FaultSet(value : ISet[One]) extends One
+
+//-----------------------Init---------------------------//
 sealed trait Init extends Node
 
 final case class BooleanInit(value: Boolean) extends Init
@@ -130,7 +151,6 @@ final case class SeqInit(typeInit: Type, value: Node.Seq[Init]) extends Init
 final case class MapInit(keyType: Type,
                          valueType: Type,
                          value: IMap[Init, Init]) extends Init
-
 
 //-----------------------Types---------------------------//
 sealed trait Type extends Node

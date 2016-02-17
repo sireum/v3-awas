@@ -23,32 +23,38 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.fptc
+package org.sireum.awas.fptc
 
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
-import org.junit.runners.Parameterized.Parameters
-import org.sireum.test.{JUnitTestFramework, TestDef}
+import org.sireum.awas.ast.Tuple
+import org.sireum.awas.graph.AwasEdge
+import scalax.collection.mutable.Graph
+import org.sireum.util
 
-@RunWith(value = classOf[Parameterized])
-final class FptcGraphTest(name: String, td: TestDef) {
-  @Test
-  def test(): Unit = {
-    td.test(JUnitTestFramework)
-  }
-}
+object FptcAnalysis {
 
-object FptcGraphTest {
-  val provider = new FptcAnalysisTestDefProvider(JUnitTestFramework)
+  def apply(g: FptcGraph[FptcNode]): FptcGraph[FptcNode] = {
 
-  @Parameters(name = "{0}")
-  def parameters = {
-    val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
-    val r = new java.util.ArrayList[Array[Object]](ps.size)
-    for (p <- ps) {
-      r.add(p)
+    var worklist = util.ilistEmpty[FptcNode]
+
+    worklist = worklist ++ g.nodes[FptcNode].map{
+      n : (Graph[FptcNode, AwasEdge]#NodeT) => n.value}
+
+    while(worklist.nonEmpty) {
+     val node = worklist.head
+     val t : Tuple = g.computeInSet(node)
+     if(!node.inSetContains(t)) {
+       node.addToInSet(t)
+       val outTuple = g.computeOutSet(node, t)
+       if(!node.outSetContains(outTuple)) {
+         node.addToOutSet(outTuple)
+         worklist = worklist.tail ++ g.propagate(node, outTuple)
+       } else {
+         worklist = worklist.tail
+       }
+     } else {
+       worklist = worklist.tail
+     }
     }
-    r
+    g
   }
 }
