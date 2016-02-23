@@ -1,0 +1,17 @@
+digraph fptc_multicomp {
+  "A2B::Connection"
+  "A2B::Connection" -> "B::Component"
+  "A2C::Connection"
+  "A2C::Connection" -> "C::Component"
+  "A::Component" -> "A2B::Connection"
+  "A::Component" -> "A2C::Connection"
+  "A::Component" [shape = box]
+  "B2A::Connection"
+  "B2A::Connection" -> "A::Component"
+  "B::Component" -> "B2A::Connection"
+  "B::Component" [shape = box]
+  "C2A::Connection"
+  "C2A::Connection" -> "A::Component"
+  "C::Component" -> "C2A::Connection"
+  "C::Component" [shape = box]
+}

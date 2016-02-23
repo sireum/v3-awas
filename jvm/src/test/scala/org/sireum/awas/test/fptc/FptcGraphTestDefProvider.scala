@@ -47,7 +47,8 @@ extends TestDefProvider {
     val filesEqual = files.filter { p =>
       p.toLowerCase.contains("pcashutoff") ||
         p.toLowerCase.contains("isolette") ||
-        p.toLowerCase.contains("abcloop")
+        p.toLowerCase.contains("abcloop")  ||
+        p.toLowerCase.contains("fptc")
     }
 
     filesEqual.toVector.map { x =>

@@ -1,0 +1,39 @@
+digraph isolette_model {
+  "Air::Component" -> "h2::Connection"
+  "Air::Component" -> "i1::Connection"
+  "Air::Component" [shape = box]
+  "HeatSource::Component" -> "h1::Connection"
+  "HeatSource::Component" [shape = box]
+  "Infant::Component" -> "i2::Connection"
+  "Infant::Component" [shape = box]
+  "Nurse::Component" -> "o4::Connection"
+  "Nurse::Component" [shape = box]
+  "OperatorInterface::Component" -> "o1::Connection"
+  "OperatorInterface::Component" -> "o3::Connection"
+  "OperatorInterface::Component" [shape = box]
+  "TempSensor::Component" -> "t2::Connection"
+  "TempSensor::Component" [shape = box]
+  "Thermostat::Component" -> "o2::Connection"
+  "Thermostat::Component" -> "t1::Connection"
+  "Thermostat::Component" [shape = box]
+  "h1::Connection"
+  "h1::Connection" -> "Air::Component"
+  "h2::Connection"
+  "h2::Connection" -> "TempSensor::Component"
+  "i1::Connection"
+  "i1::Connection" -> "Infant::Component"
+  "i2::Connection"
+  "i2::Connection" -> "Air::Component"
+  "o1::Connection"
+  "o1::Connection" -> "Thermostat::Component"
+  "o2::Connection"
+  "o2::Connection" -> "OperatorInterface::Component"
+  "o3::Connection"
+  "o3::Connection" -> "Nurse::Component"
+  "o4::Connection"
+  "o4::Connection" -> "OperatorInterface::Component"
+  "t1::Connection"
+  "t1::Connection" -> "HeatSource::Component"
+  "t2::Connection"
+  "t2::Connection" -> "Thermostat::Component"
+}

@@ -40,7 +40,7 @@ final class FptcGraphTest(name: String, td: TestDef) {
 }
 
 object FptcGraphTest {
-  val provider = new FptcAnalysisTestDefProvider(JUnitTestFramework)
+  val provider = new FptcGraphTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")
   def parameters = {

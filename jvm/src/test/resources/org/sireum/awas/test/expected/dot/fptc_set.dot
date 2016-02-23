@@ -1,0 +1,10 @@
+digraph fptc_set {
+  "A2B::Connection"
+  "A2B::Connection" -> "B::Component"
+  "ASET::Component" -> "A2B::Connection"
+  "ASET::Component" [shape = box]
+  "B2A::Connection"
+  "B2A::Connection" -> "ASET::Component"
+  "B::Component" -> "B2A::Connection"
+  "B::Component" [shape = box]
+}
