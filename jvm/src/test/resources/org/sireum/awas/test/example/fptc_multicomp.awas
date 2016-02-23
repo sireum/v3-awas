@@ -9,22 +9,20 @@ components
       out aOut1
       out aOut2
     behaviour
-      (Fault.late, Fault.value) -> (Fault.late, Fault.omission)
       (Fault.omission, Fault.late) -> (Fault.early, Fault.omission)
+      (Fault.late, Fault.value) -> (Fault.late, Fault.omission)
       (*, *) -> (Fault.early, Fault.value)
-      (f, Fault.early) -> (Fault.omission, f)
       (Fault.value, _) -> (Fault.value, {Fault.late, Fault.early})
-
+      (f, Fault.early) -> (Fault.omission, f)
 
   B
     ports
       in bIn
       out bOut
     behaviour
-      Fault.early ->  *
+      Fault.early -> Fault.omission
       * -> Fault.value
       Fault.value -> Fault.early
-      Fault.early -> Fault.omission
 
   C
     ports
@@ -38,7 +36,9 @@ components
 
 connections
   A2B : A.aOut1 -> B.bIn
+
   A2C : A.aOut2 -> C.cIn
 
   C2A : C.cOut -> A.aIn1
+
   B2A : B.bOut -> A.aIn2

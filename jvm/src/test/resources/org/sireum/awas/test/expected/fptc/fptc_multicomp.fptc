@@ -73,23 +73,23 @@ Fault.value
 A::Component
 =================
 ##InSET##
-(* ,*)
-(* ,Fault.value)
-(Fault.early ,Fault.late)
-(Fault.early ,Fault.value)
-(Fault.late ,Fault.late)
-(Fault.late ,Fault.value)
-(Fault.value ,Fault.early)
-(Fault.value ,Fault.omission)
+(*, *)
+(*, Fault.value)
+(Fault.early, Fault.late)
+(Fault.early, Fault.value)
+(Fault.late, Fault.late)
+(Fault.late, Fault.value)
+(Fault.value, Fault.early)
+(Fault.value, Fault.omission)
 ##OutSET##
-(* ,Fault.value)
-(Fault.early ,Fault.late)
-(Fault.early ,Fault.value)
-(Fault.late ,Fault.late)
-(Fault.late ,Fault.omission)
-(Fault.omission ,Fault.value)
-(Fault.value ,Fault.early)
-(Fault.value ,Fault.late)
+(*, Fault.value)
+(Fault.early, Fault.late)
+(Fault.early, Fault.value)
+(Fault.late, Fault.late)
+(Fault.late, Fault.omission)
+(Fault.omission, Fault.value)
+(Fault.value, Fault.early)
+(Fault.value, Fault.late)
 
 C::Component
 =================

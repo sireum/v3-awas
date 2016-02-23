@@ -39,7 +39,7 @@ extends TestDefProvider {
   val resultsDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/results/dot"
   val expectedDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/expected/dot"
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = listFiles(toUri(testcaseDir), "awas")

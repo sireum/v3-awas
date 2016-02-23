@@ -10,28 +10,28 @@ Fault.value
 B::Component
 =================
 ##InSET##
-(* ,*)
-(* ,Fault.early)
-(* ,Fault.late)
-(Fault.early ,Fault.value)
-(Fault.value ,Fault.early)
-(Fault.value ,Fault.late)
+(*, *)
+(*, Fault.early)
+(*, Fault.late)
+(Fault.early, Fault.value)
+(Fault.value, Fault.early)
+(Fault.value, Fault.late)
 ##OutSET##
-(* ,*)
-(Fault.value ,*)
-(Fault.value ,Fault.value)
+(*, *)
+(Fault.value, *)
+(Fault.value, Fault.value)
 
 A::Component
 =================
 ##InSET##
-(* ,*)
-(* ,Fault.value)
-(Fault.value ,*)
+(*, *)
+(*, Fault.value)
+(Fault.value, *)
 ##OutSET##
-(* ,Fault.value)
-(Fault.early ,Fault.value)
-(Fault.value ,Fault.early)
-(Fault.value ,Fault.late)
+(*, Fault.value)
+(Fault.early, Fault.value)
+(Fault.value, Fault.early)
+(Fault.value, Fault.late)
 
 A2B1::Connection
 =================

@@ -39,14 +39,12 @@ object PrettyPrinter {
   def print(n : Node): String ={
     val sb = new StringBuilder
     Visitor.build({
-      case n : Name => {
+      case n : Name =>
         new PrettyPrinter(sb).print(n)
         false
-      }
-      case t : Tuple => {
+      case t : Tuple =>
         new PrettyPrinter(sb).print(t)
         false
-      }
     })(n)
     sb.toString().trim
   }
@@ -228,7 +226,7 @@ final class PrettyPrinter(sb: StringBuilder) {
       sb.append("(")
       print(t.tokens.head)
       for(tt <- t.tokens.tail) {
-        sb.append(" ,")
+        sb.append(", ")
         print(tt)
       }
       sb.append(")")
@@ -242,20 +240,18 @@ final class PrettyPrinter(sb: StringBuilder) {
       case o : NoFailure => sb.append("*")
       case o : Wildcard => sb.append("_")
       case o : Variable => print(o.id)
-      case o : Fault => {
+      case o : Fault =>
         print(o.enum)
         sb.append(".")
         print(o.id)
-      }
-      case o : FaultSet => {
+      case o : FaultSet =>
         sb.append("{")
         print(o.value.head)
         for(vt <- o.value.tail) {
-          sb.append(" ,")
+          sb.append(", ")
           print(vt)
         }
         sb.append("}")
-      }
     }
   }
 

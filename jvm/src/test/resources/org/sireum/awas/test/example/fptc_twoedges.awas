@@ -14,7 +14,6 @@ components
       (f, Fault.early) -> (Fault.omission, f)
       (Fault.value, _) -> (Fault.value, {Fault.late, Fault.early})
 
-
   B
     ports
       in bIn1
@@ -29,7 +28,9 @@ components
 
 connections
   A2B1 : A.aOut1 -> B.bIn1
+
   A2B2 : A.aOut2 -> B.bIn2
 
   B2A1 : B.bOut1 -> A.aIn1
+
   B2A2 : B.bOut2 -> A.aIn2
