@@ -40,7 +40,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
   val resultsDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/results/fptc"
   val expectedDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/expected/fptc"
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = listFiles(toUri(testcaseDir), "awas")
@@ -54,26 +54,27 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".fptc"
       writeResult(outputFileName, graphAnalysis(readFile(x)._1, fileWithOutExt).get)
-      val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
-      EqualTest(filename(x), result ,
-        readFile(toUri(expectedDir+"/"+outputFileName))._1)
+      val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
+      EqualTest(filename(x), result,
+        readFile(toUri(expectedDir + "/" + outputFileName))._1)
     }
   }
 
-  def writeResult(fileName : String, graph : FptcGraph[FptcNode]) ={
+  def writeResult(fileName: String, graph: FptcGraph[FptcNode]) = {
     val content = new StringBuilder()
 
-    val nodes = graph.nodes[FptcNode].map{
-      n : (Graph[FptcNode, AwasEdge]#NodeT) => n.value}
+    val nodes = graph.nodes[FptcNode].map {
+      n: (Graph[FptcNode, AwasEdge]#NodeT) => n.value
+    }
 
-    nodes.foreach{ n:FptcNode => {
+    nodes.foreach { n: FptcNode => {
       content.append(n.toString)
       content.append("\n")
       content.append("=================")
       content.append("\n")
       content.append("##InSET##")
       content.append("\n")
-      val inseq = n.getInSet.toSeq.sortBy{t: Tuple => PrettyPrinter.print(t)}
+      val inseq = n.getInSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
       content.append(PrettyPrinter.print(inseq.head))
       for (ist <- inseq.tail) {
         content.append("\n")
@@ -82,7 +83,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
       content.append("\n")
       content.append("##OutSET##")
       content.append("\n")
-      val outseq = n.getOutSet.toSeq.sortBy{t: Tuple => PrettyPrinter.print(t)}
+      val outseq = n.getOutSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
       content.append(PrettyPrinter.print(outseq.head))
       for (ist <- outseq.tail) {
         content.append("\n")
@@ -92,7 +93,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
       content.append("\n")
     }
     }
-    if(generateExpected) {
+    if (generateExpected) {
       val expPath = expectedDir + "/" + fileName
       writeFile(toUri(expPath), content.toString())
     }
@@ -101,13 +102,12 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
   }
 
 
-
   def extensor(orig: String) = (orig.split('.') match {
-    case xs @ Array(x) => xs
+    case xs@Array(x) => xs
     case y => y.init
   }).mkString
 
-  def graphAnalysis(model: String, name : String): Option[FptcGraph[FptcNode]] ={
+  def graphAnalysis(model: String, name: String): Option[FptcGraph[FptcNode]] = {
     Builder(model) match {
       case None => None
       case Some(m) =>

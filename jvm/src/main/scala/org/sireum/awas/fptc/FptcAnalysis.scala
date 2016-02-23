@@ -25,8 +25,9 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.ast.Tuple
+import org.sireum.awas.ast.{FaultSet, One, Tuple}
 import org.sireum.awas.graph.AwasEdge
+import org.sireum.util._
 import scalax.collection.mutable.Graph
 import org.sireum.util
 
@@ -36,25 +37,104 @@ object FptcAnalysis {
 
     var worklist = util.ilistEmpty[FptcNode]
 
-    worklist = worklist ++ g.nodes[FptcNode].map{
-      n : (Graph[FptcNode, AwasEdge]#NodeT) => n.value}
+    worklist = worklist ++ g.nodes[FptcNode].map {
+      n: (Graph[FptcNode, AwasEdge]#NodeT) => n.value
+    }
 
-    while(worklist.nonEmpty) {
-     val node = worklist.head
-     val t : Tuple = g.computeInSet(node)
-     if(!node.inSetContains(t)) {
-       node.addToInSet(t)
-       val outTuple = g.computeOutSet(node, t)
-       if(!node.outSetContains(outTuple)) {
-         node.addToOutSet(outTuple)
-         worklist = worklist.tail ++ g.propagate(node, outTuple)
-       } else {
-         worklist = worklist.tail
-       }
-     } else {
-       worklist = worklist.tail
-     }
+    while (worklist.nonEmpty) {
+      val node = worklist.head
+      val t: ISet[Tuple] = computeInSet(g, node)
+      if (t.nonEmpty) {
+        val outTuple = computeOutSet(node, t)
+        if (outTuple.isDefined) {
+          worklist = worklist.tail ++ g.propagate(node, outTuple.get)
+        } else {
+          worklist = worklist.tail
+        }
+      } else {
+        worklist = worklist.tail
+      }
     }
     g
+  }
+
+  def computeInSet(g: FptcGraph[FptcNode], node: FptcNode): ISet[Tuple] = {
+    val inedges = g.sortedInEdges(node)
+    val temp = inedges.map { e => e.fault }
+    val t = Tuple(temp)
+    val res = flatTuple(t) diff node.getInSet
+    res.foreach(node.addToInSet)
+    res
+  }
+
+  def computeOutSet(node: FptcNode, inTupSet: ISet[Tuple]): Option[Tuple] = {
+    val behaviour: IVector[(Tuple) => Option[Tuple]] = node.behaviour
+    var outSet = isetEmpty[Option[Tuple]]
+    inTupSet.foreach { in =>
+      outSet = outSet ++ behaviour.par.map(_ (in))
+    }
+    var out = outSet.flatten.flatMap(flatTuple)
+    if (out.nonEmpty) {
+      out = out diff node.getOutSet
+    } else {
+      out = inTupSet
+    }
+    out.foreach(node.addToOutSet)
+    setOfTupleToTuple(out)
+  }
+
+  private def setOfTupleToTuple(tuples: Set[Tuple]): Option[Tuple] = {
+    // we know tuples computed from out nodes share the same length of tokens
+    if (tuples.nonEmpty) {
+      var result = ivectorEmpty[One]
+      for (i <- tuples.head.tokens.indices) {
+        var sets = isetEmpty[One]
+        tuples.foreach { tuple =>
+          sets = sets + tuple.tokens(i)
+        }
+        if (sets.size < 2) {
+          result = result :+ sets.head
+        } else {
+          result = result :+ FaultSet(sets)
+        }
+      }
+      Some(Tuple(result))
+    } else {
+      None
+    }
+  }
+
+  def findFaultSet(in: IVector[One]): Int = {
+    in.indexWhere(x => x match {
+      case x: FaultSet => true
+      case _ => false
+    })
+  }
+
+  def flatTuple(in: Tuple): ISet[Tuple] = {
+    val inSeq = in.tokens
+    var result = ilistEmpty[IVector[One]]
+    var worklist = ilistEmpty[IVector[One]]
+    worklist = worklist :+ inSeq
+    while (worklist.nonEmpty) {
+      val currTup = worklist.head
+      val where = findFaultSet(currTup)
+      var tempList = ilistEmpty[IVector[One]]
+      if (where != -1) {
+        val fs = currTup(where).asInstanceOf[FaultSet]
+        fs.value.foreach { e =>
+          var tempTup = ivectorEmpty[One]
+          tempTup = currTup.slice(0, where)
+          tempTup = tempTup :+ e
+          if (where < currTup.length - 1)
+            tempTup = tempTup ++ currTup.slice(where + 1, currTup.length)
+          tempList = tempList :+ tempTup
+        }
+      } else {
+        result = result :+ currTup
+      }
+      worklist = worklist.tail ++ tempList
+    }
+    result.map(Tuple).toSet[Tuple]
   }
 }

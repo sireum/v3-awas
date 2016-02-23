@@ -34,8 +34,7 @@ import scalax.collection.io.dot._
 
 trait FptcGraph[Node] extends AwasGraph[Node] {
   def toDot(name : String): String
-  def computeInSet(node : FptcNode): Tuple
-  def computeOutSet(node: FptcNode, t :Tuple): Tuple
+  def sortedInEdges(node : FptcNode): Vector[Edge]
   def propagate(node: FptcNode, out: Tuple): List[FptcNode]
 }
 
@@ -65,12 +64,26 @@ object FptcGraph {
         val toCompNode = FptcNode createNode compMap(conn.toComp)
         val connNode = FptcNode createNode conn
         result.addNode(connNode)
-        result.addEdge(fromCompNode, connNode)
-        result.addEdge(connNode, toCompNode)
+        val e1 = result.addEdge(fromCompNode, connNode)
+        addPortInfo(fromCompNode, conn, e1, isInPort = false)
+        val e2 = result.addEdge(connNode, toCompNode)
+        addPortInfo(toCompNode, conn, e2, isInPort = true)
       }
         false
     })(m)
     result
+  }
+
+  def addPortInfo(node : FptcNode, conn : ConnectionDecl,
+                  edge : AwasEdge[FptcNode], isInPort: Boolean) = {
+    assert(node.getType == FptcNodeProperty.COMP_NODE,
+      "Component node expected")
+    val ports = if(isInPort) node.getCompInPorts else node.getCompOutPorts
+    val portId = if(isInPort) conn.toPort else conn.fromPort
+    val port = ports.find(p => p.id.equals(portId))
+    if(port.isDefined) {
+      node.addPortEdgeInfo(port.get, edge)
+    }
   }
 }
 
@@ -113,97 +126,33 @@ class Fg extends FptcGraph[FptcNode] {
     dotSorted
   }
 
+  private def getGraphEdge(e : AwasEdge[FptcNode]) = {
+    this.graph.get(e).toOuter
+  }
+
   def sortedInEdges(node : FptcNode): Vector[Edge] = {
-    inEdges(node).toVector.sortBy(f => f._1.toString)
+    if(node.getType == FptcNodeProperty.COMP_NODE)
+      node.getCompInPorts.map{e =>
+        getGraphEdge(node.getPortEdgeInfo(e).edge)
+      }
+    else {
+      assert(this.inEdges(node).size == 1)
+      inEdges(node).toVector
+    }
   }
 
   def sortedOutEdges(node : FptcNode): Vector[Edge] = {
-    outEdges(node).toVector.sortBy(f => f._1.toString)
-  }
-
-  def computeInSet(node : FptcNode): Tuple = {
-    val inedges = sortedInEdges(node)
-    val temp = inedges.map{e => e.fault}
-    val t = Tuple(temp)
-    t
-  }
-
-  private def setOfTupleToTuple(tuples : Set[Tuple]) : Tuple = {
-    // we know tuples computed from out nodes share the same length of tokens
-    var result = ivectorEmpty[One]
-
-    for(i <- tuples.head.tokens.indices) {
-      var sets = isetEmpty[One]
-      tuples.foreach { tuple =>
-        sets = sets + tuple.tokens(i)
+    if(node.getType == FptcNodeProperty.COMP_NODE)
+      node.getCompOutPorts.map{e =>
+        getGraphEdge(node.getPortEdgeInfo(e).edge)
       }
-      if(sets.size < 2) {
-        result = result :+ sets.head
-      } else {
-        result = result :+ FaultSet(sets)
-      }
-    }
-    Tuple(result)
-  }
-
-  private def check(f: (One, One)) : Boolean = {
-    f match {
-      case (_, v : Variable) => true
-      case (_, w : Wildcard) => true
-      case (x, y) => x == y
+    else {
+      assert(this.outEdges(node).size == 1)
+      outEdges(node).toVector
     }
   }
 
-  private def matches(t : Tuple, pat : Tuple) : Boolean = {
-    val tTokens = t.tokens
-    val patTokens = pat.tokens
-    if(tTokens.length == patTokens.length) {
-      var result = true
-      for(i <- tTokens.indices) {
-        if(result) {
-          result = check((tTokens(i), patTokens(i)))
-        }
-      }
-      result
-    } else {
-      false
-    }
-  }
 
-  def computeOutSet(node: FptcNode, t :Tuple): Tuple = {
-    val behaviour : Option[IMap[Tuple, Tuple]] = node.behaviour
-    if(behaviour.isDefined) {
-      var tuples = isetEmpty[Tuple]
-
-      behaviour.get.foreach{ v =>
-        if(matches(t,v._1)) {
-          var varValMap = imapEmpty[One, One]
-          v._1.tokens.foreach{token:One =>
-            token match {
-              case vari : Variable => {
-                varValMap = varValMap + (vari -> t.tokens(v._1.tokens.indexOf(token)))
-              }
-              case _ =>
-            }
-          }
-          val newTokens = v._2.tokens.map{ t : One =>
-            t match {
-              case vari : Variable => varValMap(vari)
-              case anythingelse => anythingelse
-            }
-          }
-          tuples = tuples + Tuple(newTokens)
-        }
-      }
-      if(tuples.nonEmpty) {
-        setOfTupleToTuple(tuples)
-      } else {
-        t
-      }
-    } else {
-      t
-    }
-  }
 
   def propagate(node: FptcNode, out: Tuple): List[FptcNode] = {
     val edgeseq = sortedOutEdges(node)
@@ -211,9 +160,7 @@ class Fg extends FptcGraph[FptcNode] {
     if(edgeseq.size == out.tokens.length) {
       for(i <- edgeseq.indices) {
         if(edgeseq(i).fault != out.tokens(i)) {
-          val f = edgeseq(i).fault
           this.graph.get(edgeseq(i)).setFault(out.tokens(i))
-          val g = edgeseq(i).fault
           result= result :+ edgeseq(i)._2
         }
       }

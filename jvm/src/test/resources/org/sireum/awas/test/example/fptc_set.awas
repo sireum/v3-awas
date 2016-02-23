@@ -1,0 +1,24 @@
+types
+  enum Fault {late, value}
+
+components
+  ASET
+    ports
+      in aIn
+      out aOut
+    behaviour
+      Fault.late -> {Fault.late, Fault.value}
+      * -> Fault.value
+
+  B
+    ports
+      in bIn
+      out bOut
+    behaviour
+      Fault.value -> *
+      * -> Fault.late
+
+connections
+  A2B : ASET.aOut -> B.bIn
+
+  B2A : B.bOut -> ASET.aIn

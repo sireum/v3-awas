@@ -90,7 +90,9 @@ final case class RecordDecl(name: Name, fields: Node.Seq[FieldDecl]) extends Typ
 final case class FieldDecl(id : Id, fieldType: Type) extends Node
 
 object Id {
-  def apply(value: String): Id = _Id(value.intern())
+  def apply(value: String): Id = {
+    _Id(value.intern())
+  }
 
   def unapply(id: Id): Option[String] = Some(id.value)
 }

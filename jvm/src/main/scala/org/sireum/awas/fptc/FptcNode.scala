@@ -25,27 +25,29 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum
 import org.sireum.awas.ast._
-import org.sireum.util
+import org.sireum.awas.graph.AwasEdge
+import org.sireum.util._
 import org.sireum.util.IMap
 
 trait FptcNode {
   def getType : String
   def toString : String
-  def behaviour : Option[IMap[Tuple, Tuple]]
-  def getInPorts: Node.Seq[Port]
-  def getOutPorts: Node.Seq[Port]
+  def behaviour : IVector[((Tuple) => Option[Tuple])]
+  def getCompInPorts: Node.Seq[Port]
+  def getCompOutPorts: Node.Seq[Port]
   def addToInSet(in : Tuple): Unit
   def inSetContains(in : Tuple) : Boolean
   def addToOutSet(out : Tuple): Unit
   def outSetContains(out : Tuple): Boolean
   def getInSet: Set[Tuple]
   def getOutSet: Set[Tuple]
+  def addPortEdgeInfo(port : Port, edge : AwasEdge[FptcNode])
+  def getPortEdgeInfo : IMap[Port, AwasEdge[FptcNode]]
 }
 
 object FptcNode {
-  private var nodepool = util.imapEmpty[Node,FptcNode]
+  private var nodepool = imapEmpty[Node,FptcNode]
 
   def createNode(awasNode : Node): FptcNode = {
     if(nodepool.contains(awasNode)) {
@@ -72,11 +74,14 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
     }
   }
 
-  private var inSet = sireum.util.isetEmpty[Tuple]
-  private var outSet = sireum.util.isetEmpty[Tuple]
+  private var inSet = isetEmpty[Tuple]
+  private var outSet = isetEmpty[Tuple]
 
-  def behaviour : Option[IMap[Tuple, Tuple]] = {
-    var result :Option[IMap[Tuple, Tuple]] = None
+  private var portEdgeMap = imapEmpty[Port, AwasEdge[FptcNode]]
+
+  def behaviour : IVector[((Tuple) => Option[Tuple])] = {
+
+    var result : IMap[Tuple, Tuple] = imapEmpty[Tuple, Tuple]
 
     val temp = node match {
       case comp : ComponentDecl => comp.behaviour
@@ -85,29 +90,34 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
     }
 
     if(temp.isDefined) {
-      result = Some(temp.get.expr)
+      result = temp.get.expr
     }
-    result
+
+    result.par.map{case (k,v) => BehaviourFactory(k,v)}.toVector
   }
 
   def getType = `type`
 
-  def getInPorts: Node.Seq[Port] = {
+  def getCompInPorts: Node.Seq[Port] = {
     node match {
-      case comp : ComponentDecl => {
+      case comp : ComponentDecl =>
         comp.ports.filter{p : Port => p.isIn}
-      }
       case _ => Node.emptySeq[Port]
     }
   }
 
-  def getOutPorts: Node.Seq[Port] = {
+  def getCompOutPorts: Node.Seq[Port] = {
     node match {
-      case comp : ComponentDecl => {
+      case comp : ComponentDecl =>
         comp.ports.filter{p : Port => !p.isIn}
-      }
       case _ => Node.emptySeq[Port]
     }
+  }
+
+  def getConnFromPortName: Id = {
+    assert(this.getType == FptcNodeProperty.CONN_NODE,
+      "Node is not Connection to get from port")
+    node.asInstanceOf[ConnectionDecl].fromPort
   }
 
   def addToInSet(in : Tuple): Unit = {
@@ -129,10 +139,17 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
   def getInSet: Set[Tuple] = inSet
 
   def getOutSet: Set[Tuple] = outSet
+
+  def addPortEdgeInfo(port : Port, edge : AwasEdge[FptcNode]) = {
+    portEdgeMap = portEdgeMap + ((port, edge))
+  }
+
+  def getPortEdgeInfo : IMap[Port, AwasEdge[FptcNode]] = this.portEdgeMap
+
 }
 
 object FptcNodeProperty {
   val COMP_NODE = "Component"
   val CONN_NODE = "Connection"
-  val ERROR_NODE = "Node type unknow"
+  val ERROR_NODE = "Node type unknown"
 }
