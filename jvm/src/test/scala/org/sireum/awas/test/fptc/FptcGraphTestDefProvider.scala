@@ -35,14 +35,14 @@ import org.sireum.util.jvm.FileUtil._
 final class FptcGraphTestDefProvider(tf: TestFramework)
 extends TestDefProvider {
 
-  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
-  val resultsDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/results/dot"
-  val expectedDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/expected/dot"
+  val testcaseDir = fileUri(this.getClass, s"../example")
+  val resultsDir = toFilePath(fileUri(this.getClass,s"../results/dot"))
+  val expectedDir = toFilePath(fileUri(this.getClass,s"../expected/dot"))
 
   val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
-    val files = listFiles(toUri(testcaseDir), "awas")
+    val files = listFiles(testcaseDir, "awas")
 
     val filesEqual = files.filter { p =>
       p.toLowerCase.contains("pcashutoff") ||

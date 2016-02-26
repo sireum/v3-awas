@@ -33,11 +33,10 @@ import org.sireum.util.jvm.FileUtil._
 
 final class PrettyPrinterTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-
-  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
-
+  val testDir = fileUri(this.getClass, s"../example")
   override def testDefs: ISeq[TestDef] = {
-    val files = listFiles(toUri(testcaseDir), "awas")
+    println()
+    val files = listFiles(testDir, "awas")
 
     //equals test by excluding some
     val filesEqual = files.filterNot { p =>

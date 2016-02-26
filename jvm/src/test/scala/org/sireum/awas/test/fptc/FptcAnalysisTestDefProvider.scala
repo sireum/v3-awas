@@ -36,9 +36,9 @@ import scalax.collection.mutable.Graph
 
 final class FptcAnalysisTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
-  val resultsDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/results/fptc"
-  val expectedDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/expected/fptc"
+  val testcaseDir = fileUri(this.getClass, s"../example")
+  val resultsDir = toFilePath(fileUri(this.getClass,s"../results/fptc"))
+  val expectedDir = toFilePath(fileUri(this.getClass,s"../expected/fptc"))
 
   val generateExpected = false
 
