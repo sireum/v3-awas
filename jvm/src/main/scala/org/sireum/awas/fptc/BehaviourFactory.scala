@@ -25,58 +25,25 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum
 import org.sireum.awas.ast._
-import org.sireum.util._
 
 object BehaviourFactory {
-  def apply(k: Tuple, v: Tuple): ((Tuple) => Option[Tuple]) = {
-    new ((Tuple) => Option[Tuple]) {
-      override def apply(input: Tuple): Option[Tuple] = {
-        val lhsTokens = k.tokens
-        val rhsTokens = v.tokens
-        val inTokens = input.tokens
-        val store = sireum.util.mmapEmpty[Variable, One]
-        if (inTokens.length != lhsTokens.length) {
-          return None
-        }
-        var flag = true
-        for (i <- lhsTokens.indices) {
-          if (!(flag && checker(lhsTokens(i), inTokens(i), store))) {
-            flag = false
-          }
-        }
-        if (flag) {
-          Some(varLessRhs(rhsTokens, store))
-        } else {
-          None
-        }
+  def apply(lhs: Tuple): ((Tuple) => Option[Tuple]) = {
+    (input: Tuple) => {
+      val inBehav = lhs.tokens.map { o =>
+        funSelect(o).curried(lhs.tokens.indexOf(o))
       }
+      if (inBehav.forall(b => b(input.tokens))) Some(lhs) else None
+    }
+  }
 
-      private def checker(lhs: One, in: One, store: MMap[Variable, One]): Boolean = {
-        lhs match {
-          case w: Wildcard => true
-          case f: Fault => f == in
-          case nf: NoFailure => nf == in
-          case v: Variable => {
-            store(v) = in
-            true
-          }
-          case fs : FaultSet => {
-            assert(false, "Fault set not allowed")
-            false
-          }
-          case _ => false
-        }
-      }
-
-      private def varLessRhs(tokens: Node.Seq[One], store: MMap[Variable, One]): Tuple = {
-        val newTokens: Node.Seq[One] = tokens.map {
-          case v: Variable => store(v)
-          case x: One => x
-        }
-        Tuple(newTokens)
-      }
+  def funSelect(in: One): ((Int, Node.Seq[One]) => Boolean) = {
+    in match {
+      case w: Wildcard => (_, _) => true
+      case f: Fault => (a: Int, b: Node.Seq[One]) => b(a) == f
+      case nf: NoFailure => (a: Int, b: Node.Seq[One]) => b(a) == nf
+      case v: Variable => (_, _) => true
+      case fs: FaultSet => (a: Int, b: Node.Seq[One]) => fs.value.contains(b(a))
     }
   }
 }

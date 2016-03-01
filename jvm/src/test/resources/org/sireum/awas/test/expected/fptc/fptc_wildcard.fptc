@@ -1,3 +1,6 @@
+fptc_wildcard.fptc
+++++++++++++++++
+
 A2B::Connection
 =================
 ##InSET##
@@ -13,6 +16,7 @@ A::Component
 =================
 ##InSET##
 *
+Fault.late
 ##OutSET##
 Fault.late
 Fault.value

@@ -25,7 +25,7 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.ast.{FaultSet, One, Tuple}
+import org.sireum.awas.ast._
 import org.sireum.awas.graph.AwasEdge
 import org.sireum.util._
 import scalax.collection.mutable.Graph
@@ -60,28 +60,106 @@ object FptcAnalysis {
 
   def computeInSet(g: FptcGraph[FptcNode], node: FptcNode): ISet[Tuple] = {
     val inedges = g.sortedInEdges(node)
-    val temp = inedges.map { e => e.fault }
-    val t = Tuple(temp)
-    val res = flatTuple(t) diff node.getInSet
-    res.foreach(node.addToInSet)
-    res
+    val temp = inedges.map { e => g.getFault(e)}
+    if(temp.flatten.length == inedges.length) {
+      val t = Tuple(temp.flatten)
+      val res = flatTuple(t) diff node.getInSet
+      res.foreach(node.addToInSet)
+      res
+    } else {
+      isetEmpty[Tuple]
+    }
   }
 
+//TODO: rewrite it, pick only the tuples that are not already in outset
   def computeOutSet(node: FptcNode, inTupSet: ISet[Tuple]): Option[Tuple] = {
-    val behaviour: IVector[(Tuple) => Option[Tuple]] = node.behaviour
-    var outSet = isetEmpty[Option[Tuple]]
+    val behaviour: IVector[(Tuple) => Option[Tuple]] = node.getTups
+    var outSet = imapEmpty[Tuple, Tuple]
+    if(inTupSet.isEmpty) {
+      return None
+    }
     inTupSet.foreach { in =>
-      outSet = outSet ++ behaviour.par.map(_ (in))
+       behaviour.flatMap(_ (in)).foreach{ ml =>
+         outSet = outSet+((ml, in))
+       }
     }
-    var out = outSet.flatten.flatMap(flatTuple)
-    if (out.nonEmpty) {
-      out = out diff node.getOutSet
+    val tups = outSet.keySet
+    if(tups.nonEmpty) {
+      val tup = getMostSpecific(tups)
+      if(tup.isDefined) {
+        val out = node.getBehaviourRhs(tup.get)
+        if(out.isDefined) {
+          val res = varLessRhs(outSet(tup.get), tup.get, out.get)
+          flatTuple(res).foreach(node.addToOutSet)
+          Some(res)
+        }
+        else
+          None
+      } else {
+        println("WARNING: Unable to get the most specific in node: "
+          +node.toString)
+        None
+      }
     } else {
-      out = inTupSet
+      println("WARNING: incoming fault: "+
+        inTupSet.foldLeft(""){(a,b) => PrettyPrinter.print(b)+" "}+
+        " lacks appropriate behaviour in node: "
+        +node.toString)
+      val out = inTupSet
+      out.foreach(node.addToOutSet)
+      setOfTupleToTuple(out)
     }
-    out.foreach(node.addToOutSet)
-    setOfTupleToTuple(out)
   }
+
+  def getMostSpecific(tups:ISet[Tuple]): Option[Tuple] = {
+    val head = tups.head
+    var res = isetEmpty[Tuple] + head
+    var gwt = weight(head)
+    tups.foreach{ t =>
+      if(weight(t) > gwt){
+        gwt = weight(t)
+        res = isetEmpty[Tuple] + t
+      } else if(weight(t) == gwt) {
+        res = res + t
+      }
+    }
+    if(res.size == 1) {
+      Some(res.head)
+    } else {
+      None
+    }
+  }
+
+  private def varLessRhs(in : Tuple, lhs : Tuple, rhs : Tuple): Tuple = {
+    var store = imapEmpty[Variable, One]
+    lhs.tokens.foreach {
+      case v: Variable =>
+      store = store + ((v, in.tokens(lhs.tokens.indexOf(v))))
+      case _ =>
+    }
+
+    val newTokens: Node.Seq[One] = rhs.tokens.map {
+      case v: Variable => store(v)
+      case x: One => x
+    }
+
+    Tuple(newTokens)
+  }
+
+  def weight(t: Tuple): Integer = {
+    var fs = 0
+    var vw = 0
+    var fnf = 0
+    t.tokens.foreach {
+      case v: Variable => vw = vw + 1
+      case w: Wildcard => vw = vw + 1
+      case f: Fault => fnf = fnf + 1
+      case nf: NoFailure => fnf = fnf + 1
+      case f: FaultSet => fs = fs + 1
+    }
+    (fs * 5) + (fnf * 10) + vw
+  }
+
 
   private def setOfTupleToTuple(tuples: Set[Tuple]): Option[Tuple] = {
     // we know tuples computed from out nodes share the same length of tokens

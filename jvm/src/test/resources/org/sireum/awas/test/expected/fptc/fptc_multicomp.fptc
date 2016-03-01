@@ -1,15 +1,14 @@
+fptc_multicomp.fptc
+++++++++++++++++
+
 A2C::Connection
 =================
 ##InSET##
 *
-Fault.early
-Fault.late
 Fault.omission
 Fault.value
 ##OutSET##
 *
-Fault.early
-Fault.late
 Fault.omission
 Fault.value
 
@@ -18,27 +17,16 @@ A2B::Connection
 ##InSET##
 *
 Fault.early
-Fault.late
-Fault.omission
-Fault.value
 ##OutSET##
 *
 Fault.early
-Fault.late
-Fault.omission
-Fault.value
 
 B::Component
 =================
 ##InSET##
 *
 Fault.early
-Fault.late
-Fault.omission
-Fault.value
 ##OutSET##
-Fault.early
-Fault.late
 Fault.omission
 Fault.value
 
@@ -48,25 +36,19 @@ C2A::Connection
 *
 Fault.early
 Fault.late
-Fault.value
 ##OutSET##
 *
 Fault.early
 Fault.late
-Fault.value
 
 B2A::Connection
 =================
 ##InSET##
 *
-Fault.early
-Fault.late
 Fault.omission
 Fault.value
 ##OutSET##
 *
-Fault.early
-Fault.late
 Fault.omission
 Fault.value
 
@@ -75,32 +57,18 @@ A::Component
 ##InSET##
 (*, *)
 (*, Fault.value)
-(Fault.early, Fault.late)
-(Fault.early, Fault.value)
-(Fault.late, Fault.late)
-(Fault.late, Fault.value)
-(Fault.value, Fault.early)
-(Fault.value, Fault.omission)
+(Fault.early, Fault.omission)
 ##OutSET##
-(*, Fault.value)
-(Fault.early, Fault.late)
+(Fault.early, Fault.omission)
 (Fault.early, Fault.value)
-(Fault.late, Fault.late)
-(Fault.late, Fault.omission)
-(Fault.omission, Fault.value)
-(Fault.value, Fault.early)
-(Fault.value, Fault.late)
 
 C::Component
 =================
 ##InSET##
 *
-Fault.early
-Fault.late
 Fault.omission
 Fault.value
 ##OutSET##
 Fault.early
 Fault.late
-Fault.value
 

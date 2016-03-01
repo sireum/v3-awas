@@ -1,48 +1,38 @@
+fptc_twoedges.fptc
+++++++++++++++++
+
 B2A2::Connection
 =================
 ##InSET##
 *
-Fault.value
 ##OutSET##
 *
-Fault.value
 
 B::Component
 =================
 ##InSET##
 (*, *)
-(*, Fault.early)
-(*, Fault.late)
+(*, Fault.value)
+(Fault.early, *)
 (Fault.early, Fault.value)
-(Fault.value, Fault.early)
-(Fault.value, Fault.late)
 ##OutSET##
-(*, *)
 (Fault.value, *)
-(Fault.value, Fault.value)
 
 A::Component
 =================
 ##InSET##
 (*, *)
-(*, Fault.value)
-(Fault.value, *)
 ##OutSET##
-(*, Fault.value)
 (Fault.early, Fault.value)
-(Fault.value, Fault.early)
-(Fault.value, Fault.late)
 
 A2B1::Connection
 =================
 ##InSET##
 *
 Fault.early
-Fault.value
 ##OutSET##
 *
 Fault.early
-Fault.value
 
 B2A1::Connection
 =================
@@ -57,12 +47,8 @@ A2B2::Connection
 =================
 ##InSET##
 *
-Fault.early
-Fault.late
 Fault.value
 ##OutSET##
 *
-Fault.early
-Fault.late
 Fault.value
 

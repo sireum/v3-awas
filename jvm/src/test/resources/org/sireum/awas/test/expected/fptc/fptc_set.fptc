@@ -1,17 +1,24 @@
+fptc_set.fptc
+++++++++++++++++
+
 A2B::Connection
 =================
 ##InSET##
 *
+Fault.late
 Fault.value
 ##OutSET##
 *
+Fault.late
 Fault.value
 
 ASET::Component
 =================
 ##InSET##
 *
+Fault.late
 ##OutSET##
+Fault.late
 Fault.value
 
 B::Component
@@ -28,6 +35,8 @@ B2A::Connection
 =================
 ##InSET##
 *
+Fault.late
 ##OutSET##
 *
+Fault.late
 

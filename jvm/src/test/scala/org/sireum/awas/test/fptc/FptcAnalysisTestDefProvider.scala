@@ -43,7 +43,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
   val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
-    val files = listFiles(toUri(testcaseDir), "awas")
+    val files = listFiles(testcaseDir, "awas")
 
     val filesEqual = files.filter { p =>
       p.toLowerCase.contains("fptc")
@@ -53,46 +53,50 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
       val inputFileName = filename(x)
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".fptc"
-      writeResult(outputFileName, graphAnalysis(readFile(x)._1, fileWithOutExt).get)
+      writeResult(outputFileName, graphAnalysis(readFile(x)._1, fileWithOutExt))
       val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
       EqualTest(filename(x), result,
         readFile(toUri(expectedDir + "/" + outputFileName))._1)
     }
   }
 
-  def writeResult(fileName: String, graph: FptcGraph[FptcNode]) = {
+  def writeResult(fileName: String, graph: Option[FptcGraph[FptcNode]]) = {
     val content = new StringBuilder()
-
-    val nodes = graph.nodes[FptcNode].map {
-      n: (Graph[FptcNode, AwasEdge]#NodeT) => n.value
-    }
-
-    nodes.foreach { n: FptcNode => {
-      content.append(n.toString)
-      content.append("\n")
-      content.append("=================")
-      content.append("\n")
-      content.append("##InSET##")
-      content.append("\n")
-      val inseq = n.getInSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
-      content.append(PrettyPrinter.print(inseq.head))
-      for (ist <- inseq.tail) {
-        content.append("\n")
-        content.append(PrettyPrinter.print(ist))
+    content.append(fileName+"\n++++++++++++++++\n\n")
+    if(graph.isDefined) {
+      val g = graph.get
+      val nodes = g.nodes[FptcNode].map {
+        n: (Graph[FptcNode, AwasEdge]#NodeT) => n.value
       }
-      content.append("\n")
-      content.append("##OutSET##")
-      content.append("\n")
-      val outseq = n.getOutSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
-      content.append(PrettyPrinter.print(outseq.head))
-      for (ist <- outseq.tail) {
+
+      nodes.foreach { n: FptcNode => {
+        content.append(n.toString)
         content.append("\n")
-        content.append(PrettyPrinter.print(ist))
+        content.append("=================")
+        content.append("\n")
+        content.append("##InSET##")
+        content.append("\n")
+        val inseq = n.getInSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
+        content.append(PrettyPrinter.print(inseq.head))
+        for (ist <- inseq.tail) {
+          content.append("\n")
+          content.append(PrettyPrinter.print(ist))
+        }
+        content.append("\n")
+        content.append("##OutSET##")
+        content.append("\n")
+        val outseq = n.getOutSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
+        content.append(PrettyPrinter.print(outseq.head))
+        for (ist <- outseq.tail) {
+          content.append("\n")
+          content.append(PrettyPrinter.print(ist))
+        }
+        content.append("\n")
+        content.append("\n")
       }
-      content.append("\n")
-      content.append("\n")
+      }
     }
-    }
+
     if (generateExpected) {
       val expPath = expectedDir + "/" + fileName
       writeFile(toUri(expPath), content.toString())

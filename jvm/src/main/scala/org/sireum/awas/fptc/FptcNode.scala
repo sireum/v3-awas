@@ -33,7 +33,8 @@ import org.sireum.util.IMap
 trait FptcNode {
   def getType : String
   def toString : String
-  def behaviour : IVector[((Tuple) => Option[Tuple])]
+  def getTups : IVector[((Tuple) => Option[Tuple])]
+  def getBehaviourRhs(lhs : Tuple) : Option[Tuple]
   def getCompInPorts: Node.Seq[Port]
   def getCompOutPorts: Node.Seq[Port]
   def addToInSet(in : Tuple): Unit
@@ -63,6 +64,10 @@ object FptcNode {
       node
     }
   }
+
+  def newPool(): Unit ={
+    nodepool = imapEmpty[Node,FptcNode]
+  }
 }
 
 final case class FN(node : Node, `type`: String) extends FptcNode {
@@ -76,10 +81,13 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
 
   private var inSet = isetEmpty[Tuple]
   private var outSet = isetEmpty[Tuple]
-
+  private var behaviour = imapEmpty[Tuple, Tuple]
+  private val selectTup = buildMatcher
   private var portEdgeMap = imapEmpty[Port, AwasEdge[FptcNode]]
 
-  def behaviour : IVector[((Tuple) => Option[Tuple])] = {
+  def getTups : IVector[((Tuple) => Option[Tuple])] = selectTup
+
+  private def buildMatcher: IVector[((Tuple) => Option[Tuple])] = {
 
     var result : IMap[Tuple, Tuple] = imapEmpty[Tuple, Tuple]
 
@@ -93,7 +101,13 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
       result = temp.get.expr
     }
 
-    result.par.map{case (k,v) => BehaviourFactory(k,v)}.toVector
+    behaviour = result
+
+    result.keySet.map{k => BehaviourFactory(k)}.toVector
+  }
+
+  def getBehaviourRhs(lhs : Tuple) : Option[Tuple] = {
+    behaviour.lift(lhs)
   }
 
   def getType = `type`

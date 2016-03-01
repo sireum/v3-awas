@@ -25,7 +25,8 @@
 
 package org.sireum.awas.graph
 
-import org.sireum.awas.ast.{NoFailure, One}
+import org.sireum.awas.ast.{Fault, FaultSet, NoFailure, One}
+import org.sireum.awas.fptc.FptcNode
 import org.sireum.util._
 
 import scalax.collection.mutable.Graph
@@ -70,7 +71,7 @@ trait AwasGraph[Node] {
 
   def addEdge (from : Node, to: Node) = {
     val nodes : Product2[Node, Node]= (from, to)
-    val edge = new AwasEdge[Node](nodes, NoFailure())
+    val edge = new AwasEdge[Node](nodes, Some(NoFailure()))
     graph.add(edge)
     edge
   }
@@ -95,21 +96,45 @@ trait AwasGraph[Node] {
 
 }
 
-class AwasEdge[Node](nodes : Product, var fault : One)
+class AwasEdge[Node](nodes: Product, var fault: Option[One])
   extends DiEdge[Node](nodes)
-  with EdgeCopy[AwasEdge]
-  with OuterEdge[Node, AwasEdge]{
+    with EdgeCopy[AwasEdge]
+    with OuterEdge[Node, AwasEdge] {
 
 
-//  var fault : One = NoFailure()
-//  def getFault:One = fault
-//
-  def setFault(f : One) = {
-    this.fault = f
+  //  var fault : One = NoFailure()
+  //  def getFault:One = fault
+  //
+  def setFault(f: One) = {
+    if (this.fault.isDefined) {
+      this.fault.get match {
+        case fs: FaultSet =>
+          val oneSet = fs.value + f
+          this.fault = Some(FaultSet(oneSet))
+        case tf: One =>
+          val oneSet = isetEmpty[One] + tf + f
+          this.fault = Some(FaultSet(oneSet))
+      }
+    } else {
+      this.fault = Some(f)
+    }
   }
 
+  override def toString() = {
+    nodes match {
+      case np : (Node, Node) => np._1.toString + " ~> " + np._2.toString + "<<"+this.fault+">>"
+    }
+  }
+
+//  def getFault(): Option[One] = {
+//    val temp = this.fault
+//    this.edge.fault = None
+////    println(toString())
+//    temp
+//  }
+
   override def copy[NodeNode](newNodes: Product) =
-     new AwasEdge[NodeNode](newNodes, fault)
+    new AwasEdge[NodeNode](newNodes, fault)
 
 
 }
@@ -117,14 +142,14 @@ class AwasEdge[Node](nodes : Product, var fault : One)
 object AwasEdge {
   val ~> = AwasEdge
 
-  def apply[Node](from: Node, to: Node, fault : One):AwasEdge[Node] = new AwasEdge[Node](NodeProduct(from, to), fault)
+  def apply[Node](from: Node, to: Node, fault : Option[One]):AwasEdge[Node] = new AwasEdge[Node](NodeProduct(from, to), fault)
 
 //  protected[Collection]
 //  def from [Node](nodes : Product) = new AwasEdge[Node](nodes)
 
 //  def apply[Node](nodes: Product2[Node, Node]):AwasEdge[Node] = new AwasEdge[Node](nodes)
 
-  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node, One)] = if (e eq null) None else Some((e.source, e.target, e.fault))
+  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node, Option[One])] = if (e eq null) None else Some((e.source, e.target, e.fault))
 
 
 }

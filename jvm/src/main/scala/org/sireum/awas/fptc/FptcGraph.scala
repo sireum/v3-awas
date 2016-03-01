@@ -36,6 +36,7 @@ trait FptcGraph[Node] extends AwasGraph[Node] {
   def toDot(name : String): String
   def sortedInEdges(node : FptcNode): Vector[Edge]
   def propagate(node: FptcNode, out: Tuple): List[FptcNode]
+  def getFault(e : AwasEdge[FptcNode]) : Option[One]
 }
 
 object FptcGraph {
@@ -45,6 +46,8 @@ object FptcGraph {
   def apply(m: Model): FptcGraph[FptcNode] = {
 
     val result = new Fg()
+
+    FptcNode.newPool
 
     var compMap = imapEmpty[Name, Node]
 
@@ -152,17 +155,19 @@ class Fg extends FptcGraph[FptcNode] {
     }
   }
 
-
+  def getFault(e : AwasEdge[FptcNode]) : Option[One] = {
+    val temp = e.fault
+    this.graph.get(e).fault = None
+    temp
+  }
 
   def propagate(node: FptcNode, out: Tuple): List[FptcNode] = {
     val edgeseq = sortedOutEdges(node)
     var result = ilistEmpty[FptcNode]
     if(edgeseq.size == out.tokens.length) {
       for(i <- edgeseq.indices) {
-        if(edgeseq(i).fault != out.tokens(i)) {
           this.graph.get(edgeseq(i)).setFault(out.tokens(i))
           result= result :+ edgeseq(i)._2
-        }
       }
     }
     result
