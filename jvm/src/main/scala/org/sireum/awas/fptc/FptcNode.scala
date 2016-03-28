@@ -33,16 +33,16 @@ import org.sireum.util.IMap
 trait FptcNode {
   def getType : String
   def toString : String
-  def getTups : IVector[((Tuple) => Option[Tuple])]
+  def getTups : IVector[((IVector[Option[Fault]]) => Option[Tuple])]
   def getBehaviourRhs(lhs : Tuple) : Option[Tuple]
   def getCompInPorts: Node.Seq[Port]
   def getCompOutPorts: Node.Seq[Port]
-  def addToInSet(in : Tuple): Unit
-  def inSetContains(in : Tuple) : Boolean
-  def addToOutSet(out : Tuple): Unit
-  def outSetContains(out : Tuple): Boolean
-  def getInSet: Set[Tuple]
-  def getOutSet: Set[Tuple]
+  def addToInSet(in : IVector[Option[Fault]]): Unit
+  def inSetContains(in : IVector[Option[Fault]]) : Boolean
+  def addToOutSet(out : IVector[Option[Fault]]): Unit
+  def outSetContains(out : IVector[Option[Fault]]): Boolean
+  def getInSet: Set[IVector[Option[Fault]]]
+  def getOutSet: Set[IVector[Option[Fault]]]
   def addPortEdgeInfo(port : Port, edge : AwasEdge[FptcNode])
   def getPortEdgeInfo : IMap[Port, AwasEdge[FptcNode]]
 }
@@ -71,7 +71,8 @@ object FptcNode {
 }
 
 final case class FN(node : Node, `type`: String) extends FptcNode {
-   override def toString : String  = {
+
+  override def toString : String  = {
     node match {
       case n : ComponentDecl => PrettyPrinter.print(n.compName) +"::"+ `type`
       case n : ConnectionDecl => PrettyPrinter.print(n.connName) +"::"+ `type`
@@ -79,15 +80,15 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
     }
   }
 
-  private var inSet = isetEmpty[Tuple]
-  private var outSet = isetEmpty[Tuple]
+  private var inSet = isetEmpty[IVector[Option[Fault]]]
+  private var outSet = isetEmpty[IVector[Option[Fault]]]
   private var behaviour = imapEmpty[Tuple, Tuple]
-  private val selectTup = buildMatcher
+  private val selectTup = buildMatcher()
   private var portEdgeMap = imapEmpty[Port, AwasEdge[FptcNode]]
 
-  def getTups : IVector[((Tuple) => Option[Tuple])] = selectTup
+  def getTups : IVector[((IVector[Option[Fault]]) => Option[Tuple])] = selectTup
 
-  private def buildMatcher: IVector[((Tuple) => Option[Tuple])] = {
+  private def buildMatcher(): IVector[((IVector[Option[Fault]]) => Option[Tuple])] = {
 
     var result : IMap[Tuple, Tuple] = imapEmpty[Tuple, Tuple]
 
@@ -134,25 +135,25 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
     node.asInstanceOf[ConnectionDecl].fromPort
   }
 
-  def addToInSet(in : Tuple): Unit = {
+  def addToInSet(in : IVector[Option[Fault]]): Unit = {
     inSet = inSet + in
   }
 
-  def inSetContains(in : Tuple) : Boolean = {
+  def inSetContains(in : IVector[Option[Fault]]) : Boolean = {
     inSet.contains(in)
   }
 
-  def addToOutSet(out : Tuple): Unit = {
+  def addToOutSet(out : IVector[Option[Fault]]): Unit = {
     outSet = outSet + out
   }
 
-  def outSetContains(out : Tuple): Boolean = {
+  def outSetContains(out : IVector[Option[Fault]]): Boolean = {
     outSet.contains(out)
   }
 
-  def getInSet: Set[Tuple] = inSet
+  def getInSet: Set[IVector[Option[Fault]]] = inSet
 
-  def getOutSet: Set[Tuple] = outSet
+  def getOutSet: Set[IVector[Option[Fault]]] = outSet
 
   def addPortEdgeInfo(port : Port, edge : AwasEdge[FptcNode]) = {
     portEdgeMap = portEdgeMap + ((port, edge))

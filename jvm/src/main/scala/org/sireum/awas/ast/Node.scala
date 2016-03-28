@@ -125,7 +125,7 @@ final case class Variable(id : Id) extends One
 
 final case class Fault(enum : Name, id : Id) extends One
 
-final case class FaultSet(value : ISet[One]) extends One
+final case class FaultSet(value : ISet[Fault]) extends One
 
 //-----------------------Init---------------------------//
 sealed trait Init extends Node

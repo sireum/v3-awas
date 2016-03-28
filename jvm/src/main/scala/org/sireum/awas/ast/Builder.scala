@@ -65,7 +65,9 @@ final class Builder private() {
     ComponentDecl(build(ctx.name()),
       ctx.port().map(build),
       ctx.flow().map(build),
-      if(ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
+      if(ctx.behaviour() != null) Some(build(ctx.behaviour())) else {
+        None
+      },
       ctx.property().map(build)
     ) at ctx
   }
@@ -120,9 +122,9 @@ final class Builder private() {
   def arbitraryToken(n: Token): Option[Id] = {
     n match {
       case null => None
-      case n => n.getText match {
+      case no => no.getText match {
         case "_" => None
-        case _ => Some(buildId(n))
+        case _ => Some(buildId(no))
       }
     }
   }
@@ -149,13 +151,17 @@ final class Builder private() {
       case ctx : NoFailureContext => NoFailure()
       case ctx : WildCardContext => Wildcard()
       case ctx : VariableContext => Variable(buildId(ctx.ID()))
-      case ctx : FaultRefContext => Fault(build(ctx.name()), buildId(ctx.ID()))
-      case ctx : FaultSetContext => FaultSet(ctx.one().map(build).toSet[One])
+      case ctx : FaultRefContext => build(ctx.fault())
+      case ctx : FaultSetContext => FaultSet(ctx.fault().map(build).toSet)
     }
   }
 
+  def build(ctx: FaultContext): Fault = {
+    Fault(build(ctx.name()), buildId(ctx.ID()))
+  }
+
   def build(ctx: NameContext): Name = {
-    Name(ctx.ID().map(toToken _ andThen buildId _)) at ctx
+    Name(ctx.ID().map(toToken _ andThen buildId)) at ctx
   }
 
   def buildId(t: Token): Id = {

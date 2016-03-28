@@ -1,0 +1,73 @@
+types
+  enum Error {TooLong, TooShort, Erratic, Early, Late, TooMuch, TooLittle}
+
+components
+  AppLogic
+    ports
+      in RespRate
+      in EtCO2
+      in PulseRate
+      in SpO2
+      out CommandPump
+
+  PcaPump
+    ports
+      in AppCommand
+      out Drug
+    behaviour
+      {AppCommand.Error:TooLong, AppCommand.Error:Erratic, AppCommand.Error:Early,
+                       AppCommand.Error:Late} -> Drug.Error:TooMuch
+
+      AppCommand.Error:TooMuch -> * //Command from App cannot be too much
+                                    //(Digital signal cannot be analog quantified)
+
+      * -> * //explicitly informing no-failure "*" is sink, to fit the completeness check
+             //Just Documenting it here to inform this case is a default case and unnecessary.
+             //Therefore the tool initializes  no-failure on all input produces no-failure on all outputs.
+  Patient
+    ports
+      in Dosage
+      out HbO2
+      out ExhaleAir
+   behaviour
+      Dosage.Error:TooMuch -> (HbO2.Error:TooLittle, {ExhaleAir.Error:TooLate, ExhaleAir.Error:TooMuch})
+      Dosage.Error:TooLittle -> (_, ExhaleAir.Error:TooMuch)
+      _ -> (HbO2.Error, ExhaleAir.Error) //Other factors such as patient medical condition may cause
+                                         //Error, this is not a concern of Sam's process
+
+  PulseOx
+    ports
+      in Pulse
+      out SpO2
+      out PulseRate
+    behaviour
+
+
+  Capnograph
+    ports
+      in ExhaledCO2
+      out EtCO2
+      out RespRate
+
+Connections
+  App_to_Pump: AppLogic.CommandPump -> PcaPump.AppCommand
+  behaviour
+    * -> Error // Ok now I agree, we need some notation to say that, there is a possibility
+               // of error but we don't know what it is. Due to deterioration the connecting
+               // cable may produce error
+    AnythingElse -> AnythingElse //Variable which propagates, we need set notation to say
+                                 //All failures except no-failure for the variable "AnythingElse"
+
+  IVLine: PcaPump.Drug -> Patient.Dosage
+
+  RefractedLight: Patient.HbO2 -> PulseOx.Pulse
+
+  Breath: Patient.ExhaleAir -> Capnograph.ExhaledCO2
+
+  SpO2_to_App: PulseOx.SpO2 -> AppLogic.SpO2
+
+  PulseRate_to_App: PulseOx.PulseRate -> AppLogig.PulseRate
+
+  EtCO2_to_App: Capnograph.EtCO2 -> AppLogic.EtCO2
+
+  RespRate_to_App: Capnograph.RespRate -> AppLogic.RespRate

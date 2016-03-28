@@ -25,8 +25,8 @@
 
 package org.sireum.awas.test.fptc
 
-import org.sireum.awas.ast.{PrettyPrinter, Tuple, Builder}
-import org.sireum.awas.fptc.{FptcNode, FptcAnalysis, FptcGraph}
+import org.sireum.awas.ast.{PrettyPrinter, Fault, Builder}
+import org.sireum.awas.fptc.{FptcUtilities, FptcNode, FptcAnalysis, FptcGraph}
 import org.sireum.awas.graph.AwasEdge
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util._
@@ -46,7 +46,8 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
     val files = listFiles(testcaseDir, "awas")
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("fptc")
+      p.toLowerCase.contains("fptc") &&
+      ! p.toLowerCase.contains("pcashutoff")
     }
 
     filesEqual.toVector.map { x =>
@@ -76,20 +77,20 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
         content.append("\n")
         content.append("##InSET##")
         content.append("\n")
-        val inseq = n.getInSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
-        content.append(PrettyPrinter.print(inseq.head))
+        val inseq = n.getInSet.toSeq.sortBy {t: IVector[Option[Fault]] => FptcUtilities.toString(t)}
+        content.append(FptcUtilities.toString(inseq.head))
         for (ist <- inseq.tail) {
           content.append("\n")
-          content.append(PrettyPrinter.print(ist))
+          content.append(FptcUtilities.toString(ist))
         }
         content.append("\n")
         content.append("##OutSET##")
         content.append("\n")
-        val outseq = n.getOutSet.toSeq.sortBy { t: Tuple => PrettyPrinter.print(t) }
-        content.append(PrettyPrinter.print(outseq.head))
+        val outseq = n.getOutSet.toSeq.sortBy { t:IVector[Option[Fault]] => FptcUtilities.toString(t)}
+        content.append(FptcUtilities.toString(outseq.head))
         for (ist <- outseq.tail) {
           content.append("\n")
-          content.append(PrettyPrinter.print(ist))
+          content.append(FptcUtilities.toString(ist))
         }
         content.append("\n")
         content.append("\n")

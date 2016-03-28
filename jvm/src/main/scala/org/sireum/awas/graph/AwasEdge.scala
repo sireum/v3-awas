@@ -23,33 +23,40 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.graph
 
-import org.sireum.awas.ast._
+import org.sireum.awas.ast.Fault
 import org.sireum.util._
 
-object BehaviourFactory {
-  def apply(lhs: Tuple): ((IVector[Option[Fault]]) => Option[Tuple]) = {
-    (input: IVector[Option[Fault]]) => {
-      val inBehave = lhs.tokens.map { o =>
-        funSelect(o).curried(lhs.tokens.indexOf(o))
-      }
-      if (inBehave.forall(b => b(input))) Some(lhs) else None
+import scalax.collection.GraphEdge.{NodeProduct, EdgeCopy, DiEdge}
+import scalax.collection.GraphPredef.OuterEdge
+
+final class AwasEdge[Node](override val nodes: Product, var fault: ISet[Fault])
+  extends DiEdge[Node](nodes)
+    with EdgeCopy[AwasEdge]
+    with OuterEdge[Node, AwasEdge] {
+
+  def setFault(f: Fault) = {
+    fault = fault + f
+  }
+
+  override def toString() = {
+    nodes match {
+      case np : (Node, Node) => np._1.toString + " ~> " + np._2.toString + "<<"+this.fault+">>"
     }
   }
 
-  def funSelect(in: One): ((Int, IVector[Option[Fault]]) => Boolean) = {
-    in match {
-      case w: Wildcard => (_, _) =>
-        true
-      case f: Fault => (a: Int, b : IVector[Option[Fault]]) =>
-        b(a).isDefined && b(a).get == f
-      case nf: NoFailure => (a: Int, b : IVector[Option[Fault]]) =>
-        b(a).isEmpty
-      case v: Variable => (_, _) =>
-        true
-      case fs: FaultSet => (a: Int, b: IVector[Option[Fault]]) =>
-        b(a).isDefined && fs.value.contains(b(a).get)
-    }
-  }
+  override def copy[NodeNode](newNodes: Product) =
+    new AwasEdge[NodeNode](newNodes, fault)
+
+}
+
+object AwasEdge {
+  val ~> = AwasEdge
+
+  def apply[Node](from: Node, to: Node, fault : ISet[Fault]):AwasEdge[Node] =
+    new AwasEdge[Node](NodeProduct(from, to), fault)
+
+  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node, ISet[Fault])] =
+    if (e eq null) None else Some((e.source, e.target, e.fault))
 }

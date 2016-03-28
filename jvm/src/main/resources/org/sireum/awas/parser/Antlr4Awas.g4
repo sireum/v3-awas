@@ -105,8 +105,12 @@ one
   : '*'                                              #NoFailure
   | '_'                                              #WildCard
   | ID                                               #variable
-  | name '.' ID                                      #FaultRef
-  | '{' one (',' one)+ '}'                           #FaultSet
+  | fault                                            #FaultRef
+  | '{' fault (',' fault)+ '}'                       #FaultSet
+  ;
+
+fault
+  : name '.' ID
   ;
 
 type

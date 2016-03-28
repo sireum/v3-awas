@@ -45,10 +45,12 @@ object PrettyPrinter {
       case t : Tuple =>
         new PrettyPrinter(sb).print(t)
         false
+      case o : One =>
+        new PrettyPrinter(sb).print(o)
+        false
     })(n)
     sb.toString().trim
   }
-
 
 }
 

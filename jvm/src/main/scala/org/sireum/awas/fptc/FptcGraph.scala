@@ -35,8 +35,8 @@ import scalax.collection.io.dot._
 trait FptcGraph[Node] extends AwasGraph[Node] {
   def toDot(name : String): String
   def sortedInEdges(node : FptcNode): Vector[Edge]
-  def propagate(node: FptcNode, out: Tuple): List[FptcNode]
-  def getFault(e : AwasEdge[FptcNode]) : Option[One]
+  def propagate(node: FptcNode, out: IVector[Option[Fault]]): ISet[FptcNode]
+  def getFault(e : AwasEdge[FptcNode]) : ISet[Fault]
 }
 
 object FptcGraph {
@@ -47,7 +47,7 @@ object FptcGraph {
 
     val result = new Fg()
 
-    FptcNode.newPool
+    FptcNode.newPool()
 
     var compMap = imapEmpty[Name, Node]
 
@@ -93,6 +93,53 @@ object FptcGraph {
 class Fg extends FptcGraph[FptcNode] {
   val graph = mutable.Graph[FptcNode, AwasEdge]()
 
+//  private def getGraphEdge(e : AwasEdge[FptcNode]) = {
+//    this.graph.get(e).toOuter
+//  }
+
+  def sortedInEdges(node : FptcNode): Vector[Edge] = {
+    if(node.getType == FptcNodeProperty.COMP_NODE)
+      node.getCompInPorts.map{e =>
+        getOuterEdge(node.getPortEdgeInfo(e).edge)
+      }
+    else {
+      assert(this.inEdges(node).size == 1)
+      inEdges(node).toVector
+    }
+  }
+
+  def sortedOutEdges(node : FptcNode): Vector[Edge] = {
+    if(node.getType == FptcNodeProperty.COMP_NODE)
+      node.getCompOutPorts.map{e =>
+        getOuterEdge(node.getPortEdgeInfo(e).edge)
+      }
+    else {
+      assert(this.outEdges(node).size == 1)
+      outEdges(node).toVector
+    }
+  }
+
+  def getFault(e : AwasEdge[FptcNode]) : ISet[Fault] = {
+    val temp = this.graph.get(e).fault
+    this.graph.get(e).fault = isetEmpty[Fault]
+    temp
+  }
+
+  def propagate(node: FptcNode, out: IVector[Option[Fault]]): ISet[FptcNode] = {
+    val edgeseq = sortedOutEdges(node)
+    var result = isetEmpty[FptcNode]
+    if(edgeseq.size == out.length) {
+      for(i <- edgeseq.indices) {
+        if(out(i).isDefined) {
+          this.graph.get(edgeseq(i)).setFault(out(i).get)
+          result = result + edgeseq(i)._2
+        }
+      }
+    }
+    result
+  }
+
+  //TODO: Someday move this into more abstract class of Node
   def toDot(name : String): String = {
     val dotExporter = new Export(graph)
 
@@ -127,49 +174,5 @@ class Fg extends FptcGraph[FptcNode] {
       s"${lines.head}${mid.sorted.mkString}${lines.last}"
     }
     dotSorted
-  }
-
-  private def getGraphEdge(e : AwasEdge[FptcNode]) = {
-    this.graph.get(e).toOuter
-  }
-
-  def sortedInEdges(node : FptcNode): Vector[Edge] = {
-    if(node.getType == FptcNodeProperty.COMP_NODE)
-      node.getCompInPorts.map{e =>
-        getGraphEdge(node.getPortEdgeInfo(e).edge)
-      }
-    else {
-      assert(this.inEdges(node).size == 1)
-      inEdges(node).toVector
-    }
-  }
-
-  def sortedOutEdges(node : FptcNode): Vector[Edge] = {
-    if(node.getType == FptcNodeProperty.COMP_NODE)
-      node.getCompOutPorts.map{e =>
-        getGraphEdge(node.getPortEdgeInfo(e).edge)
-      }
-    else {
-      assert(this.outEdges(node).size == 1)
-      outEdges(node).toVector
-    }
-  }
-
-  def getFault(e : AwasEdge[FptcNode]) : Option[One] = {
-    val temp = e.fault
-    this.graph.get(e).fault = None
-    temp
-  }
-
-  def propagate(node: FptcNode, out: Tuple): List[FptcNode] = {
-    val edgeseq = sortedOutEdges(node)
-    var result = ilistEmpty[FptcNode]
-    if(edgeseq.size == out.tokens.length) {
-      for(i <- edgeseq.indices) {
-          this.graph.get(edgeseq(i)).setFault(out.tokens(i))
-          result= result :+ edgeseq(i)._2
-      }
-    }
-    result
   }
 }
