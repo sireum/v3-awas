@@ -111,9 +111,9 @@ final case class Name(value: Node.Seq[Id]) extends Node
 
 //-----------------------Behaviour---------------------------//
 
-final case class Behaviour(expr : IMap[Tuple, Tuple]) extends Node
+final case class Behaviour(expr : ILinkedMap[Tuple, Tuple]) extends Node
 
-final case class Tuple(tokens : Node.Seq[One]) extends Node
+final case class Tuple(tokens : ILinkedMap[Id, One]) extends Node
 
 sealed trait One extends Node
 

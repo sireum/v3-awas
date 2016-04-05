@@ -26,6 +26,7 @@
 package org.sireum.awas.fptc
 
 import org.sireum.awas.ast.Model
+import org.sireum.awas.fptc.FptcUtilities.FaultToken
 import org.sireum.awas.graph.{AwasEdge, AwasGraph}
 import org.sireum.awas.ast._
 import org.sireum.util._
@@ -36,7 +37,7 @@ trait FptcGraph[Node] extends AwasGraph[Node] {
   def toDot(name : String): String
   def sortedInEdges(node : FptcNode): Vector[Edge]
   def propagate(node: FptcNode, out: IVector[Option[Fault]]): ISet[FptcNode]
-  def getFault(e : AwasEdge[FptcNode]) : ISet[Fault]
+  def getFault(e : AwasEdge[FptcNode]) : ISet[FaultToken]
 }
 
 object FptcGraph {
@@ -119,10 +120,8 @@ class Fg extends FptcGraph[FptcNode] {
     }
   }
 
-  def getFault(e : AwasEdge[FptcNode]) : ISet[Fault] = {
-    val temp = this.graph.get(e).fault
-    this.graph.get(e).fault = isetEmpty[Fault]
-    temp
+  def getFault(e : AwasEdge[FptcNode]) : ISet[FaultToken] = {
+    this.graph.get(e).fault
   }
 
   def propagate(node: FptcNode, out: IVector[Option[Fault]]): ISet[FptcNode] = {

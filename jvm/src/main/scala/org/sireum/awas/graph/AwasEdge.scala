@@ -25,18 +25,18 @@
 
 package org.sireum.awas.graph
 
-import org.sireum.awas.ast.Fault
+import org.sireum.awas.fptc.FptcUtilities.FaultToken
 import org.sireum.util._
 
 import scalax.collection.GraphEdge.{NodeProduct, EdgeCopy, DiEdge}
 import scalax.collection.GraphPredef.OuterEdge
 
-final class AwasEdge[Node](override val nodes: Product, var fault: ISet[Fault])
+final class AwasEdge[Node](override val nodes: Product, var fault: ISet[FaultToken])
   extends DiEdge[Node](nodes)
     with EdgeCopy[AwasEdge]
     with OuterEdge[Node, AwasEdge] {
 
-  def setFault(f: Fault) = {
+  def setFault(f: FaultToken) = {
     fault = fault + f
   }
 
@@ -54,9 +54,9 @@ final class AwasEdge[Node](override val nodes: Product, var fault: ISet[Fault])
 object AwasEdge {
   val ~> = AwasEdge
 
-  def apply[Node](from: Node, to: Node, fault : ISet[Fault]):AwasEdge[Node] =
+  def apply[Node](from: Node, to: Node, fault : ISet[FaultToken]):AwasEdge[Node] =
     new AwasEdge[Node](NodeProduct(from, to), fault)
 
-  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node, ISet[Fault])] =
+  def unapply[Node](e: AwasEdge[Node]):Option[(Node, Node, ISet[FaultToken])] =
     if (e eq null) None else Some((e.source, e.target, e.fault))
 }

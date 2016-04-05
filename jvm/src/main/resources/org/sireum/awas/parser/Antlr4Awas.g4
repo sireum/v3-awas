@@ -97,8 +97,12 @@ expression
   ;
 
 tuple
-  : one
-  | '(' one (',' one)+ ')'
+  : faultPort
+  | '(' faultPort (',' faultPort)+ ')'
+  ;
+
+faultPort
+  : ID '.' one
   ;
 
 one

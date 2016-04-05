@@ -1,5 +1,5 @@
 types
-  enum Error {TooLong, TooShort, Erratic, Early, Late, TooMuch, TooLittle}
+  enum Error {High, Low, Erratic, Halted, Early, Late}
 
 components
   AppLogic
@@ -9,31 +9,41 @@ components
       in PulseRate
       in SpO2
       out CommandPump
+//--------------------------------------------------------------------------------//
 
   PcaPump
     ports
       in AppCommand
       out Drug
     behaviour
-      {AppCommand.Error:TooLong, AppCommand.Error:Erratic, AppCommand.Error:Early,
-                       AppCommand.Error:Late} -> Drug.Error:TooMuch
+      {AppCommand.Error:High, AppCommand.Error:Erratic, AppCommand.Error:Early,
+                       AppCommand.Error:Late} -> Drug.Error:High
 
-      AppCommand.Error:TooMuch -> * //Command from App cannot be too much
-                                    //(Digital signal cannot be analog quantified)
+      AppCommand.Error:Low -> {Drug.Error:Late, Drug.Error:Low}
+      //When command is not well formed, pump action is not taken
 
-      * -> * //explicitly informing no-failure "*" is sink, to fit the completeness check
-             //Just Documenting it here to inform this case is a default case and unnecessary.
-             //Therefore the tool initializes  no-failure on all input produces no-failure on all outputs.
+      AppCommand.Error:Halted -> {Drug.Error:Halted}
+
+    property
+      AppCommand : Set[Error] = {High, Erratic, Early, Late}
+      Drug : Set[Error] = {High, Low, Halted}
+//--------------------------------------------------------------------------------//
+
   Patient
     ports
       in Dosage
       out HbO2
       out ExhaleAir
    behaviour
-      Dosage.Error:TooMuch -> (HbO2.Error:TooLittle, {ExhaleAir.Error:TooLate, ExhaleAir.Error:TooMuch})
-      Dosage.Error:TooLittle -> (_, ExhaleAir.Error:TooMuch)
-      _ -> (HbO2.Error, ExhaleAir.Error) //Other factors such as patient medical condition may cause
-                                         //Error, this is not a concern of Sam's process
+      {Dosage.Error:High, Dosage.Error:Early} -> (HbO2.Error:Low, {ExhaleAir.Error:Low, ExhaleAir.Error:Erratic})
+      {Dosage.Error:Low, Dosage.Error:Late} -> ExhaleAir.Error:Erratic
+      {Dosage.Error:Halted, Dosage.Error:Erratic} -> ({HbO2.Erratic, HbO2.Low}, ExhaleAir.Erratic)
+
+   property
+      Dosage : Set[Error] = {High, Low, Halted, Erratic, Early, Late}
+      HbO2 : Set[Error] = {Low, Erratic}
+      ExhaledAir : Set[Error] = {Erratic, Low}
+//--------------------------------------------------------------------------------//
 
   PulseOx
     ports
@@ -41,22 +51,34 @@ components
       out SpO2
       out PulseRate
     behaviour
+      Pulse.Error:Low -> (SpO2.Error:Low, PulseRate.Error:Low)
+      {Pulse.Error:Halted, Pulse.Error:Erratic}-> (SpO2.Error:Low, {PulseRate.Error:Halted, PulseRate.Error:Erratic})
+      {Pulse.Error:High, Pulse.Error:Early} -> PulseRate.Error:High
+      Pulse.Error:Late -> (SpO2.Error:Low, PulseRate.Error:Low)
 
-
+    property
+      Pulse : Set[Error] = {Low, High, Halted, Erratic, Late, Early}
+      SpO2 : Set[Error] = {Low}
+      PulseRate : Set[]Error = {Low, Halted, Erratic, High, Late}
+//--------------------------------------------------------------------------------//
   Capnograph
     ports
       in ExhaledCO2
       out EtCO2
       out RespRate
+    behaviour
+      ExhaledCO2.Error:High -> (EtCO2.Error:High, RespRate.Error:High)
+      {ExhaledCO2.Error:Halted, ExhaledCO2.Error:Erratic} ->
+                                (EtCO2.Error:Low, {RespRate.Error:Halted, RespRate.Error:Erratic})
+      {ExhaledCO2.Error:High, ExhaledCO2.Error:Early} -> (EtCO2.Error:High, RespRate.Error:High)
+      ExhaledCO2.Error:Late -> (EtCO2.Error:Low, RespRate.Error:Low)
+    Property
+
 
 Connections
   App_to_Pump: AppLogic.CommandPump -> PcaPump.AppCommand
   behaviour
-    * -> Error // Ok now I agree, we need some notation to say that, there is a possibility
-               // of error but we don't know what it is. Due to deterioration the connecting
-               // cable may produce error
-    AnythingElse -> AnythingElse //Variable which propagates, we need set notation to say
-                                 //All failures except no-failure for the variable "AnythingElse"
+
 
   IVLine: PcaPump.Drug -> Patient.Dosage
 

@@ -26,6 +26,7 @@
 package org.sireum.awas.fptc
 
 import org.sireum.awas.ast._
+import org.sireum.awas.fptc.FptcUtilities.NTup
 import org.sireum.awas.graph.AwasEdge
 import org.sireum.util._
 import org.sireum.util.IMap
@@ -33,7 +34,7 @@ import org.sireum.util.IMap
 trait FptcNode {
   def getType : String
   def toString : String
-  def getTups : IVector[((IVector[Option[Fault]]) => Option[Tuple])]
+  def getTups : IVector[((NTup) => Option[Tuple])]
   def getBehaviourRhs(lhs : Tuple) : Option[Tuple]
   def getCompInPorts: Node.Seq[Port]
   def getCompOutPorts: Node.Seq[Port]
@@ -86,9 +87,9 @@ final case class FN(node : Node, `type`: String) extends FptcNode {
   private val selectTup = buildMatcher()
   private var portEdgeMap = imapEmpty[Port, AwasEdge[FptcNode]]
 
-  def getTups : IVector[((IVector[Option[Fault]]) => Option[Tuple])] = selectTup
+  def getTups : IVector[((NTup) => Option[Tuple])] = selectTup
 
-  private def buildMatcher(): IVector[((IVector[Option[Fault]]) => Option[Tuple])] = {
+  private def buildMatcher(): IVector[((NTup) => Option[Tuple])] = {
 
     var result : IMap[Tuple, Tuple] = imapEmpty[Tuple, Tuple]
 

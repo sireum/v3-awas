@@ -26,7 +26,7 @@
 package org.sireum.awas.fptc
 
 import org.sireum.awas.ast._
-import org.sireum.awas.fptc.FptcUtilities.NTup
+import org.sireum.awas.fptc.FptcUtilities.{FaultToken, NTup}
 import org.sireum.awas.graph.AwasEdge
 import org.sireum.util._
 import scala.collection._
@@ -45,7 +45,7 @@ object FptcAnalysis {
 
     while (worklist.nonEmpty) {
       val node = worklist.head
-      val t: ISet[IVector[Option[Fault]]] = computeInSet(g, node)
+      val t: ISet[NTup] = computeInSet(g, node)
       if (t.nonEmpty) {
         val outTuple = computeOutSet(node, t)
         var res = isetEmpty[FptcNode]
@@ -72,11 +72,11 @@ object FptcAnalysis {
     res
   }
 
-  def computeOutSet(node: FptcNode, inTupSet: ISet[IVector[Option[Fault]]]): ISet[IVector[Option[Fault]]] = {
-    val behaviour: IVector[(IVector[Option[Fault]]) => Option[Tuple]] = node.getTups
+  def computeOutSet(node: FptcNode, inTupSet: ISet[NTup]) : ISet[NTup] = {
+    val behaviour: IVector[(NTup) => Option[Tuple]] = node.getTups
     //    var outSet = imapEmpty[Tuple, Tuple]
-    if (inTupSet.isEmpty) return isetEmpty[IVector[Option[Fault]]]
-    var result = isetEmpty[IVector[Option[Fault]]]
+    if (inTupSet.isEmpty) return isetEmpty[NTup]
+    var result = isetEmpty[NTup]
     inTupSet.foreach { in =>
       val matchedLhsSet = behaviour.flatMap(_ (in)).toSet
       if (matchedLhsSet.isEmpty) {

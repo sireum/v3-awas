@@ -26,11 +26,11 @@
 package org.sireum.awas.fptc
 
 import org.sireum.awas.ast._
-import org.sireum.util._
+import org.sireum.awas.fptc.FptcUtilities._
 
 object BehaviourFactory {
-  def apply(lhs: Tuple): ((IVector[Option[Fault]]) => Option[Tuple]) = {
-    (input: IVector[Option[Fault]]) => {
+  def apply(lhs: Tuple): ((NTup) => Option[Tuple]) = {
+    (input: NTup) => {
       val inBehave = lhs.tokens.map { o =>
         funSelect(o).curried(lhs.tokens.indexOf(o))
       }
@@ -38,18 +38,16 @@ object BehaviourFactory {
     }
   }
 
-  def funSelect(in: One): ((Int, IVector[Option[Fault]]) => Boolean) = {
+  def funSelect(in: One): ((Int, NTup) => Boolean) = {
     in match {
-      case w: Wildcard => (_, _) =>
-        true
-      case f: Fault => (a: Int, b : IVector[Option[Fault]]) =>
-        b(a).isDefined && b(a).get == f
-      case nf: NoFailure => (a: Int, b : IVector[Option[Fault]]) =>
-        b(a).isEmpty
-      case v: Variable => (_, _) =>
-        true
-      case fs: FaultSet => (a: Int, b: IVector[Option[Fault]]) =>
-        b(a).isDefined && fs.value.contains(b(a).get)
+      case w: Wildcard => (_, _) => true
+      case f: Fault => (a: Int, b : NTup) => b(a) == f
+      case nf: NoFailure => (a: Int, b : NTup) => b(a) == nf
+      case v: Variable => (_, _) => true
+      case fs: FaultSet => (a: Int, b: NTup) => {
+        val fault = getFault(b(a))
+        if(fault.isDefined) fs.value.contains(fault.get) else false
+      }
     }
   }
 }

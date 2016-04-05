@@ -36,8 +36,8 @@ object FptcUtilities {
   type |∨|[T, U] = { type λ[X] = ¬¬[X] <:< (T ∨ U) }
   type FaultToken = Fault |∨| NoFailure
 
-  type Tup = IVector[ISet[Fault]]
-  type NTup = IVector[Option[Fault]]
+  type Tup = IVector[ISet[FaultToken]]
+  type NTup = IVector[FaultToken]
 
 
   def isListOfSingletons(input : Tup) : Boolean = {
@@ -45,16 +45,16 @@ object FptcUtilities {
   }
 
   def listOfSingletonToList(input : Tup) : NTup = {
-    input.map{s => s.headOption}
+    input.map{s => s.head}
   }
 
-  def ListOfSet2SetOfList(input : Tup) : ISet[IVector[Option[Fault]]]={
+  def ListOfSet2SetOfList(input : Tup) : ISet[NTup]={
     if(isListOfSingletons(input)) {
-      isetEmpty[IVector[Option[Fault]]] + listOfSingletonToList(input)
+      isetEmpty[NTup] + listOfSingletonToList(input)
     } else {
       var workList = ivectorEmpty[Tup]
       workList = workList.+:(input)
-      var result = isetEmpty[IVector[Option[Fault]]]
+      var result = isetEmpty[NTup]
       while(workList.nonEmpty) {
         val cur : Tup = workList.head
         if(isListOfSingletons(cur)) {
@@ -62,9 +62,9 @@ object FptcUtilities {
         } else {
           val setIndex = cur.indexWhere(s => s.size > 1)
           cur(setIndex).foreach{e =>
-            var tempTup : Tup = ivectorEmpty[ISet[Fault]]
+            var tempTup : Tup = ivectorEmpty[ISet[FaultToken]]
             tempTup = cur.slice(0, setIndex)
-            tempTup = tempTup :+ (isetEmpty[Fault] + e)
+            tempTup = tempTup :+ (isetEmpty[FaultToken] + e)
             if (setIndex < cur.length - 1)
               tempTup = tempTup ++ cur.slice(setIndex + 1, cur.length)
             workList = workList.:+(tempTup)
@@ -76,16 +76,30 @@ object FptcUtilities {
     }
   }
 
+  def toString(in : FaultToken): String = {
+    in match {
+      case f : Fault => PrettyPrinter.print(f)
+      case nf : NoFailure => PrettyPrinter.print(nf)
+    }
+  }
+
+  def getFault(in : FaultToken) : Option[Fault] ={
+    in match {
+      case f : Fault => Some(f)
+      case nf : NoFailure => None
+    }
+  }
+
   def toString(in : NTup) : String = {
     var res = "("
     if (in.length > 1) {
-      res = res + (if(in.head.isDefined) PrettyPrinter.print(in.head.get) else "*")
+      res = res + toString(in.head)
       in.tail.foreach { f =>
-        res = res + ", " + (if(f.isDefined) PrettyPrinter.print(f.get) else "*")
+        res = res + ", " + toString(f)
       }
       res = res + ")"
     } else {
-      res = res + (if(in.head.isDefined) PrettyPrinter.print(in.head.get) else "*") + ")"
+      res = res + toString(in.head) + ")"
     }
     res
   }

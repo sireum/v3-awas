@@ -26,6 +26,7 @@
 package org.sireum.awas.test.fptc
 
 import org.sireum.awas.ast.{PrettyPrinter, Fault, Builder}
+import org.sireum.awas.fptc.FptcUtilities.NTup
 import org.sireum.awas.fptc.{FptcUtilities, FptcNode, FptcAnalysis, FptcGraph}
 import org.sireum.awas.graph.AwasEdge
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -77,7 +78,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
         content.append("\n")
         content.append("##InSET##")
         content.append("\n")
-        val inseq = n.getInSet.toSeq.sortBy {t: IVector[Option[Fault]] => FptcUtilities.toString(t)}
+        val inseq = n.getInSet.toSeq.sortBy {t: NTup] => FptcUtilities.toString(t)}
         content.append(FptcUtilities.toString(inseq.head))
         for (ist <- inseq.tail) {
           content.append("\n")

@@ -143,7 +143,8 @@ final class Builder private() {
   }
 
   def build(ctx: TupleContext): Tuple = {
-    Tuple(ctx.one().map(build))
+    Tuple(ctx.faultPort().map{fp =>
+      (buildId(fp.ID()), build(fp.one()))})
   }
 
   def build(ctx: OneContext): One = {
