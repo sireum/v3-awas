@@ -28,16 +28,16 @@ package org.sireum.awas.test
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 import org.sireum.awas.test.ast.PrettyPrinterTest
-import org.sireum.awas.test.fptc.{FptcAnalysisTest, FptcGraphTest}
+//import org.sireum.awas.test.fptc.{FptcAnalysisTest, FptcGraphTest}
 import org.sireum.awas.test.parser.Antlr4AwasParserTest
 
 @RunWith(classOf[Suite])
 @Suite.SuiteClasses(
   Array(
     classOf[Antlr4AwasParserTest],
-    classOf[PrettyPrinterTest],
-    classOf[FptcGraphTest],
-    classOf[FptcAnalysisTest]
+    classOf[PrettyPrinterTest]
+//    classOf[FptcGraphTest],
+//    classOf[FptcAnalysisTest]
   )
 )
 final class AwasRegressionTestSuite

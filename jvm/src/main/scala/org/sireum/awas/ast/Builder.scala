@@ -28,24 +28,27 @@ package org.sireum.awas.ast
 import java.io.StringReader
 
 import org.antlr.v4.runtime._
+import org.antlr.v4.runtime.tree._
 import org.sireum.awas.parser.Antlr4AwasParser._
 import org.sireum.util._
-import scala.collection._
-import org.antlr.v4.runtime.tree._
-
 import org.sireum.util.jvm.Antlr4Util._
+
+import scala.collection._
 
 final class Builder private() {
 
   private implicit val nodeLocMap = midmapEmpty[AnyRef, LocationInfo]
 
-  def build(ctx: ModelContext): Model = {
+  def build(fileUriOpt: Option[FileResourceUri],
+            ctx: ModelContext): Model = {
     val r = Model(ctx.typeDecl().map(build),
+      ctx.behaviorDecl().map(build),
       ctx.constantDecl().map(build),
       ctx.componentDecl().map(build),
       ctx.connectionDecl().map(build)
     ) at ctx
-    r.nodeLocMap = midmapEmpty.asInstanceOf[MIdMap[Node, LocationInfo]]
+    r.nodeLocMap = this.nodeLocMap
+    r.fileUriOpt = fileUriOpt
     r
   }
 
@@ -57,15 +60,24 @@ final class Builder private() {
       case ctx: RecordTypeDeclContext => build(ctx.asInstanceOf[RecordTypeDeclContext].recordDecl())
     }
 
+  def build(ctx: BehaviorDeclContext): StateMachineDecl = {
+    StateMachineDecl(buildId(ctx.smName),
+      ctx.states().state.map(buildId),
+      ctx.events().event.map(buildId)) at ctx
+  }
+
   def build(ctx: ConstantDeclContext): ConstantDecl = {
     ConstantDecl(build(ctx.name()), build(ctx.`type`()), build(ctx.init())) at ctx
   }
 
   def build(ctx: ComponentDeclContext): ComponentDecl = {
-    ComponentDecl(build(ctx.name()),
+    ComponentDecl(buildId(ctx.compName),
+      if (ctx.`with` != null) ctx.`with`.map(build) else Node.emptySeq[Name],
       ctx.port().map(build),
+      ctx.propagation().map(build),
       ctx.flow().map(build),
-      if(ctx.behaviour() != null) Some(build(ctx.behaviour())) else {
+      if (ctx.transition() != null) Some(build(ctx.transition())) else None,
+      if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else {
         None
       },
       ctx.property().map(build)
@@ -73,32 +85,32 @@ final class Builder private() {
   }
 
   def build(ctx: ConnectionDeclContext): ConnectionDecl = {
-    ConnectionDecl(build(ctx.connName),
+    ConnectionDecl(buildId(ctx.connName),
       build(ctx.fromComponent),
       buildId(ctx.fromPort),
       ctx.fromE.map(build),
       build(ctx.toComponent),
       buildId(ctx.toPort),
       ctx.toE.map(build),
-      if(ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
+      if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
       ctx.property().map(build)) at ctx
   }
 
   def build(ctx: TypeAliasDeclContext): AliasDecl = {
-    AliasDecl(build(ctx.name()),
+    AliasDecl(buildId(ctx.ID()),
       build(ctx.`type`())) at ctx
   }
 
   def build(ctx: EnumDeclContext): EnumDecl = {
-    EnumDecl(build(ctx.n), ctx.supers.map(build), ctx.elements.map(buildId)) at ctx
+    EnumDecl(buildId(ctx.n), ctx.supers.map(build), ctx.elements.map(buildId)) at ctx
   }
 
   def build(ctx: LatticeDeclContext): LatticeDecl = {
-    LatticeDecl(build(ctx.n), ctx.supers.map(build)) at ctx
+    LatticeDecl(buildId(ctx.n), ctx.supers.map(build)) at ctx
   }
 
   def build(ctx: RecordDeclContext): RecordDecl = {
-    RecordDecl(build(ctx.name()), ctx.field().map(build)) at ctx
+    RecordDecl(buildId(ctx.ID()), ctx.field().map(build)) at ctx
   }
 
   def build(ctx: FieldContext): FieldDecl = {
@@ -109,6 +121,10 @@ final class Builder private() {
     val mod = ctx.mod.getText.equals("in")
     Port(mod, buildId(ctx.ID()),
       if (ctx.name() != null) Some(build(ctx.name())) else None) at ctx
+  }
+
+  def build(ctx: PropagationContext): Propagation = {
+    Propagation(buildId(ctx.id), ctx.errorT.map(build)) at ctx
   }
 
   def build(ctx: FlowContext): Flow = {
@@ -134,31 +150,52 @@ final class Builder private() {
       if (ctx.init() != null) Some(build(ctx.init())) else None) at ctx
   }
 
+  def build(ctx: TransitionContext): Transition = {
+    Transition(ctx.transExpr().map(build)) at ctx
+  }
+
+  def build(ctx: TransExprContext): TransExpr = {
+    TransExpr(ctx.fromState.ids.map(buildId),
+      ctx.toState.ids.map(buildId),
+      if (ctx.propCond != null) Some(build(ctx.propCond)) else None,
+      if (ctx.propCond != null) Node.emptySeq[Id] else ctx.triggers.ids.map(buildId)
+    )
+  }
+
   def build(ctx: BehaviourContext): Behaviour = {
-    var value = imapEmpty[Tuple, Tuple]
-    ctx.expression().forEach{e => {
-      value = value + (build(e.key) -> build(e.value))
-    }}
-    Behaviour(value)
+    Behaviour(ctx.expression().map(build)) at ctx
+  }
+
+  def build(ctx: ExpressionContext): Expression = {
+    Expression(
+      if(ctx.key != null) Some(build(ctx.key)) else None,
+      if(ctx.value != null) Some(build(ctx.value)) else None,
+      if(ctx.st != null) ctx.st.ids.map(buildId) else Node.emptySeq[Id]
+    ) at ctx
   }
 
   def build(ctx: TupleContext): Tuple = {
-    Tuple(ctx.faultPort().map{fp =>
-      (buildId(fp.ID()), build(fp.one()))})
+    var result = ilinkedMapEmpty[Id, One]
+    if(ctx != null) {
+      ctx.faultPort().foreach { fp =>
+        result = result + (buildId(fp.ID()) -> build(fp.one()))
+      }
+    }
+    Tuple(result)
   }
 
   def build(ctx: OneContext): One = {
     ctx match {
-      case ctx : NoFailureContext => NoFailure()
-      case ctx : WildCardContext => Wildcard()
-      case ctx : VariableContext => Variable(buildId(ctx.ID()))
-      case ctx : FaultRefContext => build(ctx.fault())
-      case ctx : FaultSetContext => FaultSet(ctx.fault().map(build).toSet)
+//      case ctx: NoFailureContext => NoFailure()
+//      case ctx: WildCardContext => Wildcard()
+//      case ctx: VariableContext => Variable(buildId(ctx.ID()))
+      case ctx: FaultRefContext => build(ctx.fault())
+      case ctx: FaultSetContext => FaultSet(ctx.fault().map(build))
     }
   }
 
   def build(ctx: FaultContext): Fault = {
-    Fault(build(ctx.name()), buildId(ctx.ID()))
+    Fault(build(ctx.name()))
   }
 
   def build(ctx: NameContext): Name = {
@@ -208,7 +245,7 @@ final class Builder private() {
       case ctx: RealContext => RealInit(ctx.REAL().getText.toDouble) at ctx
       case ctx: StringContext =>
         val text = ctx.STRING().getText
-        StringInit(text.substring(1, text.length-1).intern()) at ctx
+        StringInit(text.substring(1, text.length - 1).intern()) at ctx
       case ctx: RecordContext => RecordInit(build(ctx.name()), ctx.ID().map(t => buildId(t) ->
         build(ctx.init(ctx.ID().indexOf(t))))(breakOut): IMap[Id, Init]) at ctx
       case ctx: NameRefContext => NameRefInit(build(ctx.name()),
@@ -234,6 +271,13 @@ final class Builder private() {
 
   @inline
   private implicit def toToken(n: TerminalNode): Token = n.getSymbol
+
+  @inline
+  private implicit def toLinkedSet[T](n: Vector[T]): ILinkedSet[T] = {
+    var res = ilinkedSetEmpty[T]
+    n.foreach(x => res = res + x)
+    res
+  }
 }
 
 object Builder {
@@ -256,13 +300,13 @@ object Builder {
     }
   }
 
-  def apply(input: String,
+  def apply(fileUriOpt: Option[FileResourceUri],
+            input: String,
             maxErrors: Natural = 0,
             reporter: Reporter = ConsoleReporter): Option[Model] = {
     class ParsingEscape extends RuntimeException
 
-    import org.sireum.awas.parser.Antlr4AwasLexer
-    import org.sireum.awas.parser.Antlr4AwasParser
+    import org.sireum.awas.parser.{Antlr4AwasLexer, Antlr4AwasParser}
 
     val sr = new StringReader(input)
     val inputStream = new ANTLRInputStream(sr)
@@ -298,7 +342,7 @@ object Builder {
         case t: Throwable => None
       }
     if (success)
-      mfOpt.map(mf => new Builder().build(mf.model()))
+      mfOpt.map(mf => new Builder().build(fileUriOpt,mf.model()))
     else
       None
   }

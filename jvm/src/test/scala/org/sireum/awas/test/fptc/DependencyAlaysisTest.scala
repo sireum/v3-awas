@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -23,16 +23,34 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.ast
+package org.sireum.awas.test.fptc
 
-/**
-  * Created by hariharan on 1/27/16.
-  */
 
-trait SymbolTable {
-  ???
+
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
+import org.sireum.test.{JUnitTestFramework, TestDef}
+
+@RunWith(value = classOf[Parameterized])
+final class DependencyAlaysisTest(name: String, td: TestDef) {
+  @Test
+  def test(): Unit = {
+    td.test(JUnitTestFramework)
+  }
 }
 
-object SymbolTable {
+object DependencyAlaysisTest {
+  val provider = new DependencyAlaysisTestDefProvider(JUnitTestFramework)
 
+  @Parameters(name = "{0}")
+  def parameters = {
+    val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
+    val r = new java.util.ArrayList[Array[Object]](ps.size)
+    for (p <- ps) {
+      r.add(p)
+    }
+    r
+  }
 }

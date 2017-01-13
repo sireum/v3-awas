@@ -1,0 +1,8 @@
+components
+  comp1
+    with model::this
+      transitions
+        s1 -[in1:High]-> (s3, s4)
+        s1 -[(in1:High, in2:Low)]-> (s3, s4)
+        (s2, s3) -[e1]-> s4
+        (s2, s3) -[(e1, e2)]-> s4

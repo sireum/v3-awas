@@ -3,20 +3,22 @@ types
 
 components
   A
+  with Fault
     ports
       in aIn
       out aOut
-    behaviour
-      Fault.late -> Fault.late
-      * -> Fault.value
+    behavior
+      aIn:late -> aOut:late
+      * -> aOut:value
 
   B
+  with Fault
     ports
       in bIn
       out bOut
-    behaviour
-      Fault.value -> *
-      * -> Fault.late
+    behavior
+      bIn:value -> *
+      * -> bOut:late
 
 connections
   A2B : A.aOut -> B.bIn

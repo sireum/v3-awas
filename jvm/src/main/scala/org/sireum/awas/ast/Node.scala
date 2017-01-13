@@ -39,24 +39,38 @@ object Node {
 
 sealed trait Node extends Product
 
+sealed trait UnitNode extends Node {
+  var fileUriOpt: Option[FileResourceUri] = None
+  var nodeLocMap: MIdMap[AnyRef, LocationInfo] = midmapEmpty
+}
+
 sealed trait TypeDecl extends Node
 
 final case class Model(types: Node.Seq[TypeDecl],
+                       stateMachines: Node.Seq[StateMachineDecl],
                        constants: Node.Seq[ConstantDecl],
                        components: Node.Seq[ComponentDecl],
-                       connections: Node.Seq[ConnectionDecl]) extends Node {
-  var nodeLocMap: MIdMap[Node, LocationInfo] = midmapEmpty
+                       connections: Node.Seq[ConnectionDecl]) extends UnitNode {
+
+//  var sourceURI = Option[FileResourceUri]
 }
+
+final case class StateMachineDecl(smName: Id,
+                                  states: Node.Seq[Id],
+                                  events: Node.Seq[Id]) extends Node
 
 final case class ConstantDecl(name: Name, constType: Type, init: Init) extends Node
 
-final case class ComponentDecl(compName: Name,
+final case class ComponentDecl(compName: Id,
+                               withSM: Node.Seq[Name],
                                ports: Node.Seq[Port],
+                               propagations : Node.Seq[Propagation],
                                flows: Node.Seq[Flow],
+                               transitions: Option[Transition],
                                behaviour: Option[Behaviour],
                                properties: Node.Seq[Property]) extends Node
 
-final case class ConnectionDecl(connName: Name,
+final case class ConnectionDecl(connName: Id,
                                 fromComp: Name,
                                 fromPort: Id,
                                 fromE:Node.Seq[Name],
@@ -66,7 +80,10 @@ final case class ConnectionDecl(connName: Name,
                                 behaviour: Option[Behaviour],
                                 properties:Node.Seq[Property]) extends Node
 
+
 final case class Port(isIn : Boolean, id : Id, name: Option[Name]) extends Node
+
+final case class Propagation(id: Id, errorTypes : Node.Seq[Name]) extends Node
 
 final case class Flow(id: Id,
                       from: Option[Id],
@@ -76,16 +93,16 @@ final case class Flow(id: Id,
 
 final case class Property(id: Id, propType: Type, value: Option[Init]) extends Node
 
-final case class AliasDecl(name: Name, typeName: Type) extends TypeDecl
+final case class AliasDecl(name: Id, typeName: Type) extends TypeDecl
 
-final case class EnumDecl(name: Name,
+final case class EnumDecl(name: Id,
                           superEnums: Node.Seq[Name],
                           elements: Node.Seq[Id]) extends TypeDecl
 
-final case class LatticeDecl(name: Name,
+final case class LatticeDecl(name: Id,
                              superLattice: Node.Seq[Name]) extends TypeDecl
 
-final case class RecordDecl(name: Name, fields: Node.Seq[FieldDecl]) extends TypeDecl
+final case class RecordDecl(name: Id, fields: Node.Seq[FieldDecl]) extends TypeDecl
 
 final case class FieldDecl(id : Id, fieldType: Type) extends Node
 
@@ -109,23 +126,34 @@ _Id(value: String) extends Id {
 
 final case class Name(value: Node.Seq[Id]) extends Node
 
+final case class Virtual(name : Id) extends Node
+
 //-----------------------Behaviour---------------------------//
 
-final case class Behaviour(expr : ILinkedMap[Tuple, Tuple]) extends Node
+final case class Behaviour(exprs : Node.Seq[Expression]) extends Node
+
+final case class Transition(exprs : Node.Seq[TransExpr]) extends Node
+
+final case class TransExpr(lhs: Node.Seq[Id],
+                            rhs: Node.Seq[Id],
+                            propCond: Option[Tuple],
+                            trigger: Node.Seq[Id]) extends Node
+
+final case class Expression(lhs: Option[Tuple], rhs: Option[Tuple], states: Node.Seq[Id])
 
 final case class Tuple(tokens : ILinkedMap[Id, One]) extends Node
 
 sealed trait One extends Node
 
-final case class NoFailure() extends One
+//final case class NoFailure() extends One
 
-final case class Wildcard() extends One
+//final case class Wildcard() extends One
 
-final case class Variable(id : Id) extends One
+//final case class Variable(id : Id) extends One
 
-final case class Fault(enum : Name, id : Id) extends One
+final case class Fault(enum : Name) extends One
 
-final case class FaultSet(value : ISet[Fault]) extends One
+final case class FaultSet(value : ILinkedSet[Fault]) extends One
 
 //-----------------------Init---------------------------//
 sealed trait Init extends Node

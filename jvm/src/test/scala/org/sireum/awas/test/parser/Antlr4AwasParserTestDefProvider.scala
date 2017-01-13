@@ -40,11 +40,11 @@ final class Antlr4AwasParserTestDefProvider(tf: TestFramework)
   override def testDefs: ISeq[TestDef] = {
     val files = listFiles(toUri(testcaseDir), "awas").filterNot{p => p.toLowerCase.contains("nested")}
     files.toVector.map{ x =>
-      ConditionTest(filename(x), parsePass(readFile(x)._1))
+      ConditionTest(filename(x), parsePass(x, readFile(x)._1))
     }
   }
 
-  def parsePass(input: String): Boolean = {
-    Builder(input).isDefined
+  def parsePass(fileUri : FileResourceUri, input: String): Boolean = {
+    Builder(Some(fileUri), input).isDefined
   }
 }

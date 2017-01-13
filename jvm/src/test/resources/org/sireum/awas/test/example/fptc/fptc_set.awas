@@ -7,16 +7,16 @@ components
       in aIn
       out aOut
     behaviour
-      Fault.late -> {Fault.late, Fault.value}
-      * -> Fault.value
+      aIn:late->aOut:{late, value}
+      *->aOut:value
 
   B
     ports
       in bIn
       out bOut
     behaviour
-      Fault.value -> *
-      * -> Fault.late
+      bIn:value->*
+      *->bOut:late
 
 connections
   A2B : ASET.aOut -> B.bIn

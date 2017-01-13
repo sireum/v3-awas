@@ -26,134 +26,110 @@
 package org.sireum.awas.fptc
 
 import org.sireum.awas.ast._
-import org.sireum.awas.fptc.FptcUtilities.{FaultToken, NTup}
-import org.sireum.awas.graph.AwasEdge
+import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.util._
-import scala.collection._
-import scalax.collection.mutable.Graph
-import org.sireum.util
 
 object FptcAnalysis {
+  val H = SymbolTableHelper
+  def apply(graph: FptcGraph[FptcNode], m : Model, st: SymbolTable) : FptcGraph[FptcNode] = {
+    var workList = ilistEmpty[FptcNode]
 
-  def apply(g: FptcGraph[FptcNode]): FptcGraph[FptcNode] = {
-
-    var worklist = util.ilistEmpty[FptcNode]
-
-    worklist = worklist ++ g.nodes[FptcNode].map {
-      n: (Graph[FptcNode, AwasEdge]#NodeT) => n.value
+    workList = workList ++ graph.nodes
+    while(workList.nonEmpty) {
+      workList = workList.tail ++ evaluateNode(workList.head, st)
     }
 
-    while (worklist.nonEmpty) {
-      val node = worklist.head
-      val t: ISet[NTup] = computeInSet(g, node)
-      if (t.nonEmpty) {
-        val outTuple = computeOutSet(node, t)
-        var res = isetEmpty[FptcNode]
-        outTuple.foreach{t =>
-          res = res ++ g.propagate(node, t)
-        }
-        if (res.nonEmpty) {
-          worklist = worklist.tail ++ res.toList
-        } else {
-          worklist = worklist.tail
-        }
-      } else {
-        worklist = worklist.tail
-      }
-    }
-    g
+    graph
   }
 
-  def computeInSet(g: FptcGraph[FptcNode], node: FptcNode): ISet[NTup] = {
-    val temp = g.sortedInEdges(node).map { e => g.getFault(e) }
-    val ins = FptcUtilities.ListOfSet2SetOfList(temp)
-    val res = ins.filterNot(node.inSetContains)
-    res.foreach { in => node.addToInSet(in) }
+  def evaluateNode(node : FptcNode, st : SymbolTable) : Set[FptcNode] = {
+    var res = isetEmpty[FptcNode]
+
+    val nodeType = if(node.uri.startsWith(H.CONNECTION_TYPE)) H.CONNECTION_TYPE else H.COMPONENT_TYPE
+
+    if(nodeType == H.CONNECTION_TYPE) {
+      //connection should have only one in port and one out port
+      node.getFptcPropagation(node.inPorts.head).foreach {
+        errorUri =>
+          val temp = node.outPorts.head
+          node.addFptcPropagation(node.outPorts.head, errorUri)
+      }
+
+      //propagatation
+      //Connection connects to exactly 2 edges, one for in and one for out
+      val errors = node.getFptcPropagation(node.outPorts.head)
+      val edge = node.getEdge(node.outPorts.head).head
+      val targetPort = edge.targetPort
+      val targetNode = edge.target
+      assert(targetPort.isDefined)
+      val targetErrors = targetNode.getPropagation(targetPort.get)
+      if(!errors.subsetOf(targetErrors)) {
+        errors.foreach(targetNode.addFptcPropagation(targetPort.get, _))
+        res += targetNode
+      }
+    } else {
+      val compDecl = st.component(node.uri)
+
+      if(compDecl.behaviour.isDefined) {
+        val behavior = compDecl.behaviour.get
+        behavior.exprs.foreach{
+          expr => if(expr.lhs.isDefined) {
+            if(checkLhs(node,expr.lhs.get.tokens)) {
+              if(expr.rhs.isDefined)
+                computeOuts(node, expr.rhs.get.tokens)
+              res ++= computePropagate(node)
+            }
+          }else {
+            if(expr.rhs.isDefined)
+              computeOuts(node, expr.rhs.get.tokens)
+            res ++= computePropagate(node)
+          }
+        }
+      }
+    }
     res
   }
 
-  def computeOutSet(node: FptcNode, inTupSet: ISet[NTup]) : ISet[NTup] = {
-    val behaviour: IVector[(NTup) => Option[Tuple]] = node.getTups
-    //    var outSet = imapEmpty[Tuple, Tuple]
-    if (inTupSet.isEmpty) return isetEmpty[NTup]
-    var result = isetEmpty[NTup]
-    inTupSet.foreach { in =>
-      val matchedLhsSet = behaviour.flatMap(_ (in)).toSet
-      if (matchedLhsSet.isEmpty) {
-        result = result + in
-        println("WARNING: incoming fault Tup: " + FptcUtilities.toString(in) +
-          " lacks appropriate behaviour in node: "
-          + node.toString)
-      } else {
-        val matchedLhs = getMostSpecific(matchedLhsSet)
-        if (matchedLhs.isDefined) {
-          val rhs = node.getBehaviourRhs(matchedLhs.get)
-          result = result ++ FptcUtilities.ListOfSet2SetOfList(
-            varLessRhs(in, matchedLhs.get, rhs.get))
-        } else {
-          println("WARNING: Unable to get the most specific in node: "
-            + node.toString)
+  def checkLhs(node : FptcNode, tokens : ILinkedMap[Id, One]) : Boolean = {
+    tokens.keySet.forall{
+      t =>
+        val pUri = Resource.getResource(t).get.getUri
+        tokens(t) match {
+          case f : Fault => node.getFptcPropagation(pUri).contains(Resource.getResource(f.enum).get.getUri)
+          case fs : FaultSet => {
+            fs.value.map(f => Resource.getResource(f.enum).get.getUri).subsetOf(node.getFptcPropagation(pUri))
+          }
         }
-      }
-    }
-    result = result.filterNot(node.outSetContains)
-    result.foreach { out => node.addToOutSet(out) }
-    result
-  }
-
-  def getMostSpecific(tups: ISet[Tuple]): Option[Tuple] = {
-    val head = tups.head
-    var res = isetEmpty[Tuple] + head
-    var gwt = weight(head)
-    tups.foreach { t =>
-      if (weight(t) > gwt) {
-        gwt = weight(t)
-        res = isetEmpty[Tuple] + t
-      } else if (weight(t) == gwt) {
-        res = res + t
-      }
-    }
-    if (res.size == 1) {
-      Some(res.head)
-    } else {
-      None
     }
   }
 
-  private def varLessRhs(in: IVector[Option[Fault]], lhs: Tuple, rhs: Tuple): IVector[ISet[Fault]] = {
-    var store = imapEmpty[Variable, Option[Fault]]
-    lhs.tokens.foreach {
-      case v: Variable =>
-        store = store + ((v, in(lhs.tokens.indexOf(v))))
-      case _ =>
+  def computeOuts(node : FptcNode, tokens : ILinkedMap[Id, One]) : Unit = {
+    tokens.foreach{
+      t =>
+        val pUri = Resource.getResource(t._1).get.getUri
+        t._2 match {
+          case f : Fault => node.addFptcPropagation(pUri, Resource.getResource(f.enum).get.getUri)
+          case fs : FaultSet => {
+            fs.value.map(f => Resource.getResource(f).get.getUri).foreach(node.addFptcPropagation(pUri, _))
+          }
+        }
     }
-
-    val newTokens: IVector[ISet[Fault]] = rhs.tokens.map {
-      case v: Variable =>
-        if(store(v).isDefined) isetEmpty[Fault] + store(v).get else isetEmpty[Fault]
-      case f: Fault => isetEmpty[Fault] + f
-      case fs: FaultSet => isetEmpty[Fault] ++ fs.value
-      case nf : NoFailure => isetEmpty[Fault]
-      case x: One => {
-        println("Error, Rhs contains " + PrettyPrinter.print(x))
-        isetEmpty[Fault]
-      }
-    }
-    newTokens
   }
 
-  def weight(t: Tuple): Integer = {
-    var fs = 0
-    var vw = 0
-    var fnf = 0
-    t.tokens.foreach {
-      case v: Variable => vw = vw + 1
-      case w: Wildcard => vw = vw + 1
-      case f: Fault => fnf = fnf + 1
-      case nf: NoFailure => fnf = fnf + 1
-      case f: FaultSet => fs = fs + 1
+  def computePropagate(node: FptcNode) : Set[FptcNode] = {
+    var res = isetEmpty[FptcNode]
+    node.outPorts.foreach{
+      op =>
+        val sErrors = node.getFptcPropagation(op)
+        node.getEdge(op).foreach{
+          e =>
+            val tErrors = e.target.getFptcPropagation(e.targetPort.get)
+            if(!sErrors.subsetOf(tErrors)) {
+              sErrors.foreach(f => e.target.addFptcPropagation(e.targetPort.get, f))
+              res += e.target
+            }
+        }
     }
-    (fs * 5) + (fnf * 10) + vw
+    res
   }
-
 }

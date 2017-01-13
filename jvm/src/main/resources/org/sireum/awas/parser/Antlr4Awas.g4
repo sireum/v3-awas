@@ -10,6 +10,7 @@ modelFile
 
 model
   : ( 'types' typeDecl* )?
+    ( 'behavior' behaviorDecl* )?
     ( 'constants' constantDecl* )?
     ( 'components' componentDecl* )?
     ( 'connections' connectionDecl* )?
@@ -22,33 +23,39 @@ typeDecl
   | recordDecl                    #RecordTypeDecl
   ;
 
-componentDecl
-  : name
-      ( 'ports' port* )?
-      ( 'flows' flow* )?
-      ( 'behaviour' behaviour)?
-      ( 'properties' property* )?
+behaviorDecl
+  : smName=ID ':' states (events)?
+  ;
 
+componentDecl
+  : compName=ID
+      ( 'with' with+=name (',' with+=name)*)?
+      ( 'ports' port* )?
+      ( 'propagations' propagation*)?
+      ( 'flows' flow* )?
+      ( 'transitions' transition)?
+      ( 'behavior' behaviour)?
+      ( 'properties' property* )?
   ;
 
 connectionDecl
-  : connName=name ':'
+  : connName=ID ':'
     fromComponent=name '.' fromPort=ID
     ( '{' fromE+=name ( ',' fromE+=name )* '}' )?
     '->'
     toComponent=name '.' toPort=ID
     ( '{' toE+=name ( ',' toE+=name )* '}' )?
-    ( 'behaviour' behaviour)?
+    ( 'behavior' behaviour)?
     ( 'properties' property* )?
   ;
 
 typeAliasDecl
-  : 'alias' name '=' type
+  : 'alias' ID '=' type
   ;
 
 enumDecl
   : // enum elements can be defined in the profile
-    'enum' n=name
+    'enum' n=ID
     ( 'extends' supers+=name ( ',' supers+=name )* )?
     (
       '{' elements+=ID ( ',' elements+=ID )* '}'
@@ -56,12 +63,12 @@ enumDecl
   ;
 
 latticeDecl
-  : 'lattice' n=name
+  : 'lattice' n=ID
     ( 'extends' supers+=name ( ',' supers+=name )* )?
   ;
 
 recordDecl
-  : 'record' name
+  : 'record' ID
       field+
   ;
 
@@ -73,11 +80,15 @@ port
   : mod=( 'in' | 'out' ) ID ( ':' name )?
   ;
 
+propagation
+  : id=ID '=' '{' errorT+=name (',' errorT+= name)*'}'
+  ;
+
 flow
   : id=ID ':'
-    ( from=ID '{' fromE+=name ( ',' fromE+=name )* '}' | '_' )
+    ( from=ID '{' fromE+=name ( ',' fromE+=name )* '}' | '*' )
     '->'
-    ( to=ID '{' toE+=name ( ',' toE+=name )* '}' | '_' )
+    ( to=ID '{' toE+=name ( ',' toE+=name )* '}' | '*' )
   ;
 
 property
@@ -88,12 +99,25 @@ constantDecl
   : name ':' type '=' init
   ;
 
+transition
+  : transExpr+
+  ;
+
+transExpr
+  : fromState=idGroup ('-['(propCond=tuple | triggers=idGroup)']->') toState=idGroup
+  ;
+
 behaviour
   : expression+
   ;
 
 expression
-  : key=tuple '->' value=tuple
+  : (key=tuple | '*') ('->' | ('-[' st=idGroup ']->')) (value=tuple | '*')
+  ;
+
+idGroup
+  : ids+=ID
+  | '(' ids+=ID (',' ids+=ID)+')'
   ;
 
 tuple
@@ -102,19 +126,20 @@ tuple
   ;
 
 faultPort
-  : ID '.' one
+  : ID ':' one
   ;
 
 one
-  : '*'                                              #NoFailure
-  | '_'                                              #WildCard
-  | ID                                               #variable
-  | fault                                            #FaultRef
+  :
+  //'*'                                              #NoFailure
+//    '_'                                              #WildCard
+//    ID                                               #variable
+    fault                                            #FaultRef
   | '{' fault (',' fault)+ '}'                       #FaultSet
   ;
 
 fault
-  : name '.' ID
+  : name
   ;
 
 type
@@ -183,12 +208,16 @@ enclosureAssembly
   ;
 */
 
-/* TODO: states and transitions
+// TODO: states and transitions
 states
-  : 'states' '=' '[' ID ( ',' ID )* ']' // the initial state is the first declared one
-      ( 'transitions' transition* )?
+  : 'states' '=' '[' state+=ID ( ',' state+=ID )* ']' // the initial state is the first declared one
   ;
 
+events
+  : 'events' '=' '{' event+=ID ( ',' event+=ID )* '}'
+  ;
+
+/*
 transition
   : fromState=ID '-[' TODO ']->' toState=ID
   ;

@@ -25,101 +25,85 @@
 
 package org.sireum.awas.test.fptc
 
-import org.sireum.awas.ast.{PrettyPrinter, Fault, Builder}
-import org.sireum.awas.fptc.FptcUtilities.NTup
-import org.sireum.awas.fptc.{FptcUtilities, FptcNode, FptcAnalysis, FptcGraph}
-import org.sireum.awas.graph.AwasEdge
+import java.nio.file.Paths
+
+import org.sireum.awas.ast.Builder
+import org.sireum.awas.codegen.ContextInSensitiveGen
+import org.sireum.awas.fptc.{FptcAnalysis, FptcGraph}
+import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util._
 import org.sireum.util.jvm.FileUtil._
 
-import scalax.collection.mutable.Graph
-
 final class FptcAnalysisTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-  val testcaseDir = fileUri(this.getClass, s"../example")
+  val testDirs = Seq(s"../example/awas-lang"
+    ,s"../example/fptc"
+  )
   val resultsDir = toFilePath(fileUri(this.getClass,s"../results/fptc"))
   val expectedDir = toFilePath(fileUri(this.getClass,s"../expected/fptc"))
 
-  val generateExpected = false
+  val generateExpected = true
 
   override def testDefs: ISeq[TestDef] = {
-    val files = listFiles(testcaseDir, "awas")
-
+    val files = testDirs.flatMap { d =>
+      listFiles(fileUri(this.getClass, d), "awas")
+    }
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("fptc") &&
-      ! p.toLowerCase.contains("pcashutoff")
+      //      p.toLowerCase.contains("pcashutoff") ||
+      //        p.toLowerCase.contains("isolette") ||
+      //        p.toLowerCase.contains("abcloop")  ||
+      p.toLowerCase.contains("fptc_base")
     }
 
     filesEqual.toVector.map { x =>
       val inputFileName = filename(x)
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".fptc"
-      writeResult(outputFileName, graphAnalysis(readFile(x)._1, fileWithOutExt))
+      writeResult(outputFileName, graphAnalysis(x,readFile(x)._1, fileWithOutExt).get)
       val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
       EqualTest(filename(x), result,
         readFile(toUri(expectedDir + "/" + outputFileName))._1)
     }
   }
 
-  def writeResult(fileName: String, graph: Option[FptcGraph[FptcNode]]) = {
-    val content = new StringBuilder()
-    content.append(fileName+"\n++++++++++++++++\n\n")
-    if(graph.isDefined) {
-      val g = graph.get
-      val nodes = g.nodes[FptcNode].map {
-        n: (Graph[FptcNode, AwasEdge]#NodeT) => n.value
-      }
-
-      nodes.foreach { n: FptcNode => {
-        content.append(n.toString)
-        content.append("\n")
-        content.append("=================")
-        content.append("\n")
-        content.append("##InSET##")
-        content.append("\n")
-        val inseq = n.getInSet.toSeq.sortBy {t: NTup] => FptcUtilities.toString(t)}
-        content.append(FptcUtilities.toString(inseq.head))
-        for (ist <- inseq.tail) {
-          content.append("\n")
-          content.append(FptcUtilities.toString(ist))
-        }
-        content.append("\n")
-        content.append("##OutSET##")
-        content.append("\n")
-        val outseq = n.getOutSet.toSeq.sortBy { t:IVector[Option[Fault]] => FptcUtilities.toString(t)}
-        content.append(FptcUtilities.toString(outseq.head))
-        for (ist <- outseq.tail) {
-          content.append("\n")
-          content.append(FptcUtilities.toString(ist))
-        }
-        content.append("\n")
-        content.append("\n")
-      }
-      }
-    }
-
-    if (generateExpected) {
-      val expPath = expectedDir + "/" + fileName
-      writeFile(toUri(expPath), content.toString())
-    }
-    val resPath = resultsDir + "/" + fileName
-    writeFile(toUri(resPath), content.toString())
-  }
-
-
   def extensor(orig: String) = (orig.split('.') match {
     case xs@Array(x) => xs
     case y => y.init
   }).mkString
 
-  def graphAnalysis(model: String, name: String): Option[FptcGraph[FptcNode]] = {
-    Builder(model) match {
-      case None => None
-      case Some(m) =>
-        val graph = FptcAnalysis(FptcGraph(m))
-        Some(graph)
+  def writeResult(fileName : String, content : String) ={
+    if(generateExpected) {
+      val expPath = expectedDir + "/" + fileName
+      writeFile(toUri(expPath), content)
     }
+    val resPath = resultsDir + "/" + fileName
+    writeFile(toUri(resPath), content)
   }
 
+  def graphAnalysis(infileUri: FileResourceUri, model: String, name: String): Option[String] = {
+    import org.sireum.util.jvm.FileUtil._
+    val basePath = Paths.get(fileUri(this.getClass, s"../"))
+    val relativeUri = basePath.relativize(Paths.get(infileUri))
+    Builder(Some(relativeUri.toString), model) match {
+      case None => None
+      case Some(m) =>
+        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+        var st = SymbolTable(m)
+        val updatedModel = ContextInSensitiveGen(m, st)
+        Resource.reset
+        st = SymbolTable(updatedModel)
+        val graph = FptcGraph(updatedModel, st)
+        val fg = FptcAnalysis(graph, updatedModel, st)
+        var res = ""
+        fg.nodes.foreach{
+          n => res += n.uri
+            res += "\nIn\n"
+            res += n.inPorts.map(in => in +" = {"+n.getFptcPropagation(in).mkString(",")+"}").mkString("\n")
+            res+="\nout\n"
+            res += n.outPorts.map(out => out +" = {"+n.getFptcPropagation(out).mkString(",")+"}").mkString("\n") + "\n"
+        }
+        Some(res)
+    }
+  }
 }

@@ -69,6 +69,17 @@ final class PrettyPrinter(sb: StringBuilder) {
       println()
     }
 
+    if(m.stateMachines.nonEmpty) {
+      sb.append("behavior")
+      println()
+      print(m.stateMachines.head, indent+1)
+      for(sm <- m.stateMachines.tail) {
+        println()
+        print(sm, indent + 1)
+      }
+      println()
+    }
+
     if(m.constants.nonEmpty) {
       sb.append("constants")
       println()
@@ -112,47 +123,114 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
   }
 
-  def print(compd: ComponentDecl, indent: Natural) : Unit ={
+  def print(smd: StateMachineDecl, indent: Natural) : Unit ={
     printIndent(indent)
+    print(smd.smName)
+    sb.append(":")
+    println()
+    if(smd.states.nonEmpty) {
+      printIndent(indent+1)
+      sb.append("states = [")
+      print(smd.states.head)
+      for(st <- smd.states.tail) {
+        sb.append(", ")
+        print(st)
+      }
+      sb.append("]")
+      println()
+    }
+
+    if(smd.events.nonEmpty) {
+      printIndent(indent+1)
+      sb.append("events = {")
+      print(smd.events.head)
+      for(ev <- smd.events.tail) {
+        sb.append(", ")
+        print(ev)
+      }
+      sb.append("}")
+      println()
+    }
+  }
+
+  def print(compd: ComponentDecl, indent: Natural) : Unit ={
+    var localIndent = indent
+    printIndent(localIndent)
     print(compd.compName)
     println()
+    if(!compd.withSM.isEmpty) {
+      localIndent = localIndent+1
+      printIndent(localIndent)
+      sb.append("with ")
+      print(compd.withSM.head)
+      for(wsmt <- compd.withSM.tail) {
+        sb.append(", ")
+        print(wsmt)
+      }
+      println()
+    }
+
+
     if(compd.ports.nonEmpty) {
-      printIndent(indent+1)
+      printIndent(localIndent+1)
       sb.append("ports")
       println()
-      print(compd.ports.head, indent+2)
+      print(compd.ports.head, localIndent+2)
       for(cp <- compd.ports.tail) {
         println()
-        print(cp, indent+2)
+        print(cp, localIndent+2)
       }
      println()
     }
-    if(compd.flows.nonEmpty) {
-      printIndent(indent+1)
-      sb.append("flows")
+
+    if(compd.propagations.nonEmpty) {
+      printIndent(localIndent+1)
+      sb.append("propagations")
       println()
-      print(compd.flows.head, indent+2)
-      for(cf <- compd.flows.tail) {
+      print(compd.propagations.head, localIndent+2)
+      for(cpr <- compd.propagations.tail) {
         println()
-        print(cf, indent+2)
+        print(cpr, localIndent+2)
       }
       println()
     }
-    if(compd.behaviour.isDefined) {
-      printIndent(indent+1)
-      sb.append("behaviour")
+
+    if(compd.flows.nonEmpty) {
+      printIndent(localIndent+1)
+      sb.append("flows")
       println()
-      print(compd.behaviour.get, indent+2)
+      print(compd.flows.head, localIndent+2)
+      for(cf <- compd.flows.tail) {
+        println()
+        print(cf, localIndent+2)
+      }
       println()
     }
+
+    if(compd.transitions.isDefined) {
+      printIndent(localIndent+1)
+      sb.append("transitions")
+      println()
+      print(compd.transitions.get, localIndent+2)
+      println()
+    }
+
+    if(compd.behaviour.isDefined) {
+      printIndent(localIndent+1)
+      sb.append("behavior")
+      println()
+      print(compd.behaviour.get, localIndent+2)
+      println()
+    }
+
     if(compd.properties.nonEmpty) {
-      printIndent(indent+1)
+      printIndent(localIndent+1)
       sb.append("properties")
       println()
-      print(compd.properties.head, indent + 2)
+      print(compd.properties.head, localIndent + 2)
       for(cp <- compd.properties.tail) {
         println()
-        print(cp, indent + 2)
+        print(cp, localIndent + 2)
       }
       println()
     }
@@ -191,7 +269,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     println()
     if(cd.behaviour.isDefined) {
       printIndent(indent+1)
-      sb.append("behaviour")
+      sb.append("behavior")
       println()
       print(cd.behaviour.get, indent+2)
       println()
@@ -209,43 +287,97 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
   }
 
-  def print(b : Behaviour, indent: Natural) : Unit = {
+  def print(t: Transition, indent: Natural) : Unit = {
     printIndent(indent)
-    print(b.expr.head._1)
-    sb.append(" -> ")
-    print(b.expr.head._2)
-    for(exp <- b.expr.tail) {
+    print(t.exprs.head)
+    for(tet <- t.exprs.tail) {
       println()
       printIndent(indent)
-      print(exp._1)
+      print(tet)
+    }
+  }
+
+  def print(te: TransExpr) : Unit = {
+    printIdGroup(te.lhs)
+    sb.append(" -[")
+    te.propCond match {
+      case Some(e) => print(e)
+      case None => printIdGroup(te.trigger)
+    }
+    sb.append("]-> ")
+    printIdGroup(te.rhs)
+  }
+
+  def printIdGroup(ids : Node.Seq[Id]): Unit = {
+    if(ids.length == 1) {
+       print(ids.head)
+    } else {
+      sb.append("(")
+      print(ids.head)
+      for(idst <- ids.tail) {
+        sb.append(", ")
+        print(idst)
+      }
+      sb.append(")")
+    }
+  }
+
+  def print(b : Behaviour, indent: Natural) : Unit = {
+    printIndent(indent)
+    print(b.exprs.head)
+    for(bet <- b.exprs.tail) {
+      println()
+      printIndent(indent)
+      print(bet)
+    }
+  }
+
+  def print(expr: Expression) : Unit = {
+    print(expr.lhs)
+    if(expr.states.nonEmpty) {
+      sb.append(" -[")
+      printIdGroup(expr.states)
+      sb.append("]-> ")
+    } else {
       sb.append(" -> ")
-      print(exp._2)
+    }
+    print(expr.rhs)
+  }
+
+  def print(ot : Option[Tuple]) : Unit = {
+    ot match {
+      case Some(t) => print(t)
+      case None => sb.append("*")
     }
   }
 
   def print(t : Tuple) : Unit = {
     if (t.tokens.size > 1) {
       sb.append("(")
-      print(t.tokens.head)
+      print(t.tokens.head._1)
+      sb.append(":")
+      print(t.tokens.head._2)
       for(tt <- t.tokens.tail) {
         sb.append(", ")
-        print(tt)
+        print(tt._1)
+        sb.append(":")
+        print(tt._2)
       }
       sb.append(")")
     } else {
-      print(t.tokens.head)
+      print(t.tokens.head._1)
+      sb.append(":")
+      print(t.tokens.head._2)
     }
   }
 
   def print(o : One) : Unit = {
     o match {
-      case o : NoFailure => sb.append("*")
-      case o : Wildcard => sb.append("_")
-      case o : Variable => print(o.id)
+//      case o : NoFailure => sb.append("*")
+//      case o : Wildcard => sb.append("_")
+//      case o : Variable => print(o.id)
       case o : Fault =>
         print(o.enum)
-        sb.append(".")
-        print(o.id)
       case o : FaultSet =>
         sb.append("{")
         print(o.value.head)
@@ -338,12 +470,24 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
   }
 
+  def print(p: Propagation, indent: Natural): Unit ={
+    printIndent(indent)
+    print(p.id)
+    sb.append(" = {")
+    print(p.errorTypes.head)
+    for(pett<-p.errorTypes.tail) {
+      sb.append(", ")
+      print(pett)
+    }
+    sb.append("}")
+  }
+
   def print(f : Flow, indent: Natural) : Unit ={
     printIndent(indent)
     print(f.id)
     sb.append(" : ")
     f.from match {
-      case None => sb.append("_")
+      case None => sb.append("*")
       case _ =>
         print(f.from.get)
         sb.append("{")
@@ -356,7 +500,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
     sb.append(" -> ")
     f.to match {
-      case None => sb.append("_")
+      case None => sb.append("*")
       case _ =>
         print(f.to.get)
         sb.append("{")

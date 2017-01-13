@@ -1,0 +1,10 @@
+digraph fptc_base {
+  "A2B::Connection"
+  "A2B::Connection" -> "B::Component"
+  "A::Component" -> "A2B::Connection"
+  "A::Component" [shape = box]
+  "B2A::Connection"
+  "B2A::Connection" -> "A::Component"
+  "B::Component" -> "B2A::Connection"
+  "B::Component" [shape = box]
+}

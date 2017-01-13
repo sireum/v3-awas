@@ -33,32 +33,37 @@ import org.sireum.util.jvm.FileUtil._
 
 final class PrettyPrinterTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-  val testDir = fileUri(this.getClass, s"../example")
+  val testDirs = Seq(s"../example/awas-lang"
+//    ,s"../example/fptc"
+  )
+
   override def testDefs: ISeq[TestDef] = {
     println()
-    val files = listFiles(testDir, "awas")
+    val files = testDirs.flatMap{d =>
+      listFiles(fileUri(this.getClass,d), "awas")}
 
     //equals test by excluding some
     val filesEqual = files.filterNot { p =>
-      p.toLowerCase.contains("nested") ||
+      p.toLowerCase.contains("abnested") ||
         p.toLowerCase.contains("pcashutoff") ||
         p.toLowerCase.contains("abcloop")
     }
 
     //conditional test by filter
-    val filesConditional = files.filter { f =>
-      filename(f).equals("pcashutoff.awas") ||
-        filename(f).equals("abcloop.awas")
+    val filesConditional = files.filterNot { f =>
+      f.toLowerCase.contains("abnested") ||
+      filename(f).equals("pcashutoff.awas")
     }
 
     filesEqual.toVector.map { x =>
-      EqualOptTest(filename(x), printAndParse(readFile(x)._1), readFile(x)._1)
+      println(x)
+      EqualOptTest(filename(x), printAndParse(x, readFile(x)._1), readFile(x)._1)
     } ++ filesConditional.toVector.map {x =>
-    ConditionTest(filename(x), Builder(printAndParse(readFile(x)._1).get).isDefined)}
+    ConditionTest(filename(x), Builder(some(x),printAndParse(x, readFile(x)._1).get).isDefined)}
   }
 
-  def printAndParse(model: String): Option[String] = {
-    Builder(model) match {
+  def printAndParse(fileResourceUri: FileResourceUri, model: String): Option[String] = {
+    Builder(Some(fileResourceUri), model) match {
       case None => None
       case Some(e) =>
         val result = PrettyPrinter(e)

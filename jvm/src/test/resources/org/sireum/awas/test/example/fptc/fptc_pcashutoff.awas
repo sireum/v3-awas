@@ -1,0 +1,185 @@
+types
+  enum Error {High, Low, Erratic, Halted, Early, Late}
+//--------------------------------------------------------------------------------//
+// Partially worked model for only one hazard which is "patient overdosed".
+//--------------------------------------------------------------------------------//
+components
+  AppLogic
+    ports
+      in RespRate
+      in EtCO2
+      in SpO2
+      out CmdPump
+    specification
+      RespRate : Set[Error] = {High, Low, Erratic, Halted, Early, Late}
+      EtCO2 : Set[Error] = {High, Low, Erratic, Halted, Early, Late}
+      SpO2 : Set[Error] = {High, Low, Erratic, Halted, Early, Late}
+    behaviour
+	 flows
+	   (SpO2 = Error.high, EtCO2 = Error.Low, RespRate = Error.High) -> CmdPump = Error.High
+      	      		  	  	     	      		      //Command ticket length is too long
+           (SpO2 = Error.Early, EtCO2 = _, RespRate = _) -> CmdPump = Error.Late
+      	      		   	      	       	       //due to unexpected SpO2 message AppLogic produces its command ticket late
+           (SpO2 = _, EtCO2 = Error.Early, RespRate = _) -> CmdPump = Error.Late
+
+           (SpO2 = _, EtCO2 = _, RespRate = Error.Early) -> CmdPump = Error.Late
+	   
+	sink
+	   (SpO2 = Error.High, EtCO2 = Error.Low)
+	   
+	   (SpO2 = Error.High, RespRate = Error.High)
+
+	   (EtCO2 = Error.Low, RespRate = Error.High)
+
+	   SpO2 = Error.High
+
+	   EtCO2 = Error.Low
+
+	   RespRate = Error.High
+	   //I still think its better this way: {Error.Halted, Error.Late} rather than
+	   (SpO2 = Error.{Halted, Late}, EtCO2 = _, RespRate = _) 
+
+	   (SpO2 = _, EtCO2 = Error.{Halted, Late}, RespRate = _)
+
+	   (SpO2 = _, EtCO2 = _, RespRate = Error.{Halted, Late})
+	   
+	source
+	   CmdPump = Error.{High, Erratic, Early, Late}
+
+//--------------------------------------------------------------------------------//
+  PcaPump
+    ports
+      in AppCmd
+      out DrugFlow
+    specification
+      AppCmd : Set[Error] = {High, Erratic, Early, Late}
+      DrugFlow : Set[Error] = {High, Low, Halted}
+    behaviour
+      flows
+	AppCmd = Error.{High, Erratic, Early, Late} -> DrugFlow = Error.High
+
+      source
+        DrugFlow = Error.High
+
+      sink
+        AppCommand = Error.Low //Command token length is less or command is not well formed 
+
+      	AppCommand = Error.Halted //No Command    
+      
+//--------------------------------------------------------------------------------//
+  Patient
+    ports
+      in Vein
+      out FingerClip
+      out Exhalation
+    specification
+      Vein : Set[Error] //for the sanity of the component connectivity
+      FingerClip : Set[Error]
+      Exhalation : Set[Error]
+//--------------------------------------------------------------------------------//
+  PulseOx
+    ports
+      in Pulse
+      out SpO2
+    specification
+      Pulse : Set[Error] = {High, Low, Erratic, Halted, Early, Late}
+      SpO2 : Set[Error] = {High, Halted, Early, Late}
+    behaviour
+      flow
+	    Pulse = Error.{High, Halted, Early, Late} -> SpO2 = Error.High
+
+      source
+        SpO2 = Error.{High, Halted, Early, Late}
+	
+      sink
+        Pulse = Error.{Low, Erratic}
+
+//--------------------------------------------------------------------------------//
+  Capnograph
+    ports
+      in ExhaledCO2
+      out EtCO2
+      out RespRate
+    specification
+      ExhaledCO2 : Set[Error] = {High, Low, Erratic, Halted, Early, Late}
+      EtCO2 : Set[Error] = {Low, High, Halted, Early, Late}
+      RespRate : Set[Error] = {Halted, Early, Late}
+    behaviour
+      flow
+        ExhaledCO2 = Error.{High, Low} -> EtCO2 = Error.{High, Low}
+	    ExhaledCO2 = Error.Halted -> (EtCO2 = Error.Halted, RespRate = Error.Halted)
+	
+      sink
+        ExhaledCO2 = Error.{Early, Late, Erratic}
+	
+      source
+        EtCO2 = Error.{Low, High, Halted, Early, Late}
+	RespRate = Error.{Halted, Early, Late}
+
+//--------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------//
+
+Connections
+  App_to_Pump: AppLogic.CommandPump -> PcaPump.AppCommand
+    behaviour
+      flow
+        Error.High -> Error.High
+	    Error.Erratic -> Error.Erratic
+	    Error.Early = Error.Early
+	    Error.Late = Error.Late
+      source
+        Error.{High, Early, Late}
+	
+  IVLine: PcaPump.DrugFlow -> Patient.Vein
+    behaviour
+      flow
+	   Error.High -> Error.High
+	   Error.Halted -> Error.Halted
+
+  RefractedLight: Patient.FingerClip -> PulseOx.Pulse
+    behaviour
+      flow
+        Error.High -> Error.High
+	    Error.Low -> Error.{Low,High}
+      Source
+        Error.High
+	    Error.Halted
+	
+  Breath: Patient.Exhalation -> Capnograph.ExhaledCO2
+    behaviour
+      flow
+        Error.High -> Error.High
+	    Error.Low -> Error.{Low, High}
+      Source
+        Error.High
+	Error.Halted
+
+  SpO2_to_App: PulseOx.SpO2 -> AppLogic.SpO2
+    behaviour
+      flow
+        Error.High -> Error.High
+	    Error.Halted -> Error.Halted
+	    Error.Early -> Error.Early
+	    Error.Late -> Error.Late
+      source
+        Error.{High, Halted, Early, Late}
+
+  EtCO2_to_App: Capnograph.EtCO2 -> AppLogic.EtCO2
+    behaviour
+      flow
+        Error.Low -> Error.Low
+	    Error.Halted -> Error.Halted
+	    Error.Early -> Error.Early
+	    Error.Late -> Error.Late
+      source
+        Error.{Low, Halted, Early, Late}
+
+  RespRate_to_App: Capnograph.RespRate -> AppLogic.RespRate
+    behaviour
+      flow
+        Error.High -> Error.High
+	    Error.Halted -> Error.Halted
+	    Error.Early -> Error.Early
+	    Error.Late -> Error.Late
+      source
+        Error.{High, Halted, Early, Late}
