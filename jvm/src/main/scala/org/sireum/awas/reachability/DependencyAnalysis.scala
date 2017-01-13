@@ -83,14 +83,14 @@ object DependencyAnalysis {
                 st.compTypeDecl(node.compUri)
                 val flow = cst.flow(flowUri)
                 val fe = AwasUtil.toUri(flow.fromE, tt)
-                if (node.getSlice.intersect(fe.toSet).nonEmpty) {
+
                   val te = AwasUtil.toUri(flow.toE, tt)
-                  if (!edge.target.getSlice.subsetOf(te.toSet)) {
+                  if (!te.toSet.subsetOf(edge.target.getSlice)) {
                     te.foreach(f => edge.target.setSlice(f))
                     edge.target.setSliced
                     workList = workList :+ edge.target
                   }
-                }
+
               } else {
                 if (!edge.source.getSlice.subsetOf(edge.target.getSlice)) {
                   edge.source.getSlice.foreach(f => edge.target.setSlice(f))
