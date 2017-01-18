@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2017, Robby, Kansas State University
+ Copyright (c) 2016, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -23,27 +23,27 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.fptc
+package org.sireum.awas.test.analysis
 
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.codegen.ContextInSensitiveGen
-import org.sireum.awas.fptc.{FptcAnalysis, FptcGraph}
-import org.sireum.awas.reachability.ReachabilityAnalysis
+import org.sireum.awas.fptc.FptcGraph
 import org.sireum.awas.symbol.{Resource, SymbolTable}
-import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
-import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
+import org.sireum.test._
+import org.sireum.util._
 import org.sireum.util.jvm.FileUtil._
 
 
-final class ReachablityGraphTestDefProvider(tf: TestFramework)
-  extends TestDefProvider {
+final class FptcGraphTestDefProvider(tf: TestFramework)
+extends TestDefProvider {
+
   val testDirs = Seq(s"../example/awas-lang"
     ,s"../example/fptc"
   )
-  val resultsDir = toFilePath(fileUri(this.getClass,s"../results/fptc"))
-  val expectedDir = toFilePath(fileUri(this.getClass,s"../expected/fptc"))
+  val resultsDir = toFilePath(fileUri(this.getClass, s"../results/dot"))
+  val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/dot"))
 
   val generateExpected = true
 
@@ -51,26 +51,28 @@ final class ReachablityGraphTestDefProvider(tf: TestFramework)
     val files = testDirs.flatMap { d =>
       listFiles(fileUri(this.getClass, d), "awas")
     }
+
     val filesEqual = files.filter { p =>
-      //      p.toLowerCase.contains("pcashutoff") ||
-      //        p.toLowerCase.contains("isolette") ||
-      //        p.toLowerCase.contains("abcloop")  ||
-      p.toLowerCase.contains("fptc_base")
+//      p.toLowerCase.contains("pcashutoff") ||
+//        p.toLowerCase.contains("isolette") ||
+//        p.toLowerCase.contains("abcloop")  ||
+        p.toLowerCase.contains("fptc_base")
     }
 
     filesEqual.toVector.map { x =>
       val inputFileName = filename(x)
+      print(inputFileName)
       val fileWithOutExt = extensor(inputFileName).toString
-      val outputFileName = fileWithOutExt + ".s.dot"
-      writeResult(outputFileName, graphAnalysis(x,readFile(x)._1, fileWithOutExt).get)
-      val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
-      EqualTest(filename(x), result,
-        readFile(toUri(expectedDir + "/" + outputFileName))._1)
+      val outputFileName = fileWithOutExt + ".dot"
+      writeResult(outputFileName, dotGraphPrinter(x,readFile(x)._1, fileWithOutExt).get)
+      val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
+      EqualTest(filename(x), result ,
+        readFile(toUri(expectedDir+"/"+outputFileName))._1)
     }
   }
 
   def extensor(orig: String) = (orig.split('.') match {
-    case xs@Array(x) => xs
+    case xs @ Array(x) => xs
     case y => y.init
   }).mkString
 
@@ -83,7 +85,7 @@ final class ReachablityGraphTestDefProvider(tf: TestFramework)
     writeFile(toUri(resPath), content)
   }
 
-  def graphAnalysis(infileUri: FileResourceUri, model: String, name: String): Option[String] = {
+  def dotGraphPrinter(infileUri: FileResourceUri, model: String, name: String): Option[String] ={
     import org.sireum.util.jvm.FileUtil._
     val basePath = Paths.get(fileUri(this.getClass, s"../"))
     val relativeUri = basePath.relativize(Paths.get(infileUri))
@@ -96,8 +98,7 @@ final class ReachablityGraphTestDefProvider(tf: TestFramework)
         Resource.reset
         st = SymbolTable(updatedModel)
         val graph = FptcGraph(updatedModel, st)
-        val fg = FptcAnalysis(graph, updatedModel, st)
-        Some(ReachabilityAnalysis(fg,st).toDot(name))
+        Some(graph.toDot(name))
     }
   }
 }

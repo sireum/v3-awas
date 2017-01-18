@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -23,19 +23,21 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.fptc
+package org.sireum.awas.test.analysis
 
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.fptc.{FptcAnalysis, FptcGraph}
+import org.sireum.awas.reachability.ReachabilityAnalysis
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
-import org.sireum.util._
+import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
 import org.sireum.util.jvm.FileUtil._
 
-final class FptcAnalysisTestDefProvider(tf: TestFramework)
+
+final class ReachablityGraphTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
   val testDirs = Seq(s"../example/awas-lang"
     ,s"../example/fptc"
@@ -59,7 +61,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
     filesEqual.toVector.map { x =>
       val inputFileName = filename(x)
       val fileWithOutExt = extensor(inputFileName).toString
-      val outputFileName = fileWithOutExt + ".fptc"
+      val outputFileName = fileWithOutExt + ".s.dot"
       writeResult(outputFileName, graphAnalysis(x,readFile(x)._1, fileWithOutExt).get)
       val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
       EqualTest(filename(x), result,
@@ -69,7 +71,7 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
 
   def extensor(orig: String) = (orig.split('.') match {
     case xs@Array(x) => xs
-    case y => y.init
+    case y => y.init//init  - everything except the last
   }).mkString
 
   def writeResult(fileName : String, content : String) ={
@@ -94,16 +96,8 @@ final class FptcAnalysisTestDefProvider(tf: TestFramework)
         Resource.reset
         st = SymbolTable(updatedModel)
         val graph = FptcGraph(updatedModel, st)
-        val fg = FptcAnalysis(graph, updatedModel, st)
-        var res = ""
-        fg.nodes.foreach{
-          n => res += n.uri
-            res += "\nIn\n"
-            res += n.inPorts.map(in => in +" = {"+n.getFptcPropagation(in).mkString(",")+"}").mkString("\n")
-            res+="\nout\n"
-            res += n.outPorts.map(out => out +" = {"+n.getFptcPropagation(out).mkString(",")+"}").mkString("\n") + "\n"
-        }
-        Some(res)
+        val fg = FptcAnalysis(graph, st)
+        Some(ReachabilityAnalysis(fg,st).toDot(name))
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2017, Robby, Kansas State University
+ Copyright (c) 2016, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -23,7 +23,7 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.fptc
+package org.sireum.awas.test.analysis
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,15 +32,15 @@ import org.junit.runners.Parameterized.Parameters
 import org.sireum.test.{JUnitTestFramework, TestDef}
 
 @RunWith(value = classOf[Parameterized])
-final class ReachablityGraphTest(name: String, td: TestDef) {
+final class FptcGraphTest(name: String, td: TestDef) {
   @Test
   def test(): Unit = {
     td.test(JUnitTestFramework)
   }
 }
 
-object ReachablityGraphTest {
-  val provider = new ReachablityGraphTestDefProvider(JUnitTestFramework)
+object FptcGraphTest {
+  val provider = new FptcGraphTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")
   def parameters = {

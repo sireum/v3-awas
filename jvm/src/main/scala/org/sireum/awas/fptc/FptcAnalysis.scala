@@ -31,7 +31,7 @@ import org.sireum.util._
 
 object FptcAnalysis {
   val H = SymbolTableHelper
-  def apply(graph: FptcGraph[FptcNode], m : Model, st: SymbolTable) : FptcGraph[FptcNode] = {
+  def apply(graph: FptcGraph[FptcNode], st: SymbolTable) : FptcGraph[FptcNode] = {
     var workList = ilistEmpty[FptcNode]
 
     workList = workList ++ graph.nodes
@@ -93,11 +93,11 @@ object FptcAnalysis {
   def checkLhs(node : FptcNode, tokens : ILinkedMap[Id, One]) : Boolean = {
     tokens.keySet.forall{
       t =>
-        val pUri = Resource.getResource(t).get.getUri
+        val pUri = Resource.getResource(t).get.toUri
         tokens(t) match {
-          case f : Fault => node.getFptcPropagation(pUri).contains(Resource.getResource(f.enum).get.getUri)
+          case f : Fault => node.getFptcPropagation(pUri).contains(Resource.getResource(f.enum).get.toUri)
           case fs : FaultSet => {
-            fs.value.map(f => Resource.getResource(f.enum).get.getUri).subsetOf(node.getFptcPropagation(pUri))
+            fs.value.map(f => Resource.getResource(f.enum).get.toUri).subsetOf(node.getFptcPropagation(pUri))
           }
         }
     }
@@ -106,11 +106,11 @@ object FptcAnalysis {
   def computeOuts(node : FptcNode, tokens : ILinkedMap[Id, One]) : Unit = {
     tokens.foreach{
       t =>
-        val pUri = Resource.getResource(t._1).get.getUri
+        val pUri = Resource.getResource(t._1).get.toUri
         t._2 match {
-          case f : Fault => node.addFptcPropagation(pUri, Resource.getResource(f.enum).get.getUri)
+          case f : Fault => node.addFptcPropagation(pUri, Resource.getResource(f.enum).get.toUri)
           case fs : FaultSet => {
-            fs.value.map(f => Resource.getResource(f).get.getUri).foreach(node.addFptcPropagation(pUri, _))
+            fs.value.map(f => Resource.getResource(f).get.toUri).foreach(node.addFptcPropagation(pUri, _))
           }
         }
     }

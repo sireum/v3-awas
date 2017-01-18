@@ -23,7 +23,7 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.fptc
+package org.sireum.awas.test.analysis
 
 import java.nio.file.Paths
 
@@ -36,7 +36,7 @@ import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
 import org.sireum.util.jvm.FileUtil._
 
-final class DependencyAlaysisTestDefProvider(tf: TestFramework)
+final class DependencyAnalysisTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
     val testDirs = Seq(s"../example/awas-lang"
       ,s"../example/fptc"
@@ -95,7 +95,7 @@ final class DependencyAlaysisTestDefProvider(tf: TestFramework)
           Resource.reset
           st = SymbolTable(updatedModel)
           val graph = FptcGraph(updatedModel, st)
-          val fg = FptcAnalysis(graph, updatedModel, st)
+          val fg = FptcAnalysis(graph, st)
           val rg = ReachabilityAnalysis(fg,st)
           Some(DependencyAnalysis(rg,st,"A", "aIn", Some("late"),
             DependencyAnalysis.FORWARD).toDot(name))

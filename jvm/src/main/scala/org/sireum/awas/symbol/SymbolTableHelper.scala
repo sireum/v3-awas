@@ -91,3 +91,4 @@ object SymbolTableHelper {
   val CONNECTION_TYPE = "connection"
   def isConnection(r:Resource) = r.uriType == CONNECTION_TYPE
 }
+

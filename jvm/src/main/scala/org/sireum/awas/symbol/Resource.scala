@@ -92,10 +92,6 @@ object Resource {
             n: Option[Node]): Resource =
     build(uriType, res.uriPaths :+ res.uri, uri, isDef, n)
 
-  def getResourceUri(r: Resource): ResourceUri = {
-    new URI(r.uriType, r.uriPaths.foldLeft("")(_ + "/" + _), r.uri).toASCIIString
-  }
-
   def reset: Unit = {
     resourceInfo.retain((_,_) => false)
   }
@@ -144,7 +140,11 @@ case class ResourceBean(var _uriType: String,
     this._def = Some(isDef)
   }
 
-  override def getUri : ResourceUri = Resource.getResourceUri(self)
+  override def toUri : ResourceUri =  new URI(
+    self.uriType,
+    self.uriPaths.foldLeft("")(_ + "/" + _),
+    self.uri
+  ).toASCIIString
 
 }
 
@@ -166,5 +166,5 @@ trait Resource {
           uri: ResourceUri,
           isDef: Boolean)
 
-  def getUri : ResourceUri
+  def toUri : ResourceUri
 }

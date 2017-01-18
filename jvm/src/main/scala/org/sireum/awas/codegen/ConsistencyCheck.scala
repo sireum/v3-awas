@@ -50,8 +50,8 @@ object ConsistencyCheck {
         tPortUri.isDefined &&
         sCompUri.isDefined &&
         tCompUri.isDefined) {
-          val sourceErrors = st.componentTable(sCompUri.get.getUri).propagation(sPortUri.get.getUri)
-          val targetErrors = st.componentTable(tCompUri.get.getUri).propagation(tPortUri.get.getUri)
+          val sourceErrors = st.componentTable(sCompUri.get.toUri).propagation(sPortUri.get.toUri)
+          val targetErrors = st.componentTable(tCompUri.get.toUri).propagation(tPortUri.get.toUri)
 
           if(!sourceErrors.subsetOf(targetErrors)) {
             errorMessageGen(s"Connection target fails to handle error ${sourceErrors.diff(targetErrors).mkString(", ")}", st.connection(conn), m)

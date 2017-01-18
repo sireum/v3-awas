@@ -23,27 +23,25 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.fptc
+package org.sireum.awas.test.analysis
 
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.codegen.ContextInSensitiveGen
-import org.sireum.awas.fptc.FptcGraph
+import org.sireum.awas.fptc.{FptcAnalysis, FptcGraph}
 import org.sireum.awas.symbol.{Resource, SymbolTable}
-import org.sireum.test._
+import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util._
 import org.sireum.util.jvm.FileUtil._
 
-
-final class FptcGraphTestDefProvider(tf: TestFramework)
-extends TestDefProvider {
-
+final class FptcAnalysisTestDefProvider(tf: TestFramework)
+  extends TestDefProvider {
   val testDirs = Seq(s"../example/awas-lang"
     ,s"../example/fptc"
   )
-  val resultsDir = toFilePath(fileUri(this.getClass, s"../results/dot"))
-  val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/dot"))
+  val resultsDir = toFilePath(fileUri(this.getClass,s"../results/fptc"))
+  val expectedDir = toFilePath(fileUri(this.getClass,s"../expected/fptc"))
 
   val generateExpected = true
 
@@ -51,28 +49,26 @@ extends TestDefProvider {
     val files = testDirs.flatMap { d =>
       listFiles(fileUri(this.getClass, d), "awas")
     }
-
     val filesEqual = files.filter { p =>
-//      p.toLowerCase.contains("pcashutoff") ||
-//        p.toLowerCase.contains("isolette") ||
-//        p.toLowerCase.contains("abcloop")  ||
-        p.toLowerCase.contains("fptc_base")
+      //      p.toLowerCase.contains("pcashutoff") ||
+      //        p.toLowerCase.contains("isolette") ||
+      //        p.toLowerCase.contains("abcloop")  ||
+      p.toLowerCase.contains("fptc_base")
     }
 
     filesEqual.toVector.map { x =>
       val inputFileName = filename(x)
-      print(inputFileName)
       val fileWithOutExt = extensor(inputFileName).toString
-      val outputFileName = fileWithOutExt + ".dot"
-      writeResult(outputFileName, dotGraphPrinter(x,readFile(x)._1, fileWithOutExt).get)
-      val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
-      EqualTest(filename(x), result ,
-        readFile(toUri(expectedDir+"/"+outputFileName))._1)
+      val outputFileName = fileWithOutExt + ".fptc"
+      writeResult(outputFileName, graphAnalysis(x,readFile(x)._1, fileWithOutExt).get)
+      val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
+      EqualTest(filename(x), result,
+        readFile(toUri(expectedDir + "/" + outputFileName))._1)
     }
   }
 
   def extensor(orig: String) = (orig.split('.') match {
-    case xs @ Array(x) => xs
+    case xs@Array(x) => xs
     case y => y.init
   }).mkString
 
@@ -85,7 +81,7 @@ extends TestDefProvider {
     writeFile(toUri(resPath), content)
   }
 
-  def dotGraphPrinter(infileUri: FileResourceUri, model: String, name: String): Option[String] ={
+  def graphAnalysis(infileUri: FileResourceUri, model: String, name: String): Option[String] = {
     import org.sireum.util.jvm.FileUtil._
     val basePath = Paths.get(fileUri(this.getClass, s"../"))
     val relativeUri = basePath.relativize(Paths.get(infileUri))
@@ -98,7 +94,16 @@ extends TestDefProvider {
         Resource.reset
         st = SymbolTable(updatedModel)
         val graph = FptcGraph(updatedModel, st)
-        Some(graph.toDot(name))
+        val fg = FptcAnalysis(graph, st)
+        var res = ""
+        fg.nodes.foreach{
+          n => res += n.uri
+            res += "\nIn\n"
+            res += n.inPorts.map(in => in +" = {"+n.getFptcPropagation(in).mkString(",")+"}").mkString("\n")
+            res+="\nout\n"
+            res += n.outPorts.map(out => out +" = {"+n.getFptcPropagation(out).mkString(",")+"}").mkString("\n") + "\n"
+        }
+        Some(res)
     }
   }
 }

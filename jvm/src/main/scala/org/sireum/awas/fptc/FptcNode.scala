@@ -28,6 +28,7 @@ package org.sireum.awas.fptc
 //import org.sireum.awas.fptc.FptcTuple2Tup.{Ones, getOnes}
 //import org.sireum.awas.fptc.FptcUtilities.NTup
 //import org.sireum.awas.graph.AwasEdge
+import org.sireum.awas.graph.{AwasEdge, AwasGraph}
 import org.sireum.awas.symbol.{ComponentSymbolTable, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.util._
 //import org.sireum.util.IMap
@@ -42,14 +43,10 @@ trait FptcNode {
   def outPorts : Iterable[ResourceUri]
   def addPortEdge(port : ResourceUri, edge : FptcEdge)
   def getEdge(port : ResourceUri) : Set[FptcEdge]
-  //def getNode : Option[FptcNode]
   def getPropagation(port : ResourceUri) : Set[ResourceUri]
   def getFptcPropagation(port : ResourceUri) : Set[ResourceUri]
   def addFptcPropagation(port: ResourceUri, error_type: ResourceUri): Unit
 }
-
-
-
 
 object FptcNode {
   type Edge = FptcEdge
@@ -96,8 +93,8 @@ final case class FN(uri : ResourceUri, st : SymbolTable) extends FptcNode {
       conDecl.toComp.value.map(_.value).mkString("/")+"/"+conDecl.toPort.value,
       Some(true))
 
-    portList += Resource.getResourceUri(inPortUri)
-    portList += Resource.getResourceUri(outPortUri)
+    portList += inPortUri.toUri
+    portList += outPortUri.toUri
   } else {
     portList ++= compST.get.ports.toSeq
   }
@@ -177,117 +174,3 @@ final case class FptcEdge(owner : AwasGraph[FptcNode],
     }
   }
 }
-
-//trait FptcNode {
-//  def getType : String
-//  def toString : String
-//  def getTups : IVector[((NTup) => Option[Ones])]
-//  def getBehaviourRhs(lhs : Tuple) : Option[Tuple]
-//  def getCompInPorts: Node.Seq[Port]
-//  def getCompOutPorts: Node.Seq[Port]
-//  def addToInSet(in : IVector[Option[Fault]]): Unit
-//  def inSetContains(in : IVector[Option[Fault]]) : Boolean
-//  def addToOutSet(out : IVector[Option[Fault]]): Unit
-//  def outSetContains(out : IVector[Option[Fault]]): Boolean
-//  def getInSet: Set[IVector[Option[Fault]]]
-//  def getOutSet: Set[IVector[Option[Fault]]]
-//  def addPortEdgeInfo(port : Port, edge : AwasEdge[FptcNode])
-//  def getPortEdgeInfo : IMap[Port, AwasEdge[FptcNode]]
-//}
-//
-
-//  override def toString : String  = {
-//    node match {
-//      case n : ComponentDecl => PrettyPrinter.print(n.compName) +"::"+ `type`
-//      case n : ConnectionDecl => PrettyPrinter.print(n.connName) +"::"+ `type`
-//      case _ => "Error in node name"
-//    }
-//  }
-//
-//  private var inSet = isetEmpty[IVector[Option[Fault]]]
-//  private var outSet = isetEmpty[IVector[Option[Fault]]]
-//  private var behaviour = imapEmpty[Tuple, Tuple]
-//  private val selectTup = buildMatcher()
-//  private var portEdgeMap = imapEmpty[Port, AwasEdge[FptcNode]]
-//
-//  def getTups : IVector[((NTup) => Option[Ones])] = selectTup
-//
-//  private def buildMatcher(): IVector[((NTup) => Option[Ones])] = {
-//
-//    var result : IMap[Tuple, Tuple] = imapEmpty[Tuple, Tuple]
-//
-//    val temp = node match {
-//      case comp : ComponentDecl => comp.behaviour
-//      case conn : ConnectionDecl => conn.behaviour
-//      case _ => None
-//    }
-//
-//    if(temp.isDefined) {
-//      result = temp.get.expr
-//    }
-//
-//    behaviour = result
-//
-//    result.keySet.map{k => BehaviourFactory(getOnes(k))}.toVector
-//  }
-//
-//  def getBehaviourRhs(lhs : Tuple) : Option[Tuple] = {
-//    behaviour.lift(lhs)
-//  }
-//
-//  def getType = `type`
-//
-//  def getCompInPorts: Node.Seq[Port] = {
-//    node match {
-//      case comp : ComponentDecl =>
-//        comp.ports.filter{p : Port => p.isIn}
-//      case _ => Node.emptySeq[Port]
-//    }
-//  }
-//
-//  def getCompOutPorts: Node.Seq[Port] = {
-//    node match {
-//      case comp : ComponentDecl =>
-//        comp.ports.filter{p : Port => !p.isIn}
-//      case _ => Node.emptySeq[Port]
-//    }
-//  }
-//
-//  def getConnFromPortName: Id = {
-//    assert(this.getType == FptcNodeProperty.CONN_NODE,
-//      "Node is not Connection to get from port")
-//    node.asInstanceOf[ConnectionDecl].fromPort
-//  }
-//
-//  def addToInSet(in : IVector[Option[Fault]]): Unit = {
-//    inSet = inSet + in
-//  }
-//
-//  def inSetContains(in : IVector[Option[Fault]]) : Boolean = {
-//    inSet.contains(in)
-//  }
-//
-//  def addToOutSet(out : IVector[Option[Fault]]): Unit = {
-//    outSet = outSet + out
-//  }
-//
-//  def outSetContains(out : IVector[Option[Fault]]): Boolean = {
-//    outSet.contains(out)
-//  }
-//
-//  def getInSet: Set[IVector[Option[Fault]]] = inSet
-//
-//  def getOutSet: Set[IVector[Option[Fault]]] = outSet
-//
-//  def addPortEdgeInfo(port : Port, edge : AwasEdge[FptcNode]) = {
-//    portEdgeMap = portEdgeMap + ((port, edge))
-//  }
-//
-//  def getPortEdgeInfo : IMap[Port, AwasEdge[FptcNode]] = this.portEdgeMap
-
-//
-//object FptcNodeProperty {
-//  val COMP_NODE = "Component"
-//  val CONN_NODE = "Connection"
-//  val ERROR_NODE = "Node type unknown"
-//}

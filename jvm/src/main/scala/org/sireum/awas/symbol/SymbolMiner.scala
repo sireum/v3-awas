@@ -37,10 +37,6 @@ import org.sireum.util._
 
 object SymbolMiner {
 
-  type Seq[T] = IVector[T]
-
-  final def emptySeq[T] = ivectorEmpty[T]
-
   def apply(m: Model, stp: STProducer)(implicit reporter: AccumulatingTagReporter): STProducer = {
     new ModelElemMiner(stp).miner(m)
     stp
@@ -69,15 +65,12 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       case md: Model => {
         if (md.fileUriOpt.isDefined) {
           val r = Resource(H.MODEL_TYPE, parentRes, md.fileUriOpt.get, None, md)
-          val modelUri = Resource.getResourceUri(r)
-          st.declaredSymbols(md.fileUriOpt.get) = msetEmpty + modelUri
-          stp.modelMap(modelUri) = m
+          st.declaredSymbols(md.fileUriOpt.get) = msetEmpty + r.toUri
+          stp.modelMap(r.toUri) = m
           parentRes = r
         } else {
           val r = Resource(H.MODEL_TYPE, parentRes, "", None, md)
-          val modelUri = Resource.getResourceUri(r)
-          //st.declaredSymbols(md.fileUriOpt.get) = msetEmpty + modelUri
-          stp.modelMap(modelUri) = m
+          stp.modelMap(r.toUri) = m
           parentRes = r
         }
         false
@@ -100,18 +93,17 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
       case ed: EnumDecl => {
         val r = Resource(H.ENUM_TYPE, parentRes, ed.name.value, Some(true), ed)
-        val typeUri = Resource.getResourceUri(r)
-        st.typeDeclTable(typeUri) = ed
+        st.typeDeclTable(r.toUri) = ed
         parentRes = r
-        val tType = new stp.TypeT(typeUri)
-        st.typeTable(Resource.getResourceUri(r)) = tType
+        val tType = new stp.TypeT(r.toUri)
+        st.typeTable(r.toUri) = tType
         val tt = tType.tables
         val tempSet = mmapEmpty[ResourceUri, Id]
         ed.elements.foreach { elem =>
           val er = Resource(H.ERROR_TYPE, parentRes, elem.value, Some(true), elem)
-          val erUri = Resource.getResourceUri(er)
-          if (!tempSet.keySet.contains(erUri))
-            tempSet(Resource.getResourceUri(er)) = elem
+
+          if (!tempSet.keySet.contains(er.toUri))
+            tempSet(er.toUri) = elem
           else {
             reporter.report(errorMessageGen(
               s"Enumeration \'${elem.value}\' already exist in the type declaration ${ed.name.value}",
@@ -119,7 +111,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               m))
           }
         }
-        tt.enumTable(typeUri) = tempSet
+        tt.enumTable(r.toUri) = tempSet
         false
       }
 
@@ -141,16 +133,15 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         parentRes = Resource.getResource(m).get
 
         val r = Resource(H.STATE_MACHINE_TYPE, parentRes, sm.smName.value, Some(true), sm)
-        val smUri = Resource.getResourceUri(r)
-        st.stateMachineDeclTable(smUri) = sm
-        val smt = stp.stateMachineTableProducer(smUri)
+        st.stateMachineDeclTable(r.toUri) = sm
+        val smt = stp.stateMachineTableProducer(r.toUri)
         parentRes = r
 
         sm.states.foreach {
           s => {
             val sr = Resource(H.STATE_TYPE, parentRes, s.value, Some(true), s)
-            if (!smt.tables.statesTable.keySet.contains(Resource.getResourceUri(sr)))
-              smt.tables.statesTable(Resource.getResourceUri(sr)) = s
+            if (!smt.tables.statesTable.keySet.contains(sr.toUri))
+              smt.tables.statesTable(sr.toUri) = s
             else {
               reporter.report(errorMessageGen(
                 s"State \'${s.value}\' already exist in the state machine ${sm.smName.value}",
@@ -164,8 +155,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         sm.events.foreach {
           e => {
             val se = Resource(H.EVENT_TYPE, parentRes, e.value, Some(true), e)
-            if (!smt.tables.eventsTable.keySet.contains(Resource.getResourceUri(se)))
-              smt.tables.eventsTable(Resource.getResourceUri(se)) = e
+            if (!smt.tables.eventsTable.keySet.contains(se.toUri))
+              smt.tables.eventsTable(se.toUri) = e
             else {
               reporter.report(errorMessageGen(
                 s"Event \'${e.value}\' already exist in the state machine ${sm.smName.value}",
@@ -188,18 +179,16 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     implicit reporter: AccumulatingTagReporter): Model = {
     var parentRes = Resource(H.HEAD)
     Visitor.build({
-      case m: Model => {
+      case m: Model =>
         require(Resource.getResource(m).isDefined)
         parentRes = Resource.getResource(m).get
         true
-      }
 
-      case comp: ComponentDecl => {
+      case comp: ComponentDecl =>
         val r = Resource(H.COMPONENT_TYPE, parentRes, comp.compName.value, Some(true), comp)
-        val compUri = Resource.getResourceUri(r)
-        if (!st.componentDeclTable.keySet.contains(compUri)) {
-          st.componentDeclTable(compUri) = comp
-          val compTableProducer = stp.componentSymbolTableProducer(compUri)
+        if (!st.componentDeclTable.keySet.contains(r.toUri)) {
+          st.componentDeclTable(r.toUri) = comp
+          val compTableProducer = stp.componentSymbolTableProducer(r.toUri)
 
           comp.withSM.foreach {
             withs => {
@@ -208,9 +197,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               val smUri = st.stateMachineDeclTable.find(_._1.endsWith(withName))
               val tyUri = st.typeDeclTable.find(_._1.endsWith(withName))
               if (smUri.isDefined) {
-                st.compSMTable(compUri) = smUri.get._1
+                st.compSMTable(r.toUri) = smUri.get._1
               } else if (tyUri.isDefined) {
-                st.compTypeTable(compUri) = tyUri.get._1
+                st.compTypeTable(r.toUri) = tyUri.get._1
               } else {
                 //TODO: Included Type or State machine not found
               }
@@ -224,9 +213,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           comp.flows.foreach {
             flow => {
               val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
-              if (!compTableProducer.tables.flowTable.contains(Resource.getResourceUri(fr))) {
-                compTableProducer.tables.flowTable(Resource.getResourceUri(fr)) = flow
-                flowCheck(m,flow, r,stp.typeTable(stp.compTypeDecl(compUri).get))
+              if (!compTableProducer.tables.flowTable.contains(fr.toUri)) {
+                compTableProducer.tables.flowTable(fr.toUri) = flow
+                flowCheck(m,flow, r,stp.typeTable(stp.compTypeDecl(r.toUri).get))
 
               } else {
                 //TODO: Error flow id already exist
@@ -235,8 +224,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           }
 
           if (comp.behaviour.isDefined) {
-            val ttUri = stp.compTypeDecl(compUri)
-            val smUri = stp.compStateMachine(compUri)
+            val ttUri = stp.compTypeDecl(r.toUri)
+            val smUri = stp.compStateMachine(r.toUri)
             if (ttUri.isDefined) {
               val typeTable = stp.typeTable(ttUri.get)
               comp.behaviour.get.exprs.foreach(exprMiner(m, _, r, typeTable, smUri))
@@ -249,14 +238,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
 
         false
-      }
     })(m)
     m
   }
 
   def flowCheck(m : Model, flow:Flow, r : Resource, tt : TypeTable)(
     implicit reporter: AccumulatingTagReporter): Unit = {
-    val ctp = stp.compMap(Resource.getResourceUri(r))
+    val ctp = stp.compMap(r.toUri)
     if(flow.from.isDefined) {
       val fromP = ctp.ports.find(_.endsWith(flow.from.get.value))
       if(fromP.isDefined) {
@@ -265,14 +253,14 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           flow.fromE.foreach{
             e =>
               val err = e.value.map(_.value).mkString("/")
-              val ttUri = stp.compTypeDecl(r.getUri).get
+              val ttUri = stp.compTypeDecl(r.toUri).get
               val typeTable = stp.typeTable(ttUri)
               val  edecl = typeTable.enumElements.find(_.endsWith(err))
               if(edecl.isDefined) {
                 Resource.useDefResolve(e,typeTable.enumElement(edecl.get))
               } else {
                 reporter.report(errorMessageGen(
-                  s"Error \'${err}\' not found in the associated type declaration",
+                  s"Error \'$err\' not found in the associated type declaration",
                   e,
                   m)
                 )
@@ -298,14 +286,14 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           flow.toE.foreach{
             e =>
               val err = e.value.map(_.value).mkString("/")
-              val ttUri = stp.compTypeDecl(r.getUri).get
+              val ttUri = stp.compTypeDecl(r.toUri).get
               val typeTable = stp.typeTable(ttUri)
               val  edecl = typeTable.enumElements.find(_.endsWith(err))
               if(edecl.isDefined) {
                 Resource.useDefResolve(e,typeTable.enumElement(edecl.get))
               } else {
                 reporter.report(errorMessageGen(
-                  s"Error \'${err}\' not found in the associated type declaration",
+                  s"Error \'$err\' not found in the associated type declaration",
                   e,
                   m)
                 )
@@ -356,9 +344,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     implicit reporter: AccumulatingTagReporter): Unit = {
     tup.tokens.foreach {
       t =>
-        val port = stp.componentTable(r.getUri).ports.find(_.endsWith(t._1.value))
+        val port = stp.componentTable(r.toUri).ports.find(_.endsWith(t._1.value))
         if (port.isDefined) {
-          Resource.useDefResolve(t._1, stp.componentTable(r.getUri).port(port.get))
+          Resource.useDefResolve(t._1, stp.componentTable(r.toUri).port(port.get))
         } else {
           reporter.report(errorMessageGen(
             s"Port \'${t._1.value}\' specified in behavior not found in the component",
@@ -381,7 +369,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       Resource.useDefResolve(f.enum, tt.enumElement(elem.get))
     } else {
       reporter.report(errorMessageGen(
-        s"Error type \'${fif}\' specified in behavior not found in the type declaration associated with the component",
+        s"Error type \'$fif\' specified in behavior not found in the type declaration associated with the component",
         f,
         m)
       )
@@ -390,16 +378,16 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
   def propagationMiner(m: Model, p: Propagation, r: Resource)(
     implicit reporter: AccumulatingTagReporter): Unit = {
-    val ctp = stp.compMap(Resource.getResourceUri(r))
+    val ctp = stp.compMap(r.toUri)
     val portUri = ctp.tables.portTable.keySet.find(_.endsWith("#" + p.id.value))
-    val compUri = Resource.getResourceUri(r)
-    if (!portUri.isDefined) {
+
+    if (portUri.isEmpty) {
       reporter.report(errorMessageGen(
         s"Port \'${p.id.value}\' specified in propagation, not found in the component",
         p,
         m)
       )
-    } else if (!st.compTypeTable.get(compUri).isDefined) {
+    } else if (st.compTypeTable.get(r.toUri).isEmpty) {
       reporter.report(errorMessageGen(
         s"There is no type declaration associated with the component",
         p,
@@ -408,7 +396,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     } else {
       val tempSet = msetEmpty[ResourceUri]
       Resource.useDefResolve(p, ctp.tables.portTable(portUri.get))
-      val tt = st.typeTable(st.compTypeTable(Resource.getResourceUri(r)))
+      val tt = st.typeTable(st.compTypeTable(r.toUri))
       p.errorTypes.foreach {
         et => {
           val etUri = tt.enumElements.find(_.endsWith("#" + et.value.last.value))
@@ -419,14 +407,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
             val td = st.typeDeclTable(tt.uri)
             if (Resource.getResource(td).isDefined) {
               Resource.getResource(td).get.uriType match {
-                case H.ENUM_TYPE => {
+                case H.ENUM_TYPE =>
                   val enumD = td.asInstanceOf[EnumDecl]
                   reporter.report(errorMessageGen(
                     s"Error type \'${et.value.last}\' not fount in type declaration: ${enumD.name.value}",
                     p,
                     m)
                   )
-                }
               }
             } else {
               reporter.report(errorMessageGen(
@@ -445,10 +432,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
   def portMiner(m: Model, p: Port, c: ComponentDecl, r: Resource)(
     implicit reporter: AccumulatingTagReporter): Unit = {
-    val ctp = stp.compMap(Resource.getResourceUri(r))
+    val ctp = stp.compMap(r.toUri)
     val pr = Resource(if (p.isIn) H.PORT_IN_TYPE else H.PORT_OUT_TYPE, r, p.id.value, Some(true), p)
-    if (!ctp.tables.portTable.keySet.contains(Resource.getResourceUri(pr))) {
-      ctp.tables.portTable(Resource.getResourceUri(pr)) = p
+    if (!ctp.tables.portTable.keySet.contains(pr.toUri)) {
+      ctp.tables.portTable(pr.toUri) = p
     } else {
       reporter.report(errorMessageGen(
         s"Port \'${p.id.value}\' already exist in the component ${c.compName.value}",
@@ -459,17 +446,17 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
   def connectionMiner(m: Model)(
-    implicit reporter: AccumulatingTagReporter) = {
+    implicit reporter: AccumulatingTagReporter): Model = {
     var parentRes = Resource(H.HEAD)
     Visitor.build({
-      case conn: ConnectionDecl => {
+      case conn: ConnectionDecl =>
         require(Resource.getResource(m).isDefined)
         parentRes = Resource.getResource(m).get
 
         val r = Resource(H.CONNECTION_TYPE, parentRes, conn.connName.value, Some(true), conn)
-        val connUri = Resource.getResourceUri(r)
-        if (!st.connectionTable.contains(connUri)) {
-          st.connectionTable(connUri) = conn
+
+        if (!st.connectionTable.contains(r.toUri)) {
+          st.connectionTable(r.toUri) = conn
           compPortCheck(m, conn.fromComp, conn.fromPort)
           compPortCheck(m, conn.toComp, conn.toPort)
         } else {
@@ -480,13 +467,12 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           )
         }
         false
-      }
     })(m)
     m
   }
 
   def compPortCheck(m: Model, comp: Name, port: Id)(
-    implicit reporter: AccumulatingTagReporter) = {
+    implicit reporter: AccumulatingTagReporter) : Unit = {
     val fcompUri = findComponent(comp)
     if (fcompUri.isDefined) {
       Resource.useDefResolve(comp, stp.component(fcompUri.get))
@@ -512,6 +498,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   def findComponent(compName: Name): Option[ResourceUri] = {
     st.componentDeclTable.keySet.find(_.endsWith("#" + compName.value.last.value))
   }
+
+
 
   def miner(m: Model)(implicit reporter: AccumulatingTagReporter) =
     connectionMiner(componentElemMiner(stateMachineMiner(

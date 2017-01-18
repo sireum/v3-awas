@@ -23,25 +23,32 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test
+package org.sireum.awas.test.analysis
 
+import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.Suite
-import org.sireum.awas.test.CodeGen.ContextInSensitiveTest
-import org.sireum.awas.test.analysis.{DependencyAnalysisTest, FptcAnalysisTest, FptcGraphTest}
-import org.sireum.awas.test.ast.{PrettyPrinterTest, SymbolTableTest}
-import org.sireum.awas.test.parser.Antlr4AwasParserTest
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
+import org.sireum.test.{TestDef, JUnitTestFramework}
 
-@RunWith(classOf[Suite])
-@Suite.SuiteClasses(
-  Array(
-    classOf[Antlr4AwasParserTest],
-    classOf[PrettyPrinterTest],
-    classOf[SymbolTableTest],
-    classOf[ContextInSensitiveTest],
-    classOf[FptcGraphTest],
-    classOf[FptcAnalysisTest],
-    classOf[DependencyAnalysisTest]
-  )
-)
-final class AwasRegressionTestSuite
+@RunWith(value = classOf[Parameterized])
+final class FptcAnalysisTest(name: String, td: TestDef)  {
+  @Test
+  def test(): Unit = {
+    td.test(JUnitTestFramework)
+  }
+}
+
+object FptcAnalysisTest {
+  val provider = new FptcAnalysisTestDefProvider(JUnitTestFramework)
+
+  @Parameters(name = "{0}")
+  def parameters = {
+    val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
+    val r = new java.util.ArrayList[Array[Object]](ps.size)
+    for (p <- ps) {
+      r.add(p)
+    }
+    r
+  }
+}

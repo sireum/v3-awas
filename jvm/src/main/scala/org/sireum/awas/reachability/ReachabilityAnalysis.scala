@@ -33,6 +33,7 @@ import org.jgrapht.ext.{ComponentAttributeProvider, DOTExporter, IntegerNameProv
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.awas.ast.Name
 import org.sireum.awas.fptc._
+import org.sireum.awas.graph.{AwasEdge, AwasGraph}
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper, TypeTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -70,17 +71,17 @@ object ReachabilityAnalysis {
               if(flow.from.isEmpty) {
                 val source = nodePool(n.uri+"/"+"source")
                 source.setProp(toUri(flow.toE, tt).toSet)
-                val t = Resource.getResource(flow.to.get).get.getUri
-                result.addEdge(source, nodePool(Resource.getResource(flow.to.get).get.getUri))
+                val t = Resource.getResource(flow.to.get).get.toUri
+                result.addEdge(source, nodePool(Resource.getResource(flow.to.get).get.toUri))
               } else if(flow.to.isEmpty) {
                 val sink = nodePool(n.uri+"/"+"sink")
                 sink.setProp(toUri(flow.fromE, tt).toSet)
-                result.addEdge(nodePool(Resource.getResource(flow.from.get).get.getUri),sink)
+                result.addEdge(nodePool(Resource.getResource(flow.from.get).get.toUri),sink)
               } else {
-                val source = Resource.getResource(flow.from.get).get.getUri
-                val target = Resource.getResource(flow.to.get).get.getUri
+                val source = Resource.getResource(flow.from.get).get.toUri
+                val target = Resource.getResource(flow.to.get).get.toUri
                 val edge = result.addEdge(nodePool(source), nodePool(target))
-                edge.setFlow(Resource.getResource(flow).get.getUri)
+                edge.setFlow(Resource.getResource(flow).get.toUri)
               }
 
           }
