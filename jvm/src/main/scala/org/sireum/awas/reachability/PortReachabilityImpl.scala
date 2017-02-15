@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -23,37 +23,8 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.reachability
 
-import org.sireum.awas.symbol.SymbolTable
-import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util._
+class PortReachabilityImpl[BasicNode]  {
 
-trait FptcNode extends BasicNode {
-  def getFptcPropagation(port : ResourceUri) : Set[ResourceUri]
-}
-
-trait FptcNodeUpdate {
-  def addFptcPropagation(port: ResourceUri, error_type: ResourceUri)
-}
-
-object FptcNode {
-  type Edge = FptcEdge
-  private var nodepool = imapEmpty[ResourceUri, FptcNode]
-
-  def createNode(uri: ResourceUri, st: SymbolTable): FptcNode = {
-    if (nodepool.contains(uri)) {
-      nodepool(uri)
-    } else {
-      val node = new FptcNodeImpl(uri, st)
-      nodepool += (uri -> node)
-      node
-    }
-  }
-
-  def getNode(uri: ResourceUri): Option[FptcNode] = nodepool.get(uri)
-
-  def newPool(): Unit = {
-    nodepool = imapEmpty[ResourceUri, FptcNode]
-  }
 }

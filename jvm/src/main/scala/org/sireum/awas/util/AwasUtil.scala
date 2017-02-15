@@ -35,35 +35,7 @@ import org.sireum.awas.symbol.TypeTable
 object AwasUtil {
   type ResourceUri = String
 
-  def errorMessageGen(message: String,
-                              node: Node,
-                              model: Model)
-  : ErrorTag = {
-    val KIND = "Symbol Checker"
-    val locInfo = model.nodeLocMap(node)
-    if (model.fileUriOpt.isDefined) {
 
-      FileLocationInfoErrorMessage(KIND,
-        model.fileUriOpt.get,
-        locInfo.lineBegin,
-        locInfo.columnBegin,
-        locInfo.lineEnd,
-        locInfo.columnEnd,
-        locInfo.offset,
-        locInfo.length,
-        message)
-    } else {
-      LocationInfoErrorMessage(
-        KIND,
-        locInfo.lineBegin,
-        locInfo.columnBegin,
-        locInfo.lineEnd,
-        locInfo.columnEnd,
-        locInfo.offset,
-        locInfo.length,
-        message)
-    }
-  }
 
   def toUri(n : ISeq[Name], tt:TypeTable) : ISeq[ResourceUri] = {
     var res = ivectorEmpty[ResourceUri]

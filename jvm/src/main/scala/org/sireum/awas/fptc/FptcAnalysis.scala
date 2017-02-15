@@ -45,14 +45,14 @@ object FptcAnalysis {
   def evaluateNode(node : FptcNode, st : SymbolTable) : Set[FptcNode] = {
     var res = isetEmpty[FptcNode]
 
-    val nodeType = if(node.uri.startsWith(H.CONNECTION_TYPE)) H.CONNECTION_TYPE else H.COMPONENT_TYPE
+    val nodeType = if(node.getUri.startsWith(H.CONNECTION_TYPE)) H.CONNECTION_TYPE else H.COMPONENT_TYPE
 
     if(nodeType == H.CONNECTION_TYPE) {
       //connection should have only one in port and one out port
       node.getFptcPropagation(node.inPorts.head).foreach {
         errorUri =>
           val temp = node.outPorts.head
-          node.addFptcPropagation(node.outPorts.head, errorUri)
+//          node.addFptcPropagation(node.outPorts.head, errorUri)
       }
 
       //propagatation
@@ -64,11 +64,12 @@ object FptcAnalysis {
       assert(targetPort.isDefined)
       val targetErrors = targetNode.getPropagation(targetPort.get)
       if(!errors.subsetOf(targetErrors)) {
-        errors.foreach(targetNode.addFptcPropagation(targetPort.get, _))
+//        errors.foreach(targetNode.addFptcPropagation(targetPort.get, _))
         res += targetNode
       }
     } else {
-      val compDecl = st.component(node.uri)
+      //component node, there are only two kinds of node
+      val compDecl = st.component(node.getUri)
 
       if(compDecl.behaviour.isDefined) {
         val behavior = compDecl.behaviour.get
@@ -107,12 +108,12 @@ object FptcAnalysis {
     tokens.foreach{
       t =>
         val pUri = Resource.getResource(t._1).get.toUri
-        t._2 match {
-          case f : Fault => node.addFptcPropagation(pUri, Resource.getResource(f.enum).get.toUri)
-          case fs : FaultSet => {
-            fs.value.map(f => Resource.getResource(f).get.toUri).foreach(node.addFptcPropagation(pUri, _))
-          }
-        }
+//        t._2 match {
+//          case f : Fault => node.addFptcPropagation(pUri, Resource.getResource(f.enum).get.toUri)
+//          case fs : FaultSet => {
+//            fs.value.map(f => Resource.getResource(f).get.toUri).foreach(node.addFptcPropagation(pUri, _))
+//          }
+//        }
     }
   }
 
@@ -125,7 +126,7 @@ object FptcAnalysis {
           e =>
             val tErrors = e.target.getFptcPropagation(e.targetPort.get)
             if(!sErrors.subsetOf(tErrors)) {
-              sErrors.foreach(f => e.target.addFptcPropagation(e.targetPort.get, f))
+//              sErrors.foreach(f => e.target.addFptcPropagation(e.targetPort.get, f))
               res += e.target
             }
         }

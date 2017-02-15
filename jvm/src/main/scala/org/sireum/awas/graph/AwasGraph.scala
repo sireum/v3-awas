@@ -57,39 +57,54 @@ trait AwasGraph[Node] {
     graph.containsEdge(n1, n2)
   }
 
-  def addNode(n : Node) : Node = {
-    graph.addVertex(n)
-    n
+  def hasCycles : Boolean = {
+    import org.jgrapht.alg.cycle._
+    new SzwarcfiterLauerSimpleCycles(graph).findSimpleCycles().isEmpty
   }
-
-  def addEdge (from : Node, to: Node) : Edge
-//  = {
-//    val edge = AwasEdge[Node](self, from, to)
-//    graph.addEdge(from, to, edge)
-//    edge
-//  }
 
   def getEdge(n1 : Node, n2: Node) : CSet[Edge] = {
     import scala.collection.JavaConverters._
     graph.getAllEdges(n1, n2).asScala
   }
 
-  def getIncomingEdges(node : Node) : Set[Edge] = {
+  def getIncomingEdges(node : Node) : CSet[Edge] = {
     import scala.collection.JavaConverters._
-    graph.incomingEdgesOf(node).asScala.toSet
+    graph.incomingEdgesOf(node).asScala
   }
 
-  def getOutgoingEdges(node : Node) : Set[Edge] = {
+  def getOutgoingEdges(node : Node) : CSet[Edge] = {
     import scala.collection.JavaConverters._
-    graph.outgoingEdgesOf(node).asScala.toSet
+    graph.outgoingEdgesOf(node).asScala
   }
 
+  def getSuccessorNodes(node : Node) : CSet[Node] = {
+    import scala.collection.JavaConverters._
+    graph.outgoingEdgesOf(node).asScala.map(_.target)
+  }
+
+  def getPredecessorNodes(node : Node) : CSet[Node] = {
+    import scala.collection.JavaConverters._
+    graph.incomingEdgesOf(node).asScala.map(_.source)
+  }
+
+}
+
+trait AwasGraphUpdate[Node] {
+  self : AwasGraph[Node] =>
+
+  def addNode(n : Node) : Node = {
+    graph.addVertex(n)
+    n
+  }
+
+  def addEdge (from : Node, to: Node) : Edge
 }
 
 trait AwasEdge[Node] {
   def sourcePort : Option[ResourceUri]
   def targetPort : Option[ResourceUri]
-
+  def source : Node
+  def target : Node
 }
 
 

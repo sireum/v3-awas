@@ -66,7 +66,7 @@ object DependencyAnalysis {
 
   def forwardSlice(cnode: ReachNode, g:ReachGraph[ReachNode], st : SymbolTable) : ReachGraph[ReachNode] = {
     var workList = ivectorEmpty[ReachNode] :+ cnode
-    while(!workList.isEmpty) {
+    while(workList.nonEmpty) {
       val node = workList.head
       if(node.compUri.startsWith(SymbolTableHelper.COMPONENT_TYPE)) {
         val cst = st.componentTable(node.compUri)
@@ -103,13 +103,14 @@ object DependencyAnalysis {
       } else {
         g.getOutgoingEdges(node).foreach {
           e =>
-            if(e.isInstanceOf[ReachEdge]) {
-              val edge = e.asInstanceOf[ReachEdge]
-              if (!edge.source.getSlice.subsetOf(edge.target.getSlice)) {
-                edge.source.getSlice.foreach(f => edge.target.setSlice(f))
-                edge.target.setSliced
-                workList = workList :+ edge.target
-              }
+            e match {
+              case edge: ReachEdge =>
+                if (!edge.source.getSlice.subsetOf(edge.target.getSlice)) {
+                  edge.source.getSlice.foreach(f => edge.target.setSlice(f))
+                  edge.target.setSliced
+                  workList = workList :+ edge.target
+                }
+              case _ =>
             }
         }
       }
@@ -120,7 +121,7 @@ object DependencyAnalysis {
 
   def backwardSlice(cnode: ReachNode, g:ReachGraph[ReachNode], st : SymbolTable) : ReachGraph[ReachNode] = {
     var workList = ivectorEmpty[ReachNode] :+ cnode
-    while(!workList.isEmpty) {
+    while(workList.nonEmpty) {
       val node = workList.head
       val cst = st.componentTable(node.compUri)
       val ttUri = st.compTypeDecl(node.compUri)

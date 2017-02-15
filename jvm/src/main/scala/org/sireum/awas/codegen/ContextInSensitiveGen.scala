@@ -89,6 +89,7 @@ object ContextInSensitiveGen {
     res.map { f => f._1 -> f._2.toVector }
   }
 
+  //TODO : Refactor this function - function for each case
   def mineBehaviorFlow(behaviour: Behaviour): IVector[Flow] = {
     var res = ivectorEmpty[Flow]
     behaviour.exprs.foreach {

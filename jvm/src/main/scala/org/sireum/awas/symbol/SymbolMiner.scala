@@ -26,9 +26,9 @@
 package org.sireum.awas.symbol
 
 import org.sireum.awas.ast._
-import org.sireum.awas.util.AwasUtil.{ResourceUri, _}
+import org.sireum.awas.symbol.SymbolTableMessage._
+import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-
 /**
   * Created by hariharan on 12/17/16.
   */
@@ -106,9 +106,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
             tempSet(er.toUri) = elem
           else {
             reporter.report(errorMessageGen(
-              s"Enumeration \'${elem.value}\' already exist in the type declaration ${ed.name.value}",
+              DUPLICATE_TYPE,
               elem,
-              m))
+              m, elem.value))
           }
         }
         tt.enumTable(r.toUri) = tempSet
@@ -144,24 +144,21 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               smt.tables.statesTable(sr.toUri) = s
             else {
               reporter.report(errorMessageGen(
-                s"State \'${s.value}\' already exist in the state machine ${sm.smName.value}",
+                DUPLICATE_STATE,
                 s,
-                m))
+                m, s.value))
             }
           }
         }
-
-
         sm.events.foreach {
           e => {
             val se = Resource(H.EVENT_TYPE, parentRes, e.value, Some(true), e)
             if (!smt.tables.eventsTable.keySet.contains(se.toUri))
               smt.tables.eventsTable(se.toUri) = e
             else {
-              reporter.report(errorMessageGen(
-                s"Event \'${e.value}\' already exist in the state machine ${sm.smName.value}",
+              reporter.report(errorMessageGen(DUPLICATE_EVENT,
                 e,
-                m)
+                m, e.value)
               )
             }
           }
@@ -201,7 +198,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               } else if (tyUri.isDefined) {
                 st.compTypeTable(r.toUri) = tyUri.get._1
               } else {
-                //TODO: Included Type or State machine not found
+                reporter.report(errorMessageGen(MiSSING_TYPE_OR_STATE_MACHINE,
+                  withs,
+                  m, withName))
               }
             }
           }
@@ -218,7 +217,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
                 flowCheck(m,flow, r,stp.typeTable(stp.compTypeDecl(r.toUri).get))
 
               } else {
-                //TODO: Error flow id already exist
+                reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
+                  flow.id,
+                  m, flow.id.value))
               }
             }
           }
@@ -234,7 +235,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           //TODO : resolve Fault, state and events from behavior and transistion,
           // so that nodes points to the right uri
         } else {
-          //        TODO: "Component name already exist in the model"
+          reporter.report(errorMessageGen(DUPLICATE_COMPONENT,
+            comp,
+            m, comp.compName.value))
         }
 
         false
@@ -259,22 +262,16 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               if(edecl.isDefined) {
                 Resource.useDefResolve(e,typeTable.enumElement(edecl.get))
               } else {
-                reporter.report(errorMessageGen(
-                  s"Error \'$err\' not found in the associated type declaration",
+                reporter.report(errorMessageGen(Missing_TYPE_DECL,
                   e,
-                  m)
-                )
+                  m, err))
               }
           }
-
         }
-
       } else {
-        reporter.report(errorMessageGen(
-          s"port \'${flow.from.get.value}\' used in flow ${flow.id.value}, not found in component",
+        reporter.report(errorMessageGen(MISSING_PORT_DECL,
           flow,
-          m)
-        )
+          m, flow.from.get.value))
       }
 
     }
@@ -292,22 +289,16 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               if(edecl.isDefined) {
                 Resource.useDefResolve(e,typeTable.enumElement(edecl.get))
               } else {
-                reporter.report(errorMessageGen(
-                  s"Error \'$err\' not found in the associated type declaration",
+                reporter.report(errorMessageGen(Missing_TYPE_DECL,
                   e,
-                  m)
-                )
+                  m, err))
               }
           }
-
         }
-
       } else {
-        reporter.report(errorMessageGen(
-          s"port \'${flow.to.get.value}\' used in flow ${flow.id.value}, not found in component",
+        reporter.report(errorMessageGen(MISSING_PORT_DECL,
           flow,
-          m)
-        )
+          m, flow.id.value))
       }
 
     }
@@ -329,11 +320,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           if (sUri.isDefined) {
             Resource.useDefResolve(s, smt.state(sUri.get))
           } else {
-            reporter.report(errorMessageGen(
-              s"State \'${s.value}\' specified in behavior not found in the component state machine",
+            reporter.report(errorMessageGen(MISSING_STATE_DECL,
               s,
-              m)
-            )
+              m, s.value))
           }
       }
     }
@@ -348,11 +337,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         if (port.isDefined) {
           Resource.useDefResolve(t._1, stp.componentTable(r.toUri).port(port.get))
         } else {
-          reporter.report(errorMessageGen(
-            s"Port \'${t._1.value}\' specified in behavior not found in the component",
+          reporter.report(errorMessageGen(MISSING_PORT_DECL,
             t._1,
-            m)
-          )
+            m, t._1.value))
         }
         t._2 match {
           case f: Fault => mineFault(m, f, r, tt)
@@ -368,11 +355,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     if (elem.isDefined) {
       Resource.useDefResolve(f.enum, tt.enumElement(elem.get))
     } else {
-      reporter.report(errorMessageGen(
-        s"Error type \'$fif\' specified in behavior not found in the type declaration associated with the component",
+      reporter.report(errorMessageGen(Missing_TYPE_DECL,
         f,
-        m)
-      )
+        m, fif))
+
     }
   }
 
@@ -382,18 +368,15 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     val portUri = ctp.tables.portTable.keySet.find(_.endsWith("#" + p.id.value))
 
     if (portUri.isEmpty) {
-      reporter.report(errorMessageGen(
-        s"Port \'${p.id.value}\' specified in propagation, not found in the component",
+      reporter.report(errorMessageGen(MISSING_PORT_DECL,
         p,
-        m)
-      )
+        m, p.id.value))
+
     } else if (st.compTypeTable.get(r.toUri).isEmpty) {
-      reporter.report(errorMessageGen(
-        s"There is no type declaration associated with the component",
+      reporter.report(errorMessageGen(MISSING_TYPE_ASSOCIATION,
         p,
-        m)
-      )
-    } else {
+        m, ""))
+
       val tempSet = msetEmpty[ResourceUri]
       Resource.useDefResolve(p, ctp.tables.portTable(portUri.get))
       val tt = st.typeTable(st.compTypeTable(r.toUri))
@@ -409,18 +392,17 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               Resource.getResource(td).get.uriType match {
                 case H.ENUM_TYPE =>
                   val enumD = td.asInstanceOf[EnumDecl]
-                  reporter.report(errorMessageGen(
-                    s"Error type \'${et.value.last}\' not fount in type declaration: ${enumD.name.value}",
+
+                  reporter.report(errorMessageGen(Missing_TYPE_DECL,
                     p,
-                    m)
-                  )
+                    m, et.value.last.value))
+
               }
             } else {
-              reporter.report(errorMessageGen(
-                s"Error type \'${et.value.last}\' not fount in type declaration: ?",
+              reporter.report(errorMessageGen(Missing_TYPE_DECL,
                 p,
-                m)
-              )
+                m, et.value.last.value))
+
             }
           }
         }
@@ -437,11 +419,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     if (!ctp.tables.portTable.keySet.contains(pr.toUri)) {
       ctp.tables.portTable(pr.toUri) = p
     } else {
-      reporter.report(errorMessageGen(
-        s"Port \'${p.id.value}\' already exist in the component ${c.compName.value}",
+      reporter.report(errorMessageGen(DUPLICATE_PORT,
         p,
-        m)
-      )
+        m, p.id.value))
+
     }
   }
 
@@ -460,11 +441,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           compPortCheck(m, conn.fromComp, conn.fromPort)
           compPortCheck(m, conn.toComp, conn.toPort)
         } else {
-          reporter.report(errorMessageGen(
-            s"Connection \'${conn.connName.value}\' already exist in the model",
-            conn.connName,
-            m)
-          )
+
+          reporter.report(errorMessageGen(DUPLICATE_CONNECTION,
+            conn,
+            m,conn.connName.value))
         }
         false
     })(m)
@@ -480,26 +460,20 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       if (fportUri.isDefined) {
         Resource.useDefResolve(port, stp.componentTable(fcompUri.get).port(fportUri.get))
       } else {
-        reporter.report(errorMessageGen(
-          s"Port \'${port.value}\' not found in component: ${st.componentDeclTable(fcompUri.get).compName.value}",
+        reporter.report(errorMessageGen(MISSING_PORT_DECL,
           port,
-          m)
-        )
+          m, port.value))
       }
     } else {
-      reporter.report(errorMessageGen(
-        s"Component \'${comp.value.map(_.value).mkString("::")}\' not found in connection",
+      reporter.report(errorMessageGen(MISSING_COMPONENT,
         comp,
-        m)
-      )
+        m,comp.value.map(_.value).mkString("::")))
     }
   }
 
   def findComponent(compName: Name): Option[ResourceUri] = {
     st.componentDeclTable.keySet.find(_.endsWith("#" + compName.value.last.value))
   }
-
-
 
   def miner(m: Model)(implicit reporter: AccumulatingTagReporter) =
     connectionMiner(componentElemMiner(stateMachineMiner(
@@ -509,9 +483,4 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
 /*
 TODO: 1. error out intersection of component name and connection name
-2. behavior and transistion error type, state and event resolving
  */
-
-
-
-

@@ -25,12 +25,84 @@
 
 package org.sireum.awas.symbol
 
+import org.sireum.awas.ast.{Model, Node}
+import org.sireum.util.{ErrorTag, FileLocationInfoErrorMessage, LocationInfoErrorMessage}
+
 /**
   * Created by hariharan on 1/17/17.
   */
 object SymbolTableMessage {
 
   val DUPLICATE_TYPE =
-    "Type declaration '%s' had already been defined at [%d, %d]"
+    "Type declaration '%s' had already been defined"
+
+  val DUPLICATE_STATE =
+    "State '%s' already declared in the state machine"
+
+  val DUPLICATE_EVENT =
+    "Event '%s' already declared in the state machine"
+
+  val MiSSING_TYPE_OR_STATE_MACHINE =
+    "Type / State machine '%s' not declared"
+
+  val DUPLICATE_FLOW_NAME =
+    "Flow Name '%s' already declared"
+
+  val DUPLICATE_PORT =
+    "Port '%s' already declared in this component"
+
+  val DUPLICATE_COMPONENT =
+    "Component declaration '%s' had already been defined"
+
+  val DUPLICATE_CONNECTION =
+    "Connection declaration '%s' had already been defined"
+
+  val Missing_TYPE_DECL =
+    "Error '%s' not found in the associated type declaration"
+
+  val MISSING_PORT_DECL =
+    "port '%s' not declared in this component"
+
+  val MISSING_STATE_DECL =
+    "STATE '%s' not found in the associated state machine declaration"
+
+  val MISSING_TYPE_ASSOCIATION =
+    "Type association missing for this component"
+
+  val MISSING_COMPONENT =
+    "Component declaration '%s' not found in this model"
+
+
+  def errorMessageGen(template: String,
+                      node: Node,
+                      model: Model,
+                      info : String)
+  : ErrorTag = {
+    val KIND = "Symbol Checker"
+    val message = template.format(info)
+    val locInfo = model.nodeLocMap(node)
+    if (model.fileUriOpt.isDefined) {
+
+      FileLocationInfoErrorMessage(KIND,
+        model.fileUriOpt.get,
+        locInfo.lineBegin,
+        locInfo.columnBegin,
+        locInfo.lineEnd,
+        locInfo.columnEnd,
+        locInfo.offset,
+        locInfo.length,
+        message)
+    } else {
+      LocationInfoErrorMessage(
+        KIND,
+        locInfo.lineBegin,
+        locInfo.columnBegin,
+        locInfo.lineEnd,
+        locInfo.columnEnd,
+        locInfo.offset,
+        locInfo.length,
+        message)
+    }
+  }
 
 }

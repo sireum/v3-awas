@@ -26,17 +26,10 @@
 
 package org.sireum.awas.fptc
 
-import java.io.StringWriter
-import java.util
-
-import org.jgrapht.DirectedGraph
-import org.jgrapht.ext.{ComponentAttributeProvider, DOTExporter, IntegerNameProvider, VertexNameProvider}
-import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.awas.ast.Model
-import org.sireum.awas.graph.{AwasEdge, AwasGraph}
+import org.sireum.awas.graph.AwasGraph
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
-import org.sireum.util._
 
 trait FptcGraph[Node] extends AwasGraph[Node] {
   def toDot(name : String) : String
@@ -45,7 +38,7 @@ trait FptcGraph[Node] extends AwasGraph[Node] {
 object FptcGraph{
   val H = SymbolTableHelper
   def apply(m : Model, st : SymbolTable) : FptcGraph[FptcNode] = {
-    val result = new Fg()
+    val result = new FptcGraphImpl()
 
     FptcNode.newPool()
 
@@ -62,13 +55,13 @@ object FptcGraph{
         if(fromNode.isDefined && toNode.isDefined) {
           val fedge = result.addEdge(fromNode.get, connNode)
           val fromPortUri = Resource.getResource(st.connection(conn).fromPort).get.toUri
-          fromNode.get.addPortEdge(fromPortUri, fedge)
-          connNode.addPortEdge(connNode.inPorts.head, fedge)
+//          fromNode.get.addPortEdge(fromPortUri, fedge)
+//          connNode.addPortEdge(connNode.inPorts.head, fedge)
 
           val tedge = result.addEdge(connNode, toNode.get)
           val toPortUri = Resource.getResource(st.connection(conn).toPort).get.toUri
-          toNode.get.addPortEdge(toPortUri, tedge)
-          connNode.addPortEdge(connNode.outPorts.head, tedge)
+//          toNode.get.addPortEdge(toPortUri, tedge)
+//          connNode.addPortEdge(connNode.outPorts.head, tedge)
         }
     }
 
@@ -85,56 +78,3 @@ object FptcGraph{
   }
 }
 
-class Fg extends FptcGraph[FptcNode] {
-  self =>
-  override def addEdge(from: FptcNode, to: FptcNode) = {
-    val edge = FptcEdge(self, from, to)
-    graph.addEdge(from, to, edge)
-    edge
-  }
-  override def toDot(name: String): String = {
-    val de = new DOTExporter[FptcNode, Edge](new IntegerNameProvider[FptcNode],
-      nlabelProvide,null,
-        this.attProvider, null)
-    val sw = new StringWriter()
-    de.exportGraph(graph, sw)
-    sw.toString
-  }
-
-  protected val attProvider = new ComponentAttributeProvider[FptcNode] {
-    override def getComponentAttributes(component: FptcNode): util.Map[String, String] = {
-      import scala.collection.JavaConverters._
-      val res = mlinkedMapEmpty[String, String]
-      res("shape") = "record"
-      res.asJava
-    }
-  }
-
-  protected val nlabelProvide = new VertexNameProvider[FptcNode] {
-    override def getVertexName(vertex: FptcNode): String = {
-      var result = ""
-      if(vertex.uri.startsWith(SymbolTableHelper.COMPONENT_TYPE)) {
-        result += "{In Port|"+vertex.inPorts.map{
-          ip =>
-          val pname=ip.split("#").last
-            "<"+pname+">"+pname
-        }.mkString("|") +"} |"
-        result += SymbolTableHelper.COMPONENT_TYPE +"\n"+ vertex.uri.split("#").last + "|"
-        result += "{Out Port\n"+vertex.outPorts.map(_.split("#").last).mkString("|")+"}"
-      } else {
-
-        result = SymbolTableHelper.CONNECTION_TYPE + "\n" + vertex.uri.split("#").last
-      }
-      result
-
-    }
-  }
-
-  override protected val graph: DirectedGraph[FptcNode, Edge] = {
-    new DefaultDirectedGraph[FptcNode, AwasEdge[FptcNode]](
-      (source: FptcNode, target: FptcNode) => new FptcEdge(self, source, target)
-    )
-  }
-
-  override def getNode(n: FptcNode) = n
-}

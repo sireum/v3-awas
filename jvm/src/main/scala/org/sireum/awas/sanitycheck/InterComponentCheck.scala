@@ -23,14 +23,13 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.codegen
+package org.sireum.awas.sanitycheck
 
 import org.sireum.awas.ast.Model
 import org.sireum.awas.symbol.{Resource, SymbolTable}
-import org.sireum.awas.util.AwasUtil.errorMessageGen
 import org.sireum.util.AccumulatingTagReporter
-
-object ConsistencyCheck {
+import org.sireum.awas.symbol.SymbolTableMessage._
+object InterComponentCheck {
 
   def apply(m: Model, st: SymbolTable)
            (implicit reporter: AccumulatingTagReporter): Model = {
@@ -54,7 +53,7 @@ object ConsistencyCheck {
           val targetErrors = st.componentTable(tCompUri.get.toUri).propagation(tPortUri.get.toUri)
 
           if(!sourceErrors.subsetOf(targetErrors)) {
-            errorMessageGen(s"Connection target fails to handle error ${sourceErrors.diff(targetErrors).mkString(", ")}", st.connection(conn), m)
+            errorMessageGen(s"Connection's target fails to handle error ", st.connection(conn), m, {sourceErrors.diff(targetErrors).mkString(", ")})
           }
         }
     }
