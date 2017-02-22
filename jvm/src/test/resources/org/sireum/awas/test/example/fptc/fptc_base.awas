@@ -1,6 +1,11 @@
 types
   enum Fault {late, value}
 
+behavior
+  FailStop:
+    states = [operational, fail]
+    events = {failure, recovery}
+
 components
   A
   with Fault
