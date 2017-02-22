@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -27,12 +27,28 @@
 package org.sireum.awas.fptc
 
 import org.sireum.awas.ast.Model
-import org.sireum.awas.graph.AwasGraph
+import org.sireum.awas.graph.{AwasEdge, AwasGraph}
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
+import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.util.CSet
 
 trait FptcGraph[Node] extends AwasGraph[Node] {
   def toDot(name : String) : String
+
+  def getEdgeForPort(port: ResourceUri): Set[Edge]
+
+  def getSuccessorPorts(port: ResourceUri): CSet[ResourceUri]
+
+  def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri]
+
+  def getNode(port: ResourceUri): Option[Node]
+}
+
+trait FptcEdge[Node] extends AwasEdge[Node] {
+  def sourcePort: Option[ResourceUri]
+
+  def targetPort: Option[ResourceUri]
 }
 
 object FptcGraph{
@@ -55,16 +71,15 @@ object FptcGraph{
         if(fromNode.isDefined && toNode.isDefined) {
           val fedge = result.addEdge(fromNode.get, connNode)
           val fromPortUri = Resource.getResource(st.connection(conn).fromPort).get.toUri
-//          fromNode.get.addPortEdge(fromPortUri, fedge)
-//          connNode.addPortEdge(connNode.inPorts.head, fedge)
+          result.addPortEdge(fromPortUri, fedge)
+          result.addPortEdge(connNode.inPorts.head, fedge)
 
           val tedge = result.addEdge(connNode, toNode.get)
           val toPortUri = Resource.getResource(st.connection(conn).toPort).get.toUri
-//          toNode.get.addPortEdge(toPortUri, tedge)
-//          connNode.addPortEdge(connNode.outPorts.head, tedge)
+          result.addPortEdge(toPortUri, tedge)
+          result.addPortEdge(connNode.outPorts.head, tedge)
         }
     }
-
     result
   }
 

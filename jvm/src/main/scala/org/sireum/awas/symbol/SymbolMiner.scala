@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -214,7 +214,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
               if (!compTableProducer.tables.flowTable.contains(fr.toUri)) {
                 compTableProducer.tables.flowTable(fr.toUri) = flow
-                flowCheck(m,flow, r,stp.typeTable(stp.compTypeDecl(r.toUri).get))
+                flowCheck(m, flow, r)
 
               } else {
                 reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
@@ -245,7 +245,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     m
   }
 
-  def flowCheck(m : Model, flow:Flow, r : Resource, tt : TypeTable)(
+  def flowCheck(m: Model, flow: Flow, r: Resource)(
     implicit reporter: AccumulatingTagReporter): Unit = {
     val ctp = stp.compMap(r.toUri)
     if(flow.from.isDefined) {

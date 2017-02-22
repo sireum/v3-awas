@@ -23,41 +23,33 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.test.Query
 
-import org.sireum.awas.symbol.SymbolTable
-import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util._
 
-trait FptcNode extends BasicNode {
-  def getFptcPropagation(port : ResourceUri) : Set[ResourceUri]
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
+import org.sireum.test.{JUnitTestFramework, TestDef}
 
-  def flowForward(port: ResourceUri): Set[ResourceUri]
-
-  def flowBackward(port: ResourceUri): Set[ResourceUri]
-}
-
-trait FptcNodeUpdate {
-  def addFptcPropagation(port: ResourceUri, error_type: ResourceUri)
-}
-
-object FptcNode {
-  type Edge = FptcEdge[FptcNode]
-  private var nodepool = imapEmpty[ResourceUri, FptcNode]
-
-  def createNode(uri: ResourceUri, st: SymbolTable): FptcNode = {
-    if (nodepool.contains(uri)) {
-      nodepool(uri)
-    } else {
-      val node = new FptcNodeImpl(uri, st)
-      nodepool += (uri -> node)
-      node
-    }
+@RunWith(value = classOf[Parameterized])
+final class QueryTest(name: String, td: TestDef) {
+  @Test
+  def test(): Unit = {
+    td.test(JUnitTestFramework)
   }
+}
 
-  def getNode(uri: ResourceUri): Option[FptcNode] = nodepool.get(uri)
+object QueryTest {
+  val provider = new QueryTestDefProvider(JUnitTestFramework)
 
-  def newPool(): Unit = {
-    nodepool = imapEmpty[ResourceUri, FptcNode]
+  @Parameters(name = "{0}")
+  def parameters = {
+    val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
+    val r = new java.util.ArrayList[Array[Object]](ps.size)
+    for (p <- ps) {
+      r.add(p)
+    }
+    r
   }
 }

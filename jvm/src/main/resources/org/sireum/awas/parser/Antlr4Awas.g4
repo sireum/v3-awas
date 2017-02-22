@@ -86,9 +86,9 @@ propagation
 
 flow
   : id=ID ':'
-    ( from=ID '{' fromE+=name ( ',' fromE+=name )* '}' | '*' )
+     (from=ID ('{' fromE+=name ( ',' fromE+=name )* '}')? | '*')
     '->'
-    ( to=ID '{' toE+=name ( ',' toE+=name )* '}' | '*' )
+    (to=ID ('{' toE+=name ( ',' toE+=name )* '}')? | '*')
   ;
 
 property

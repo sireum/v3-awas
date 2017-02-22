@@ -31,20 +31,44 @@ import java.util
 import org.jgrapht.DirectedGraph
 import org.jgrapht.ext._
 import org.jgrapht.graph.DefaultDirectedGraph
-import org.sireum.awas.graph.{AwasEdge, AwasGraphUpdate}
+import org.sireum.awas.graph.AwasGraphUpdate
 import org.sireum.awas.symbol.SymbolTableHelper
+import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
 class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
   self =>
+
+  type FEdge = FptcEdge[FptcNode]
+
+  var portEdgeMap = imapEmpty[ResourceUri, ISet[FEdge]]
+
+  var portNodeMap = imapEmpty[ResourceUri, FptcNode]
+
+  val H = SymbolTableHelper
+
+  def addPortEdge(port: ResourceUri, edge: FEdge): Unit = {
+    if (portEdgeMap.keySet.contains(port)) {
+      portEdgeMap += port -> (portEdgeMap(port) + edge)
+    } else {
+      portEdgeMap += port -> (isetEmpty[FEdge] + edge)
+    }
+  }
+
   override def addEdge(from: FptcNode, to: FptcNode) = {
-    val edge = FptcEdge(self, from, to)
+    val edge = FptcEdgeImpl(self, from, to)
     graph.addEdge(from, to, edge)
     edge
   }
 
+  override def addNode(n: FptcNode): FptcNode = {
+    n.ports.foreach { p => portNodeMap += (p -> n) }
+    graph.addVertex(n)
+    n
+  }
+
   override def toDot(name: String): String = {
-    val de = new DOTExporter[FptcNode, Edge](new IntegerNameProvider[FptcNode],
+    val de = new DOTExporter[FptcNode, FEdge](new IntegerNameProvider[FptcNode],
       nlabelProvide, null,
       this.attProvider, null)
     val sw = new StringWriter()
@@ -71,7 +95,7 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
             "<" + pname + ">" + pname
         }.mkString("|") + "} |"
         result += SymbolTableHelper.COMPONENT_TYPE + "\n" + vertex.getUri.split("#").last + "|"
-        result += "{Out Port\n" + vertex.outPorts.map(_.split("#").last).mkString("|") + "}"
+        result += "{Out Port|" + vertex.outPorts.map(_.split("#").last).mkString("|") + "}"
       } else {
 
         result = SymbolTableHelper.CONNECTION_TYPE + "\n" + vertex.getUri.split("#").last
@@ -80,11 +104,62 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
     }
   }
 
-  override protected val graph: DirectedGraph[FptcNode, Edge] = {
-    new DefaultDirectedGraph[FptcNode, AwasEdge[FptcNode]](
-      (source: FptcNode, target: FptcNode) => new FptcEdge(self, source, target)
+  override protected val graph: DirectedGraph[FptcNode, FEdge] = {
+    new DefaultDirectedGraph[FptcNode, FEdge](
+      (source: FptcNode, target: FptcNode) => FptcEdgeImpl(self, source, target)
     )
   }
 
   override def getNode(n: FptcNode) = n
+
+  def getNode(uri: ResourceUri): Option[FptcNode] = {
+    if (uri.startsWith(H.COMPONENT_TYPE) ||
+      uri.startsWith(H.CONNECTION_TYPE)) {
+      FptcNode.getNode(uri)
+    } else {
+      portNodeMap.get(uri)
+    }
+  }
+
+  override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
+    portEdgeMap.getOrElse(port, isetEmpty[FEdge])
+
+  override def getSuccessorPorts(port: ResourceUri): CSet[ResourceUri] = {
+    var result = isetEmpty[ResourceUri]
+    val node = getNode(port)
+    if (node.isDefined) {
+      if (port.startsWith(H.PORT_IN_TYPE)) {
+        result = result ++ node.get.flowForward(port)
+      } else {
+        //outport: use edge to get the successor
+        getEdgeForPort(port).foreach {
+          e =>
+            e.targetPort match {
+              case Some(x) => result = result + x
+              case none =>
+            }
+        }
+      }
+    }
+    result
+  }
+
+  override def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri] = {
+    var result = isetEmpty[ResourceUri]
+    val node = getNode(port)
+    if (node.isDefined) {
+      if (port.startsWith(H.PORT_IN_TYPE)) {
+        getEdgeForPort(port).foreach { e =>
+          e.sourcePort match {
+            case Some(x) => result = result + x
+            case none =>
+          }
+        }
+      } else {
+        //outport: use edge to get the successor
+        result = result ++ node.get.flowBackward(port)
+      }
+    }
+    result
+  }
 }

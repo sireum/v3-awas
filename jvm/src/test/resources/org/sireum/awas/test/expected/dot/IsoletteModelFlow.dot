@@ -1,0 +1,56 @@
+digraph G {
+  1 [ label="{In Port|<sensed_temp>sensed_temp|<settings>settings} |component
+Thermostat|{Out Port|feedback|heater_ctrl}" shape="record" ];
+  2 [ label="{In Port|<monitor>monitor} |component
+Nurse|{Out Port|set_params}" shape="record" ];
+  3 [ label="{In Port|<from_heater>from_heater|<from_infant>from_infant} |component
+Air|{Out Port|to_sensor|to_infant}" shape="record" ];
+  4 [ label="{In Port|<heat_in>heat_in} |component
+Infant|{Out Port|heat_out}" shape="record" ];
+  5 [ label="{In Port|<settings_in>settings_in|<feedback_in>feedback_in} |component
+OperatorInterface|{Out Port|feedback_out|settings_out}" shape="record" ];
+  6 [ label="{In Port|<on_heater>on_heater} |component
+HeatSource|{Out Port|heater_output}" shape="record" ];
+  7 [ label="{In Port|<air_heat>air_heat} |component
+TempSensor|{Out Port|air_temp}" shape="record" ];
+  8 [ label="connection
+i1" shape="record" ];
+  9 [ label="connection
+t1" shape="record" ];
+  10 [ label="connection
+o3" shape="record" ];
+  11 [ label="connection
+h1" shape="record" ];
+  12 [ label="connection
+o2" shape="record" ];
+  13 [ label="connection
+i2" shape="record" ];
+  14 [ label="connection
+t2" shape="record" ];
+  15 [ label="connection
+o1" shape="record" ];
+  16 [ label="connection
+o4" shape="record" ];
+  17 [ label="connection
+h2" shape="record" ];
+  3 -> 8;
+  8 -> 4;
+  1 -> 9;
+  9 -> 6;
+  5 -> 10;
+  10 -> 2;
+  6 -> 11;
+  11 -> 3;
+  1 -> 12;
+  12 -> 5;
+  4 -> 13;
+  13 -> 3;
+  7 -> 14;
+  14 -> 1;
+  5 -> 15;
+  15 -> 1;
+  2 -> 16;
+  16 -> 5;
+  3 -> 17;
+  17 -> 7;
+}

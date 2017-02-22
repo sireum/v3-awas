@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -28,20 +28,17 @@ package org.sireum.awas.test
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 import org.sireum.awas.test.CodeGen.ContextInSensitiveTest
-import org.sireum.awas.test.analysis.{DependencyAnalysisTest, FptcAnalysisTest, FptcGraphTest}
+import org.sireum.awas.test.analysis.FptcGraphTest
 import org.sireum.awas.test.ast.{PrettyPrinterTest, SymbolTableTest}
-import org.sireum.awas.test.parser.Antlr4AwasParserTest
 
 @RunWith(classOf[Suite])
 @Suite.SuiteClasses(
   Array(
-    classOf[Antlr4AwasParserTest],
     classOf[PrettyPrinterTest],
     classOf[SymbolTableTest],
     classOf[ContextInSensitiveTest],
     classOf[FptcGraphTest],
-    classOf[FptcAnalysisTest],
-    classOf[DependencyAnalysisTest]
+    classOf[Query.QueryTest]
   )
 )
 final class AwasRegressionTestSuite

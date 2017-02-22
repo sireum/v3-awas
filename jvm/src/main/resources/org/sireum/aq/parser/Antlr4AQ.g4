@@ -13,44 +13,32 @@ model
 ;
 
 queryStmt
-: queryName '=' queryExpr
-;
-
-queryName
-: ID
-;
-
-queryExpr
-: expr (operator expr)*
+: id=ID '=' expr
 ;
 
 expr
-: nodeNameError
-| '{' nodeNameError '}'
-| '*'
-| queryName
+: pexpr                                          #PrimaryExpr
+| l=expr op='-' r=expr                           #Binary
+| l=expr op=('union' | 'intersect') r=expr       #Binary
+| l=expr op=('->' | '<-') r=expr                 #Binary
+;
+
+
+pexpr
+: nodeNameError                                  #NodeN
+| '(' expr ')'                                   #Paren
+| '{' nodeNameError(','  nodeNameError)+ '}'     #NodeSet
+| '*'                                            #Empty
+| '\''id=ID                                     #QueryRes
 ;
 
 nodeNameError
-: nodeName ('{' ID+ '}')?
+: nodeName ('{' ids+=ID+ '}')?
 ;
 
 nodeName
-  : ID ( '.' ID )* (':' ('in' | 'out' | 'source' | 'sink'))?
+  : ids+=ID ( '.' ids+=ID )* (':' f=('in' | 'out' | 'source' | 'sink'))?
   ;
-
-operator
-: 'union'
-| 'intersect'
-| '->'
-| '<-'
-| '-'
-;
-
-filter
-:
-':'('source' | 'sink' | 'both')
-;
 
 INTEGER
   : '0' | [1-9] [0-9]*

@@ -33,10 +33,7 @@ trait BasicNode {
   def ports : Iterable[ResourceUri]
   def inPorts: Iterable[ResourceUri]
   def outPorts : Iterable[ResourceUri]
-  def getEdge(port : ResourceUri) : Set[FptcEdge]
   def getPropagation(port : ResourceUri) : Set[ResourceUri]
-}
 
-trait BasicNodeUpdate {
-  def addPortEdge(port : ResourceUri, edge : FptcEdge)
+  def isComponent: Boolean
 }

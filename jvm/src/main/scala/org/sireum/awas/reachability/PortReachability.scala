@@ -25,10 +25,35 @@
 
 package org.sireum.awas.reachability
 
+import org.sireum.awas.fptc.{FptcGraph, FptcNode}
 import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.util.ISet
 
 
 trait PortReachability[Node] extends BasicReachability[Node]{
-  def forwardPortReach(criterion: ResourceUri)
-  def BackwardPortReach(criterion: ResourceUri)
+  def forwardPortReach(criterion: ResourceUri): ISet[ResourceUri]
+
+  def backwardPortReach(criterion: ResourceUri): ISet[ResourceUri]
+
+  def forwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri]
+
+  def backwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri]
+
+  def forwardPortReach(criterion: FptcNode): ISet[ResourceUri]
+
+  def backwardPortReach(criterion: FptcNode): ISet[ResourceUri]
+
+  def forwardReach(criterion: ResourceUri): ISet[ResourceUri]
+
+  def backwardReach(criterion: ResourceUri): ISet[ResourceUri]
+
+  def forwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri]
+
+  def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri]
+}
+
+object PortReachability {
+  def apply(graph: FptcGraph[FptcNode]): PortReachability[FptcNode] = {
+    new PortReachabilityImpl[FptcNode](graph)
+  }
 }

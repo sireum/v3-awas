@@ -1,0 +1,112 @@
+patient_reach
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+app_backreach
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+patient_backreach
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+patient_reach_2
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+patient_backreach2
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+patient_to_App
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+patient_to_App2
+ -------------- 
+component:$$example/Query/PCAModel.awas#App
+component:$$example/Query/PCAModel.awas#Capnography
+component:$$example/Query/PCAModel.awas#Patient
+component:$$example/Query/PCAModel.awas#PulseOx
+component:$$example/Query/PCAModel.awas#Pump
+connection:$$example/Query/PCAModel.awas#a1
+connection:$$example/Query/PCAModel.awas#app1
+connection:$$example/Query/PCAModel.awas#p1
+connection:$$example/Query/PCAModel.awas#p2
+connection:$$example/Query/PCAModel.awas#s1
+connection:$$example/Query/PCAModel.awas#s2
+connection:$$example/Query/PCAModel.awas#s3
+ -------------- 
+spo2_reach
+ -------------- 
+port-in-virtual:$$example/Query/PCAModel.awas$s1#PulseOx/spo2
+port-in:$$example/Query/PCAModel.awas$App#spo2
+port-out-virtual:$$example/Query/PCAModel.awas$s1#App/spo2
+port-out:$$example/Query/PCAModel.awas$PulseOx#spo2
+ -------------- 

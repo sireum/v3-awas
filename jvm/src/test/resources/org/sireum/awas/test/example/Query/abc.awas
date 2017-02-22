@@ -1,0 +1,25 @@
+components
+  A
+    ports
+      in aIn
+      out aOut
+    flows
+      f1 : aIn -> aOut
+
+  B
+    ports
+      in bIn
+      out bOut
+      out bOut2
+
+  C
+    ports
+      in cIn
+      out cOut
+
+connections
+  A2B : A.aOut -> B.bIn
+
+  B2C : B.bOut -> C.cIn
+
+  B2A : B.bOut2 -> A.aIn

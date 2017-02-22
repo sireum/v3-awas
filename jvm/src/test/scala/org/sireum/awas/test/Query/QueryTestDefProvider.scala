@@ -23,31 +23,25 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.test.analysis
+package org.sireum.awas.test.Query
 
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
-import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.fptc.FptcGraph
-import org.sireum.awas.symbol.{Resource, SymbolTable}
-import org.sireum.awas.util.TestUtils
-import org.sireum.test._
-import org.sireum.util._
-import org.sireum.util.jvm.FileUtil.{readFile, _}
+import org.sireum.awas.query.{QueryBuilder, QueryEval}
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
+import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
+import org.sireum.util._
+import org.sireum.util.jvm.FileUtil._
 
 
-final class FptcGraphTestDefProvider(tf: TestFramework)
-extends TestDefProvider {
+final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
+  val testDirs = Seq(makePath("..", "example", "Query"))
 
-  val testDirs = Seq(
-    //    makePath("..", "example", "awas-lang"),
-    makePath("..", "example", "fptc"),
-    makePath("..", "example", "Query")
-  )
-  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
-  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
+  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
+  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
 
   val generateExpected = true
 
@@ -63,35 +57,53 @@ extends TestDefProvider {
     filesEqual.toVector.map { x =>
       val inputFileName = filename(x)
       print(inputFileName)
-      val fileWithOutExt = TestUtils.extensor(inputFileName).toString
-      val outputFileName = fileWithOutExt + ".dot"
-      val res = dotGraphPrinter(x, readFile(x)._1, fileWithOutExt)
+      val fileWithOutExt = extensor(inputFileName).toString
 
-      TestUtils.writeResult(outputFileName,
-        if (res.isDefined) res.get else "",
-        expectedDir, resultsDir, generateExpected)
-      val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
-      EqualTest(filename(x), result ,
-        readFile(toUri(expectedDir+"/"+outputFileName))._1)
+      val modelFile = x
+      val queryFile = extensor(x) + ".aq"
+      var inputs = imapEmpty[FileResourceUri, FileResourceUri]
+      inputs = inputs + (modelFile -> queryFile)
+
+      val outputFileName = fileWithOutExt + ".qres"
+
+      println(queryFile)
+      writeResult(outputFileName,
+        QueryResultPrinter(x, readFile(x)._1,
+          readFile(queryFile)._1), expectedDir, resultsDir, generateExpected)
+
+
+      EqualTest(fileWithOutExt,
+        readFile(toUri(makePath(resultsDir, outputFileName)))._1,
+        readFile(toUri(makePath(expectedDir, outputFileName)))._1)
     }
   }
 
-
-
-  def dotGraphPrinter(infileUri: FileResourceUri, model: String, name: String): Option[String] ={
+  def QueryResultPrinter(modelfile: FileResourceUri, model: String,
+                         query: String): String = {
     import org.sireum.util.jvm.FileUtil._
     val basePath = Paths.get(fileUri(this.getClass, s".."))
-    val relativeUri = basePath.relativize(Paths.get(infileUri))
+    val relativeUri = basePath.relativize(Paths.get(modelfile))
+
     Builder(Some(relativeUri.toString), model) match {
-      case None => None
+      case None => ""
       case Some(m) =>
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         var st = SymbolTable(m)
-        val updatedModel = ContextInSensitiveGen(m, st)
-        Resource.reset
-        st = SymbolTable(updatedModel)
-        val graph = FptcGraph(updatedModel, st)
-        Some(graph.toDot(name))
+        val graph = FptcGraph(m, st)
+        QueryBuilder(query) match {
+          case None => ""
+          case Some(q) =>
+            val res = QueryEval(q, graph, st)
+            var result = ""
+            res.foreach { r =>
+              result += r._1
+              result += "\n -------------- \n"
+              result += r._2.toSeq.sorted.mkString("\n")
+              result += "\n -------------- \n"
+            }
+            result
+        }
     }
+
   }
 }

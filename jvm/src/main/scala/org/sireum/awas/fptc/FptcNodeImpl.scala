@@ -25,7 +25,7 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.graph.{AwasEdge, AwasGraph}
+import org.sireum.awas.graph.AwasGraph
 import org.sireum.awas.symbol._
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -33,7 +33,7 @@ import org.sireum.util._
 final case class FptcNodeImpl(uri : ResourceUri, st : SymbolTable)  extends
   BasicNodeImpl(uri, st) with FptcNode with FptcNodeUpdate {
 
-  type Edge = FptcEdge
+  type Edge = FptcEdge[FptcNode]
 
   val uriType: Uri = if(uri.startsWith(H.CONNECTION_TYPE)) H.CONNECTION_TYPE else H.COMPONENT_TYPE
 
@@ -62,14 +62,56 @@ final case class FptcNodeImpl(uri : ResourceUri, st : SymbolTable)  extends
 
   override def getFptcPropagation(port: ResourceUri): Set[ResourceUri] = fptcPropagation(port)
 
+  override def flowForward(port: ResourceUri): Set[ResourceUri] = {
+    var result = isetEmpty[ResourceUri]
+    if (port.startsWith(H.PORT_IN_TYPE)) {
+      if (isComponent) {
+        val flows = compST.get.flows
+        val pid = port.split("#").last
+        flows.foreach { f =>
+          if (compST.get.flow(f).from.isDefined &&
+            compST.get.flow(f).to.isDefined) {
+            if (compST.get.flow(f).from.get.value == pid) {
+              result = result ++ outPorts.filter(_.split("#").last == compST.get.flow(f).to.get.value)
+            }
+          }
+        }
+      } else {
+        result += outPorts.head
+      }
+    }
+    result
+  }
+
+  override def flowBackward(port: ResourceUri): Set[ResourceUri] = {
+    var result = isetEmpty[ResourceUri]
+    if (port.startsWith(H.PORT_OUT_TYPE)) {
+      if (isComponent) {
+        val flows = compST.get.flows
+        val pid = port.split("#").last
+        flows.foreach { f =>
+          if (compST.get.flow(f).from.isDefined &&
+            compST.get.flow(f).to.isDefined) {
+            if (compST.get.flow(f).to.get.value == pid) {
+              result = result ++ inPorts.filter(_.split("#").last == compST.get.flow(f).from.get.value)
+            }
+          }
+        }
+      } else {
+        result += inPorts.head
+      }
+    }
+    result
+  }
 }
 
-final case class FptcEdge(owner : AwasGraph[FptcNode],
-                          source : FptcNode,
-                          target : FptcNode) extends AwasEdge[FptcNode]{
-  self : FptcEdge =>
+final case class FptcEdgeImpl(owner: AwasGraph[FptcNode],
+                              source : FptcNode,
+                              target: FptcNode) extends FptcEdge[FptcNode] {
+  self: FptcEdge[FptcNode] =>
   //either source or target should be a connection
-  val conn : FptcNode = if(source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE)) source else target
+  val conn: FptcNode = if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
+    source else target
 
   val isSourceConn : Boolean = conn == source
 
@@ -77,13 +119,15 @@ final case class FptcEdge(owner : AwasGraph[FptcNode],
     if(isSourceConn) {
       Some(conn.outPorts.head)
     } else {
-      source.outPorts.find(source.getEdge(_).contains(self))
+      val pname = conn.inPorts.head.split("/").last
+      source.outPorts.find(_.endsWith(pname))
     }
   }
 
   override def targetPort: Option[ResourceUri] = {
     if(isSourceConn) {
-      target.inPorts.find(target.getEdge(_).contains(self))
+      val pname = conn.outPorts.head.split("/").last
+      target.inPorts.find(_.endsWith(pname))
     } else {
       Some(conn.inPorts.head)
     }

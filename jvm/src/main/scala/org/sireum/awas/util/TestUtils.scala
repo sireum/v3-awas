@@ -23,41 +23,28 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.util
 
-import org.sireum.awas.symbol.SymbolTable
-import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util._
+import java.io.File
 
-trait FptcNode extends BasicNode {
-  def getFptcPropagation(port : ResourceUri) : Set[ResourceUri]
+import org.sireum.util.jvm.FileUtil._
 
-  def flowForward(port: ResourceUri): Set[ResourceUri]
+object TestUtils {
 
-  def flowBackward(port: ResourceUri): Set[ResourceUri]
-}
+  def extensor(orig: String) = orig.split('.').init.mkString(".")
 
-trait FptcNodeUpdate {
-  def addFptcPropagation(port: ResourceUri, error_type: ResourceUri)
-}
-
-object FptcNode {
-  type Edge = FptcEdge[FptcNode]
-  private var nodepool = imapEmpty[ResourceUri, FptcNode]
-
-  def createNode(uri: ResourceUri, st: SymbolTable): FptcNode = {
-    if (nodepool.contains(uri)) {
-      nodepool(uri)
-    } else {
-      val node = new FptcNodeImpl(uri, st)
-      nodepool += (uri -> node)
-      node
+  def writeResult(fileName: String,
+                  content: String,
+                  expectedDir: String,
+                  resultsDir: String,
+                  genExpected: Boolean) = {
+    if (genExpected) {
+      writeFile(toUri(makePath(expectedDir, fileName)), content)
     }
+    writeFile(toUri(makePath(resultsDir, fileName)), content)
   }
 
-  def getNode(uri: ResourceUri): Option[FptcNode] = nodepool.get(uri)
+  def makePath(ins: String*): String =
+    ins.mkString(File.separator)
 
-  def newPool(): Unit = {
-    nodepool = imapEmpty[ResourceUri, FptcNode]
-  }
 }

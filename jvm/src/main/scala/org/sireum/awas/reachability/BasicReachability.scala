@@ -41,7 +41,7 @@ trait BasicReachability[Node] {
     * @param criterion Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  def forwardReachSet(criterion : Set[Node]) : ISet[Node]
+  def forwardReachSetNode(criterion: Set[Node]): ISet[Node]
 
   /**
     * Returns the backward reachability/slice of the criterion
@@ -56,5 +56,5 @@ trait BasicReachability[Node] {
     * @param criterions Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  def backwardReachSet(criterions : Set[Node]) : ISet[Node]
+  def backwardReachSetNode(criterions: Set[Node]): ISet[Node]
 }

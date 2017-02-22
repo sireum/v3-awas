@@ -78,7 +78,7 @@ class BasicReachabilityImpl(graph : FptcGraph[FptcNode]) extends BasicReachabili
     * @param criterion Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  override def forwardReachSet(criterion: Set[FptcNode]): ISet[FptcNode] = {
+  override def forwardReachSetNode(criterion: Set[FptcNode]): ISet[FptcNode] = {
     criterion.flatMap(forwardReach)
   }
 
@@ -88,7 +88,7 @@ class BasicReachabilityImpl(graph : FptcGraph[FptcNode]) extends BasicReachabili
     * @param criterions Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  override def backwardReachSet(criterions: Set[FptcNode]): ISet[FptcNode] = {
+  override def backwardReachSetNode(criterions: Set[FptcNode]): ISet[FptcNode] = {
     criterions.flatMap(backwardReach)
   }
 }

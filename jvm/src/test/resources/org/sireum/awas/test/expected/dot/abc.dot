@@ -1,0 +1,20 @@
+digraph G {
+  1 [ label="{In Port|<aIn>aIn} |component
+A|{Out Port|aOut}" shape="record" ];
+  2 [ label="{In Port|<cIn>cIn} |component
+C|{Out Port|cOut}" shape="record" ];
+  3 [ label="{In Port|<bIn>bIn} |component
+B|{Out Port|bOut2|bOut}" shape="record" ];
+  4 [ label="connection
+B2A" shape="record" ];
+  5 [ label="connection
+A2B" shape="record" ];
+  6 [ label="connection
+B2C" shape="record" ];
+  3 -> 4;
+  4 -> 1;
+  1 -> 5;
+  5 -> 3;
+  3 -> 6;
+  6 -> 2;
+}

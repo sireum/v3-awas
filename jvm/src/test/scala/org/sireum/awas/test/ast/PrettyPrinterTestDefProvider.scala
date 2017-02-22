@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -44,9 +44,8 @@ final class PrettyPrinterTestDefProvider(tf: TestFramework)
 
     //equals test by excluding some
     val filesEqual = files.filterNot { p =>
-      p.toLowerCase.contains("abnested") ||
-        p.toLowerCase.contains("pcashutoff") ||
-        p.toLowerCase.contains("abcloop")
+      p.toLowerCase.contains("abcloop") ||
+        p.toLowerCase.contains("pcashutoff.awas")
     }
 
     //conditional test by filter

@@ -1,0 +1,26 @@
+//This file contains the queries to exercise all the completed features
+//of the query language and the reachability analysis
+//----------------------------------------------------------------------
+//component reachability
+//----------------------------------------------------------------------
+
+patient_reach = Patient -> *
+app_backreach = * -> App
+
+patient_backreach = * -> Patient
+patient_reach_2 = * <- Patient
+patient_backreach2 = Patient <- *
+//due to the loop it provides everything
+patient_to_App = Patient -> App
+
+//use the tick(') to use the result of another query
+patient_to_App2 = 'patient_reach intersect 'app_backreach
+
+//----------------------------------------------------------------------
+//flow reachability
+//----------------------------------------------------------------------
+
+spo2_reach = PulseOx.spo2 -> *
+
+
+

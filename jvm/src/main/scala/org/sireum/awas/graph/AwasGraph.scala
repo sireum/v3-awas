@@ -26,12 +26,12 @@
 package org.sireum.awas.graph
 
 import org.jgrapht.DirectedGraph
-import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.awas.fptc.FptcEdge
 import org.sireum.util.CSet
 
 trait AwasGraph[Node] {
   self =>
-  type Edge = AwasEdge[Node]
+  type Edge = FptcEdge[Node]
 
   protected def graph : DirectedGraph[Node, Edge]
 
@@ -101,8 +101,6 @@ trait AwasGraphUpdate[Node] {
 }
 
 trait AwasEdge[Node] {
-  def sourcePort : Option[ResourceUri]
-  def targetPort : Option[ResourceUri]
   def source : Node
   def target : Node
 }

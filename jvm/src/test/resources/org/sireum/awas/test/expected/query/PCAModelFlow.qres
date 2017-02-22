@@ -1,0 +1,97 @@
+spo2_reach
+ -------------- 
+port-in-virtual:$$example/Query/PCAModelFlow.awas$a1#Pump/drug
+port-in-virtual:$$example/Query/PCAModelFlow.awas$app1#App/pump_cmd
+port-in-virtual:$$example/Query/PCAModelFlow.awas$p1#Patient/fingerclip
+port-in-virtual:$$example/Query/PCAModelFlow.awas$p2#Patient/exhalation
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s1#PulseOx/spo2
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s2#Capnography/etco2
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s3#Capnography/resp_rate
+port-in:$$example/Query/PCAModelFlow.awas$App#etco2
+port-in:$$example/Query/PCAModelFlow.awas$App#rr
+port-in:$$example/Query/PCAModelFlow.awas$App#spo2
+port-in:$$example/Query/PCAModelFlow.awas$Capnography#breath
+port-in:$$example/Query/PCAModelFlow.awas$Patient#vein
+port-in:$$example/Query/PCAModelFlow.awas$PulseOx#refracted_light
+port-in:$$example/Query/PCAModelFlow.awas$Pump#cmd
+port-out-virtual:$$example/Query/PCAModelFlow.awas$a1#Patient/vein
+port-out-virtual:$$example/Query/PCAModelFlow.awas$app1#Pump/cmd
+port-out-virtual:$$example/Query/PCAModelFlow.awas$p1#PulseOx/refracted_light
+port-out-virtual:$$example/Query/PCAModelFlow.awas$p2#Capnography/breath
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s1#App/spo2
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s2#App/etco2
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s3#App/rr
+port-out:$$example/Query/PCAModelFlow.awas$App#pump_cmd
+port-out:$$example/Query/PCAModelFlow.awas$Capnography#etco2
+port-out:$$example/Query/PCAModelFlow.awas$Capnography#resp_rate
+port-out:$$example/Query/PCAModelFlow.awas$Patient#exhalation
+port-out:$$example/Query/PCAModelFlow.awas$Patient#fingerclip
+port-out:$$example/Query/PCAModelFlow.awas$PulseOx#spo2
+port-out:$$example/Query/PCAModelFlow.awas$Pump#drug
+ -------------- 
+spo2_reachback
+ -------------- 
+port-in-virtual:$$example/Query/PCAModelFlow.awas$a1#Pump/drug
+port-in-virtual:$$example/Query/PCAModelFlow.awas$app1#App/pump_cmd
+port-in-virtual:$$example/Query/PCAModelFlow.awas$p1#Patient/fingerclip
+port-in-virtual:$$example/Query/PCAModelFlow.awas$p2#Patient/exhalation
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s1#PulseOx/spo2
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s2#Capnography/etco2
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s3#Capnography/resp_rate
+port-in:$$example/Query/PCAModelFlow.awas$App#etco2
+port-in:$$example/Query/PCAModelFlow.awas$App#rr
+port-in:$$example/Query/PCAModelFlow.awas$App#spo2
+port-in:$$example/Query/PCAModelFlow.awas$Capnography#breath
+port-in:$$example/Query/PCAModelFlow.awas$Patient#vein
+port-in:$$example/Query/PCAModelFlow.awas$PulseOx#refracted_light
+port-in:$$example/Query/PCAModelFlow.awas$Pump#cmd
+port-out-virtual:$$example/Query/PCAModelFlow.awas$a1#Patient/vein
+port-out-virtual:$$example/Query/PCAModelFlow.awas$app1#Pump/cmd
+port-out-virtual:$$example/Query/PCAModelFlow.awas$p1#PulseOx/refracted_light
+port-out-virtual:$$example/Query/PCAModelFlow.awas$p2#Capnography/breath
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s1#App/spo2
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s2#App/etco2
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s3#App/rr
+port-out:$$example/Query/PCAModelFlow.awas$App#pump_cmd
+port-out:$$example/Query/PCAModelFlow.awas$Capnography#etco2
+port-out:$$example/Query/PCAModelFlow.awas$Capnography#resp_rate
+port-out:$$example/Query/PCAModelFlow.awas$Patient#exhalation
+port-out:$$example/Query/PCAModelFlow.awas$Patient#fingerclip
+port-out:$$example/Query/PCAModelFlow.awas$PulseOx#spo2
+port-out:$$example/Query/PCAModelFlow.awas$Pump#drug
+ -------------- 
+spo2_pump
+ -------------- 
+port-in-virtual:$$example/Query/PCAModelFlow.awas$a1#Pump/drug
+port-in-virtual:$$example/Query/PCAModelFlow.awas$app1#App/pump_cmd
+port-in-virtual:$$example/Query/PCAModelFlow.awas$p1#Patient/fingerclip
+port-in-virtual:$$example/Query/PCAModelFlow.awas$p2#Patient/exhalation
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s1#PulseOx/spo2
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s2#Capnography/etco2
+port-in-virtual:$$example/Query/PCAModelFlow.awas$s3#Capnography/resp_rate
+port-in:$$example/Query/PCAModelFlow.awas$App#etco2
+port-in:$$example/Query/PCAModelFlow.awas$App#rr
+port-in:$$example/Query/PCAModelFlow.awas$App#spo2
+port-in:$$example/Query/PCAModelFlow.awas$Capnography#breath
+port-in:$$example/Query/PCAModelFlow.awas$Patient#vein
+port-in:$$example/Query/PCAModelFlow.awas$PulseOx#refracted_light
+port-in:$$example/Query/PCAModelFlow.awas$Pump#cmd
+port-out-virtual:$$example/Query/PCAModelFlow.awas$a1#Patient/vein
+port-out-virtual:$$example/Query/PCAModelFlow.awas$app1#Pump/cmd
+port-out-virtual:$$example/Query/PCAModelFlow.awas$p1#PulseOx/refracted_light
+port-out-virtual:$$example/Query/PCAModelFlow.awas$p2#Capnography/breath
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s1#App/spo2
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s2#App/etco2
+port-out-virtual:$$example/Query/PCAModelFlow.awas$s3#App/rr
+port-out:$$example/Query/PCAModelFlow.awas$App#pump_cmd
+port-out:$$example/Query/PCAModelFlow.awas$Capnography#etco2
+port-out:$$example/Query/PCAModelFlow.awas$Capnography#resp_rate
+port-out:$$example/Query/PCAModelFlow.awas$Patient#exhalation
+port-out:$$example/Query/PCAModelFlow.awas$Patient#fingerclip
+port-out:$$example/Query/PCAModelFlow.awas$PulseOx#spo2
+port-out:$$example/Query/PCAModelFlow.awas$Pump#drug
+ -------------- 
+spo2_pump2
+ -------------- 
+
+ -------------- 

@@ -1,0 +1,12 @@
+q1 = A -> *
+q2 = B -> *
+q3 = C -> *
+q4 = * <- A
+q5 = B <- *
+q6 = * <- C
+q7 = A.aIn -> *
+q8 = C.cOut <- *
+q9 = 'q5 intersect 'q2
+q10 = 'q9 union 'q2
+q11 = 'q2 - 'q9
+q12 = A -> C

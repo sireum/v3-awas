@@ -1,0 +1,58 @@
+components
+  Patient
+    ports
+       in vein
+       out fingerclip
+       out exhalation
+    flows
+      f1 : vein -> fingerclip
+      f2 : vein -> exhalation
+
+  PulseOx
+     ports
+       in refracted_light
+       out spo2
+     flows
+       f3 : refracted_light -> spo2
+
+  Capnography
+    ports
+      in breath
+      out etco2
+      out resp_rate
+    flows
+      f4 : breath -> etco2
+      f5 : breath -> resp_rate
+
+  App
+    ports
+      in etco2
+      in spo2
+      in rr
+      out pump_cmd
+    flows
+      f6 : etco2 -> pump_cmd
+      f7 : spo2 -> pump_cmd
+      f8 : rr -> pump_cmd
+
+  Pump
+    ports
+      in cmd
+      out drug
+    flows
+      f9 : cmd -> drug
+
+connections
+  p1 : Patient.fingerclip -> PulseOx.refracted_light
+
+  p2 : Patient.exhalation -> Capnography.breath
+
+  s1 : PulseOx.spo2 -> App.spo2
+
+  s2 : Capnography.etco2 -> App.etco2
+
+  s3 : Capnography.resp_rate -> App.rr
+
+  app1 : App.pump_cmd -> Pump.cmd
+
+  a1 : Pump.drug -> Patient.vein

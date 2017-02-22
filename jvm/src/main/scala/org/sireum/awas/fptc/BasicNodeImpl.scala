@@ -27,7 +27,7 @@ package org.sireum.awas.fptc
 
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{imapEmpty, isetEmpty}
+import org.sireum.util.isetEmpty
 
 class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
 
@@ -35,26 +35,24 @@ class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
 
   var portList = isetEmpty[ResourceUri]
 
-  var portEdgeMap = imapEmpty[ResourceUri, Set[FptcEdge]]
-
-  if(uri.startsWith(H.CONNECTION_TYPE)) {
+  if (isComponent) {
+    val compST = st.componentTable(uri)
+    portList ++= compST.ports.toSeq
+  } else {
     val conDecl = st.connection(uri)
 
     val inPortUri = Resource(H.PORT_IN_VIRTUAL_TYPE,
       Resource.getResource(conDecl).get,
-      conDecl.fromComp.value.map(_.value).mkString("/")+"/"+conDecl.fromPort.value,
+      conDecl.fromComp.value.map(_.value).mkString("/") + "/" + conDecl.fromPort.value,
       Some(true))
 
     val outPortUri = Resource(H.PORT_OUT_VIRTUAL_TYPE,
       Resource.getResource(conDecl).get,
-      conDecl.toComp.value.map(_.value).mkString("/")+"/"+conDecl.toPort.value,
+      conDecl.toComp.value.map(_.value).mkString("/") + "/" + conDecl.toPort.value,
       Some(true))
 
     portList += inPortUri.toUri
     portList += outPortUri.toUri
-  } else {
-    val compST = st.componentTable(uri)
-    portList ++= compST.ports.toSeq
   }
 
   override def getResourceType: String = if(uri.startsWith(H.COMPONENT_TYPE)) H.COMPONENT_TYPE
@@ -68,7 +66,6 @@ class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
 
   override def outPorts: Iterable[ResourceUri] = ports.filter(_.startsWith(H.PORT_OUT_TYPE))
 
-  override def getEdge(port: ResourceUri): Set[FptcEdge] = portEdgeMap.getOrElse(port, isetEmpty[FptcEdge])
 
   override def getPropagation(port: ResourceUri): Set[ResourceUri] = {
     if(getResourceType == H.COMPONENT_TYPE) {
@@ -78,4 +75,6 @@ class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
       isetEmpty[ResourceUri]
     }
   }
+
+  override def isComponent: Boolean = uri.startsWith(H.COMPONENT_TYPE)
 }

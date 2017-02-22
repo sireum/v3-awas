@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -142,7 +142,7 @@ case class ResourceBean(var _uriType: String,
 
   override def toUri : ResourceUri =  new URI(
     self.uriType,
-    self.uriPaths.foldLeft("")(_ + "/" + _),
+    self.uriPaths.foldLeft("")(_ + "$" + _),
     self.uri
   ).toASCIIString
 

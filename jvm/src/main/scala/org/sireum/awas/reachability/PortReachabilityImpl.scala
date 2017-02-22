@@ -25,6 +25,84 @@
 
 package org.sireum.awas.reachability
 
-class PortReachabilityImpl[BasicNode]  {
+import org.sireum.awas.fptc.{FptcGraph, FptcNode}
+import org.sireum.awas.symbol.SymbolTableHelper
+import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.util._
 
+class PortReachabilityImpl[Node](graph: FptcGraph[FptcNode]) extends
+  BasicReachabilityImpl(graph) with PortReachability[FptcNode] {
+
+  val H = SymbolTableHelper
+
+  override def forwardPortReach(criterion: ResourceUri): ISet[ResourceUri] =
+    portReach(criterion, isForward = true)
+
+  override def backwardPortReach(criterion: ResourceUri): ISet[ResourceUri] =
+    portReach(criterion, isForward = false)
+
+  override def forwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri] =
+    criterions.flatMap(forwardPortReach)
+
+  override def backwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri] =
+    criterions.flatMap(backwardPortReach)
+
+  override def forwardPortReach(criterion: FptcNode): ISet[ResourceUri] =
+    forwardPortReachSet(criterion.outPorts.toSet)
+
+  override def backwardPortReach(criterion: FptcNode): ISet[ResourceUri] =
+    backwardPortReachSet(criterion.inPorts.toSet)
+
+  def portReach(criterion: ResourceUri, isForward: Boolean): ISet[ResourceUri] = {
+    var result = isetEmpty[ResourceUri]
+    var worklist = ilistEmpty[ResourceUri]
+    if (criterion.startsWith(H.PORT_TYPE) && graph.getNode(criterion).isDefined) {
+      worklist = worklist :+ criterion
+      while (worklist.nonEmpty) {
+        val current = worklist.head
+        if (!result.contains(current))
+          worklist = worklist ++ (if (isForward) graph.getSuccessorPorts(current)
+          else graph.getPredecessorPorts(current))
+        worklist = worklist.tail
+        result += current
+      }
+    }
+    result
+  }
+
+  override def forwardReach(criterion: ResourceUri): ISet[ResourceUri] = {
+    if (criterion.startsWith(H.COMPONENT_TYPE) ||
+      criterion.startsWith(H.CONNECTION_TYPE)) {
+      val onode = graph.getNode(criterion)
+      if (onode.isDefined) {
+        forwardReach(onode.get).map(_.getUri)
+      } else {
+        isetEmpty[ResourceUri]
+      }
+    } else {
+      forwardPortReach(criterion)
+    }
+  }
+
+  override def backwardReach(criterion: ResourceUri): ISet[ResourceUri] = {
+    if (criterion.startsWith(H.COMPONENT_TYPE) ||
+      criterion.startsWith(H.CONNECTION_TYPE)) {
+      val onode = graph.getNode(criterion)
+      if (onode.isDefined) {
+        backwardReach(onode.get).map(_.getUri)
+      } else {
+        isetEmpty[ResourceUri]
+      }
+    } else {
+      backwardPortReach(criterion)
+    }
+  }
+
+  override def forwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
+    criterion.flatMap(forwardReach)
+  }
+
+  override def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
+    criterion.flatMap(backwardReach)
+  }
 }
