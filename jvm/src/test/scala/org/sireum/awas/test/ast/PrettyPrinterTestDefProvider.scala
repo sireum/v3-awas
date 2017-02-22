@@ -25,7 +25,8 @@
 
 package org.sireum.awas.test.ast
 
-import org.sireum.awas.ast.{PrettyPrinter, Builder}
+import org.sireum.awas.ast.{Builder, PrettyPrinter}
+import org.sireum.awas.util.TestUtils.makePath
 import org.sireum.test._
 import org.sireum.util._
 import org.sireum.util.jvm.FileUtil._
@@ -33,7 +34,7 @@ import org.sireum.util.jvm.FileUtil._
 
 final class PrettyPrinterTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-  val testDirs = Seq(s"../example/awas-lang"
+  val testDirs = Seq(makePath("..", "example", "awas-lang")
 //    ,s"../example/fptc"
   )
 

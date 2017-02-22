@@ -29,17 +29,18 @@ import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.symbol.SymbolTable
+import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.jvm.FileUtil.{fileUri, _}
 import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq, TagPickling}
 
 final class SymbolTableTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-  val testDirs = Seq(s"../example/awas-lang"
+  val testDirs = Seq(makePath("..", "example", "awas-lang")
     //    ,s"../example/fptc"
   )
-  val resultsDir = toFilePath(fileUri(this.getClass, s"../results/st"))
-  val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/st"))
+  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "st")))
+  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "st")))
 
   val generateExpected = true
 
@@ -57,29 +58,18 @@ final class SymbolTableTestDefProvider(tf: TestFramework)
       val inputFileName = filename(x)
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".st"
-//      val res = symbolTablePrinter(x, readFile(x)._1, fileWithOutExt)
-//      if (res.isDefined) {
-        writeResult(outputFileName, symbolTablePrinter(x, readFile(x)._1, fileWithOutExt).get)
-        val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
-        EqualTest(filename(x), result,
-          readFile(toUri(expectedDir + "/" + outputFileName))._1)
+      //
+      writeResult(outputFileName,
+        symbolTablePrinter(x, readFile(x)._1, fileWithOutExt).get,
+        expectedDir, resultsDir, generateExpected)
+
+      EqualTest(fileWithOutExt,
+        readFile(toUri(makePath(resultsDir, outputFileName)))._1,
+        readFile(toUri(makePath(expectedDir, outputFileName)))._1)
 //      }
     }
   }
 
-  def extensor(orig: String) = (orig.split('.') match {
-    case xs@Array(x) => xs
-    case y => y.init
-  }).mkString
-
-  def writeResult(fileName: String, content: String) = {
-    if (generateExpected) {
-      val expPath = expectedDir + "/" + fileName
-      writeFile(toUri(expPath), content)
-    }
-    val resPath = resultsDir + "/" + fileName
-    writeFile(toUri(resPath), content)
-  }
 
   def symbolTablePrinter(infileUri: FileResourceUri, model: String, name: String): Option[String] = {
     import org.sireum.util.jvm.FileUtil._

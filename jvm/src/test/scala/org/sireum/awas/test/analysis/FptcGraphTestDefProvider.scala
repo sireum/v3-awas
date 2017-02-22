@@ -32,10 +32,10 @@ import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.fptc.FptcGraph
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.TestUtils
+import org.sireum.awas.util.TestUtils._
 import org.sireum.test._
 import org.sireum.util._
 import org.sireum.util.jvm.FileUtil.{readFile, _}
-import org.sireum.awas.util.TestUtils._
 
 
 final class FptcGraphTestDefProvider(tf: TestFramework)
@@ -49,7 +49,7 @@ extends TestDefProvider {
   val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
   val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -70,9 +70,10 @@ extends TestDefProvider {
       TestUtils.writeResult(outputFileName,
         if (res.isDefined) res.get else "",
         expectedDir, resultsDir, generateExpected)
-      val result = readFile(toUri(resultsDir+"/"+outputFileName))._1
-      EqualTest(filename(x), result ,
-        readFile(toUri(expectedDir+"/"+outputFileName))._1)
+
+      EqualTest(fileWithOutExt,
+        readFile(toUri(makePath(resultsDir, outputFileName)))._1,
+        readFile(toUri(makePath(expectedDir, outputFileName)))._1)
     }
   }
 

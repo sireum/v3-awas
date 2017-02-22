@@ -28,6 +28,7 @@ package org.sireum.awas.test.CodeGen
 import org.sireum.awas.ast.{Builder, PrettyPrinter}
 import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.symbol.SymbolTable
+import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.jvm.FileUtil._
 import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
@@ -36,13 +37,15 @@ import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourc
 final class CInSensitiveTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
 
-  val testDirs = Seq(s"../example/awas-lang"
-        ,s"../example/fptc"
+  val testDirs = Seq(
+    makePath("..", "example", "awas-lang"),
+    makePath("..", "example", "fptc")
   )
-  val resultsDir = toFilePath(fileUri(this.getClass, s"../results/codegen"))
-  val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/codegen"))
+  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "codegen")))
+  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "codegen")))
 
-  val generateExpected = true
+
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -57,26 +60,17 @@ final class CInSensitiveTestDefProvider(tf: TestFramework)
       val inputFileName = filename(x)
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".cis"
-      writeResult(outputFileName, modelPrinter(x, readFile(x)._1, fileWithOutExt).get)
-      val result = readFile(toUri(resultsDir + "/" + outputFileName))._1
-      EqualTest(filename(x), result,
-        readFile(toUri(expectedDir + "/" + outputFileName))._1)
+
+      writeResult(outputFileName,
+        modelPrinter(x, readFile(x)._1, fileWithOutExt).get,
+        expectedDir, resultsDir, generateExpected)
+
+      EqualTest(fileWithOutExt,
+        readFile(toUri(makePath(resultsDir, outputFileName)))._1,
+        readFile(toUri(makePath(expectedDir, outputFileName)))._1)
     }
   }
 
-  def extensor(orig: String) = (orig.split('.') match {
-    case xs@Array(x) => xs
-    case y => y.init
-  }).mkString
-
-  def writeResult(fileName: String, content: String) = {
-    if (generateExpected) {
-      val expPath = expectedDir + "/" + fileName
-      writeFile(toUri(expPath), content)
-    }
-    val resPath = resultsDir + "/" + fileName
-    writeFile(toUri(resPath), content)
-  }
 
   def modelPrinter(fileUri: FileResourceUri, model: String, name: String): Option[String] = {
     Builder(Some(fileUri), model) match {
