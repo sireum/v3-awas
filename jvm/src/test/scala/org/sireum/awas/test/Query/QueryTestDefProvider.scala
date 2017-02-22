@@ -56,7 +56,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     filesEqual.toVector.map { x =>
       val inputFileName = filename(x)
-      print(inputFileName)
+      println(inputFileName)
       val fileWithOutExt = extensor(inputFileName).toString
 
       val modelFile = x
@@ -66,7 +66,6 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
       val outputFileName = fileWithOutExt + ".qres"
 
-      println(queryFile)
       writeResult(outputFileName,
         QueryResultPrinter(x, readFile(x)._1,
           readFile(queryFile)._1), expectedDir, resultsDir, generateExpected)
