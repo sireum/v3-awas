@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2017, Hariharan Thiagarajan, Robby, Kansas State University
+ Copyright (c) 2017, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
 
 package org.sireum.awas.ast
 
-import org.sireum.util.{IVector, RewriteFunction}
+import org.sireum.util._
 
 object Rewriter {
 
@@ -33,57 +33,57 @@ object Rewriter {
 
   val constructorMap: ConstructorMap = Map(
     ("Propagation", { es =>
-      val Seq(id: Id, et: IVector[Name]) = es
-      org.sireum.awas.ast.Propagation(id, et)
+      val Seq(id: Id, et: IVector[_]) = es
+      org.sireum.awas.ast.Propagation(id, cast(et))
     }),
     ("Id", { es =>
       val Seq(value: String) = es
       org.sireum.awas.ast.Id(value)
     }),
     ("Name", { es =>
-      val Seq(value: IVector[Id]) = es
-      org.sireum.awas.ast.Name(value)
+      val Seq(value: IVector[_]) = es
+      org.sireum.awas.ast.Name(cast(value))
     }),
     ("ComponentDecl", { es =>
       val Seq(compName: Id,
-      withSm: Node.Seq[Name],
-      ports: Node.Seq[Port],
-      propagations: Node.Seq[Propagation],
-      flows: Node.Seq[Flow],
-      transitions: Option[Transition],
-      behaviour: Option[Behaviour],
-      properties: Node.Seq[Property]) = es
+      withSm: Node.Seq[_],
+      ports: Node.Seq[_],
+      propagations: Node.Seq[_],
+      flows: Node.Seq[_],
+      transitions: Option[_],
+      behaviour: Option[_],
+      properties: Node.Seq[_]) = es
 
       org.sireum.awas.ast.ComponentDecl(compName,
-        withSm,
-        ports,
-        propagations,
-        flows,
-        transitions,
-        behaviour,
-        properties)
+        cast(withSm),
+        cast(ports),
+        cast(propagations),
+        cast(flows),
+        cast(transitions),
+        cast(behaviour),
+        cast(properties))
     }),
     ("Flow", { es =>
       val Seq(id: Id,
-      from: Option[Id],
-      fromE: Node.Seq[Name],
-      to: Option[Id],
-      toE: Node.Seq[Name]) = es
-      org.sireum.awas.ast.Flow(id, from, fromE, to, toE)
+      from: Option[_],
+      fromE: Node.Seq[_],
+      to: Option[_],
+      toE: Node.Seq[_]) = es
+      org.sireum.awas.ast.Flow(id, cast(from), cast(fromE), cast(to), cast(toE))
     }),
 
     ("Model",{es =>
-      val Seq(types: Node.Seq[TypeDecl],
-      stateMachines: Node.Seq[StateMachineDecl],
-      constants: Node.Seq[ConstantDecl],
-      components: Node.Seq[ComponentDecl],
-      connections: Node.Seq[ConnectionDecl]) = es
-//      fileUriOpt : Option[FileResourceUri],
-//      nodeLocMap: MIdMap[AnyRef, LocationInfo]//
-      org.sireum.awas.ast.Model(types, stateMachines, constants, components, connections)
-//      m.fileUriOpt = fileUriOpt
-//      m.nodeLocMap = nodeLocMap
-//      m
+      val Seq(types: Node.Seq[_],
+      stateMachines: Node.Seq[_],
+      constants: Node.Seq[_],
+      components: Node.Seq[_],
+      connections: Node.Seq[_]) = es
+
+      org.sireum.awas.ast.Model(cast(types),
+        cast(stateMachines),
+        cast(constants),
+        cast(components),
+        cast(connections))
     })
   )
 
