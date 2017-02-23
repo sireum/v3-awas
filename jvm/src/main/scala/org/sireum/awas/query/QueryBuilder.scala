@@ -95,6 +95,8 @@ final class QueryBuilder private() {
   }
 
   import scala.collection.JavaConverters._
+  import scala.language.implicitConversions
+
 
   @inline
   private implicit def toNodeSeq[T](ns: java.lang.Iterable[T]): QueryNode.Seq[T] =

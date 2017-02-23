@@ -156,7 +156,6 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
           }
         }
       } else {
-        //outport: use edge to get the successor
         result = result ++ node.get.flowBackward(port)
       }
     }

@@ -49,7 +49,7 @@ sealed trait QueryExpr extends QueryNode
 
 final case class BinaryExpr(lhs: QueryExpr,
                             op: String,
-                            rhs: QueryExpr) extends PrimaryExpr
+                            rhs: QueryExpr) extends QueryExpr
 
 sealed trait PrimaryExpr extends QueryExpr
 
