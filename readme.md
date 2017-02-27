@@ -6,7 +6,7 @@
   2. [Git (optional)](https://git-scm.com/downloads)
 
 ### Installation
-Follow [Sireum IVF installation](http://logika.sireum.org/doc/01-getting-started/index.html#installation) to optain and install Sireum IVF 
+Follow [Sireum IVE installation](http://logika.sireum.org/doc/01-getting-started/index.html#installation) to obtain and install Sireum IVE 
 
 Using git to clone the following repository
 ```bash
