@@ -30,11 +30,11 @@ import org.sireum.util.{IVector, ivector, ivectorEmpty}
 object QueryNode {
   type Seq[T] = IVector[T]
 
-  final def emptySeq[T] = ivectorEmpty[T]
+  final def emptySeq[T]: IVector[T] = ivectorEmpty[T]
 
-  final def seq[T](es: T*) = ivector(es: _*)
+  final def seq[T](es: T*): IVector[T] = ivector(es: _*)
 
-  final def seq[T](es: Iterable[T]) = es.toVector
+  final def seq[T](es: Iterable[T]): Vector[T] = es.toVector
 }
 
 sealed trait QueryNode extends Product
@@ -49,7 +49,7 @@ sealed trait QueryExpr extends QueryNode
 
 final case class BinaryExpr(lhs: QueryExpr,
                             op: String,
-                            rhs: QueryExpr) extends PrimaryExpr
+                            rhs: QueryExpr) extends QueryExpr
 
 sealed trait PrimaryExpr extends QueryExpr
 
