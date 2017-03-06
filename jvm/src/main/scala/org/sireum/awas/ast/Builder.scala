@@ -295,7 +295,6 @@ object Builder {
                        column: PosInteger,
                        offset: Natural,
                        message: String): Unit = {
-      //Console.err.println(s"[$line, $column] $message")
       Console.err.println("[" + line + ", " + column + "] " + message)
       Console.err.flush()
     }

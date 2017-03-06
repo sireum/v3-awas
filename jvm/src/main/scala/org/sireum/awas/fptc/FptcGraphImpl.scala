@@ -41,9 +41,9 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
 
   type FEdge = FptcEdge[FptcNode]
 
-  var portEdgeMap = imapEmpty[ResourceUri, ISet[FEdge]]
+  var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
 
-  var portNodeMap = imapEmpty[ResourceUri, FptcNode]
+  var portNodeMap: IMap[ResourceUri, FptcNode] = imapEmpty[ResourceUri, FptcNode]
 
   val H = SymbolTableHelper
 
@@ -55,7 +55,7 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
     }
   }
 
-  override def addEdge(from: FptcNode, to: FptcNode) = {
+  override def addEdge(from: FptcNode, to: FptcNode): FptcEdgeImpl = {
     val edge = FptcEdgeImpl(self, from, to)
     graph.addEdge(from, to, edge)
     edge
@@ -67,7 +67,7 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
     n
   }
 
-  override def toDot(name: String): String = {
+  override def toDot: String = {
     val de = new DOTExporter[FptcNode, FEdge](new IntegerNameProvider[FptcNode],
       nlabelProvide, null,
       this.attProvider, null)
@@ -110,7 +110,7 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
     )
   }
 
-  override def getNode(n: FptcNode) = n
+  override def getNode(n: FptcNode): FptcNode = n
 
   def getNode(uri: ResourceUri): Option[FptcNode] = {
     if (uri.startsWith(H.COMPONENT_TYPE) ||
@@ -136,7 +136,7 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
           e =>
             e.targetPort match {
               case Some(x) => result = result + x
-              case none =>
+              case _ =>
             }
         }
       }
@@ -152,7 +152,7 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
         getEdgeForPort(port).foreach { e =>
           e.sourcePort match {
             case Some(x) => result = result + x
-            case none =>
+            case _ =>
           }
         }
       } else {

@@ -25,6 +25,7 @@
 
 package org.sireum.awas.symbol
 
+import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
 object SymbolTableHelper {
@@ -39,43 +40,56 @@ object SymbolTableHelper {
   val MODEL_TYPE = "model"
 
   val TYPE_TYPE = "type"
-  def isType(r: Resource) = r.uriType == TYPE_TYPE
+
+  def isType(r: Resource): Boolean = r.uriType == TYPE_TYPE
 
   val ALIAS_TYPE = "alias"
-  def isAlias(r: Resource) = r.uriType == ALIAS_TYPE
+
+  def isAlias(r: Resource): Boolean = r.uriType == ALIAS_TYPE
 
   val LATTICE_TYPE = "lattice"
-  def isLattice(r:Resource) = r.uriType == LATTICE_TYPE
+
+  def isLattice(r: Resource): Boolean = r.uriType == LATTICE_TYPE
 
   val ENUM_TYPE = "enum"
-  def isEnum(r : Resource) = r.uriType == ENUM_TYPE
+
+  def isEnum(r: Resource): Boolean = r.uriType == ENUM_TYPE
 
   val RECORD_TYPE = "record"
-  def isRecord(r : Resource) = r.uriType == RECORD_TYPE
+
+  def isRecord(r: Resource): Boolean = r.uriType == RECORD_TYPE
 
   val ERROR_TYPE = "error"
-  def isError(r : Resource) = r.uriType == ERROR_TYPE
+
+  def isError(r: Resource): Boolean = r.uriType == ERROR_TYPE
 
   val STATE_MACHINE_TYPE = "state-machine"
-  def isStateMachine(r : Resource) = r.uriType == STATE_MACHINE_TYPE
+
+  def isStateMachine(r: Resource): Boolean = r.uriType == STATE_MACHINE_TYPE
 
   val EVENT_TYPE = "event"
-  def isEvent(r : Resource) = r.uriType == EVENT_TYPE
+
+  def isEvent(r: Resource): Boolean = r.uriType == EVENT_TYPE
 
   val STATE_TYPE = "state"
-  def isState(r : Resource) = r.uriType == STATE_TYPE
+
+  def isState(r: Resource): Boolean = r.uriType == STATE_TYPE
 
   val COMPONENT_TYPE = "component"
-  def isComponent(r: Resource) = r.uriType == COMPONENT_TYPE
+
+  def isComponent(r: Resource): Boolean = r.uriType == COMPONENT_TYPE
 
   val PORT_IN_TYPE = "port-in"
-  def isInPort(r : Resource) = r.uriType.startsWith(PORT_IN_TYPE)
+
+  def isInPort(r: Resource): Boolean = r.uriType.startsWith(PORT_IN_TYPE)
 
   val PORT_OUT_TYPE = "port-out"
-  def isOutPort(r : Resource) = r.uriType.startsWith(PORT_OUT_TYPE)
+
+  def isOutPort(r: Resource): Boolean = r.uriType.startsWith(PORT_OUT_TYPE)
 
   val PORT_TYPE = "port"
-  def isPort(r : Resource) = r.uriType.startsWith(PORT_TYPE)
+
+  def isPort(r: Resource): Boolean = r.uriType.startsWith(PORT_TYPE)
 
   val VIRTUAL_PORT_TYPE = "virtual"
 
@@ -83,12 +97,39 @@ object SymbolTableHelper {
 
   val PORT_IN_VIRTUAL_TYPE = "port-in-virtual"
 
-  def isVirtual(r : Resource) = r.uriType.endsWith(VIRTUAL_PORT_TYPE)
+  def isVirtual(r: Resource): Boolean = r.uriType.endsWith(VIRTUAL_PORT_TYPE)
 
   val FLOW_TYPE = "flow"
-  def isFlow(r : Resource) = r.uriType == FLOW_TYPE
+
+  def isFlow(r: Resource): Boolean = r.uriType == FLOW_TYPE
 
   val CONNECTION_TYPE = "connection"
-  def isConnection(r:Resource) = r.uriType == CONNECTION_TYPE
+
+  def isConnection(r: Resource): Boolean = r.uriType == CONNECTION_TYPE
+
+  //dot separated canonical resource name, TODO: rewrite later with the model name
+  def getUriFromString(st: SymbolTable, completeName: String): Option[ResourceUri] = {
+    val cmlist = completeName.split('.')
+    if (cmlist.nonEmpty && cmlist.length == 1) {
+      st.components.find(_.endsWith("#" + cmlist.last))
+    } else if (cmlist.length > 1) {
+      getPortUri(st, completeName)
+    } else {
+      None
+    }
+  }
+
+  def getPortUri(st: SymbolTable, completeName: String): Option[ResourceUri] = {
+    val cmlist = completeName.split('.')
+    if (cmlist.length >= 2) {
+      val comp = st.components.find(_.endsWith("#" + cmlist(cmlist.length - 2)))
+      if (comp.isDefined)
+        st.componentTable(comp.get).ports.find(_.endsWith("#" + cmlist.last))
+      else
+        None
+    } else {
+      None
+    }
+  }
 }
 

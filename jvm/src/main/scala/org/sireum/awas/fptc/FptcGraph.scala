@@ -26,15 +26,17 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.ast.Model
+import java.nio.file.Paths
+
+import org.sireum.awas.ast.{Builder, Model}
 import org.sireum.awas.graph.{AwasEdge, AwasGraph}
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.CSet
+import org.sireum.util.{AccumulatingTagReporter, CSet, ConsoleTagReporter, FileResourceUri}
 
 trait FptcGraph[Node] extends AwasGraph[Node] {
-  def toDot(name : String) : String
+  def toDot: String
 
   def getEdgeForPort(port: ResourceUri): Set[Edge]
 
@@ -51,6 +53,9 @@ trait FptcEdge[Node] extends AwasEdge[Node] {
   def targetPort: Option[ResourceUri]
 }
 
+/**
+  * Factory Methods to build graph
+  */
 object FptcGraph{
   val H = SymbolTableHelper
   def apply(m : Model, st : SymbolTable) : FptcGraph[FptcNode] = {
@@ -83,7 +88,25 @@ object FptcGraph{
     result
   }
 
-  def toFptcNode(node : org.sireum.awas.ast.Node) : Option[FptcNode] = {
+  def apply(m: Model): FptcGraph[FptcNode] = {
+    implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+    val st = SymbolTable(m)
+    apply(m, st)
+  }
+
+  def apply(modelFile: FileResourceUri): Option[FptcGraph[FptcNode]] = {
+    import org.sireum.util.jvm.FileUtil._
+    val basePath = Paths.get(fileUri(this.getClass, s".."))
+    val relativeUri = basePath.relativize(Paths.get(modelFile))
+    val modelOpt = Builder(Some(relativeUri.toString), readFile(modelFile)._1)
+    if (modelOpt.isDefined) {
+      Some(apply(modelOpt.get))
+    } else {
+      None
+    }
+  }
+
+  private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FptcNode] = {
     val res = getResource(node)
     if(res.isDefined && (H.isComponent(res.get) || H.isConnection(res.get))) {
       FptcNode.getNode(res.get.toUri)

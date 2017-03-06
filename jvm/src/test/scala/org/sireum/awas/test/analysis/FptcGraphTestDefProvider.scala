@@ -46,8 +46,8 @@ extends TestDefProvider {
     makePath("..", "example", "fptc"),
     makePath("..", "example", "Query")
   )
-  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
-  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
+  val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
+  val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
 
   val generateExpected = false
 
@@ -65,7 +65,7 @@ extends TestDefProvider {
       print(inputFileName)
       val fileWithOutExt = TestUtils.extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".dot"
-      val res = dotGraphPrinter(x, readFile(x)._1, fileWithOutExt)
+      val res = dotGraphPrinter(x, readFile(x)._1)
 
       TestUtils.writeResult(outputFileName,
         if (res.isDefined) res.get else "",
@@ -78,8 +78,7 @@ extends TestDefProvider {
   }
 
 
-
-  def dotGraphPrinter(infileUri: FileResourceUri, model: String, name: String): Option[String] ={
+  def dotGraphPrinter(infileUri: FileResourceUri, model: String): Option[String] = {
     import org.sireum.util.jvm.FileUtil._
     val basePath = Paths.get(fileUri(this.getClass, s".."))
     val relativeUri = basePath.relativize(Paths.get(infileUri))
@@ -92,7 +91,7 @@ extends TestDefProvider {
         Resource.reset
         st = SymbolTable(updatedModel)
         val graph = FptcGraph(updatedModel, st)
-        Some(graph.toDot(name))
+        Some(graph.toDot)
     }
   }
 }

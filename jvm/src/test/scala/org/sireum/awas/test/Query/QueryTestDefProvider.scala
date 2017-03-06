@@ -40,8 +40,8 @@ import org.sireum.util.jvm.FileUtil._
 final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(makePath("..", "example", "Query"))
 
-  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
-  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
+  val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
+  val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
 
   val generateExpected = true
 
@@ -70,7 +70,6 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
         QueryResultPrinter(x, readFile(x)._1,
           readFile(queryFile)._1), expectedDir, resultsDir, generateExpected)
 
-
       EqualTest(fileWithOutExt,
         readFile(toUri(makePath(resultsDir, outputFileName)))._1,
         readFile(toUri(makePath(expectedDir, outputFileName)))._1)
@@ -87,7 +86,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
       case None => ""
       case Some(m) =>
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-        var st = SymbolTable(m)
+        val st = SymbolTable(m)
         val graph = FptcGraph(m, st)
         QueryBuilder(query) match {
           case None => ""
