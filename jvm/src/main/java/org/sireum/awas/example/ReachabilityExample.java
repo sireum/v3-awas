@@ -84,10 +84,12 @@ public class ReachabilityExample {
                 if (criterion != null) {
                     if (Objects.equals(args[1].toLowerCase(), "forward")) {
                         System.out.println("Forward reachability for the criterion: " + args[2]);
-                        JavaConverters.toJavaSet(pr.forwardReach(criterion)).forEach(System.out::println);
+                        JavaConverters.toJavaSet(
+                                pr.forwardReach(criterion)).forEach(System.out::println);
                     } else {
                         System.out.println("Backward reachability for the criterion: " + args[2]);
-                        JavaConverters.toJavaSet(pr.backwardReach(criterion)).forEach(System.out::println);
+                        JavaConverters.toJavaSet(
+                                pr.backwardReach(criterion)).forEach(System.out::println);
                     }
                 } else {
                     if (args.length == 3)

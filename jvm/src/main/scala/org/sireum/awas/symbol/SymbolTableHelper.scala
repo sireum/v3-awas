@@ -34,6 +34,9 @@ object SymbolTableHelper {
   //      use the below defined map to record the dependency between files
   type DependencyMap = MMap[FileResourceUri, MSet[FileResourceUri]]
 
+  //uri id seperator
+  val ID_SEPARATOR = "#"
+
   //dummy parent uri
   val HEAD = "head"
 
@@ -111,7 +114,7 @@ object SymbolTableHelper {
   def getUriFromString(st: SymbolTable, completeName: String): Option[ResourceUri] = {
     val cmlist = completeName.split('.')
     if (cmlist.nonEmpty && cmlist.length == 1) {
-      st.components.find(_.endsWith("#" + cmlist.last))
+      st.components.find(_.endsWith(ID_SEPARATOR + cmlist.last))
     } else if (cmlist.length > 1) {
       getPortUri(st, completeName)
     } else {
@@ -122,9 +125,9 @@ object SymbolTableHelper {
   def getPortUri(st: SymbolTable, completeName: String): Option[ResourceUri] = {
     val cmlist = completeName.split('.')
     if (cmlist.length >= 2) {
-      val comp = st.components.find(_.endsWith("#" + cmlist(cmlist.length - 2)))
+      val comp = st.components.find(_.endsWith(ID_SEPARATOR + cmlist(cmlist.length - 2)))
       if (comp.isDefined)
-        st.componentTable(comp.get).ports.find(_.endsWith("#" + cmlist.last))
+        st.componentTable(comp.get).ports.find(_.endsWith(ID_SEPARATOR + cmlist.last))
       else
         None
     } else {
