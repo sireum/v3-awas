@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ErrorReachExample {
     public static void main(String[] args) throws Exception {
-        String path = "/workspace-v3/sireum-v3/awas/jvm/src/test/resources/org/sireum/awas/test/example/Query/abcEF.awas";
+        String path = "/Users/Hariharan/Documents/workspace-slang/sireum-v3/awas/jvm/src/test/resources/org/sireum/awas/test/example/Query/abcEF.awas";
         Boolean isForward = true;
 
 

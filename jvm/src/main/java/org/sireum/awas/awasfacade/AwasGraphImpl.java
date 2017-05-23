@@ -132,6 +132,7 @@ public class AwasGraphImpl implements AwasGraph {
         for (String error : errors) {
             String errorUri = toJavaOptional(SymbolTableHelper.
                     getErrorUri(st, error)).orElse("");
+            errorsUri.add(errorUri);
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.forwardErrorReach(
                 portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet());

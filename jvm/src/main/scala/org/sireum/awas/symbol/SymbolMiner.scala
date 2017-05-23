@@ -270,7 +270,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       val fromP = ctp.ports.find(_.endsWith(H.ID_SEPARATOR + flow.from.get.value))
       if(fromP.isDefined) {
         Resource.useDefResolve(flow.from.get, ctp.port(fromP.get).get)
-        ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) + fr
+        ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
         if(flow.fromE.nonEmpty) {
           flow.fromE.foreach{
             e =>
@@ -298,7 +298,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       val fromP = ctp.ports.find(_.endsWith(H.ID_SEPARATOR + flow.to.get.value))
       if(fromP.isDefined) {
         Resource.useDefResolve(flow.to.get, ctp.port(fromP.get).get)
-        ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) + fr
+        ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
         if(flow.toE.nonEmpty) {
           flow.toE.foreach{
             e =>

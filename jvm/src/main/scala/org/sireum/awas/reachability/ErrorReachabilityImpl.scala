@@ -95,7 +95,7 @@ class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
     var result = false
     val errors = res.getOrElseUpdate(port, msetEmpty[ResourceUri])
     if (!errors.contains(error)) {
-      res(port) + error
+      res(port) = res(port) + error
       result = true
     }
     result

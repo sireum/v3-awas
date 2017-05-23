@@ -124,7 +124,13 @@ object SymbolTableHelper {
       None
     } else {
       val ttUri = st.typeDecls.find(_.endsWith(ID_SEPARATOR + cmlist.head))
+      st.typeTable(ttUri.get).enumElements.foreach(println(_))
       if (ttUri.isDefined) {
+        st.typeTable(ttUri.get).enumElements.foreach{
+          f => if(f.endsWith(cmlist.last)) {
+            return Some(f)
+          }
+        }
         st.typeTable(ttUri.get).enumElements.find(_.endsWith(ID_SEPARATOR + cmlist.last))
       } else {
         None
