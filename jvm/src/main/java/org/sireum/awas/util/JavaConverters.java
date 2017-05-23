@@ -32,6 +32,10 @@ public class JavaConverters {
         return scala.collection.JavaConverters.setAsJavaSet(scalaSet);
     }
 
+    public static <T> java.util.Map<T, java.util.Set<T>> toJavaMap(scala.collection.Map<T, java.util.Set<T>> scalaMap) {
+        return scala.collection.JavaConverters.mapAsJavaMap(scalaMap);
+    }
+
     public static <T> java.util.List<T> toJavaList(scala.collection.Seq<T> scalaSeq) {
         return scala.collection.JavaConverters.seqAsJavaList(scalaSeq);
     }

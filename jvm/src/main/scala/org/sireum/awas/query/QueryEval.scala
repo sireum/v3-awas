@@ -25,7 +25,7 @@
 
 package org.sireum.awas.query
 
-import org.sireum.awas.fptc.{FptcGraph, FptcNode}
+import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.awas.reachability.PortReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -34,12 +34,12 @@ import org.sireum.util.{ISet, _}
 object QueryEval {
   type QueryResult = Map[String, Set[ResourceUri]]
 
-  def apply(m: Model, graph: FptcGraph[FptcNode], st: SymbolTable): QueryResult = {
+  def apply(m: Model, graph: FlowGraph[FlowNode], st: SymbolTable): QueryResult = {
     new QueryEval(graph, st).eval(m)
   }
 }
 
-final class QueryEval(graph: FptcGraph[FptcNode], st: SymbolTable) {
+final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
   var result = ilinkedMapEmpty[String, Set[ResourceUri]]
 
   var queries = ilinkedMapEmpty[String, QueryExpr]

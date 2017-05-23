@@ -28,7 +28,7 @@ package org.sireum.awas.test
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 import org.sireum.awas.test.CodeGen.ContextInSensitiveTest
-import org.sireum.awas.test.analysis.FptcGraphTest
+import org.sireum.awas.test.analysis.FlowGraphTest
 import org.sireum.awas.test.ast.{PrettyPrinterTest, SymbolTableTest}
 
 @RunWith(classOf[Suite])
@@ -37,7 +37,7 @@ import org.sireum.awas.test.ast.{PrettyPrinterTest, SymbolTableTest}
     classOf[PrettyPrinterTest],
     classOf[SymbolTableTest],
     classOf[ContextInSensitiveTest],
-    classOf[FptcGraphTest],
+    classOf[FlowGraphTest],
     classOf[Query.QueryTest]
   )
 )

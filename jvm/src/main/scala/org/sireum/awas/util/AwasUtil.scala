@@ -25,9 +25,11 @@
 
 package org.sireum.awas.util
 
-import org.sireum.util.{ErrorTag, FileLocationInfoErrorMessage, ISeq, LocationInfoErrorMessage, ivectorEmpty}
 import org.sireum.awas.ast._
 import org.sireum.awas.symbol.TypeTable
+import org.sireum.util.{IMap, ISeq, ISet, ivectorEmpty}
+
+import scala.collection.JavaConverters._
 
 /**
   * Created by hariharan on 12/8/16.
@@ -44,5 +46,11 @@ object AwasUtil {
         res :+= eUri.get
     }
     res
+  }
+
+  def toJavaMap[T](in: IMap[T, ISet[T]]): java.util.Map[T, java.util.Set[T]] = {
+    in.map { f =>
+      (f._1, f._2.toSet.asJava)
+    }.asJava
   }
 }

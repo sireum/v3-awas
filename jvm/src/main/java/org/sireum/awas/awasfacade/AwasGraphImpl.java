@@ -25,30 +25,39 @@
 
 package org.sireum.awas.awasfacade;
 
-import org.sireum.awas.fptc.FptcGraph;
-import org.sireum.awas.fptc.FptcNode;
+import org.sireum.awas.fptc.FlowGraph;
+import org.sireum.awas.fptc.FlowNode;
+import org.sireum.awas.reachability.ErrorReachability;
+import org.sireum.awas.reachability.ErrorReachability$;
 import org.sireum.awas.reachability.PortReachability;
 import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTableHelper;
+import org.sireum.awas.util.AwasUtil;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.sireum.awas.util.JavaConverters.toJavaOptional;
 import static org.sireum.awas.util.JavaConverters.toJavaSet;
 
 
+
 public class AwasGraphImpl implements AwasGraph {
-    private FptcGraph<FptcNode> graph;
+    private FlowGraph<FlowNode> graph;
 
     private SymbolTable st;
 
-    private PortReachability<FptcNode> pr;
+    private PortReachability<FlowNode> pr;
 
-    public AwasGraphImpl(FptcGraph<FptcNode> graph, SymbolTable st) {
+    private ErrorReachability<FlowNode> er;
+
+    public AwasGraphImpl(FlowGraph<FlowNode> graph, SymbolTable st) {
         this.graph = graph;
         this.st = st;
         this.pr = PortReachability$.MODULE$.apply(graph);
+        this.er = ErrorReachability$.MODULE$.apply(graph);
     }
 
     /**
@@ -116,7 +125,36 @@ public class AwasGraphImpl implements AwasGraph {
     }
 
     @Override
-    public FptcGraph<FptcNode> getGraph() {
+    public Map<String, Set<String>> forwardErrorReachUsingNames(String port, String... errors) {
+        String portUri = toJavaOptional(SymbolTableHelper.
+                getUriFromString(st, port)).orElse("");
+        Set<String> errorsUri = new HashSet<String>();
+        for (String error : errors) {
+            String errorUri = toJavaOptional(SymbolTableHelper.
+                    getErrorUri(st, error)).orElse("");
+        }
+        scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.forwardErrorReach(
+                portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet());
+        return AwasUtil.toJavaMap(temp);
+    }
+
+    @Override
+    public Map<String, Set<String>> backwardErrorReachUsingNames(String port, String... errors) {
+        String portUri = toJavaOptional(SymbolTableHelper.
+                getUriFromString(st, port)).orElse("");
+        Set<String> errorsUri = new HashSet<String>();
+        for (String error : errors) {
+            String errorUri = toJavaOptional(SymbolTableHelper.
+                    getErrorUri(st, error)).orElse("");
+        }
+        scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.backwardErrorReach(
+                portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet());
+        return AwasUtil.toJavaMap(temp);
+    }
+
+
+    @Override
+    public FlowGraph<FlowNode> getGraph() {
         return graph;
     }
 

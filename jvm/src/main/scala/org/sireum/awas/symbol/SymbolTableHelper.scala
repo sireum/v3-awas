@@ -43,70 +43,53 @@ object SymbolTableHelper {
   val MODEL_TYPE = "model"
 
   val TYPE_TYPE = "type"
+  val ALIAS_TYPE = "alias"
+  val LATTICE_TYPE = "lattice"
+  val ENUM_TYPE = "enum"
+  val RECORD_TYPE = "record"
+  val ERROR_TYPE = "error"
+  val STATE_MACHINE_TYPE = "state-machine"
+  val EVENT_TYPE = "event"
+  val STATE_TYPE = "state"
+  val COMPONENT_TYPE = "component"
+  val PORT_IN_TYPE = "port-in"
+  val PORT_OUT_TYPE = "port-out"
+  val PORT_TYPE = "port"
+  val VIRTUAL_PORT_TYPE = "virtual"
+  val PORT_OUT_VIRTUAL_TYPE = "port-out-virtual"
+  val PORT_IN_VIRTUAL_TYPE = "port-in-virtual"
+  val FLOW_TYPE = "flow"
+  val CONNECTION_TYPE = "connection"
 
   def isType(r: Resource): Boolean = r.uriType == TYPE_TYPE
 
-  val ALIAS_TYPE = "alias"
-
   def isAlias(r: Resource): Boolean = r.uriType == ALIAS_TYPE
-
-  val LATTICE_TYPE = "lattice"
 
   def isLattice(r: Resource): Boolean = r.uriType == LATTICE_TYPE
 
-  val ENUM_TYPE = "enum"
-
   def isEnum(r: Resource): Boolean = r.uriType == ENUM_TYPE
-
-  val RECORD_TYPE = "record"
 
   def isRecord(r: Resource): Boolean = r.uriType == RECORD_TYPE
 
-  val ERROR_TYPE = "error"
-
   def isError(r: Resource): Boolean = r.uriType == ERROR_TYPE
-
-  val STATE_MACHINE_TYPE = "state-machine"
 
   def isStateMachine(r: Resource): Boolean = r.uriType == STATE_MACHINE_TYPE
 
-  val EVENT_TYPE = "event"
-
   def isEvent(r: Resource): Boolean = r.uriType == EVENT_TYPE
-
-  val STATE_TYPE = "state"
 
   def isState(r: Resource): Boolean = r.uriType == STATE_TYPE
 
-  val COMPONENT_TYPE = "component"
-
   def isComponent(r: Resource): Boolean = r.uriType == COMPONENT_TYPE
-
-  val PORT_IN_TYPE = "port-in"
 
   def isInPort(r: Resource): Boolean = r.uriType.startsWith(PORT_IN_TYPE)
 
-  val PORT_OUT_TYPE = "port-out"
-
   def isOutPort(r: Resource): Boolean = r.uriType.startsWith(PORT_OUT_TYPE)
-
-  val PORT_TYPE = "port"
 
   def isPort(r: Resource): Boolean = r.uriType.startsWith(PORT_TYPE)
 
-  val VIRTUAL_PORT_TYPE = "virtual"
-
-  val PORT_OUT_VIRTUAL_TYPE = "port-out-virtual"
-
-  val PORT_IN_VIRTUAL_TYPE = "port-in-virtual"
-
   def isVirtual(r: Resource): Boolean = r.uriType.endsWith(VIRTUAL_PORT_TYPE)
 
-  val FLOW_TYPE = "flow"
-
   def isFlow(r: Resource): Boolean = r.uriType == FLOW_TYPE
-
-  val CONNECTION_TYPE = "connection"
 
   def isConnection(r: Resource): Boolean = r.uriType == CONNECTION_TYPE
 
@@ -134,5 +117,46 @@ object SymbolTableHelper {
       None
     }
   }
+
+  def getErrorUri(st: SymbolTable, errorName: String): Option[ResourceUri] = {
+    val cmlist = errorName.split('.')
+    if (cmlist.length != 2) {
+      None
+    } else {
+      val ttUri = st.typeDecls.find(_.endsWith(ID_SEPARATOR + cmlist.head))
+      if (ttUri.isDefined) {
+        st.typeTable(ttUri.get).enumElements.find(_.endsWith(ID_SEPARATOR + cmlist.last))
+      } else {
+        None
+      }
+    }
+  }
+
+  def isFlowDefined(cst: ComponentSymbolTable): Boolean = cst.flows.nonEmpty
+
+  def getCompId(st: SymbolTable, compUri: ResourceUri): Option[String] = {
+    if (st.components.toSet.contains(compUri)) {
+      val compRes = Resource.getResource(st.component(compUri))
+      Some(compRes.get.uri)
+    } else {
+      None
+    }
+  }
+
+  //TODO: Add connection virtual port to st during symbol mining
+  def getPortId(st: SymbolTable, elemUri: ResourceUri, portUri: ResourceUri)
+  : Option[String] = {
+    if (elemUri.startsWith(CONNECTION_TYPE)) {
+      Some(portUri.split(ID_SEPARATOR).last)
+    } else {
+      val cst = st.componentTable(elemUri)
+      if (cst.port(portUri).isDefined) {
+        Some(Resource.getResource(cst.port(portUri).get).get.uri)
+      } else {
+        None
+      }
+    }
+  }
+
 }
 

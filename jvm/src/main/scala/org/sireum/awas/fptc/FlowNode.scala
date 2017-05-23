@@ -29,35 +29,39 @@ import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-trait FptcNode extends BasicNode {
+trait FlowNode extends BasicNode {
   def getFptcPropagation(port : ResourceUri) : Set[ResourceUri]
 
   def flowForward(port: ResourceUri): Set[ResourceUri]
 
   def flowBackward(port: ResourceUri): Set[ResourceUri]
+
+  def errorForward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)]
+
+  def errorBackward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)]
 }
 
 trait FptcNodeUpdate {
   def addFptcPropagation(port: ResourceUri, error_type: ResourceUri)
 }
 
-object FptcNode {
-  type Edge = FptcEdge[FptcNode]
-  private var nodepool = imapEmpty[ResourceUri, FptcNode]
+object FlowNode {
+  type Edge = FptcEdge[FlowNode]
+  private var nodepool = imapEmpty[ResourceUri, FlowNode]
 
-  def createNode(uri: ResourceUri, st: SymbolTable): FptcNode = {
+  def createNode(uri: ResourceUri, st: SymbolTable): FlowNode = {
     if (nodepool.contains(uri)) {
       nodepool(uri)
     } else {
-      val node = new FptcNodeImpl(uri, st)
+      val node = new FlowNodeImpl(uri, st)
       nodepool += (uri -> node)
       node
     }
   }
 
-  def getNode(uri: ResourceUri): Option[FptcNode] = nodepool.get(uri)
+  def getNode(uri: ResourceUri): Option[FlowNode] = nodepool.get(uri)
 
   def newPool(): Unit = {
-    nodepool = imapEmpty[ResourceUri, FptcNode]
+    nodepool = imapEmpty[ResourceUri, FlowNode]
   }
 }

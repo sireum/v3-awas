@@ -27,9 +27,9 @@ package org.sireum.awas.example;
 
 import org.sireum.awas.ast.Builder;
 import org.sireum.awas.ast.Model;
-import org.sireum.awas.fptc.FptcGraph;
-import org.sireum.awas.fptc.FptcGraph$;
-import org.sireum.awas.fptc.FptcNode;
+import org.sireum.awas.fptc.FlowGraph;
+import org.sireum.awas.fptc.FlowGraph$;
+import org.sireum.awas.fptc.FlowNode;
 import org.sireum.awas.reachability.PortReachability;
 import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
@@ -65,7 +65,7 @@ public class ReachabilityExample {
                 SymbolTable st = SymbolTable$.MODULE$.apply(modelOpt.get(),
                         new ConsoleTagReporter());
                 //build graph
-                FptcGraph<FptcNode> graph = FptcGraph$.MODULE$.apply(modelOpt.get(), st);
+                FlowGraph<FlowNode> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
                 System.out.println("Constructed Graph: ");
                 System.out.println(graph.toDot());
 
@@ -78,7 +78,7 @@ public class ReachabilityExample {
                 }
 
                 // step 2: Construct the reachability object
-                PortReachability<FptcNode> pr = PortReachability$.MODULE$.apply(graph);
+                PortReachability<FlowNode> pr = PortReachability$.MODULE$.apply(graph);
 
                 // step 3: invoke the right method based on the direction
                 if (criterion != null) {

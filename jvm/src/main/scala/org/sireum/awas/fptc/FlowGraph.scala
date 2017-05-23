@@ -35,7 +35,7 @@ import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{AccumulatingTagReporter, CSet, ConsoleTagReporter, FileResourceUri}
 
-trait FptcGraph[Node] extends AwasGraph[Node] {
+trait FlowGraph[Node] extends AwasGraph[Node] {
   def toDot: String
 
   def getEdgeForPort(port: ResourceUri): Set[Edge]
@@ -56,20 +56,39 @@ trait FptcEdge[Node] extends AwasEdge[Node] {
 /**
   * Factory Methods to build graph
   */
-object FptcGraph{
+object FlowGraph {
   val H = SymbolTableHelper
-  def apply(m : Model, st : SymbolTable) : FptcGraph[FptcNode] = {
-    val result = new FptcGraphImpl()
 
-    FptcNode.newPool()
+  def apply(modelFile: FileResourceUri): Option[FlowGraph[FlowNode]] = {
+    import org.sireum.util.jvm.FileUtil._
+    val basePath = Paths.get(fileUri(this.getClass, s".."))
+    val relativeUri = basePath.relativize(Paths.get(modelFile))
+    val modelOpt = Builder(Some(relativeUri.toString), readFile(modelFile)._1)
+    if (modelOpt.isDefined) {
+      Some(apply(modelOpt.get))
+    } else {
+      None
+    }
+  }
+
+  def apply(m: Model): FlowGraph[FlowNode] = {
+    implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+    val st = SymbolTable(m)
+    apply(m, st)
+  }
+
+  def apply(m: Model, st: SymbolTable): FlowGraph[FlowNode] = {
+    val result = new FlowGraphImpl()
+
+    FlowNode.newPool()
 
     st.components.foreach{
-      comp => result.addNode(FptcNode.createNode(comp, st))
+      comp => result.addNode(FlowNode.createNode(comp, st))
     }
 
     st.connections.foreach {
       conn =>
-        val connNode = result.addNode(FptcNode.createNode(conn, st))
+        val connNode = result.addNode(FlowNode.createNode(conn, st))
         val fromNode = toFptcNode(st.connection(conn).fromComp)
         val toNode = toFptcNode(st.connection(conn).toComp)
 
@@ -88,28 +107,10 @@ object FptcGraph{
     result
   }
 
-  def apply(m: Model): FptcGraph[FptcNode] = {
-    implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-    val st = SymbolTable(m)
-    apply(m, st)
-  }
-
-  def apply(modelFile: FileResourceUri): Option[FptcGraph[FptcNode]] = {
-    import org.sireum.util.jvm.FileUtil._
-    val basePath = Paths.get(fileUri(this.getClass, s".."))
-    val relativeUri = basePath.relativize(Paths.get(modelFile))
-    val modelOpt = Builder(Some(relativeUri.toString), readFile(modelFile)._1)
-    if (modelOpt.isDefined) {
-      Some(apply(modelOpt.get))
-    } else {
-      None
-    }
-  }
-
-  private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FptcNode] = {
+  private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FlowNode] = {
     val res = getResource(node)
     if(res.isDefined && (H.isComponent(res.get) || H.isConnection(res.get))) {
-      FptcNode.getNode(res.get.toUri)
+      FlowNode.getNode(res.get.toUri)
     } else {
       None
     }

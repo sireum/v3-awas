@@ -25,7 +25,7 @@
 
 package org.sireum.awas.reachability
 
-import org.sireum.awas.fptc.{FptcGraph, FptcNode}
+import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.ISet
 
@@ -39,9 +39,9 @@ trait PortReachability[Node] extends BasicReachability[Node]{
 
   def backwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri]
 
-  def forwardPortReach(criterion: FptcNode): ISet[ResourceUri]
+  def forwardPortReach(criterion: FlowNode): ISet[ResourceUri]
 
-  def backwardPortReach(criterion: FptcNode): ISet[ResourceUri]
+  def backwardPortReach(criterion: FlowNode): ISet[ResourceUri]
 
   def forwardReach(criterion: ResourceUri): ISet[ResourceUri]
 
@@ -53,7 +53,7 @@ trait PortReachability[Node] extends BasicReachability[Node]{
 }
 
 object PortReachability {
-  def apply(graph: FptcGraph[FptcNode]): PortReachability[FptcNode] = {
-    new PortReachabilityImpl[FptcNode](graph)
+  def apply(graph: FlowGraph[FlowNode]): PortReachability[FlowNode] = {
+    new PortReachabilityImpl[FlowNode](graph)
   }
 }

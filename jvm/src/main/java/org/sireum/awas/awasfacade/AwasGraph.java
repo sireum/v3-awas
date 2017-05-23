@@ -24,9 +24,10 @@
  */
 package org.sireum.awas.awasfacade;
 
-import org.sireum.awas.fptc.FptcGraph;
-import org.sireum.awas.fptc.FptcNode;
+import org.sireum.awas.fptc.FlowGraph;
+import org.sireum.awas.fptc.FlowNode;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface AwasGraph {
@@ -43,7 +44,11 @@ public interface AwasGraph {
 
     Set<String> backwardReachUsingNames(String criterion);
 
-    FptcGraph<FptcNode> getGraph();
+    Map<String, Set<String>> forwardErrorReachUsingNames(String port, String... errors);
+
+    Map<String, Set<String>> backwardErrorReachUsingNames(String port, String... errors);
+
+    FlowGraph<FlowNode> getGraph();
 
     String getDotGraph();
 }

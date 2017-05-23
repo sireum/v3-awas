@@ -25,33 +25,24 @@
 
 package org.sireum.awas.reachability
 
-import org.sireum.awas.fptc.{FptcGraph, FptcNode}
+import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-class PortReachabilityImpl[Node](graph: FptcGraph[FptcNode]) extends
-  BasicReachabilityImpl(graph) with PortReachability[FptcNode] {
+class PortReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
+  BasicReachabilityImpl(graph) with PortReachability[FlowNode] {
 
   val H = SymbolTableHelper
 
-  override def forwardPortReach(criterion: ResourceUri): ISet[ResourceUri] =
-    portReach(criterion, isForward = true)
-
-  override def backwardPortReach(criterion: ResourceUri): ISet[ResourceUri] =
-    portReach(criterion, isForward = false)
+  override def forwardPortReach(criterion: FlowNode): ISet[ResourceUri] =
+    forwardPortReachSet(criterion.outPorts.toSet)
 
   override def forwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri] =
     criterions.flatMap(forwardPortReach)
 
-  override def backwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri] =
-    criterions.flatMap(backwardPortReach)
-
-  override def forwardPortReach(criterion: FptcNode): ISet[ResourceUri] =
-    forwardPortReachSet(criterion.outPorts.toSet)
-
-  override def backwardPortReach(criterion: FptcNode): ISet[ResourceUri] =
-    backwardPortReachSet(criterion.inPorts.toSet)
+  override def forwardPortReach(criterion: ResourceUri): ISet[ResourceUri] =
+    portReach(criterion, isForward = true)
 
   def portReach(criterion: ResourceUri, isForward: Boolean): ISet[ResourceUri] = {
     var result = isetEmpty[ResourceUri]
@@ -70,6 +61,19 @@ class PortReachabilityImpl[Node](graph: FptcGraph[FptcNode]) extends
     result
   }
 
+  override def backwardPortReach(criterion: FlowNode): ISet[ResourceUri] =
+    backwardPortReachSet(criterion.inPorts.toSet)
+
+  override def backwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri] =
+    criterions.flatMap(backwardPortReach)
+
+  override def backwardPortReach(criterion: ResourceUri): ISet[ResourceUri] =
+    portReach(criterion, isForward = false)
+
+  override def forwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
+    criterion.flatMap(forwardReach)
+  }
+
   override def forwardReach(criterion: ResourceUri): ISet[ResourceUri] = {
     if (criterion.startsWith(H.COMPONENT_TYPE) ||
       criterion.startsWith(H.CONNECTION_TYPE)) {
@@ -84,6 +88,10 @@ class PortReachabilityImpl[Node](graph: FptcGraph[FptcNode]) extends
     }
   }
 
+  override def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
+    criterion.flatMap(backwardReach)
+  }
+
   override def backwardReach(criterion: ResourceUri): ISet[ResourceUri] = {
     if (criterion.startsWith(H.COMPONENT_TYPE) ||
       criterion.startsWith(H.CONNECTION_TYPE)) {
@@ -96,13 +104,5 @@ class PortReachabilityImpl[Node](graph: FptcGraph[FptcNode]) extends
     } else {
       backwardPortReach(criterion)
     }
-  }
-
-  override def forwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
-    criterion.flatMap(forwardReach)
-  }
-
-  override def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
-    criterion.flatMap(backwardReach)
   }
 }

@@ -25,28 +25,28 @@
 
 package org.sireum.awas.reachability
 
-import org.sireum.awas.fptc.{FptcGraph, FptcNode}
+import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.util._
 
-class BasicReachabilityImpl(graph : FptcGraph[FptcNode]) extends BasicReachability[FptcNode] {
+class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachability[FlowNode] {
+  /**
+    * Returns the forward reachability/slice for the set of criterion
+    *
+    * @param criterion Set of graph nodes to which reachability is computed
+    * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
+    */
+  override def forwardReachSetNode(criterion: Set[FlowNode]): ISet[FlowNode] = {
+    criterion.flatMap(forwardReach)
+  }
+
   /**
     * Returns the forward reachability/slice of the criterion
     *
     * @param criterion Graph node from which reachability is computed
     * @return [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  override def forwardReach(criterion: FptcNode): ISet[FptcNode] = {
+  override def forwardReach(criterion: FlowNode): ISet[FlowNode] = {
     reach(criterion, true)
-  }
-
-  /**
-    * Returns the backward reachability/slice of the criterion
-    *
-    * @param criterion Graph node to which reachability is computed
-    * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
-    */
-  override def backwardReach(criterion: FptcNode): ISet[FptcNode] = {
-    reach(criterion, false)
   }
 
   /**
@@ -55,9 +55,9 @@ class BasicReachabilityImpl(graph : FptcGraph[FptcNode]) extends BasicReachabili
     * @param isForward
     * @return
     */
-  private def reach(criterion: FptcNode, isForward: Boolean): ISet[FptcNode] = {
-    var result = isetEmpty[FptcNode]
-    var workList = ilistEmpty[FptcNode]
+  private def reach(criterion: FlowNode, isForward: Boolean): ISet[FlowNode] = {
+    var result = isetEmpty[FlowNode]
+    var workList = ilistEmpty[FlowNode]
     if (graph.hasNode(criterion)) {
       workList = workList :+ criterion
       while (workList.nonEmpty) {
@@ -73,22 +73,22 @@ class BasicReachabilityImpl(graph : FptcGraph[FptcNode]) extends BasicReachabili
   }
 
   /**
-    * Returns the forward reachability/slice for the set of criterion
-    *
-    * @param criterion Set of graph nodes to which reachability is computed
-    * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
-    */
-  override def forwardReachSetNode(criterion: Set[FptcNode]): ISet[FptcNode] = {
-    criterion.flatMap(forwardReach)
-  }
-
-  /**
     * Returns the backward reachability/slice for the set of criterion
     *
     * @param criterions Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  override def backwardReachSetNode(criterions: Set[FptcNode]): ISet[FptcNode] = {
+  override def backwardReachSetNode(criterions: Set[FlowNode]): ISet[FlowNode] = {
     criterions.flatMap(backwardReach)
+  }
+
+  /**
+    * Returns the backward reachability/slice of the criterion
+    *
+    * @param criterion Graph node to which reachability is computed
+    * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
+    */
+  override def backwardReach(criterion: FlowNode): ISet[FlowNode] = {
+    reach(criterion, false)
   }
 }

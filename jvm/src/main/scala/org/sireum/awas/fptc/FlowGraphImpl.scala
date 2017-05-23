@@ -36,57 +36,26 @@ import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
+class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
   self =>
 
-  type FEdge = FptcEdge[FptcNode]
-
-  var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
-
-  var portNodeMap: IMap[ResourceUri, FptcNode] = imapEmpty[ResourceUri, FptcNode]
-
+  type FEdge = FptcEdge[FlowNode]
+  override protected val graph: DirectedGraph[FlowNode, FEdge] = {
+    new DefaultDirectedGraph[FlowNode, FEdge](
+      (source: FlowNode, target: FlowNode) => FlowEdgeImpl(self, source, target)
+    )
+  }
   val H = SymbolTableHelper
-
-  def addPortEdge(port: ResourceUri, edge: FEdge): Unit = {
-    if (portEdgeMap.keySet.contains(port)) {
-      portEdgeMap += port -> (portEdgeMap(port) + edge)
-    } else {
-      portEdgeMap += port -> (isetEmpty[FEdge] + edge)
-    }
-  }
-
-  override def addEdge(from: FptcNode, to: FptcNode): FptcEdgeImpl = {
-    val edge = FptcEdgeImpl(self, from, to)
-    graph.addEdge(from, to, edge)
-    edge
-  }
-
-  override def addNode(n: FptcNode): FptcNode = {
-    n.ports.foreach { p => portNodeMap += (p -> n) }
-    graph.addVertex(n)
-    n
-  }
-
-  override def toDot: String = {
-    val de = new DOTExporter[FptcNode, FEdge](new IntegerNameProvider[FptcNode],
-      nlabelProvide, null,
-      this.attProvider, null)
-    val sw = new StringWriter()
-    de.exportGraph(graph, sw)
-    sw.toString
-  }
-
-  protected val attProvider = new ComponentAttributeProvider[FptcNode] {
-    override def getComponentAttributes(component: FptcNode): util.Map[String, String] = {
+  protected val attProvider = new ComponentAttributeProvider[FlowNode] {
+    override def getComponentAttributes(component: FlowNode): util.Map[String, String] = {
       import scala.collection.JavaConverters._
       val res = mlinkedMapEmpty[String, String]
       res("shape") = "record"
       res.asJava
     }
   }
-
-  protected val nlabelProvide = new VertexNameProvider[FptcNode] {
-    override def getVertexName(vertex: FptcNode): String = {
+  protected val nlabelProvide = new StringComponentNameProvider[FlowNode] {
+    override def getName(vertex: FlowNode): String = {
       var result = ""
       if (vertex.getUri.startsWith(SymbolTableHelper.COMPONENT_TYPE)) {
         result += "{In Port|" + vertex.inPorts.map {
@@ -103,26 +72,39 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
       result
     }
   }
+  var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
+  var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
 
-  override protected val graph: DirectedGraph[FptcNode, FEdge] = {
-    new DefaultDirectedGraph[FptcNode, FEdge](
-      (source: FptcNode, target: FptcNode) => FptcEdgeImpl(self, source, target)
-    )
-  }
-
-  override def getNode(n: FptcNode): FptcNode = n
-
-  def getNode(uri: ResourceUri): Option[FptcNode] = {
-    if (uri.startsWith(H.COMPONENT_TYPE) ||
-      uri.startsWith(H.CONNECTION_TYPE)) {
-      FptcNode.getNode(uri)
+  def addPortEdge(port: ResourceUri, edge: FEdge): Unit = {
+    if (portEdgeMap.keySet.contains(port)) {
+      portEdgeMap += port -> (portEdgeMap(port) + edge)
     } else {
-      portNodeMap.get(uri)
+      portEdgeMap += port -> (isetEmpty[FEdge] + edge)
     }
   }
 
-  override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
-    portEdgeMap.getOrElse(port, isetEmpty[FEdge])
+  override def addEdge(from: FlowNode, to: FlowNode): FlowEdgeImpl = {
+    val edge = FlowEdgeImpl(self, from, to)
+    graph.addEdge(from, to, edge)
+    edge
+  }
+
+  override def addNode(n: FlowNode): FlowNode = {
+    n.ports.foreach { p => portNodeMap += (p -> n) }
+    graph.addVertex(n)
+    n
+  }
+
+  override def toDot: String = {
+    val de = new DOTExporter[FlowNode, FEdge](new IntegerComponentNameProvider[FlowNode],
+      nlabelProvide, null,
+      this.attProvider, null)
+    val sw = new StringWriter()
+    de.exportGraph(graph, sw)
+    sw.toString
+  }
+
+  override def getNode(n: FlowNode): FlowNode = n
 
   override def getSuccessorPorts(port: ResourceUri): CSet[ResourceUri] = {
     var result = isetEmpty[ResourceUri]
@@ -143,6 +125,18 @@ class FptcGraphImpl extends FptcGraph[FptcNode] with AwasGraphUpdate[FptcNode] {
     }
     result
   }
+
+  def getNode(uri: ResourceUri): Option[FlowNode] = {
+    if (uri.startsWith(H.COMPONENT_TYPE) ||
+      uri.startsWith(H.CONNECTION_TYPE)) {
+      FlowNode.getNode(uri)
+    } else {
+      portNodeMap.get(uri)
+    }
+  }
+
+  override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
+    portEdgeMap.getOrElse(port, isetEmpty[FEdge])
 
   override def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri] = {
     var result = isetEmpty[ResourceUri]

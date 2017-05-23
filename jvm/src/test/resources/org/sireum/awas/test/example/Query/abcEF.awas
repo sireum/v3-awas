@@ -1,0 +1,36 @@
+types
+  enum Error {High, Low}
+components
+
+  A
+  with Error
+    ports
+      in aIn
+      out aOut
+    flows
+      f1 : aIn{High} -> aOut{Low}
+
+  B
+  with Error
+    ports
+      in bIn
+      out bOut
+      out bOut2
+    flows
+      f2 : bIn{High} -> bOut{Low}
+      f3 : bIn{Low, High} -> bOut2{Low}
+
+  C
+  with Error
+    ports
+      in cIn
+      out cOut
+    flows
+      f4 : cIn{Low} -> cOut{High}
+
+connections
+  A2B : A.aOut -> B.bIn
+
+  B2C : B.bOut -> C.cIn
+
+  B2A : B.bOut2 -> A.aIn

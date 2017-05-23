@@ -32,14 +32,14 @@ import org.junit.runners.Parameterized.Parameters
 import org.sireum.test.{JUnitTestFramework, TestDef}
 
 @RunWith(value = classOf[Parameterized])
-final class FptcGraphTest(name: String, td: TestDef) {
+final class FlowGraphTest(name: String, td: TestDef) {
   @Test
   def test(): Unit = {
     td.test(JUnitTestFramework)
   }
 }
 
-object FptcGraphTest {
+object FlowGraphTest {
   val provider = new FptcGraphTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")

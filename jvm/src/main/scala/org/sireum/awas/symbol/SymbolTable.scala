@@ -101,11 +101,6 @@ class STProducer extends SymbolTable {
 
   val modelMap = mmapEmpty[ResourceUri, Model]
 
-  def componentSymbolTableProducer(curi : ResourceUri) : CompST = {
-    assert(tables.componentDeclTable.contains(curi))
-    compMap.getOrElseUpdate(curi, new CompST(curi))
-  }
-
   def stateMachineTableProducer(smUri : ResourceUri) : SMT = {
     val smt = new SMT(smUri)
     assert(tables.stateMachineDeclTable.contains(smUri))
@@ -113,8 +108,6 @@ class STProducer extends SymbolTable {
     tables.stateMachineTable(smUri) = smt
     smt
   }
-
-
 
   override def typeDecls: Iterable[ResourceUri] = tables.typeDeclTable.keys
 
@@ -148,8 +141,23 @@ class STProducer extends SymbolTable {
     cST
   }
 
+  def componentSymbolTableProducer(curi: ResourceUri): CompST = {
+    assert(tables.componentDeclTable.contains(curi))
+    compMap.getOrElseUpdate(curi, new CompST(curi))
+  }
+
   override def compStateMachine(compUri: ResourceUri): Option[ResourceUri] = {
     tables.compSMTable.get(compUri)
+  }
+
+  override def smTable(smUri: ResourceUri): StateMachineTable = {
+    tables.stateMachineTable(smUri)
+  }
+
+  def toSymbolTable: SymbolTable = this
+
+  override def compTypeDecl(compUri: ResourceUri): Option[ResourceUri] = {
+    tables.compTypeTable.get(compUri)
   }
 
   class TypeT(val typeDeclUri: ResourceUri) extends TypeTable {
@@ -195,7 +203,9 @@ class STProducer extends SymbolTable {
 
     override def ports: Iterable[ResourceUri] = tables.portTable.keys
 
-    override def port(portUri: ResourceUri): Port = tables.portTable(portUri)
+    override def port(portUri: ResourceUri): Option[Port] =
+      Option(tables.portTable.getOrElse(portUri, null))
+
 
     override def propagation(portUri: ResourceUri): Set[ResourceUri] = {
       if(tables.propagationTable.contains(portUri))
@@ -207,16 +217,10 @@ class STProducer extends SymbolTable {
     override def flows: Iterable[ResourceUri] = tables.flowTable.keys
 
     override def flow(flowUri: ResourceUri): Flow = tables.flowTable(flowUri)
-  }
 
-  override def smTable(smUri: ResourceUri): StateMachineTable = {
-    tables.stateMachineTable(smUri)
-  }
-
-  def toSymbolTable : SymbolTable = this
-
-  override def compTypeDecl(compUri: ResourceUri): Option[ResourceUri] = {
-    tables.compTypeTable.get(compUri)
+    override def flowRelate(portUri: ResourceUri): Set[ResourceUri] = {
+      tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
+    }
   }
 }
 
@@ -229,13 +233,15 @@ trait ComponentSymbolTable {
 
   def ports: Iterable[ResourceUri]
 
-  def port(portUri: ResourceUri): Port
+  def port(portUri: ResourceUri): Option[Port]
 
   def propagation(portUri: ResourceUri): Set[ResourceUri]
 
   def flows: Iterable[ResourceUri]
 
   def flow(flowUri: ResourceUri): Flow
+
+  def flowRelate(portUri: ResourceUri): Set[ResourceUri]
 }
 
 sealed case class ComponentTableData
@@ -243,7 +249,7 @@ sealed case class ComponentTableData
  portTable: MMap[ResourceUri, Port] = mmapEmpty,
  propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  flowTable: MMap[ResourceUri, Flow] = mmapEmpty,
- flowPortRelation: MMap[ResourceUri, ResourceUri] = mmapEmpty
+ flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty
 )
 
 trait TypeTable {

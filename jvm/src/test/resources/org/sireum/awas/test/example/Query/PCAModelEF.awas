@@ -1,0 +1,75 @@
+types
+  enum Error {High, Low, Erratic, Halted, Early, Late}
+
+components
+  Patient
+  with Error
+    ports
+       in vein
+       out fingerclip
+       out exhalation
+    flows
+    //sink
+      f1 : vein{High} -> *
+
+
+  PulseOx
+  with Error
+     ports
+       in refracted_light
+       out spo2
+     flows
+     //source
+       f2 : * -> spo2{High, Low, Early, Late, Halted}
+
+  Capnography
+  with Error
+    ports
+      in breath
+      out etco2
+      out resp_rate
+    flows
+    //source
+      f3 : * -> etco2{High, Low, Early, Late, Halted}
+      f4 : * -> resp_rate{High, Low, Early, Late, Halted}
+
+  App
+  with Error
+    ports
+      in etco2
+      in spo2
+      in rr
+      out pump_cmd
+    flows
+    //Over infusion case
+      f5 : etco2{Low} -> pump_cmd{High}
+      f6 : spo2{High} -> pump_cmd{High}
+      f7 : rr{High} -> pump_cmd{High}
+
+    //Error occurred in the app
+      f8 : * -> pump_cmd{High, Early, Late}
+
+
+  Pump
+  with Error
+    ports
+      in cmd
+      out drug
+    flows
+      f9 : cmd{High, Early} -> drug{High}
+      f10 : cmd{Low, Late, Halted} -> *
+
+connections
+  p1 : Patient.fingerclip -> PulseOx.refracted_light
+
+  p2 : Patient.exhalation -> Capnography.breath
+
+  s1 : PulseOx.spo2 -> App.spo2
+
+  s2 : Capnography.etco2 -> App.etco2
+
+  s3 : Capnography.resp_rate -> App.rr
+
+  app1 : App.pump_cmd -> Pump.cmd
+
+  a1 : Pump.drug -> Patient.vein

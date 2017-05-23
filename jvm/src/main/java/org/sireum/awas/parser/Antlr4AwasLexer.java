@@ -1,147 +1,44 @@
-/*
- Copyright (c) 2017, Robby, Kansas State University
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- 1. Redistributions of source code must retain the above copyright notice, this
-    list of conditions and the following disclaimer.
- 2. Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-// Generated from /Volumes/User/hariharan/Documents/workspace-sireumV3/sireum-v3/awas/jvm/src/main/resources/org/sireum/awas/parser/Antlr4Awas.g4 by ANTLR 4.6
+// Generated from /workspace-v3/sireum-v3/awas/jvm/src/main/resources/org/sireum/awas/parser/Antlr4Awas.g4 by ANTLR 4.7
 package org.sireum.awas.parser;
 
 // @formatter:off
 
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Antlr4AwasLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.6", RuntimeMetaData.VERSION); }
-
-	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
-		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
-		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, INTEGER=51, REAL=52, 
-		STRING=53, ID=54, WS=55, COMMENT=56, LINE_COMMENT=57, ERROR_CHAR=58;
-	public static String[] modeNames = {
-		"DEFAULT_MODE"
-	};
-
+            T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
+            T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
+            T__17 = 18, T__18 = 19, T__19 = 20, T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24,
+            T__24 = 25, T__25 = 26, T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31,
+            T__31 = 32, T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38,
+            T__38 = 39, T__39 = 40, T__40 = 41, T__41 = 42, T__42 = 43, T__43 = 44, T__44 = 45,
+            T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, INTEGER = 51, REAL = 52,
+            STRING=53, ID=54, WS=55, COMMENT=56, LINE_COMMENT=57, ERROR_CHAR=58;
 	public static final String[] ruleNames = {
-		"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
-		"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16", 
-		"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
-		"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32", 
-		"T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40", 
-		"T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "T__47", "T__48", 
-		"T__49", "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT", 
-		"ERROR_CHAR"
+            "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
+            "T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16",
+            "T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24",
+            "T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32",
+            "T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40",
+            "T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "T__47", "T__48",
+            "T__49", "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT",
+            "ERROR_CHAR"
 	};
-
-	private static final String[] _LITERAL_NAMES = {
-		null, "'types'", "'behavior'", "'constants'", "'components'", "'connections'", 
-		"':'", "'with'", "','", "'ports'", "'propagations'", "'flows'", "'transitions'", 
-		"'properties'", "'.'", "'{'", "'}'", "'->'", "'alias'", "'='", "'enum'", 
-		"'extends'", "'lattice'", "'record'", "'in'", "'out'", "'*'", "'-['", 
-		"']->'", "'('", "')'", "'Option'", "'['", "']'", "'Set'", "'Seq'", "'Map'", 
-		"'Boolean'", "'Integer'", "'Real'", "'String'", "'Component'", "'Port'", 
-		"'_'", "'true'", "'false'", "'None'", "'Some'", "'::'", "'states'", "'events'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", 
-		"LINE_COMMENT", "ERROR_CHAR"
-	};
-	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
-
 	/**
 	 * @deprecated Use {@link #VOCABULARY} instead.
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
-	static {
-		tokenNames = new String[_SYMBOLIC_NAMES.length];
-		for (int i = 0; i < tokenNames.length; i++) {
-			tokenNames[i] = VOCABULARY.getLiteralName(i);
-			if (tokenNames[i] == null) {
-				tokenNames[i] = VOCABULARY.getSymbolicName(i);
-			}
-
-			if (tokenNames[i] == null) {
-				tokenNames[i] = "<INVALID>";
-			}
-		}
-	}
-
-	@Override
-	@Deprecated
-	public String[] getTokenNames() {
-		return tokenNames;
-	}
-
-	@Override
-
-	public Vocabulary getVocabulary() {
-		return VOCABULARY;
-	}
-
-
-	public Antlr4AwasLexer(CharStream input) {
-		super(input);
-		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
-	}
-
-	@Override
-	public String getGrammarFileName() { return "Antlr4Awas.g4"; }
-
-	@Override
-	public String[] getRuleNames() { return ruleNames; }
-
-	@Override
-	public String getSerializedATN() { return _serializedATN; }
-
-	@Override
-	public String[] getModeNames() { return modeNames; }
-
-	@Override
-	public ATN getATN() { return _ATN; }
-
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\2<\u01e2\b\1\4\2\t"+
-		"\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
+            "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2<\u01e1\b\1\4\2\t" +
+                    "\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
 		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
@@ -167,39 +64,39 @@ public class Antlr4AwasLexer extends Lexer {
 		"\63\3\63\3\63\3\64\3\64\3\64\7\64\u018f\n\64\f\64\16\64\u0192\13\64\5"+
 		"\64\u0194\n\64\3\65\3\65\3\65\7\65\u0199\n\65\f\65\16\65\u019c\13\65\5"+
 		"\65\u019e\n\65\3\65\3\65\6\65\u01a2\n\65\r\65\16\65\u01a3\3\66\3\66\3"+
-		"\66\3\66\7\66\u01aa\n\66\f\66\16\66\u01ad\13\66\3\66\3\66\3\67\3\67\7"+
-		"\67\u01b3\n\67\f\67\16\67\u01b6\13\67\3\67\3\67\6\67\u01ba\n\67\r\67\16"+
-		"\67\u01bb\3\67\5\67\u01bf\n\67\38\68\u01c2\n8\r8\168\u01c3\38\38\39\3"+
-		"9\39\39\79\u01cc\n9\f9\169\u01cf\139\39\39\39\39\39\3:\3:\3:\3:\7:\u01da"+
-		"\n:\f:\16:\u01dd\13:\3:\3:\3;\3;\3\u01cd\2<\3\3\5\4\7\5\t\6\13\7\r\b\17"+
-		"\t\21\n\23\13\25\f\27\r\31\16\33\17\35\20\37\21!\22#\23%\24\'\25)\26+"+
-		"\27-\30/\31\61\32\63\33\65\34\67\359\36;\37= ?!A\"C#E$G%I&K\'M(O)Q*S+"+
-		"U,W-Y.[/]\60_\61a\62c\63e\64g\65i\66k\67m8o9q:s;u<\3\2\n\3\2\63;\3\2\62"+
-		";\3\2$$\6\2&&C\\aac|\7\2&&\62;C\\aac|\5\2\13\f\16\17bb\5\2\13\f\16\17"+
-		"\"\"\4\2\f\f\17\17\u01ee\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2"+
-		"\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2\2\25"+
-		"\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2"+
-		"\2\2\2!\3\2\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2\2\2+\3\2\2"+
-		"\2\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2\65\3\2\2\2\2\67\3"+
-		"\2\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2\2\2\2?\3\2\2\2\2A\3\2\2\2\2C\3\2\2"+
-		"\2\2E\3\2\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2\2O\3\2\2\2\2"+
-		"Q\3\2\2\2\2S\3\2\2\2\2U\3\2\2\2\2W\3\2\2\2\2Y\3\2\2\2\2[\3\2\2\2\2]\3"+
-		"\2\2\2\2_\3\2\2\2\2a\3\2\2\2\2c\3\2\2\2\2e\3\2\2\2\2g\3\2\2\2\2i\3\2\2"+
-		"\2\2k\3\2\2\2\2m\3\2\2\2\2o\3\2\2\2\2q\3\2\2\2\2s\3\2\2\2\2u\3\2\2\2\3"+
-		"w\3\2\2\2\5}\3\2\2\2\7\u0086\3\2\2\2\t\u0090\3\2\2\2\13\u009b\3\2\2\2"+
-		"\r\u00a7\3\2\2\2\17\u00a9\3\2\2\2\21\u00ae\3\2\2\2\23\u00b0\3\2\2\2\25"+
-		"\u00b6\3\2\2\2\27\u00c3\3\2\2\2\31\u00c9\3\2\2\2\33\u00d5\3\2\2\2\35\u00e0"+
-		"\3\2\2\2\37\u00e2\3\2\2\2!\u00e4\3\2\2\2#\u00e6\3\2\2\2%\u00e9\3\2\2\2"+
-		"\'\u00ef\3\2\2\2)\u00f1\3\2\2\2+\u00f6\3\2\2\2-\u00fe\3\2\2\2/\u0106\3"+
-		"\2\2\2\61\u010d\3\2\2\2\63\u0110\3\2\2\2\65\u0114\3\2\2\2\67\u0116\3\2"+
-		"\2\29\u0119\3\2\2\2;\u011d\3\2\2\2=\u011f\3\2\2\2?\u0121\3\2\2\2A\u0128"+
-		"\3\2\2\2C\u012a\3\2\2\2E\u012c\3\2\2\2G\u0130\3\2\2\2I\u0134\3\2\2\2K"+
+                    "\66\3\66\7\66\u01aa\n\66\f\66\16\66\u01ad\13\66\3\66\3\67\3\67\7\67\u01b2" +
+                    "\n\67\f\67\16\67\u01b5\13\67\3\67\3\67\6\67\u01b9\n\67\r\67\16\67\u01ba" +
+                    "\3\67\5\67\u01be\n\67\38\68\u01c1\n8\r8\168\u01c2\38\38\39\39\39\39\7" +
+                    "9\u01cb\n9\f9\169\u01ce\139\39\39\39\39\39\3:\3:\3:\3:\7:\u01d9\n:\f:" +
+                    "\16:\u01dc\13:\3:\3:\3;\3;\3\u01cc\2<\3\3\5\4\7\5\t\6\13\7\r\b\17\t\21" +
+                    "\n\23\13\25\f\27\r\31\16\33\17\35\20\37\21!\22#\23%\24\'\25)\26+\27-\30" +
+                    "/\31\61\32\63\33\65\34\67\359\36;\37= ?!A\"C#E$G%I&K\'M(O)Q*S+U,W-Y.[" +
+                    "/]\60_\61a\62c\63e\64g\65i\66k\67m8o9q:s;u<\3\2\n\3\2\63;\3\2\62;\3\2" +
+                    "$$\6\2&&C\\aac|\7\2&&\62;C\\aac|\5\2\13\f\16\17bb\5\2\13\f\16\17\"\"\4" +
+                    "\2\f\f\17\17\2\u01ed\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2\2\2" +
+                    "\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2\2\25\3" +
+                    "\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2\2" +
+                    "\2\2!\3\2\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2\2\2+\3\2\2\2" +
+                    "\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2\65\3\2\2\2\2\67\3\2" +
+                    "\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2\2\2\2?\3\2\2\2\2A\3\2\2\2\2C\3\2\2\2" +
+                    "\2E\3\2\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2\2O\3\2\2\2\2Q" +
+                    "\3\2\2\2\2S\3\2\2\2\2U\3\2\2\2\2W\3\2\2\2\2Y\3\2\2\2\2[\3\2\2\2\2]\3\2" +
+                    "\2\2\2_\3\2\2\2\2a\3\2\2\2\2c\3\2\2\2\2e\3\2\2\2\2g\3\2\2\2\2i\3\2\2\2" +
+                    "\2k\3\2\2\2\2m\3\2\2\2\2o\3\2\2\2\2q\3\2\2\2\2s\3\2\2\2\2u\3\2\2\2\3w" +
+                    "\3\2\2\2\5}\3\2\2\2\7\u0086\3\2\2\2\t\u0090\3\2\2\2\13\u009b\3\2\2\2\r" +
+                    "\u00a7\3\2\2\2\17\u00a9\3\2\2\2\21\u00ae\3\2\2\2\23\u00b0\3\2\2\2\25\u00b6" +
+                    "\3\2\2\2\27\u00c3\3\2\2\2\31\u00c9\3\2\2\2\33\u00d5\3\2\2\2\35\u00e0\3" +
+                    "\2\2\2\37\u00e2\3\2\2\2!\u00e4\3\2\2\2#\u00e6\3\2\2\2%\u00e9\3\2\2\2\'" +
+                    "\u00ef\3\2\2\2)\u00f1\3\2\2\2+\u00f6\3\2\2\2-\u00fe\3\2\2\2/\u0106\3\2" +
+                    "\2\2\61\u010d\3\2\2\2\63\u0110\3\2\2\2\65\u0114\3\2\2\2\67\u0116\3\2\2" +
+                    "\29\u0119\3\2\2\2;\u011d\3\2\2\2=\u011f\3\2\2\2?\u0121\3\2\2\2A\u0128" +
+                    "\3\2\2\2C\u012a\3\2\2\2E\u012c\3\2\2\2G\u0130\3\2\2\2I\u0134\3\2\2\2K"+
 		"\u0138\3\2\2\2M\u0140\3\2\2\2O\u0148\3\2\2\2Q\u014d\3\2\2\2S\u0154\3\2"+
 		"\2\2U\u015e\3\2\2\2W\u0163\3\2\2\2Y\u0165\3\2\2\2[\u016a\3\2\2\2]\u0170"+
 		"\3\2\2\2_\u0175\3\2\2\2a\u017a\3\2\2\2c\u017d\3\2\2\2e\u0184\3\2\2\2g"+
-		"\u0193\3\2\2\2i\u019d\3\2\2\2k\u01a5\3\2\2\2m\u01be\3\2\2\2o\u01c1\3\2"+
-		"\2\2q\u01c7\3\2\2\2s\u01d5\3\2\2\2u\u01e0\3\2\2\2wx\7v\2\2xy\7{\2\2yz"+
-		"\7r\2\2z{\7g\2\2{|\7u\2\2|\4\3\2\2\2}~\7d\2\2~\177\7g\2\2\177\u0080\7"+
+                    "\u0193\3\2\2\2i\u019d\3\2\2\2k\u01a5\3\2\2\2m\u01bd\3\2\2\2o\u01c0\3\2" +
+                    "\2\2q\u01c6\3\2\2\2s\u01d4\3\2\2\2u\u01df\3\2\2\2wx\7v\2\2xy\7{\2\2yz" +
+                    "\7r\2\2z{\7g\2\2{|\7u\2\2|\4\3\2\2\2}~\7d\2\2~\177\7g\2\2\177\u0080\7"+
 		"j\2\2\u0080\u0081\7c\2\2\u0081\u0082\7x\2\2\u0082\u0083\7k\2\2\u0083\u0084"+
 		"\7q\2\2\u0084\u0085\7t\2\2\u0085\6\3\2\2\2\u0086\u0087\7e\2\2\u0087\u0088"+
 		"\7q\2\2\u0088\u0089\7p\2\2\u0089\u008a\7u\2\2\u008a\u008b\7v\2\2\u008b"+
@@ -277,33 +174,126 @@ public class Antlr4AwasLexer extends Lexer {
 		"\3\2\2\2\u019a\u019b\3\2\2\2\u019b\u019e\3\2\2\2\u019c\u019a\3\2\2\2\u019d"+
 		"\u0195\3\2\2\2\u019d\u0196\3\2\2\2\u019e\u019f\3\2\2\2\u019f\u01a1\7\60"+
 		"\2\2\u01a0\u01a2\t\3\2\2\u01a1\u01a0\3\2\2\2\u01a2\u01a3\3\2\2\2\u01a3"+
-		"\u01a1\3\2\2\2\u01a3\u01a4\3\2\2\2\u01a4j\3\2\2\2\u01a5\u01ab\7$\2\2\u01a6"+
-		"\u01aa\n\4\2\2\u01a7\u01a8\7$\2\2\u01a8\u01aa\7$\2\2\u01a9\u01a6\3\2\2"+
-		"\2\u01a9\u01a7\3\2\2\2\u01aa\u01ad\3\2\2\2\u01ab\u01a9\3\2\2\2\u01ab\u01ac"+
-		"\3\2\2\2\u01ac\u01ae\3\2\2\2\u01ad\u01ab\3\2\2\2\u01ae\u01af\7$\2\2\u01af"+
-		"l\3\2\2\2\u01b0\u01b4\t\5\2\2\u01b1\u01b3\t\6\2\2\u01b2\u01b1\3\2\2\2"+
-		"\u01b3\u01b6\3\2\2\2\u01b4\u01b2\3\2\2\2\u01b4\u01b5\3\2\2\2\u01b5\u01bf"+
-		"\3\2\2\2\u01b6\u01b4\3\2\2\2\u01b7\u01b9\7b\2\2\u01b8\u01ba\n\7\2\2\u01b9"+
-		"\u01b8\3\2\2\2\u01ba\u01bb\3\2\2\2\u01bb\u01b9\3\2\2\2\u01bb\u01bc\3\2"+
-		"\2\2\u01bc\u01bd\3\2\2\2\u01bd\u01bf\7b\2\2\u01be\u01b0\3\2\2\2\u01be"+
-		"\u01b7\3\2\2\2\u01bfn\3\2\2\2\u01c0\u01c2\t\b\2\2\u01c1\u01c0\3\2\2\2"+
-		"\u01c2\u01c3\3\2\2\2\u01c3\u01c1\3\2\2\2\u01c3\u01c4\3\2\2\2\u01c4\u01c5"+
-		"\3\2\2\2\u01c5\u01c6\b8\2\2\u01c6p\3\2\2\2\u01c7\u01c8\7\61\2\2\u01c8"+
-		"\u01c9\7,\2\2\u01c9\u01cd\3\2\2\2\u01ca\u01cc\13\2\2\2\u01cb\u01ca\3\2"+
-		"\2\2\u01cc\u01cf\3\2\2\2\u01cd\u01ce\3\2\2\2\u01cd\u01cb\3\2\2\2\u01ce"+
-		"\u01d0\3\2\2\2\u01cf\u01cd\3\2\2\2\u01d0\u01d1\7,\2\2\u01d1\u01d2\7\61"+
-		"\2\2\u01d2\u01d3\3\2\2\2\u01d3\u01d4\b9\2\2\u01d4r\3\2\2\2\u01d5\u01d6"+
-		"\7\61\2\2\u01d6\u01d7\7\61\2\2\u01d7\u01db\3\2\2\2\u01d8\u01da\n\t\2\2"+
-		"\u01d9\u01d8\3\2\2\2\u01da\u01dd\3\2\2\2\u01db\u01d9\3\2\2\2\u01db\u01dc"+
-		"\3\2\2\2\u01dc\u01de\3\2\2\2\u01dd\u01db\3\2\2\2\u01de\u01df\b:\2\2\u01df"+
-		"t\3\2\2\2\u01e0\u01e1\13\2\2\2\u01e1v\3\2\2\2\20\2\u0190\u0193\u019a\u019d"+
-		"\u01a3\u01a9\u01ab\u01b4\u01bb\u01be\u01c3\u01cd\u01db\3\b\2\2";
-	public static final ATN _ATN =
+                    "\u01a1\3\2\2\2\u01a3\u01a4\3\2\2\2\u01a4j\3\2\2\2\u01a5\u01ab\3\2\2\2" +
+                    "\u01a6\u01aa\n\4\2\2\u01a7\u01a8\7$\2\2\u01a8\u01aa\7$\2\2\u01a9\u01a6" +
+                    "\3\2\2\2\u01a9\u01a7\3\2\2\2\u01aa\u01ad\3\2\2\2\u01ab\u01a9\3\2\2\2\u01ab" +
+                    "\u01ac\3\2\2\2\u01ac\u01ae\3\2\2\2\u01ad\u01ab\3\2\2\2\u01ael\3\2\2\2" +
+                    "\u01af\u01b3\t\5\2\2\u01b0\u01b2\t\6\2\2\u01b1\u01b0\3\2\2\2\u01b2\u01b5" +
+                    "\3\2\2\2\u01b3\u01b1\3\2\2\2\u01b3\u01b4\3\2\2\2\u01b4\u01be\3\2\2\2\u01b5" +
+                    "\u01b3\3\2\2\2\u01b6\u01b8\7b\2\2\u01b7\u01b9\n\7\2\2\u01b8\u01b7\3\2" +
+                    "\2\2\u01b9\u01ba\3\2\2\2\u01ba\u01b8\3\2\2\2\u01ba\u01bb\3\2\2\2\u01bb" +
+                    "\u01bc\3\2\2\2\u01bc\u01be\7b\2\2\u01bd\u01af\3\2\2\2\u01bd\u01b6\3\2" +
+                    "\2\2\u01ben\3\2\2\2\u01bf\u01c1\t\b\2\2\u01c0\u01bf\3\2\2\2\u01c1\u01c2" +
+                    "\3\2\2\2\u01c2\u01c0\3\2\2\2\u01c2\u01c3\3\2\2\2\u01c3\u01c4\3\2\2\2\u01c4" +
+                    "\u01c5\b8\2\2\u01c5p\3\2\2\2\u01c6\u01c7\7\61\2\2\u01c7\u01c8\7,\2\2\u01c8" +
+                    "\u01cc\3\2\2\2\u01c9\u01cb\13\2\2\2\u01ca\u01c9\3\2\2\2\u01cb\u01ce\3" +
+                    "\2\2\2\u01cc\u01cd\3\2\2\2\u01cc\u01ca\3\2\2\2\u01cd\u01cf\3\2\2\2\u01ce" +
+                    "\u01cc\3\2\2\2\u01cf\u01d0\7,\2\2\u01d0\u01d1\7\61\2\2\u01d1\u01d2\3\2" +
+                    "\2\2\u01d2\u01d3\b9\2\2\u01d3r\3\2\2\2\u01d4\u01d5\7\61\2\2\u01d5\u01d6" +
+                    "\7\61\2\2\u01d6\u01da\3\2\2\2\u01d7\u01d9\n\t\2\2\u01d8\u01d7\3\2\2\2" +
+                    "\u01d9\u01dc\3\2\2\2\u01da\u01d8\3\2\2\2\u01da\u01db\3\2\2\2\u01db\u01dd" +
+                    "\3\2\2\2\u01dc\u01da\3\2\2\2\u01dd\u01de\b:\2\2\u01det\3\2\2\2\u01df\u01e0" +
+                    "\13\2\2\2\u01e0v\3\2\2\2\20\2\u0190\u0193\u019a\u019d\u01a3\u01a9\u01ab" +
+                    "\u01b3\u01ba\u01bd\u01c2\u01cc\u01da\3\b\2\2";
+    public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
+    protected static final DFA[] _decisionToDFA;
+    protected static final PredictionContextCache _sharedContextCache =
+            new PredictionContextCache();
+    private static final String[] _LITERAL_NAMES = {
+            null, "'types'", "'behavior'", "'constants'", "'components'", "'connections'",
+            "':'", "'with'", "','", "'ports'", "'propagations'", "'flows'", "'transitions'",
+            "'properties'", "'.'", "'{'", "'}'", "'->'", "'alias'", "'='", "'enum'",
+            "'extends'", "'lattice'", "'record'", "'in'", "'out'", "'*'", "'-['",
+            "']->'", "'('", "')'", "'Option'", "'['", "']'", "'Set'", "'Seq'", "'Map'",
+            "'Boolean'", "'Integer'", "'Real'", "'String'", "'Component'", "'Port'",
+            "'_'", "'true'", "'false'", "'None'", "'Some'", "'::'", "'states'", "'events'"
+    };
+    private static final String[] _SYMBOLIC_NAMES = {
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT",
+            "LINE_COMMENT", "ERROR_CHAR"
+    };
+    public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+    public static String[] channelNames = {
+            "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+    };
+    public static String[] modeNames = {
+            "DEFAULT_MODE"
+    };
+
+    static {
+        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
+    }
+
+    static {
+        tokenNames = new String[_SYMBOLIC_NAMES.length];
+        for (int i = 0; i < tokenNames.length; i++) {
+            tokenNames[i] = VOCABULARY.getLiteralName(i);
+            if (tokenNames[i] == null) {
+                tokenNames[i] = VOCABULARY.getSymbolicName(i);
+            }
+
+            if (tokenNames[i] == null) {
+                tokenNames[i] = "<INVALID>";
+            }
+        }
+    }
+
 	static {
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
 		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
 			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
 		}
 	}
+
+    public Antlr4AwasLexer(CharStream input) {
+        super(input);
+        _interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+    }
+
+    @Override
+    @Deprecated
+    public String[] getTokenNames() {
+        return tokenNames;
+    }
+
+    @Override
+
+    public Vocabulary getVocabulary() {
+        return VOCABULARY;
+    }
+
+    @Override
+    public String getGrammarFileName() {
+        return "Antlr4Awas.g4";
+    }
+
+    @Override
+    public String[] getRuleNames() {
+        return ruleNames;
+    }
+
+    @Override
+    public String getSerializedATN() {
+        return _serializedATN;
+    }
+
+    @Override
+    public String[] getChannelNames() {
+        return channelNames;
+    }
+
+    @Override
+    public String[] getModeNames() {
+        return modeNames;
+    }
+
+    @Override
+    public ATN getATN() {
+        return _ATN;
+    }
 }

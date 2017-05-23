@@ -28,7 +28,7 @@ package org.sireum.awas.test.Query
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
-import org.sireum.awas.fptc.FptcGraph
+import org.sireum.awas.fptc.FlowGraph
 import org.sireum.awas.query.{QueryBuilder, QueryEval}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
@@ -87,7 +87,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
       case Some(m) =>
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         val st = SymbolTable(m)
-        val graph = FptcGraph(m, st)
+        val graph = FlowGraph(m, st)
         QueryBuilder(query) match {
           case None => ""
           case Some(q) =>

@@ -29,9 +29,9 @@ package org.sireum.awas.awasfacade;
 import org.sireum.awas.ast.Builder;
 import org.sireum.awas.ast.Model;
 import org.sireum.awas.example.ReachabilityExample;
-import org.sireum.awas.fptc.FptcGraph;
-import org.sireum.awas.fptc.FptcGraph$;
-import org.sireum.awas.fptc.FptcNode;
+import org.sireum.awas.fptc.FlowGraph;
+import org.sireum.awas.fptc.FlowGraph$;
+import org.sireum.awas.fptc.FlowNode;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTable$;
 import org.sireum.awas.util.JavaConverters;
@@ -58,7 +58,7 @@ public class AwasGraphBuilder {
             SymbolTable st = SymbolTable$.MODULE$.apply(modelOpt.get(),
                     new ConsoleTagReporter());
             //build graph
-            FptcGraph<FptcNode> graph = FptcGraph$.MODULE$.apply(modelOpt.get(), st);
+            FlowGraph<FlowNode> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
 
             final AwasGraph ag = new AwasGraphImpl(graph, st);
             return Optional.of(ag);

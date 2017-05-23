@@ -25,8 +25,6 @@
 
 package org.sireum.awas.query
 
-import java.io.StringReader
-
 import org.antlr.v4.runtime._
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.sireum.aq.parser.Antlr4AQParser._
@@ -115,31 +113,12 @@ final class QueryBuilder private() {
 
 object QueryBuilder {
 
-  trait Reporter {
-    def error(line: PosInteger,
-              column: PosInteger,
-              offset: Natural,
-              message: String): Unit
-  }
-
-  object ConsoleReporter extends Reporter {
-    override def error(line: PosInteger,
-                       column: PosInteger,
-                       offset: Natural,
-                       message: String): Unit = {
-      //Console.err.println(s"[$line, $column] $message")
-      Console.err.println("[" + line + ", " + column + "] " + message)
-      Console.err.flush()
-    }
-  }
-
   def apply(input: String,
             maxErrors: Natural = 0,
             reporter: Reporter = ConsoleReporter): Option[Model] = {
     class ParsingEscape extends RuntimeException
 
-    val sr = new StringReader(input)
-    val inputStream = new ANTLRInputStream(sr)
+    val inputStream = CharStreams.fromString(input)
     val lexer = new Antlr4AQLexer(inputStream)
     val tokens = new CommonTokenStream(lexer)
     val parser = new Antlr4AQParser(tokens)
@@ -175,5 +154,23 @@ object QueryBuilder {
       mfOpt.map(mf => new QueryBuilder().build(mf.model()))
     else
       None
+  }
+
+  trait Reporter {
+    def error(line: PosInteger,
+              column: PosInteger,
+              offset: Natural,
+              message: String): Unit
+  }
+
+  object ConsoleReporter extends Reporter {
+    override def error(line: PosInteger,
+                       column: PosInteger,
+                       offset: Natural,
+                       message: String): Unit = {
+      //Console.err.println(s"[$line, $column] $message")
+      Console.err.println("[" + line + ", " + column + "] " + message)
+      Console.err.flush()
+    }
   }
 }

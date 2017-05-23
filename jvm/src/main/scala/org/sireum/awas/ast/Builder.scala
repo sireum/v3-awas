@@ -25,8 +25,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.sireum.awas.ast
 
-import java.io.StringReader
-
 import org.antlr.v4.runtime._
 import org.antlr.v4.runtime.tree._
 import org.sireum.awas.parser.Antlr4AwasParser._
@@ -283,23 +281,6 @@ final class Builder private() {
 
 object Builder {
 
-  trait Reporter {
-    def error(line: PosInteger,
-              column: PosInteger,
-              offset: Natural,
-              message: String): Unit
-  }
-
-  object ConsoleReporter extends Reporter {
-    override def error(line: PosInteger,
-                       column: PosInteger,
-                       offset: Natural,
-                       message: String): Unit = {
-      Console.err.println("[" + line + ", " + column + "] " + message)
-      Console.err.flush()
-    }
-  }
-
   def apply(fileUriOpt: Option[FileResourceUri],
             input: String,
             maxErrors: Natural = 0,
@@ -308,8 +289,7 @@ object Builder {
 
     import org.sireum.awas.parser.{Antlr4AwasLexer, Antlr4AwasParser}
 
-    val sr = new StringReader(input)
-    val inputStream = new ANTLRInputStream(sr)
+    val inputStream = CharStreams.fromString(input)
     val lexer = new Antlr4AwasLexer(inputStream)
     val tokens = new CommonTokenStream(lexer)
     val parser = new Antlr4AwasParser(tokens)
@@ -345,5 +325,22 @@ object Builder {
       mfOpt.map(mf => new Builder().build(fileUriOpt,mf.model()))
     else
       None
+  }
+
+  trait Reporter {
+    def error(line: PosInteger,
+              column: PosInteger,
+              offset: Natural,
+              message: String): Unit
+  }
+
+  object ConsoleReporter extends Reporter {
+    override def error(line: PosInteger,
+                       column: PosInteger,
+                       offset: Natural,
+                       message: String): Unit = {
+      Console.err.println("[" + line + ", " + column + "] " + message)
+      Console.err.flush()
+    }
   }
 }
