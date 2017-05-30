@@ -81,7 +81,11 @@ final class QueryBuilder private() {
   }
 
   def build(ctx: NodeNameErrorContext): NodeNameError = {
-    NodeNameError(build(ctx.nodeName()), ctx.ids.map(buildId))
+    NodeNameError(build(ctx.nodeName()), ctx.errorId().map(build))
+  }
+
+  def build(ctx: ErrorIdContext): QueryNode.Seq[Id] = {
+    ctx.ids.map(buildId)
   }
 
   def build(ctx: NodeNameContext): NodeName = {

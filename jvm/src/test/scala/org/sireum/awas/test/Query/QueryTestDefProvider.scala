@@ -47,7 +47,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
-      listFiles(fileUri(this.getClass, d), "awas")
+      listFiles(fileUri(this.getClass, d), "abcEF.awas")
     }
 
     val filesEqual = files.filter { p =>
@@ -96,7 +96,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
             res.foreach { r =>
               result += r._1
               result += "\n -------------- \n"
-              result += r._2.toSeq.sorted.mkString("\n")
+              result += r._2.toString
               result += "\n -------------- \n"
             }
             result

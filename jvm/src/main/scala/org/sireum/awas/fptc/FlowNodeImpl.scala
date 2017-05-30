@@ -30,7 +30,7 @@ import org.sireum.awas.symbol._
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable) extends
+final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit reporter: AccumulatingTagReporter) extends
   BasicNodeImpl(uri, st) with FlowNode with FptcNodeUpdate {
 
   type Edge = FptcEdge[FlowNode]
@@ -62,6 +62,58 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable) extends
 
   override def getFptcPropagation(port: ResourceUri): Set[ResourceUri] = fptcPropagation(port)
 
+  override def errorForward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)] = {
+    var result = isetEmpty[(ResourceUri, ResourceUri)]
+
+    if (isComponent && !H.isFlowDefined(compST.get)) {
+      outPorts.foreach { op =>
+        result ++= compST.get.propagation(op).map((f: ResourceUri) => (op, f))
+      }
+    } else {
+      if (tuple._1.startsWith(H.PORT_IN_TYPE) &&
+        isComponent && H.getPortId(st, uri, tuple._1).isDefined) {
+        var found = false
+        compST.get.flowRelate(tuple._1).foreach { f =>
+          // this looks for path
+          if (compST.get.flow(f).from.isDefined &&
+            compST.get.flow(f).to.isDefined) {
+            val fromE = compST.get.flow(f).fromE.flatMap(Resource.getResource(_)).map(_.toUri)
+
+            if (fromE.contains(tuple._2)) {
+              val toUri = Resource.getResource(compST.get.flow(f).to.get)
+              if (toUri.isDefined) {
+                found = true
+                result = result ++ compST.get.flow(f).toE.flatMap(
+                  Resource.getResource(_)).map(_.toUri).map((toUri.get.toUri, _))
+              }
+            }
+          }
+          //looks for sink
+          if (compST.get.flow(f).from.isDefined &&
+            compST.get.flow(f).to.isEmpty) {
+            val fromE = compST.get.flow(f).fromE.flatMap(Resource.getResource(_)).map(_.toUri)
+            if (fromE.contains(tuple._2)) {
+              found = true
+            }
+          }
+        }
+        if (!found) {
+          if (compST.get.port(tuple._1).isDefined) {
+            val port = compST.get.port(tuple._1).get
+            val tos = flowForward(tuple._1)
+            tos.foreach { it =>
+              result = result ++ compST.get.propagation(it).map((it, _))
+            }
+            System.err.println("Flow missing the error :" + tuple._1 + " -> " + tuple._2)
+          }
+        }
+      } else {
+        result += ((outPorts.head, tuple._2))
+      }
+    }
+    result
+  }
+
   override def flowForward(port: ResourceUri): Set[ResourceUri] = {
     var result = isetEmpty[ResourceUri]
     if (isComponent && !H.isFlowDefined(compST.get)) {
@@ -83,31 +135,57 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable) extends
     result
   }
 
-  override def errorForward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)] = {
+  override def errorBackward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)] = {
     var result = isetEmpty[(ResourceUri, ResourceUri)]
 
     if (isComponent && !H.isFlowDefined(compST.get)) {
-      outPorts.foreach { op =>
+      inPorts.foreach { op =>
         result ++= compST.get.propagation(op).map((f: ResourceUri) => (op, f))
       }
     } else {
-      if (tuple._1.startsWith(H.PORT_IN_TYPE) &&
+      if (tuple._1.startsWith(H.PORT_OUT_TYPE) &&
         isComponent && H.getPortId(st, uri, tuple._1).isDefined) {
+        var found = false
         compST.get.flowRelate(tuple._1).foreach { f =>
+          // this looks for path
           if (compST.get.flow(f).from.isDefined &&
             compST.get.flow(f).to.isDefined) {
-            val fromE = compST.get.flow(f).fromE.flatMap(Resource.getResource(_)).map(_.toUri)
-            if (fromE.contains(tuple._2)) {
-              val toUri = Resource.getResource(compST.get.flow(f).to.get)
-              if (toUri.isDefined) {
-                result = result ++ compST.get.flow(f).toE.flatMap(
-                  Resource.getResource(_)).map(_.toUri).map((toUri.get.toUri, _))
+            val toE = compST.get.flow(f).toE.flatMap(Resource.getResource(_)).map(_.toUri)
+            if (toE.contains(tuple._2)) {
+              val fromUri = Resource.getResource(compST.get.flow(f).from.get)
+              if (fromUri.isDefined) {
+                result ++= compST.get.flow(f).fromE.flatMap(
+                  Resource.getResource(_)).map(_.toUri).map((fromUri.get.toUri, _))
+                found = true
               }
             }
           }
+          //looks for sink
+          if (compST.get.flow(f).to.isDefined &&
+            compST.get.flow(f).from.isEmpty) {
+            val toE = compST.get.flow(f).toE.flatMap(Resource.getResource(_)).map(_.toUri)
+            if (toE.contains(tuple._2)) {
+              found = true
+            }
+          }
+
         }
+
+        if (!found) {
+          if (compST.get.port(tuple._1).isDefined) {
+            val port = compST.get.port(tuple._1).get
+            val tos = flowBackward(tuple._1)
+            tos.foreach { it =>
+              result = result ++ compST.get.propagation(it).map((it, _))
+            }
+            System.err.println("Flow missing the error :" + tuple._1 + " -> " + tuple._2)
+          }
+
+        }
+
+
       } else {
-        result += ((outPorts.head, tuple._2))
+        result += ((inPorts.head, tuple._2))
       }
     }
     result
@@ -129,36 +207,6 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable) extends
         }
       } else {
         result += inPorts.head
-      }
-    }
-    result
-  }
-
-  override def errorBackward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)] = {
-    var result = isetEmpty[(ResourceUri, ResourceUri)]
-
-    if (isComponent && !H.isFlowDefined(compST.get)) {
-      inPorts.foreach { op =>
-        result ++= compST.get.propagation(op).map((f: ResourceUri) => (op, f))
-      }
-    } else {
-      if (tuple._1.startsWith(H.PORT_OUT_TYPE) &&
-        isComponent && H.getPortId(st, uri, tuple._1).isDefined) {
-        compST.get.flowRelate(tuple._1).foreach { f =>
-          if (compST.get.flow(f).from.isDefined &&
-            compST.get.flow(f).to.isDefined) {
-            val toE = compST.get.flow(f).toE.flatMap(Resource.getResource(_)).map(_.toUri)
-            if (toE.contains(tuple._2)) {
-              val fromUri = Resource.getResource(compST.get.flow(f).from.get)
-              if (fromUri.isDefined) {
-                result ++= compST.get.flow(f).fromE.flatMap(
-                  Resource.getResource(_)).map(_.toUri).map((fromUri.get.toUri, _))
-              }
-            }
-          }
-        }
-      } else {
-        result += ((inPorts.head, tuple._2))
       }
     }
     result

@@ -72,6 +72,9 @@ object SymbolTableMessage {
   val MISSING_COMPONENT =
     "Component declaration '%s' not found in this model"
 
+  val FLOW_MISSING =
+    "Error flow type '%s' not defined for this port"
+
 
   def errorMessageGen(template: String,
                       node: Node,
@@ -103,6 +106,19 @@ object SymbolTableMessage {
         locInfo.length,
         message)
     }
+  }
+
+  def warningMessageGen(template: String,
+                        node: Node,
+
+                        info: String)
+  : Unit = {
+    val KIND = "Flow Checker"
+    val message = template.format(info)
+
+    println(KIND + " " + message)
+
+
   }
 
 }

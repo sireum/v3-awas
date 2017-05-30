@@ -1,0 +1,6 @@
+q1 = A.aIn{Error.High} -> *
+q2 = * -> C.cOut{Error.High}
+q3 = * -> A.aIn{Error.Low}
+q4 = 'q1 intersect 'q3
+q5 = A.aIn -> *
+q6 = 'q4 union 'q5

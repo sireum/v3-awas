@@ -26,25 +26,25 @@
 package org.sireum.awas.query
 
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
-import org.sireum.awas.reachability.PortReachability
-import org.sireum.awas.symbol.{Resource, SymbolTable}
+import org.sireum.awas.reachability.ErrorReachability
+import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{ISet, _}
 
 object QueryEval {
-  type QueryResult = Map[String, Set[ResourceUri]]
+  type Result = Map[String, QueryResult]
 
-  def apply(m: Model, graph: FlowGraph[FlowNode], st: SymbolTable): QueryResult = {
+  def apply(m: Model, graph: FlowGraph[FlowNode], st: SymbolTable): Result = {
     new QueryEval(graph, st).eval(m)
   }
 }
 
 final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
-  var result = ilinkedMapEmpty[String, Set[ResourceUri]]
+  var result = ilinkedMapEmpty[String, QRes]
 
   var queries = ilinkedMapEmpty[String, QueryExpr]
 
-  def eval(m: Model): QueryEval.QueryResult = {
+  def eval(m: Model): QueryEval.Result = {
     m.queryStmt.foreach {
       q =>
         if (!queries.keySet.contains(q.qName.value)) {
@@ -57,87 +57,139 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
     result
   }
 
-  def eval(qexp: QueryExpr): Set[ResourceUri] = {
+  def eval(qexp: QueryExpr): QRes = {
     qexp match {
       case binary: BinaryExpr => eval(binary)
       case primary: PrimaryExpr => eval(primary)
     }
   }
 
-  def eval(bexp: BinaryExpr): Set[ResourceUri] = {
-    val lhs: ISet[ResourceUri] = eval(bexp.lhs)
-    val rhs: ISet[ResourceUri] = eval(bexp.rhs)
+  def eval(bexp: BinaryExpr): QRes = {
+    val lhs: QRes = eval(bexp.lhs)
+    val rhs: QRes = eval(bexp.rhs)
     bexp.op match {
-      case "union" => lhs.union(rhs)
-      case "intersect" => lhs.intersect(rhs)
-      case "-" => lhs.diff(rhs)
+      case "union" => QueryResult.union(lhs, rhs)
+      case "intersect" => QueryResult.intersect(lhs, rhs)
+      case "-" => QueryResult.diff(lhs, rhs)
       case "->" => {
-        var res = isetEmpty[ResourceUri]
-        val pr = PortReachability(graph)
-        if (lhs.isEmpty && rhs.nonEmpty) {
-          res = pr.backwardReachSet(rhs)
-        } else if (rhs.isEmpty && lhs.nonEmpty) {
-          res = pr.forwardReachSet(lhs)
-        } else if (!lhs.isEmpty && !rhs.isEmpty) {
-          val lhsres = pr.forwardReachSet(lhs)
-          val rhsres = pr.backwardReachSet(rhs)
-          res = lhsres.intersect(rhsres)
+        val er = ErrorReachability(graph)
+        if (lhs.unitRes.isEmpty && rhs.unitRes.nonEmpty) {
+          backwardReach(rhs)
+        } else if (rhs.unitRes.isEmpty && lhs.unitRes.nonEmpty) {
+          forwardReach(lhs)
+        } else if (lhs.unitRes.nonEmpty && rhs.unitRes.nonEmpty) {
+          val lhsres = forwardReach(lhs)
+          val rhsres = backwardReach(rhs)
+          QueryResult.intersect(lhsres, rhsres)
         } else {
-          res = isetEmpty[ResourceUri]
+          QRes(isetEmpty[UnitResult])
         }
-        res
-      }
-      case "<-" => {
-        var res = isetEmpty[ResourceUri]
-        val pr = PortReachability(graph)
-        if (lhs.isEmpty && rhs.nonEmpty) {
-          res = pr.forwardReachSet(rhs)
-        } else if (rhs.isEmpty && lhs.nonEmpty) {
-          res = pr.backwardReachSet(lhs)
-        } else if (!lhs.isEmpty && !rhs.isEmpty) {
-          val rhsres = pr.forwardReachSet(rhs)
-          val lhsres = pr.backwardReachSet(lhs)
-          res = lhsres.intersect(rhsres)
-        }
-        res
       }
     }
   }
 
-  def eval(pexp: PrimaryExpr): ISet[ResourceUri] = {
+  def backwardReach(criterion: QRes): QRes = {
+    val er = ErrorReachability(graph)
+    val minType = QueryResult.getMinType(criterion)
+    if (minType <= QResMinType.PathUri) {
+      val ac = QueryResult.convertToType(criterion, QResMinType.Uri)
+      QRes(ac.unitRes.flatMap(it =>
+        er.backwardReach(it.asInstanceOf[UriResult].value)).map(UriResult))
+    } else {
+      val ac = QueryResult.convertToType(criterion, QResMinType.Error)
+      var res = imapEmpty[ResourceUri, ISet[ResourceUri]]
+      ac.unitRes.foreach {
+        it =>
+          val e = it.asInstanceOf[ErrorResult]
+          er.backwardErrorReach(e.port, e.errors).foreach {
+            f => res += (f._1 -> (res.getOrElse(f._1, isetEmpty[ResourceUri]) ++ f._2))
+          }
+      }
+      QRes(res.map(it => ErrorResult(it._1, it._2)).toSet)
+    }
+  }
+
+  def forwardReach(criterion: QRes): QRes = {
+    val er = ErrorReachability(graph)
+    val minType = QueryResult.getMinType(criterion)
+    if (minType <= QResMinType.PathUri) {
+      val ac = QueryResult.convertToType(criterion, QResMinType.Uri)
+      QRes(ac.unitRes.flatMap(it =>
+        er.forwardReach(it.asInstanceOf[UriResult].value)).map(UriResult))
+    } else {
+      val ac = QueryResult.convertToType(criterion, QResMinType.Error)
+      var res = imapEmpty[ResourceUri, ISet[ResourceUri]]
+      ac.unitRes.foreach {
+        it =>
+          val e = it.asInstanceOf[ErrorResult]
+          er.forwardErrorReach(e.port, e.errors).foreach {
+            f => res += (f._1 -> (res.getOrElse(f._1, isetEmpty[ResourceUri]) ++ f._2))
+          }
+      }
+      QRes(res.map(it => ErrorResult(it._1, it._2)).toSet)
+    }
+  }
+
+  def eval(pexp: PrimaryExpr): QRes = {
     pexp match {
-      case NodeNameError(nodeName, errorSet) => eval(nodeName)
+      case NodeNameError(nodeName, errorSet) => eval(nodeName, errorSet)
 
       case Paren(expr) => eval(expr)
 
-      case NodeSet(sets) => sets.flatMap(eval).toSet
+      case NodeSet(sets) => sets.foldLeft(QRes(isetEmpty[UnitResult]))((a, b) =>
+        QueryResult.union(a, eval(b)))
 
-      case NodeEmpty() => isetEmpty[ResourceUri]
+      case NodeEmpty() => QRes(isetEmpty[UnitResult])
 
-      case QueryName(id) => result.getOrElse(id.value, isetEmpty[ResourceUri])
+      case QueryName(id) => result.getOrElse(id.value, QRes(isetEmpty[UnitResult]))
     }
   }
 
-  def eval(nn: NodeName): ISet[ResourceUri] = {
+  def eval(nn: NodeName, errorSet: ISeq[ISeq[Id]]): QRes = {
     var res = isetEmpty[ResourceUri]
-    if (nn.ids.length == 2) {
-      val compId = nn.ids(0)
-      val pid = nn.ids(1)
+    if (errorSet.isEmpty) {
+      val uri = getCompOrPortUri(nn)
+      if (uri.isDefined) {
+        res = res + uri.get
+      }
+      QRes(res.map(UriResult))
+    } else {
+      assert(nn.ids.length == 2)
+      val uri = getCompOrPortUri(nn)
+      if (uri.isDefined) {
+        var errorUri = isetEmpty[ResourceUri]
+        errorSet.foreach { f =>
+          val x = SymbolTableHelper.getErrorUri(st, f.map(_.value).mkString("."))
+          if (x.isDefined) {
+            errorUri = errorUri + x.get
+          }
+        }
+        QRes(isetEmpty[UnitResult] +
+          ErrorResult(uri.get, errorUri))
+      } else {
+        QRes(isetEmpty[UnitResult])
+      }
+    }
+  }
+
+  def getCompOrPortUri(n: NodeName): Option[ResourceUri] = {
+    if (n.ids.length == 2) {
+      val compId = n.ids(0)
+      val pid = n.ids(1)
       val comp = st.components.find(_.endsWith(compId.value))
       if (comp.isDefined) {
         val port = st.component(comp.get).ports.find(_.id.value == pid.value)
         if (port.isDefined && Resource.getResource(port.get).isDefined) {
-          res = res + Resource.getResource(port.get).get.toUri
+          Some(Resource.getResource(port.get).get.toUri)
+        } else {
+          None
         }
+      } else {
+        None
       }
+    } else {
+      val compId = n.ids(0)
+      st.components.find(_.endsWith(compId.value))
     }
-    if (nn.ids.length == 1) {
-      val compId = nn.ids(0)
-      val comp = st.components.find(_.endsWith(compId.value))
-      if (comp.isDefined) {
-        res += comp.get
-      }
-    }
-    res
   }
 }

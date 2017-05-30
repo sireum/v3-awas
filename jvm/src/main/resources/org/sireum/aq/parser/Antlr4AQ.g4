@@ -33,7 +33,11 @@ pexpr
 ;
 
 nodeNameError
-: nodeName ('{' ids+=ID+ '}')?
+: nodeName ('{' errorId(','  errorId)* '}')?
+;
+
+errorId
+: ids+=ID ( '.' ids+=ID )*
 ;
 
 nodeName
@@ -49,7 +53,7 @@ REAL
   ;
 
 STRING
-  : '\"' ( ~["] | '"' '"' )* '\"'
+  : '\\"' ( ~["] | '"' '"' )* '\\"'
   ;
 
 ID

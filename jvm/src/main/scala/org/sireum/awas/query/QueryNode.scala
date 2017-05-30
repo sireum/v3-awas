@@ -54,7 +54,7 @@ final case class BinaryExpr(lhs: QueryExpr,
 sealed trait PrimaryExpr extends QueryExpr
 
 final case class NodeNameError(nodeName: NodeName,
-                               errorSet: QueryNode.Seq[Id]) extends PrimaryExpr
+                               errorSet: QueryNode.Seq[QueryNode.Seq[Id]]) extends PrimaryExpr
 
 final case class Paren(expr: QueryExpr) extends PrimaryExpr
 

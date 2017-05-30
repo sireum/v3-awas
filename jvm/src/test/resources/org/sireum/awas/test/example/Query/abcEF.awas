@@ -7,6 +7,9 @@ components
     ports
       in aIn
       out aOut
+    propagations
+       aIn = {High}
+       aOut = {Low}
     flows
       f1 : aIn{High} -> aOut{Low}
 
@@ -16,6 +19,10 @@ components
       in bIn
       out bOut
       out bOut2
+    propagations
+      bIn = {High, Low}
+      bOut = {Low}
+      bOut2 = {Low}
     flows
       f2 : bIn{High} -> bOut{Low}
       f3 : bIn{Low, High} -> bOut2{Low}
@@ -25,6 +32,9 @@ components
     ports
       in cIn
       out cOut
+    propagations
+      cIn = {Low}
+      cOut = {High}
     flows
       f4 : cIn{Low} -> cOut{High}
 

@@ -26,28 +26,34 @@
 package org.sireum.awas.sanitycheck
 
 import org.sireum.awas.ast._
+import org.sireum.awas.symbol.SymbolTableMessage._
 import org.sireum.awas.symbol.{ComponentSymbolTable, SymbolTable}
 import org.sireum.util._
 
 object IntraComponentChecks {
+  var model: Model = _
+
 
   def apply(m: Model, st: SymbolTable)
            (implicit reporter: AccumulatingTagReporter): Model = {
+    this.model = m
     build(m, st)
     m
   }
 
-  def build(m : Model, st : SymbolTable) = {
+  def build(m: Model, st: SymbolTable)(
+    implicit reporter: AccumulatingTagReporter) = {
     st.components.foreach {
       c =>
         val cst = st.componentTable(c)
         val cd = st.component(c)
-
+        checkFlows(cst, cd)
     }
 
   }
 
-  def checkFlows(cst : ComponentSymbolTable, cd : ComponentDecl) = {
+  def checkFlows(cst: ComponentSymbolTable, cd: ComponentDecl)(
+    implicit reporter: AccumulatingTagReporter) = {
     cst.flows.foreach {
        furi =>
          val flow = cst.flow(furi)
@@ -63,13 +69,17 @@ object IntraComponentChecks {
   def flowExpCheck(cst : ComponentSymbolTable,
                    cd : ComponentDecl,
                    pName : Id,
-                   eNames : Seq[Name]) = {
-    val puri = cst.ports.find(_.endsWith("#"+pName))
+                   eNames: Seq[Name])(
+                    implicit reporter: AccumulatingTagReporter) = {
+    val puri = cst.ports.find(_.endsWith("#" + pName.value))
     if(puri.isDefined) {
       eNames.foreach {
         err =>
           val error = cst.propagation(puri.get).find(_.endsWith(err.value.last.value))
           if(error.isEmpty) {
+            reporter.report(errorMessageGen(FLOW_MISSING,
+              cd,
+              model, puri + " -  " + err.value.last.value))
             //error not found
           }
       }

@@ -50,6 +50,7 @@ object FlowNode {
   private var nodepool = imapEmpty[ResourceUri, FlowNode]
 
   def createNode(uri: ResourceUri, st: SymbolTable): FlowNode = {
+    implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
     if (nodepool.contains(uri)) {
       nodepool(uri)
     } else {
