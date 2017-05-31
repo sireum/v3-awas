@@ -20,6 +20,7 @@ build:
     - ln -s ../ ./awas
     - ./bin/sbt-launch.sh "project awas" test
   post_ci:
+    - rm -rf sireum-v3
   on_success:
   on_failure:
   push:
