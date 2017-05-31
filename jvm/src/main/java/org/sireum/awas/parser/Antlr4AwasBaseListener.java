@@ -1,4 +1,4 @@
-// Generated from /Users/Hariharan/Documents/workspace-slang/sireum-v3/awas/jvm/src/main/resources/org/sireum/awas/parser/Antlr4Awas.g4 by ANTLR 4.7
+// Generated from /workspace-v3/sireum-v3/awas/jvm/src/main/resources/org/sireum/awas/parser/Antlr4Awas.g4 by ANTLR 4.7
 package org.sireum.awas.parser;
 
 // @formatter:off

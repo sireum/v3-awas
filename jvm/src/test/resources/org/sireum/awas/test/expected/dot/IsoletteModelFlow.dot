@@ -1,4 +1,4 @@
-digraph G {
+strict digraph G {
   1 [ label="{In Port|<sensed_temp>sensed_temp|<settings>settings} |component
 Thermostat|{Out Port|feedback|heater_ctrl}" shape="record" ];
   2 [ label="{In Port|<monitor>monitor} |component

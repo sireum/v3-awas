@@ -1,0 +1,24 @@
+language: none
+
+services:
+
+env:
+  global:
+    - SIREUM_PARALLEL_BUILD=false
+    - JAVA_OPTIONS="-Xmx2G -XX:+UseG1GC -XX:ReservedCodeCacheSize=1G -Xss2m -XX:+CMSClassUnloadingEnabled"
+
+build:
+  pre_ci:
+  pre_ci_boot:
+    image_name: sireum/v3-awas
+    image_tag: latest
+    pull: true
+    options: "-e HOME=/root"
+  ci:
+    - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
+    - ls
+  post_ci:
+  on_success:
+  on_failure:
+  push:
+  cache: true

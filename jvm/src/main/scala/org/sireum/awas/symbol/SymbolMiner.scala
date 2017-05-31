@@ -395,7 +395,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       reporter.report(errorMessageGen(MISSING_TYPE_ASSOCIATION,
         p,
         m, ""))
-
+    }
       val tempSet = msetEmpty[ResourceUri]
       Resource.useDefResolve(p, ctp.tables.portTable(portUri.get))
       val tt = st.typeTable(st.compTypeTable(r.toUri))
@@ -403,7 +403,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         et => {
           val etUri = tt.enumElements.find(_.endsWith(H.ID_SEPARATOR + et.value.last.value))
           if (etUri.isDefined) {
-            tempSet + etUri.get
+            tempSet += etUri.get
             Resource.useDefResolve(et, tt.enumElement(etUri.get))
           } else {
             val td = st.typeDeclTable(tt.uri)
@@ -425,8 +425,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
             }
           }
         }
-      }
-      ctp.tables.propagationTable(portUri.get) = tempSet
+
+          ctp.tables.propagationTable(portUri.get) = tempSet
     }
   }
 

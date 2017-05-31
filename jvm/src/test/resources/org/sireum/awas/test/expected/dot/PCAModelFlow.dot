@@ -1,4 +1,4 @@
-digraph G {
+strict digraph G {
   1 [ label="{In Port|<breath>breath} |component
 Capnography|{Out Port|resp_rate|etco2}" shape="record" ];
   2 [ label="{In Port|<refracted_light>refracted_light} |component

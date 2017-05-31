@@ -1,4 +1,4 @@
-digraph G {
+strict digraph G {
   1 [ label="{In Port|<cmd>cmd} |component
 Pump|{Out Port|drug}" shape="record" ];
   2 [ label="{In Port|<vein>vein} |component

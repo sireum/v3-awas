@@ -1,0 +1,40 @@
+strict digraph G {
+  1 [ label="{In Port|<vein>vein} |component
+Patient|{Out Port|exhalation|fingerclip}" shape="record" ];
+  2 [ label="{In Port|<breath>breath} |component
+Capnography|{Out Port|etco2|resp_rate}" shape="record" ];
+  3 [ label="{In Port|<cmd>cmd} |component
+Pump|{Out Port|drug}" shape="record" ];
+  4 [ label="{In Port|<refracted_light>refracted_light} |component
+PulseOx|{Out Port|spo2}" shape="record" ];
+  5 [ label="{In Port|<rr>rr|<etco2>etco2|<spo2>spo2} |component
+App|{Out Port|pump_cmd}" shape="record" ];
+  6 [ label="connection
+app1" shape="record" ];
+  7 [ label="connection
+s2" shape="record" ];
+  8 [ label="connection
+s1" shape="record" ];
+  9 [ label="connection
+p1" shape="record" ];
+  10 [ label="connection
+s3" shape="record" ];
+  11 [ label="connection
+a1" shape="record" ];
+  12 [ label="connection
+p2" shape="record" ];
+  5 -> 6;
+  6 -> 3;
+  2 -> 7;
+  7 -> 5;
+  4 -> 8;
+  8 -> 5;
+  1 -> 9;
+  9 -> 4;
+  2 -> 10;
+  10 -> 5;
+  3 -> 11;
+  11 -> 1;
+  1 -> 12;
+  12 -> 2;
+}

@@ -39,10 +39,10 @@ final class SymbolTableTestDefProvider(tf: TestFramework)
   val testDirs = Seq(makePath("..", "example", "awas-lang")
     //    ,s"../example/fptc"
   )
-  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "st")))
-  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "st")))
+  val resultsDir: FileResourceUri = toFilePath(fileUri(this.getClass, makePath("..", "results", "st")))
+  val expectedDir: FileResourceUri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "st")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -124,7 +124,7 @@ final class SymbolTableTestDefProvider(tf: TestFramework)
 
           Some(result)
         } else {
-          Some(reporter.tags.map(TagPickling.pickle(_)).mkString("\n"))
+          Some(reporter.tags.map(TagPickling.pickle).mkString("\n"))
         }
     }
   }

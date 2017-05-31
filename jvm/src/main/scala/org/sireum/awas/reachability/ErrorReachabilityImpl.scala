@@ -21,6 +21,30 @@ class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
     errorReach(port, errors, isForward = true)
   }
 
+  override def backwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]])
+  : IMap[ResourceUri, Set[ResourceUri]] = {
+    var result = imapEmpty[ResourceUri, Set[ResourceUri]]
+    errorRes.foldLeft(result) { case (a, (k, v)) => unionErrors(a, backwardErrorReach(k, v)) }
+    result
+  }
+
+  def unionErrors(op1: IMap[ResourceUri, ISet[ResourceUri]],
+                  op2: IMap[ResourceUri, ISet[ResourceUri]]):
+  IMap[ResourceUri, Set[ResourceUri]] = {
+    var result = imapEmpty[ResourceUri, ISet[ResourceUri]]
+    val ports = op1.keySet ++ op2.keySet
+    ports.foreach { p =>
+      result = result + ((p, op1.getOrElse(p, isetEmpty[ResourceUri]) ++
+        op2.getOrElse(p, isetEmpty[ResourceUri])))
+    }
+    result
+  }
+
+  override def backwardErrorReach(port: ResourceUri, errors: ISet[ResourceUri]):
+  IMap[ResourceUri, Set[ResourceUri]] = {
+    errorReach(port, errors, isForward = false)
+  }
+
   def errorReach(port: ResourceUri, errors: ISet[ResourceUri], isForward: Boolean)
   : IMap[ResourceUri, Set[ResourceUri]] = {
     var workList = ilistEmpty[(ResourceUri, ResourceUri)]
@@ -32,8 +56,9 @@ class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
         if (addErrors(result, current._1, current._2)) {
           workList = workList ++ (if (isForward) getSuccessorError(current)
           else getPredecessorError(current))
-          workList = workList.tail
+
         }
+        workList = workList.tail
       }
     }
     result.map(v => (v._1, v._2.toSet)).toMap
@@ -99,30 +124,6 @@ class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
       result = true
     }
     result
-  }
-
-  def unionErrors(op1: IMap[ResourceUri, ISet[ResourceUri]],
-                  op2: IMap[ResourceUri, ISet[ResourceUri]]):
-  IMap[ResourceUri, Set[ResourceUri]] = {
-    var result = imapEmpty[ResourceUri, ISet[ResourceUri]]
-    val ports = op1.keySet ++ op2.keySet
-    ports.foreach { p =>
-      result = result + ((p, op1.getOrElse(p, isetEmpty[ResourceUri]) ++
-        op2.getOrElse(p, isetEmpty[ResourceUri])))
-    }
-    result
-  }
-
-  override def backwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]])
-  : IMap[ResourceUri, Set[ResourceUri]] = {
-    var result = imapEmpty[ResourceUri, Set[ResourceUri]]
-    errorRes.foldLeft(result) { case (a, (k, v)) => unionErrors(a, backwardErrorReach(k, v)) }
-    result
-  }
-
-  override def backwardErrorReach(port: ResourceUri, errors: ISet[ResourceUri]):
-  IMap[ResourceUri, Set[ResourceUri]] = {
-    errorReach(port, errors, isForward = false)
   }
 
   def intersectErrors(op1: IMap[ResourceUri, ISet[ResourceUri]],

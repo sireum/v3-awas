@@ -25,6 +25,8 @@
 
 package org.sireum.awas.test.analysis
 
+import java.util
+
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -43,7 +45,7 @@ object FlowGraphTest {
   val provider = new FptcGraphTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")
-  def parameters = {
+  def parameters: util.ArrayList[Array[Object]] = {
     val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
     val r = new java.util.ArrayList[Array[Object]](ps.size)
     for (p <- ps) {

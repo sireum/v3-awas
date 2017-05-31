@@ -1,4 +1,4 @@
-digraph G {
+strict digraph G {
   1 [ label="{In Port|<bIn>bIn} |component
 B|{Out Port|bOut}" shape="record" ];
   2 [ label="{In Port|<aIn>aIn} |component
