@@ -15,12 +15,12 @@ build:
     pull: true
     options: "-e HOME=/root"
   ci:
+    - rm -rf sireum-v3
     - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
     - cd sireum-v3
     - ln -s ../ ./awas
     - ./bin/sbt-launch.sh "project awas" test
   post_ci:
-    - rm -rf sireum-v3
   on_success:
   on_failure:
   push:
