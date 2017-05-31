@@ -16,7 +16,9 @@ build:
     options: "-e HOME=/root"
   ci:
     - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
-    - ls
+    - cd sireum-v3
+    - ln -s ../ ./awas
+    - ./bin/sbt-launch.sh "project awas" test
   post_ci:
   on_success:
   on_failure:
