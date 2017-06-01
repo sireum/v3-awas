@@ -26,6 +26,7 @@ build:
     - ./bin/sbt-launch.sh "project awas" test
     - cd ..
     - mkdir -p shippable/testresults
+    - rm -f ./shippable/testresults/*
     - cp ./jvm/target/test-reports/* shippable/testresults
   post_ci:
   on_success:
