@@ -1,4 +1,7 @@
-language: none
+language: scala
+
+scala:
+  - 2.12.2
 
 services:
 
@@ -16,6 +19,8 @@ build:
     options: "-e HOME=/root"
   ci:
     - rm -rf sireum-v3
+    - mkdir -p shippable/testresults
+    - ln -s ../target/test-reports shippable/testresults
     - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
     - cd sireum-v3
     - ln -s ../ ./awas
