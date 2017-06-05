@@ -30,6 +30,8 @@ import org.sireum.awas.symbol.SymbolTable
 import org.sireum.util.Rewriter.TraversalMode
 import org.sireum.util._
 
+import scala.collection.immutable.ListMap
+
 object ContextInSensitiveGen {
   var varNameCounter = 0
 
@@ -47,7 +49,7 @@ object ContextInSensitiveGen {
       case c: ComponentDecl => {
         var propMap = imapEmpty[Id, MSet[Name]]
         if (c.behaviour.isDefined) {
-          val props = mineBehaviorProp(c.behaviour.get).map { f => Propagation(f._1, f._2) }
+          val props = ListMap(mineBehaviorProp(c.behaviour.get).toSeq.sortBy(_._1.value): _*).map { f => Propagation(f._1, f._2) }
           val flows = mineBehaviorFlow(c.behaviour.get)
           ComponentDecl(c.compName,
             c.withSM, c.ports, props.toVector,
@@ -140,7 +142,7 @@ object ContextInSensitiveGen {
         }
       }
     }
-    res
+    res.sortBy(_.id.value)
   }
 
   def mineTokens(id: Id, one: One): (Id, MSet[Name]) = {
