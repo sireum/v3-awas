@@ -46,6 +46,7 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
     )
   }
   val H = SymbolTableHelper
+
   protected val attProvider = new ComponentAttributeProvider[FlowNode] {
     override def getComponentAttributes(component: FlowNode): util.Map[String, String] = {
       import scala.collection.JavaConverters._
@@ -54,29 +55,59 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
       res.asJava
     }
   }
+
+  protected val nIdProvider = new StringComponentNameProvider[FlowNode] {
+    override def getName(component: FlowNode): FileResourceUri = {
+      component.getUri.split(H.ID_SEPARATOR).last
+    }
+  }
+
   protected val nlabelProvide = new StringComponentNameProvider[FlowNode] {
     override def getName(vertex: FlowNode): String = {
       var result = ""
       if (vertex.getUri.startsWith(SymbolTableHelper.COMPONENT_TYPE)) {
         result += "{In Port|" + vertex.inPorts.map {
           ip =>
-            val pname = ip.split("#").last
+            val pname = ip.split(H.ID_SEPARATOR).last
             "<" + pname + ">" + pname
         }.mkString("|") + "} |"
-        result += SymbolTableHelper.COMPONENT_TYPE + "\n" + vertex.getUri.split("#").last + "|"
+        result += SymbolTableHelper.COMPONENT_TYPE + "\n" + vertex.getUri.split(H.ID_SEPARATOR).last + "|"
         result += "{Out Port|" + vertex.outPorts.map {
           ip =>
-            val pname = ip.split("#").last
+            val pname = ip.split(H.ID_SEPARATOR).last
             "<" + pname + ">" + pname
-        }.mkString("|") + "} |"
+        }.mkString("|") + "} "
       } else {
-        result = SymbolTableHelper.CONNECTION_TYPE + "\n" + vertex.getUri.split("#").last
+        result = SymbolTableHelper.CONNECTION_TYPE + "\n" + vertex.getUri.split(H.ID_SEPARATOR).last
       }
       result
     }
   }
+
+  protected val eAttrProvider = new ComponentAttributeProvider[FEdge] {
+    override def getComponentAttributes(component: FEdge): util.Map[String, String] = {
+      import scala.collection.JavaConverters._
+      val res = mlinkedMapEmpty[String, String]
+      if (component.source.isComponent) {
+        res("tailport") = component.sourcePort.get.split(H.ID_SEPARATOR).last
+      }
+      if (component.target.isComponent) {
+        res("headport") = component.targetPort.get.split(H.ID_SEPARATOR).last
+      }
+      res.asJava
+    }
+  }
   var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
   var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
+
+  override def toDot: String = {
+    val de = new DOTExporter[FlowNode, FEdge](nIdProvider,
+      nlabelProvide, null,
+      this.attProvider, eAttrProvider)
+    val sw = new StringWriter()
+    de.exportGraph(graph, sw)
+    sw.toString
+  }
 
   def addPortEdge(port: ResourceUri, edge: FEdge): Unit = {
     if (portEdgeMap.keySet.contains(port)) {
@@ -98,14 +129,6 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
     n
   }
 
-  override def toDot: String = {
-    val de = new DOTExporter[FlowNode, FEdge](new IntegerComponentNameProvider[FlowNode],
-      nlabelProvide, null,
-      this.attProvider, null)
-    val sw = new StringWriter()
-    de.exportGraph(graph, sw)
-    sw.toString
-  }
 
   override def getNode(n: FlowNode): FlowNode = n
 

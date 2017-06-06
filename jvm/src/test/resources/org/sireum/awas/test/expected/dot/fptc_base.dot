@@ -1,14 +1,14 @@
 strict digraph G {
-  1 [ label="{In Port|<bIn>bIn} |component
-B|{Out Port|bOut}" shape="record" ];
-  2 [ label="{In Port|<aIn>aIn} |component
-A|{Out Port|aOut}" shape="record" ];
-  3 [ label="connection
+  B [ label="{In Port|<bIn>bIn} |component
+B|{Out Port|<bOut>bOut} " shape="record" ];
+  A [ label="{In Port|<aIn>aIn} |component
+A|{Out Port|<aOut>aOut} " shape="record" ];
+  B2A [ label="connection
 B2A" shape="record" ];
-  4 [ label="connection
+  A2B [ label="connection
 A2B" shape="record" ];
-  1 -> 3;
-  3 -> 2;
-  2 -> 4;
-  4 -> 1;
+  B -> B2A [ tailport="bOut" ];
+  B2A -> A [ headport="aIn" ];
+  A -> A2B [ tailport="aOut" ];
+  A2B -> B [ headport="bIn" ];
 }

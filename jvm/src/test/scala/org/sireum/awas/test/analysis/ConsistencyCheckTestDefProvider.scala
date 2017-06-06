@@ -17,7 +17,7 @@ final class ConsistencyCheckTestDefProvider(tf: TestFramework)
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>

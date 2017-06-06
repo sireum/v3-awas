@@ -1,40 +1,40 @@
 strict digraph G {
-  1 [ label="{In Port|<breath>breath} |component
-Capnography|{Out Port|resp_rate|etco2}" shape="record" ];
-  2 [ label="{In Port|<refracted_light>refracted_light} |component
-PulseOx|{Out Port|spo2}" shape="record" ];
-  3 [ label="{In Port|<spo2>spo2|<rr>rr|<etco2>etco2} |component
-App|{Out Port|pump_cmd}" shape="record" ];
-  4 [ label="{In Port|<cmd>cmd} |component
-Pump|{Out Port|drug}" shape="record" ];
-  5 [ label="{In Port|<vein>vein} |component
-Patient|{Out Port|exhalation|fingerclip}" shape="record" ];
-  6 [ label="connection
+  Capnography [ label="{In Port|<breath>breath} |component
+Capnography|{Out Port|<resp_rate>resp_rate|<etco2>etco2} " shape="record" ];
+  PulseOx [ label="{In Port|<refracted_light>refracted_light} |component
+PulseOx|{Out Port|<spo2>spo2} " shape="record" ];
+  App [ label="{In Port|<spo2>spo2|<rr>rr|<etco2>etco2} |component
+App|{Out Port|<pump_cmd>pump_cmd} " shape="record" ];
+  Pump [ label="{In Port|<cmd>cmd} |component
+Pump|{Out Port|<drug>drug} " shape="record" ];
+  Patient [ label="{In Port|<vein>vein} |component
+Patient|{Out Port|<exhalation>exhalation|<fingerclip>fingerclip} " shape="record" ];
+  app1 [ label="connection
 app1" shape="record" ];
-  7 [ label="connection
+  s3 [ label="connection
 s3" shape="record" ];
-  8 [ label="connection
+  a1 [ label="connection
 a1" shape="record" ];
-  9 [ label="connection
+  s2 [ label="connection
 s2" shape="record" ];
-  10 [ label="connection
+  p2 [ label="connection
 p2" shape="record" ];
-  11 [ label="connection
+  s1 [ label="connection
 s1" shape="record" ];
-  12 [ label="connection
+  p1 [ label="connection
 p1" shape="record" ];
-  3 -> 6;
-  6 -> 4;
-  1 -> 7;
-  7 -> 3;
-  4 -> 8;
-  8 -> 5;
-  1 -> 9;
-  9 -> 3;
-  5 -> 10;
-  10 -> 1;
-  2 -> 11;
-  11 -> 3;
-  5 -> 12;
-  12 -> 2;
+  App -> app1 [ tailport="pump_cmd" ];
+  app1 -> Pump [ headport="cmd" ];
+  Capnography -> s3 [ tailport="resp_rate" ];
+  s3 -> App [ headport="rr" ];
+  Pump -> a1 [ tailport="drug" ];
+  a1 -> Patient [ headport="vein" ];
+  Capnography -> s2 [ tailport="etco2" ];
+  s2 -> App [ headport="etco2" ];
+  Patient -> p2 [ tailport="exhalation" ];
+  p2 -> Capnography [ headport="breath" ];
+  PulseOx -> s1 [ tailport="spo2" ];
+  s1 -> App [ headport="spo2" ];
+  Patient -> p1 [ tailport="fingerclip" ];
+  p1 -> PulseOx [ headport="refracted_light" ];
 }
