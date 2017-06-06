@@ -29,7 +29,7 @@ import org.sireum.awas.ast.{Builder, PrettyPrinter}
 import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
-import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
+import org.sireum.test._
 import org.sireum.util.jvm.FileUtil._
 import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
 
@@ -41,11 +41,9 @@ final class CInSensitiveTestDefProvider(tf: TestFramework)
     makePath("..", "example", "awas-lang"),
     makePath("..", "example", "fptc")
   )
-  val resultsDir = toFilePath(fileUri(this.getClass, makePath("..", "results", "codegen")))
-  val expectedDir = toFilePath(fileUri(this.getClass, makePath("..", "expected", "codegen")))
+  val resultsDir: FileResourceUri = toFilePath(fileUri(this.getClass, makePath("..", "results", "codegen")))
+  val expectedDir: FileResourceUri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "codegen")))
 
-
-  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -61,18 +59,12 @@ final class CInSensitiveTestDefProvider(tf: TestFramework)
       val fileWithOutExt = extensor(inputFileName).toString
       val outputFileName = fileWithOutExt + ".cis"
 
-      writeResult(outputFileName,
-        modelPrinter(x, readFile(x)._1, fileWithOutExt).get,
-        expectedDir, resultsDir, generateExpected)
-
-      EqualTest(fileWithOutExt,
-        readFile(toUri(makePath(resultsDir, outputFileName)))._1,
-        readFile(toUri(makePath(expectedDir, outputFileName)))._1)
+      ConditionTest(fileWithOutExt, Builder(Some(x), modelPrinter(x, readFile(x)._1).get).isDefined)
     }
   }
 
 
-  def modelPrinter(fileUri: FileResourceUri, model: String, name: String): Option[String] = {
+  def modelPrinter(fileUri: FileResourceUri, model: String): Option[String] = {
     Builder(Some(fileUri), model) match {
       case None => None
       case Some(m) =>

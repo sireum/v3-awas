@@ -25,10 +25,8 @@
 
 package org.sireum.awas.reachability
 
-import org.jgrapht.graph.GraphWalk
-import org.sireum.awas.fptc.FlowNode.Edge
+import org.jgrapht.GraphPath
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
-import org.sireum.awas.graph.AwasGraph
 import org.sireum.util._
 
 class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachability[FlowNode] {
@@ -103,9 +101,10 @@ class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachabilit
     */
   def reachPath(source : FlowNode, target:FlowNode): ISet[Set[FlowNode]] = {
     import org.jgrapht.alg.shortestpath._
+
     import scala.collection.JavaConverters._
     val allGraphPath = new AllDirectedPaths[FlowNode, graph.Edge](graph.graph)
     allGraphPath.getAllPaths(source,target,true,null).asScala
-      .toSet[GraphWalk[FlowNode,graph.Edge]].map(_.getVertexList.asScala.toSet)
+      .toSet.map((it: GraphPath[FlowNode, graph.Edge]) => it.getVertexList.asScala.toSet)
   }
 }

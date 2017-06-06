@@ -36,6 +36,7 @@ object ContextInSensitiveGen {
   var varNameCounter = 0
 
   def apply(m: Model, st: SymbolTable): Model = {
+    varNameCounter = 0
     val nm = build(m, st)
     nm
   }

@@ -1,7 +1,7 @@
 
 spo2_reach = PulseOx.spo2 -> *
 
-spo2_reachback = PulseOx.spo2 <- *
+spo2_reachback = * -> PulseOx.spo2
 
 spo2_pump = PulseOx.spo2 -> Pump.drug
 

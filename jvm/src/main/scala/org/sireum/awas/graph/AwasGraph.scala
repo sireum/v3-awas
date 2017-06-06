@@ -59,8 +59,10 @@ trait AwasGraph[Node] {
 
   def getCycles : Set[Seq[Node]] = {
     import org.jgrapht.alg.cycle._
+
     import scala.collection.JavaConverters._
-    new SzwarcfiterLauerSimpleCycles(graph).findSimpleCycles().asScala.toSet[Seq[Node]]
+    new SzwarcfiterLauerSimpleCycles(graph)
+      .findSimpleCycles().asScala.toSet.map((it: java.util.List[Node]) => it.asScala)
   }
 
   def getEdge(n1 : Node, n2: Node) : CSet[Edge] = {

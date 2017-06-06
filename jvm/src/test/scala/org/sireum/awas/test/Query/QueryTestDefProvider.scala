@@ -43,11 +43,11 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
-      listFiles(fileUri(this.getClass, d), "abcEF.awas")
+      listFiles(fileUri(this.getClass, d), ".awas")
     }
 
     val filesEqual = files.filter { p =>

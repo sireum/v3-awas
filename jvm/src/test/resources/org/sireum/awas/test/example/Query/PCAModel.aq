@@ -8,8 +8,7 @@ patient_reach = Patient -> *
 app_backreach = * -> App
 
 patient_backreach = * -> Patient
-patient_reach_2 = * <- Patient
-patient_backreach2 = Patient <- *
+patient_reach_2 =  Patient -> *
 //due to the loop it provides everything
 patient_to_App = Patient -> App
 
