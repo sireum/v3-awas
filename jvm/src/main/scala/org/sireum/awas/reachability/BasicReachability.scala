@@ -57,4 +57,12 @@ trait BasicReachability[Node] {
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
   def backwardReachSetNode(criterions: Set[Node]): ISet[Node]
+
+  /**
+    * Returns the set of paths from source to target
+    * @param source Starting node of paths
+    * @param target Ending node of paths
+    * @return a [[ISet]] of Paths, each path consists of a set of nodes
+    */
+  def reachPath(source : Node, target:Node): ISet[Set[Node]]
 }

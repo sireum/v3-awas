@@ -33,7 +33,7 @@ trait AwasGraph[Node] {
   self =>
   type Edge = FptcEdge[Node]
 
-  protected def graph : DirectedGraph[Node, Edge]
+  def graph : DirectedGraph[Node, Edge]
 
   def nodes: Iterable[Node] = {
     import scala.collection.JavaConverters._
@@ -57,9 +57,10 @@ trait AwasGraph[Node] {
     graph.containsEdge(n1, n2)
   }
 
-  def hasCycles : Boolean = {
+  def getCycles : Set[Seq[Node]] = {
     import org.jgrapht.alg.cycle._
-    new SzwarcfiterLauerSimpleCycles(graph).findSimpleCycles().isEmpty
+    import scala.collection.JavaConverters._
+    new SzwarcfiterLauerSimpleCycles(graph).findSimpleCycles().asScala.toSet[Seq[Node]]
   }
 
   def getEdge(n1 : Node, n2: Node) : CSet[Edge] = {

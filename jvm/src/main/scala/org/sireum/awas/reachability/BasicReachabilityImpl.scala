@@ -25,7 +25,10 @@
 
 package org.sireum.awas.reachability
 
+import org.jgrapht.graph.GraphWalk
+import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.graph.AwasGraph
 import org.sireum.util._
 
 class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachability[FlowNode] {
@@ -46,14 +49,14 @@ class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachabilit
     * @return [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
   override def forwardReach(criterion: FlowNode): ISet[FlowNode] = {
-    reach(criterion, true)
+    reach(criterion, isForward = true)
   }
 
   /**
     * Returns the transitive closure of the given node in the specified direction
-    * @param criterion
-    * @param isForward
-    * @return
+    * @param criterion Starting point for the closure
+    * @param isForward direction to compute closure
+    * @return Set of reachable nodes
     */
   private def reach(criterion: FlowNode, isForward: Boolean): ISet[FlowNode] = {
     var result = isetEmpty[FlowNode]
@@ -89,6 +92,20 @@ class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachabilit
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
   override def backwardReach(criterion: FlowNode): ISet[FlowNode] = {
-    reach(criterion, false)
+    reach(criterion, isForward = false)
+  }
+
+  /**
+    * Returns the set of paths from source to target
+    * @param source Starting node of paths
+    * @param target Ending node of paths
+    * @return a [[ISet]] of Paths, each path consists of a set of nodes
+    */
+  def reachPath(source : FlowNode, target:FlowNode): ISet[Set[FlowNode]] = {
+    import org.jgrapht.alg.shortestpath._
+    import scala.collection.JavaConverters._
+    val allGraphPath = new AllDirectedPaths[FlowNode, graph.Edge](graph.graph)
+    allGraphPath.getAllPaths(source,target,true,null).asScala
+      .toSet[GraphWalk[FlowNode,graph.Edge]].map(_.getVertexList.asScala.toSet)
   }
 }

@@ -40,7 +40,7 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
   self =>
 
   type FEdge = FptcEdge[FlowNode]
-  override protected val graph: DirectedGraph[FlowNode, FEdge] = {
+  override val graph: DirectedGraph[FlowNode, FEdge] = {
     new DefaultDirectedGraph[FlowNode, FEdge](
       (source: FlowNode, target: FlowNode) => FlowEdgeImpl(self, source, target)
     )
@@ -64,9 +64,12 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
             "<" + pname + ">" + pname
         }.mkString("|") + "} |"
         result += SymbolTableHelper.COMPONENT_TYPE + "\n" + vertex.getUri.split("#").last + "|"
-        result += "{Out Port|" + vertex.outPorts.map(_.split("#").last).mkString("|") + "}"
+        result += "{Out Port|" + vertex.outPorts.map {
+          ip =>
+            val pname = ip.split("#").last
+            "<" + pname + ">" + pname
+        }.mkString("|") + "} |"
       } else {
-
         result = SymbolTableHelper.CONNECTION_TYPE + "\n" + vertex.getUri.split("#").last
       }
       result
