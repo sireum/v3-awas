@@ -11,7 +11,7 @@ Follow [Sireum IVE installation](http://logika.sireum.org/doc/01-getting-started
 
 Using git to clone the following repository
 ```bash
-git clone -b master git@github.com:sireum/v3.git sireum-v3
+git clone --recursive -b master git@github.com:sireum/v3.git sireum-v3
 git clone git@github.com:sireum/v3-awas.git sireum-v3/awas
 ```
 
@@ -43,7 +43,7 @@ git clone git@github.com:sireum/v3-awas.git sireum-v3/awas
 
 ### Tasks - Graph construction
 - [x] Awas graph
-- [ ] Flow Graph - refactor FptcGraph as flow graph
+- [x] Flow Graph - refactor FptcGraph as flow graph
 - [x] Basic Node
 - [ ] Split FptcNode into FlowNode and FptcNode
 
@@ -56,8 +56,8 @@ git clone git@github.com:sireum/v3-awas.git sireum-v3/awas
 - [x] Reachability Node level
 - [x] Port level reachability
   - [x] Port successor and predecessor  
-- [ ] Converters between port and node level uris
-- [ ] Error flow 
-- [ ] getCycle and detectCycle on slice rather than entire graph 
+- [x] Converters between port and node level uris
+- [x] Error flow 
+- [x] getCycle and detectCycle on slice rather than entire graph 
   - [ ] Investigate the JgraphT's findCyclesContainingVertex implementation
  

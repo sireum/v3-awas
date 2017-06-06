@@ -19,17 +19,19 @@ build:
     options: "-e HOME=/root"
   ci:
     - rm -rf sireum-v3
-
     - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
     - cd sireum-v3
     - ln -s ../ ./awas
     - ./bin/sbt-launch.sh "project awas" test
     - cd ..
   post_ci:
+  on_success:
     - mkdir -p shippable/testresults
     - rm -f ./shippable/testresults/*
     - cp ./jvm/target/test-reports/* shippable/testresults
-  on_success:
   on_failure:
+    - mkdir -p shippable/testresults
+    - rm -f ./shippable/testresults/*
+    - cp ./jvm/target/test-reports/* shippable/testresults
   push:
   cache: true
