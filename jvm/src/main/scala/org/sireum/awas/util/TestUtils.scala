@@ -31,13 +31,13 @@ import org.sireum.util.jvm.FileUtil._
 
 object TestUtils {
 
-  def extensor(orig: String) = orig.split('.').init.mkString(".")
+  def extensor(orig: String): String = orig.split('.').init.mkString(".")
 
   def writeResult(fileName: String,
                   content: String,
                   expectedDir: String,
                   resultsDir: String,
-                  genExpected: Boolean) = {
+                  genExpected: Boolean): Boolean = {
     if (genExpected) {
       writeFile(toUri(makePath(expectedDir, fileName)), content)
     }

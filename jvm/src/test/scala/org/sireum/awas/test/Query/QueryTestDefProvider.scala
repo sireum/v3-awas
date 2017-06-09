@@ -61,8 +61,6 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
       val modelFile = x
       val queryFile = extensor(x) + ".aq"
-      var inputs = imapEmpty[FileResourceUri, FileResourceUri]
-      inputs = inputs + (modelFile -> queryFile)
 
       val outputFileName = fileWithOutExt + ".qres"
 

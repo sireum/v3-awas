@@ -32,7 +32,7 @@ public class JavaConverters {
         return scala.collection.JavaConverters.setAsJavaSet(scalaSet);
     }
 
-    public static <T> java.util.Map<T, java.util.Set<T>> toJavaMap(scala.collection.Map<T, java.util.Set<T>> scalaMap) {
+    public static <K, V> java.util.Map<K, V> toJavaMap(scala.collection.Map<K, V> scalaMap) {
         return scala.collection.JavaConverters.mapAsJavaMap(scalaMap);
     }
 

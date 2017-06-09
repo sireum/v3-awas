@@ -27,6 +27,10 @@ package org.sireum.awas.awasfacade;
 
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
+import org.sireum.awas.query.Model;
+import org.sireum.awas.query.QueryBuilder;
+import org.sireum.awas.query.QueryBuilder$;
+import org.sireum.awas.query.QueryEval;
 import org.sireum.awas.reachability.ErrorReachability;
 import org.sireum.awas.reachability.ErrorReachability$;
 import org.sireum.awas.reachability.PortReachability;
@@ -34,13 +38,12 @@ import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTableHelper;
 import org.sireum.awas.util.AwasUtil;
+import org.sireum.awas.util.JavaConverters;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.sireum.awas.util.JavaConverters.toJavaOptional;
-import static org.sireum.awas.util.JavaConverters.toJavaSet;
+import static org.sireum.awas.util.JavaConverters.*;
 
 
 
@@ -153,6 +156,15 @@ public class AwasGraphImpl implements AwasGraph {
         return AwasUtil.toJavaMap(temp);
     }
 
+    public Map<String, String> queryEvaluator(String query) {
+        Optional<Model> queryModel = JavaConverters.toJavaOptional(QueryBuilder$.MODULE$.apply(query,
+                QueryBuilder.apply$default$2(),
+                QueryBuilder.apply$default$3()));
+
+        return queryModel.map(model -> toJavaMap(QueryEval.apply(model, graph, st)).entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()))).orElseGet(HashMap::new);
+    }
 
     @Override
     public FlowGraph<FlowNode> getGraph() {

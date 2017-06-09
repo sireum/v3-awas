@@ -48,6 +48,8 @@ public interface AwasGraph {
 
     Map<String, Set<String>> backwardErrorReachUsingNames(String port, String... errors);
 
+    Map<String, String> queryEvaluator(String query);
+
     FlowGraph<FlowNode> getGraph();
 
     String getDotGraph();
