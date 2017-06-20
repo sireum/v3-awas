@@ -29,15 +29,15 @@ import java.net.URI
 
 import org.sireum.awas.ast.Node
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{ISeq, _}
+import org.sireum.util._
 
 object Resource {
 
   //TODO: Refactor this, to restrict the exposure of resourceInfo,
   // use of private is a temp fix
-  private [Resource] val resourceInfo = MIdMap[Node, Resource]
+  private[Resource] val resourceInfo = MIdMap[Node, Resource]()
 
-  def hasResourceInfo(n: Node): Boolean = resourceInfo.keySet.contains(n)
+  private[Resource] val resourceUri = mmapEmpty[String, Resource]
 
   def getResource(n : Node) : Option[Resource] = {
     if(hasResourceInfo(n)) {
@@ -47,43 +47,52 @@ object Resource {
     }
   }
 
-  def useDefResolve(use : Node, defn: Node) = {
+  def hasResourceInfo(n: Node): Boolean = resourceInfo.keySet.contains(n)
+
+  //TODO: Rework this
+  def getParentUri(uri: ResourceUri): Option[ResourceUri] = {
+    val H = SymbolTableHelper
+    if (getDefResource(uri).isDefined) {
+      val uri_par = uri.split(":").last.split(H.ID_SEPARATOR).head
+      val puri = uri_par.split('$').init.mkString("$") + H.ID_SEPARATOR + uri_par.split('$').last
+      if (getDefResource(puri).isDefined) Some(getDefResource(puri).get.toUri) else None
+    } else {
+      None
+    }
+  }
+
+  def getDefResource(uri: ResourceUri): Option[Resource] = {
+    resourceUri.get(uri.split(":").last)
+  }
+
+  def useDefResolve(use: Node, defn: Node): Unit = {
     assert(resourceInfo.get(defn).isDefined)
     val defResource = resourceInfo(defn)
     resourceInfo(use) = ResourceBean(defResource.uriType,
       defResource.uriPaths, defResource.uri,
       Some(!defResource.isDef))
+    resourceUri(resourceInfo(use).toUri.split(":").last) = resourceInfo(defn)
+
   }
 
-  def apply(uriType: String) = build(uriType, ivectorEmpty[String], "")
+  def apply(uriType: String): Resource = build(uriType, ivectorEmpty[String], "")
 
   def apply(uriType: String,
             uriPath: ISeq[String],
             uri: ResourceUri,
             isDef: Option[Boolean],
-            n: Node) = build(uriType, uriPath, uri, isDef, Some(n))
+            n: Node): Resource = build(uriType, uriPath, uri, isDef, Some(n))
 
   def apply(uriType: String,
             res: Resource,
             uri: ResourceUri,
             isDef: Option[Boolean],
-            n: Node) = build(uriType, res, uri, isDef, Some(n))
+            n: Node): Resource = build(uriType, res, uri, isDef, Some(n))
 
   def apply(uriType: String,
             res: Resource,
             uri: ResourceUri,
-            isDef: Option[Boolean] = None) = build(uriType, res, uri, isDef, None)
-
-  def build(uriType: String,
-            uriPath: ISeq[String],
-            uri: ResourceUri,
-            isDef: Option[Boolean] = None,
-            n: Option[Node] = None): Resource = {
-    val res = ResourceBean(uriType, uriPath, uri, isDef)
-    if(n.isDefined)
-      resourceInfo(n.get) = res
-    res
-  }
+            isDef: Option[Boolean] = None): Resource = build(uriType, res, uri, isDef, None)
 
   def build(uriType: String,
             res: Resource,
@@ -92,8 +101,22 @@ object Resource {
             n: Option[Node]): Resource =
     build(uriType, res.uriPaths :+ res.uri, uri, isDef, n)
 
-  def reset: Unit = {
+  def build(uriType: String,
+            uriPath: ISeq[String],
+            uri: ResourceUri,
+            isDef: Option[Boolean] = None,
+            n: Option[Node] = None): Resource = {
+    val res = ResourceBean(uriType, uriPath, uri, isDef)
+    if (n.isDefined) {
+      resourceInfo(n.get) = res
+      resourceUri(res.toUri.split(":").last) = res
+    }
+    res
+  }
+
+  def reset(): Unit = {
     resourceInfo.retain((_,_) => false)
+    resourceUri.clear()
   }
 
 }
@@ -104,18 +127,6 @@ case class ResourceBean(var _uriType: String,
                         var _def: Option[Boolean] = None
                        ) extends Resource {
   self =>
-  def uriType: String = {
-    this._uriType
-  }
-
-  def uriPaths: ISeq[String] = {
-    _uriPaths
-  }
-
-  def uri: ResourceUri = {
-    _uri
-  }
-
   def isDef: Boolean = {
     if (_def.isDefined)
       _def.get
@@ -140,11 +151,23 @@ case class ResourceBean(var _uriType: String,
     this._def = Some(isDef)
   }
 
+  def uriPaths: ISeq[String] = {
+    _uriPaths
+  }
+
   override def toUri : ResourceUri =  new URI(
     self.uriType,
     self.uriPaths.foldLeft("")(_ + "$" + _),
     self.uri
   ).toASCIIString
+
+  def uriType: String = {
+    this._uriType
+  }
+
+  def uri: ResourceUri = {
+    _uri
+  }
 
 }
 

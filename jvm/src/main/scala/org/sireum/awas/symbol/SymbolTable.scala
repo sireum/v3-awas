@@ -73,7 +73,7 @@ trait SymbolTable {
 
   def uris(file: FileResourceUri): MSet[ResourceUri]
 
-  def compTypeDecl(compUri: ResourceUri): Option[ResourceUri]
+  def compTypeDecl(compUri: ResourceUri): Set[ResourceUri]
 }
 
 sealed case class SymbolTableData
@@ -86,7 +86,7 @@ sealed case class SymbolTableData
  componentSymbolTable: MMap[ResourceUri, ComponentSymbolTable] = mmapEmpty,
  connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,
  compSMTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
- compTypeTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
+ compTypeTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty
 )
 
@@ -95,11 +95,11 @@ class STProducer extends SymbolTable {
   st =>
   val tables = SymbolTableData()
 
-  val compSymbolTableMap = mmapEmpty[ResourceUri, CompST]
+  val compSymbolTableMap: MMap[ResourceUri, CompST] = mmapEmpty[ResourceUri, CompST]
 
-  val compMap = mmapEmpty[ResourceUri, CompST]
+  val compMap: MMap[ResourceUri, CompST] = mmapEmpty[ResourceUri, CompST]
 
-  val modelMap = mmapEmpty[ResourceUri, Model]
+  val modelMap: MMap[ResourceUri, Model] = mmapEmpty[ResourceUri, Model]
 
   def stateMachineTableProducer(smUri : ResourceUri) : SMT = {
     val smt = new SMT(smUri)
@@ -156,21 +156,21 @@ class STProducer extends SymbolTable {
 
   def toSymbolTable: SymbolTable = this
 
-  override def compTypeDecl(compUri: ResourceUri): Option[ResourceUri] = {
-    tables.compTypeTable.get(compUri)
+  override def compTypeDecl(compUri: ResourceUri): Set[ResourceUri] = {
+    tables.compTypeTable.getOrElse(compUri, isetEmpty[ResourceUri]).toSet
   }
 
   class TypeT(val typeDeclUri: ResourceUri) extends TypeTable {
 
     val tables = TypeTableData()
 
-    override def uri = typeDeclUri
+    override def uri: ResourceUri = typeDeclUri
 
     override def symbolTable: SymbolTable = st
 
     override def enumElements: Set[ResourceUri] = tables.enumTable(typeDeclUri).keySet.toSet
 
-    override def enumElement(enumElemUri: ResourceUri) =
+    override def enumElement(enumElemUri: ResourceUri): Id =
       tables.enumTable(typeDeclUri)(enumElemUri)
 
   }
@@ -191,7 +191,7 @@ class STProducer extends SymbolTable {
   class CompST(val compUri: ResourceUri) extends ComponentSymbolTable {
     val tables = ComponentTableData()
 
-    val typeDefMap = mmapEmpty[ResourceUri, ResourceUri]
+    val typeDefMap: MMap[ResourceUri, ResourceUri] = mmapEmpty[ResourceUri, ResourceUri]
 
     override def symbolTable: SymbolTable = st
 

@@ -81,14 +81,14 @@ port
   ;
 
 propagation
-  : id=ID '=' '{' errorT+=name (',' errorT+= name)*'}'
+  : id=ID '=' '{' errorT+=fault (',' errorT+= fault)*'}'
   ;
 
 flow
   : id=ID ':'
-     (from=ID ('{' fromE+=name ( ',' fromE+=name )* '}')? | '*')
+     (from=ID ('{' fromE+=fault ( ',' fromE+=fault )* '}')? | '*')
     '->'
-    (to=ID ('{' toE+=name ( ',' toE+=name )* '}')? | '*')
+    (to=ID ('{' toE+=fault ( ',' toE+=fault )* '}')? | '*')
   ;
 
 property

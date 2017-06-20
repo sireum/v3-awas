@@ -50,6 +50,10 @@ trait PortReachability[Node] extends BasicReachability[Node]{
   def forwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri]
 
   def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri]
+
+  def reachPath(source: ResourceUri, target: ResourceUri): ISet[Set[ResourceUri]]
+
+  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri]): ISet[Set[ResourceUri]]
 }
 
 object PortReachability {

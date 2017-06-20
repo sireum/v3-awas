@@ -42,7 +42,7 @@ object IntraComponentChecks {
   }
 
   def build(m: Model, st: SymbolTable)(
-    implicit reporter: AccumulatingTagReporter) = {
+    implicit reporter: AccumulatingTagReporter): Unit = {
     st.components.foreach {
       c =>
         val cst = st.componentTable(c)
@@ -53,7 +53,7 @@ object IntraComponentChecks {
   }
 
   def checkFlows(cst: ComponentSymbolTable, cd: ComponentDecl)(
-    implicit reporter: AccumulatingTagReporter) = {
+    implicit reporter: AccumulatingTagReporter): Unit = {
     cst.flows.foreach {
        furi =>
          val flow = cst.flow(furi)
@@ -69,17 +69,17 @@ object IntraComponentChecks {
   def flowExpCheck(cst : ComponentSymbolTable,
                    cd : ComponentDecl,
                    pName : Id,
-                   eNames: Seq[Name])(
-                    implicit reporter: AccumulatingTagReporter) = {
+                   eNames: Seq[Fault])(
+                    implicit reporter: AccumulatingTagReporter): Unit = {
     val puri = cst.ports.find(_.endsWith("#" + pName.value))
     if(puri.isDefined) {
       eNames.foreach {
         err =>
-          val error = cst.propagation(puri.get).find(_.endsWith(err.value.last.value))
+          val error = cst.propagation(puri.get).find(_.endsWith(err.enum.value.last.value))
           if(error.isEmpty) {
             reporter.report(errorMessageGen(FLOW_MISSING,
               cd,
-              model, puri + " -  " + err.value.last.value))
+              model, puri + " -  " + err.enum.value.last.value))
             //error not found
           }
       }

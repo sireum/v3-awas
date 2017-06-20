@@ -12,6 +12,14 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
   def forwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]]): Map[ResourceUri, Set[ResourceUri]]
 
   def backwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]]): Map[ResourceUri, Set[ResourceUri]]
+
+  def errorPathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
+                     targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
+  ISet[IMap[ResourceUri, Set[ResourceUri]]]
+
+  def errorPathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
+                        target: IMap[ResourceUri, ISet[ResourceUri]]):
+  ISet[IMap[ResourceUri, Set[ResourceUri]]]
 }
 
 object ErrorReachability {

@@ -20,7 +20,7 @@ expr
 : pexpr                                          #PrimaryExpr
 | l=expr op='-' r=expr                           #Binary
 | l=expr op=('union' | 'intersect') r=expr       #Binary
-| l=expr op=('->' | '<-') r=expr                 #Binary
+| l=expr op=('->' | '~>') r=expr                 #Binary
 ;
 
 

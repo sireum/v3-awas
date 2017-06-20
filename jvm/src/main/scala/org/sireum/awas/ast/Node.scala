@@ -30,11 +30,11 @@ import org.sireum.util._
 object Node {
   type Seq[T] = IVector[T]
 
-  final def emptySeq[T] = ivectorEmpty[T]
+  final def emptySeq[T]: IVector[T] = ivectorEmpty[T]
 
-  final def seq[T](es: T*) = ivector(es: _*)
+  final def seq[T](es: T*): IVector[T] = ivector(es: _*)
 
-  final def seq[T](es: Iterable[T]) = es.toVector
+  final def seq[T](es: Iterable[T]): Vector[T] = es.toVector
 }
 
 sealed trait Node extends Product
@@ -83,13 +83,13 @@ final case class ConnectionDecl(connName: Id,
 
 final case class Port(isIn : Boolean, id : Id, name: Option[Name]) extends Node
 
-final case class Propagation(id: Id, errorTypes : Node.Seq[Name]) extends Node
+final case class Propagation(id: Id, errorTypes: Node.Seq[Fault]) extends Node
 
 final case class Flow(id: Id,
                       from: Option[Id],
-                      fromE: Node.Seq[Name],
+                      fromE: Node.Seq[Fault],
                       to:Option[Id],
-                      toE: Node.Seq[Name]) extends Node
+                      toE: Node.Seq[Fault]) extends Node
 
 final case class Property(id: Id, propType: Type, value: Option[Init]) extends Node
 

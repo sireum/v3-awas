@@ -20,8 +20,8 @@ public class Antlr4AwasLexer extends Lexer {
             T__31 = 32, T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38,
             T__38 = 39, T__39 = 40, T__40 = 41, T__41 = 42, T__42 = 43, T__43 = 44, T__44 = 45,
             T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, INTEGER = 51, REAL = 52,
-            STRING=53, ID=54, WS=55, COMMENT=56, LINE_COMMENT=57, ERROR_CHAR=58;
-	public static final String[] ruleNames = {
+            STRING = 53, ID = 54, WS = 55, COMMENT = 56, LINE_COMMENT = 57, ERROR_CHAR = 58;
+    public static final String[] ruleNames = {
             "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
             "T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16",
             "T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24",
@@ -30,7 +30,7 @@ public class Antlr4AwasLexer extends Lexer {
             "T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "T__47", "T__48",
             "T__49", "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT",
             "ERROR_CHAR"
-	};
+    };
     /**
      * @deprecated Use {@link #VOCABULARY} instead.
      */
@@ -201,8 +201,8 @@ public class Antlr4AwasLexer extends Lexer {
     protected static final PredictionContextCache _sharedContextCache =
             new PredictionContextCache();
     private static final String[] _LITERAL_NAMES = {
-		null, "'types'", "'behavior'", "'constants'", "'components'", "'connections'", 
-		"':'", "'with'", "','", "'ports'", "'propagations'", "'flows'", "'transitions'", 
+            null, "'types'", "'behavior'", "'constants'", "'components'", "'connections'",
+            "':'", "'with'", "','", "'ports'", "'propagations'", "'flows'", "'transitions'",
 		"'properties'", "'.'", "'{'", "'}'", "'->'", "'alias'", "'='", "'enum'", 
 		"'extends'", "'lattice'", "'record'", "'in'", "'out'", "'*'", "'-['", 
 		"']->'", "'('", "')'", "'Option'", "'['", "']'", "'Set'", "'Seq'", "'Map'", 
@@ -226,7 +226,8 @@ public class Antlr4AwasLexer extends Lexer {
     };
 
     static {
-        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
+    }
 
     static {
         tokenNames = new String[_SYMBOLIC_NAMES.length];

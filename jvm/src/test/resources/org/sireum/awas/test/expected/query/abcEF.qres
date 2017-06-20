@@ -12,18 +12,14 @@ port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error
  -------------- 
 q2
  -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$A2B#A/aOut[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#B/bOut2[ error:$$example/Query/abcEF.awas$Error#High ]
+port-out-virtual:$$example/Query/abcEF.awas$A2B#B/bIn[ error:$$example/Query/abcEF.awas$Error#High ]
+port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#High ]
 port-out:$$example/Query/abcEF.awas$B#bOut[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#A/aIn[ error:$$example/Query/abcEF.awas$Error#High ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#B/bIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#High ]
+port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#High ]
 port-out:$$example/Query/abcEF.awas$C#cOut[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
+port-in-virtual:$$example/Query/abcEF.awas$A2B#A/aOut[ error:$$example/Query/abcEF.awas$Error#High ]
 port-in:$$example/Query/abcEF.awas$C#cIn[ error:$$example/Query/abcEF.awas$Error#Low ]
 port-out-virtual:$$example/Query/abcEF.awas$B2C#C/cIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
 port-in-virtual:$$example/Query/abcEF.awas$B2C#B/bOut[ error:$$example/Query/abcEF.awas$Error#Low ]
 
  -------------- 

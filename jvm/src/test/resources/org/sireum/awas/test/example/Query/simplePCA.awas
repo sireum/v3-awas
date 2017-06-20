@@ -1,0 +1,46 @@
+
+/*Accident: patient overdose */
+
+types
+  enum guidewords {provided_not_appropriate,
+                   not_provided,
+                   applied_too_long,
+		   stopped_too_soon,
+		   provided_too_early, 
+		   provided_late}
+  enum hazards {overinfuse} /* Single hazard in this situation */
+
+components
+  patient
+    with hazards
+    ports
+      in pump_in
+      out signal
+    flows
+      f1: pump_in{overinfuse} -> *
+
+  pump 
+    with guidewords, hazards
+    ports
+      in cmd_in
+      out dose
+    flows
+      f2: cmd_in{applied_too_long} -> dose{overinfuse} /* only if patient is vulnerable */
+      f3: cmd_in{provided_not_appropriate} -> dose{overinfuse} /* only if patient is vulnerable */
+      f4: cmd_in{provided_too_early} -> dose{overinfuse} /* only if patient is vulnerable */
+   
+  app
+    ports
+      in spo2_val
+      out cmd_out
+
+  pulse_ox
+    ports
+      in signal
+      out spo2_val
+
+connections
+  read : patient.signal -> pulse_ox.signal
+  spo2 : pulse_ox.spo2_val -> app.spo2_val
+  cmd : app.cmd_out -> pump.cmd_in
+  infuse : pump.dose -> patient.pump_in

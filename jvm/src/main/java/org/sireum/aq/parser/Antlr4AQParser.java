@@ -21,8 +21,8 @@ public class Antlr4AQParser extends Parser {
             T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
             T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
             T__17 = 18, T__18 = 19, INTEGER = 20, REAL = 21, STRING = 22, ID = 23, WS = 24, COMMENT = 25,
-            LINE_COMMENT=26, ERROR_CHAR=27;
-	public static final int
+            LINE_COMMENT = 26, ERROR_CHAR = 27;
+    public static final int
             RULE_modelFile = 0, RULE_model = 1, RULE_queryStmt = 2, RULE_expr = 3,
             RULE_pexpr = 4, RULE_nodeNameError = 5, RULE_errorId = 6, RULE_nodeName = 7;
     public static final String[] ruleNames = {
@@ -67,19 +67,20 @@ public class Antlr4AQParser extends Parser {
     protected static final PredictionContextCache _sharedContextCache =
             new PredictionContextCache();
     private static final String[] _LITERAL_NAMES = {
-            null, "'='", "'-'", "'union'", "'intersect'", "'->'", "'<-'", "'('", "')'",
+            null, "'='", "'-'", "'union'", "'intersect'", "'->'", "'~>'", "'('", "')'",
             "'{'", "','", "'}'", "'*'", "'''", "'.'", "':'", "'in'", "'out'", "'source'",
             "'sink'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
+    };
+    private static final String[] _SYMBOLIC_NAMES = {
             null, null, null, null, null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null, "INTEGER", "REAL", "STRING",
             "ID", "WS", "COMMENT", "LINE_COMMENT", "ERROR_CHAR"
-	};
-	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+    };
+    public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
     static {
-        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
+    }
 
     static {
         tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -141,8 +142,8 @@ public class Antlr4AQParser extends Parser {
                 model();
                 setState(17);
                 match(EOF);
-			}
-		}
+            }
+        }
 		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
@@ -163,18 +164,18 @@ public class Antlr4AQParser extends Parser {
             {
                 setState(20);
                 _errHandler.sync(this);
-			_la = _input.LA(1);
-			do {
-				{
+                _la = _input.LA(1);
+                do {
+                {
                     {
                         setState(19);
                         queryStmt();
-				}
+                    }
                 }
                 setState(22);
                 _errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( _la==ID );
+                _la = _input.LA(1);
+                } while ( _la==ID );
 			}
 		}
 		catch (RecognitionException re) {
@@ -195,13 +196,13 @@ public class Antlr4AQParser extends Parser {
 			enterOuterAlt(_localctx, 1);
             {
                 setState(24);
-                ((QueryStmtContext)_localctx).id = match(ID);
+                ((QueryStmtContext) _localctx).id = match(ID);
                 setState(25);
                 match(T__0);
                 setState(26);
                 expr(0);
-			}
-		}
+            }
+        }
 		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
@@ -236,20 +237,20 @@ public class Antlr4AQParser extends Parser {
 
                 setState(29);
                 pexpr();
-			}
-			_ctx.stop = _input.LT(-1);
+            }
+                _ctx.stop = _input.LT(-1);
                 setState(42);
                 _errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+                _alt = getInterpreter().adaptivePredict(_input, 2, _ctx);
+                while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
                     {
                         setState(40);
                         _errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
-					case 1:
+                        switch (getInterpreter().adaptivePredict(_input, 1, _ctx)) {
+                            case 1:
 						{
 						_localctx = new BinaryContext(new ExprContext(_parentctx, _parentState));
 						((BinaryContext)_localctx).l = _prevctx;
@@ -257,11 +258,11 @@ public class Antlr4AQParser extends Parser {
                             setState(31);
                             if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
                             setState(32);
-                            ((BinaryContext)_localctx).op = match(T__1);
+                            ((BinaryContext) _localctx).op = match(T__1);
                             setState(33);
-                            ((BinaryContext)_localctx).r = expr(4);
-						}
-						break;
+                            ((BinaryContext) _localctx).r = expr(4);
+                        }
+                            break;
 					case 2:
 						{
 						_localctx = new BinaryContext(new ExprContext(_parentctx, _parentState));
@@ -270,9 +271,9 @@ public class Antlr4AQParser extends Parser {
                             setState(34);
                             if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
                             setState(35);
-                            ((BinaryContext)_localctx).op = _input.LT(1);
-						_la = _input.LA(1);
-						if ( !(_la==T__2 || _la==T__3) ) {
+                            ((BinaryContext) _localctx).op = _input.LT(1);
+                            _la = _input.LA(1);
+                            if ( !(_la==T__2 || _la==T__3) ) {
 							((BinaryContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
@@ -281,9 +282,9 @@ public class Antlr4AQParser extends Parser {
 							consume();
                         }
                             setState(36);
-                            ((BinaryContext)_localctx).r = expr(3);
-						}
-						break;
+                            ((BinaryContext) _localctx).r = expr(3);
+                        }
+                    break;
 					case 3:
 						{
 						_localctx = new BinaryContext(new ExprContext(_parentctx, _parentState));
@@ -292,9 +293,9 @@ public class Antlr4AQParser extends Parser {
                             setState(37);
                             if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
                             setState(38);
-                            ((BinaryContext)_localctx).op = _input.LT(1);
-						_la = _input.LA(1);
-						if ( !(_la==T__4 || _la==T__5) ) {
+                            ((BinaryContext) _localctx).op = _input.LT(1);
+                            _la = _input.LA(1);
+                            if ( !(_la==T__4 || _la==T__5) ) {
 							((BinaryContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
@@ -303,16 +304,16 @@ public class Antlr4AQParser extends Parser {
 							consume();
                         }
                             setState(39);
-                            ((BinaryContext)_localctx).r = expr(2);
-						}
-						break;
+                            ((BinaryContext) _localctx).r = expr(2);
+                        }
+                    break;
                     }
                     }
                 }
                 setState(44);
                 _errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
-			}
+                _alt = getInterpreter().adaptivePredict(_input, 2, _ctx);
+                }
 			}
 		}
 		catch (RecognitionException re) {
@@ -333,15 +334,15 @@ public class Antlr4AQParser extends Parser {
         try {
             setState(63);
             _errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case ID:
+            switch (_input.LA(1)) {
+                case ID:
 				_localctx = new NodeNContext(_localctx);
 				enterOuterAlt(_localctx, 1);
             {
                 setState(45);
                 nodeNameError();
-				}
-				break;
+            }
+                break;
 			case T__6:
 				_localctx = new ParenContext(_localctx);
 				enterOuterAlt(_localctx, 2);
@@ -352,8 +353,8 @@ public class Antlr4AQParser extends Parser {
                 expr(0);
                 setState(48);
                 match(T__7);
-				}
-				break;
+            }
+            break;
 			case T__8:
 				_localctx = new NodeSetContext(_localctx);
 				enterOuterAlt(_localctx, 3);
@@ -364,32 +365,32 @@ public class Antlr4AQParser extends Parser {
                 nodeNameError();
                 setState(54);
                 _errHandler.sync(this);
-				_la = _input.LA(1);
-				do {
-					{
+                _la = _input.LA(1);
+                do {
+                    {
                         {
                             setState(52);
                             match(T__9);
                             setState(53);
                             nodeNameError();
-					}
+                        }
                     }
                     setState(56);
                     _errHandler.sync(this);
-					_la = _input.LA(1);
-				} while ( _la==T__9);
+                    _la = _input.LA(1);
+                } while (_la == T__9);
                 setState(58);
                 match(T__10);
-				}
-				break;
+            }
+            break;
 			case T__11:
 				_localctx = new EmptyContext(_localctx);
 				enterOuterAlt(_localctx, 4);
             {
                 setState(60);
                 match(T__11);
-				}
-				break;
+            }
+            break;
 			case T__12:
 				_localctx = new QueryResContext(_localctx);
 				enterOuterAlt(_localctx, 5);
@@ -397,9 +398,9 @@ public class Antlr4AQParser extends Parser {
                 setState(61);
                 match(T__12);
                 setState(62);
-                ((QueryResContext)_localctx).id = match(ID);
-				}
-				break;
+                ((QueryResContext) _localctx).id = match(ID);
+            }
+            break;
 			default:
 				throw new NoViableAltException(this);
 			}
@@ -426,32 +427,32 @@ public class Antlr4AQParser extends Parser {
                 nodeName();
                 setState(77);
                 _errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
-			case 1: {
-                setState(66);
-                match(T__8);
-                setState(67);
-                errorId();
-                setState(72);
-                _errHandler.sync(this);
-				_la = _input.LA(1);
-                while (_la == T__9) {
-                    {
-                        {
-                            setState(68);
-                            match(T__9);
-                            setState(69);
-                            errorId();
+                switch (getInterpreter().adaptivePredict(_input, 6, _ctx)) {
+                    case 1: {
+                        setState(66);
+                        match(T__8);
+                        setState(67);
+                        errorId();
+                        setState(72);
+                        _errHandler.sync(this);
+                        _la = _input.LA(1);
+                        while (_la == T__9) {
+                            {
+                                {
+                                    setState(68);
+                                    match(T__9);
+                                    setState(69);
+                                    errorId();
+                                }
+                            }
+                            setState(74);
+                            _errHandler.sync(this);
+                            _la = _input.LA(1);
                         }
+                        setState(75);
+                        match(T__10);
                     }
-                    setState(74);
-                    _errHandler.sync(this);
-					_la = _input.LA(1);
-                }
-                setState(75);
-                match(T__10);
-				}
-				break;
+                    break;
 			}
 			}
 		}
@@ -508,42 +509,42 @@ public class Antlr4AQParser extends Parser {
 		NodeNameContext _localctx = new NodeNameContext(_ctx, getState());
         enterRule(_localctx, 14, RULE_nodeName);
         int _la;
-		try {
-			int _alt;
+        try {
+            int _alt;
 			enterOuterAlt(_localctx, 1);
             {
                 setState(87);
-                ((NodeNameContext)_localctx).ID = match(ID);
-			((NodeNameContext)_localctx).ids.add(((NodeNameContext)_localctx).ID);
+                ((NodeNameContext) _localctx).ID = match(ID);
+                ((NodeNameContext) _localctx).ids.add(((NodeNameContext) _localctx).ID);
                 setState(92);
                 _errHandler.sync(this);
-                _alt = getInterpreter().adaptivePredict(_input, 8,_ctx);
-                while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					{
+                _alt = getInterpreter().adaptivePredict(_input, 8, _ctx);
+                while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
+                    if (_alt == 1) {
+                        {
                         {
                             setState(88);
                             match(T__13);
                             setState(89);
-                            ((NodeNameContext)_localctx).ID = match(ID);
-					((NodeNameContext)_localctx).ids.add(((NodeNameContext)_localctx).ID);
+                            ((NodeNameContext) _localctx).ID = match(ID);
+                            ((NodeNameContext) _localctx).ids.add(((NodeNameContext) _localctx).ID);
                         }
                     }
                 }
-                setState(94);
+                    setState(94);
                     _errHandler.sync(this);
-                _alt = getInterpreter().adaptivePredict(_input, 8,_ctx);
-            }
+                    _alt = getInterpreter().adaptivePredict(_input, 8, _ctx);
+                }
                 setState(97);
                 _errHandler.sync(this);
-                switch (getInterpreter().adaptivePredict(_input, 9, _ctx) ) {
+                switch (getInterpreter().adaptivePredict(_input, 9, _ctx)) {
                     case 1: {
-                setState(95);
+                        setState(95);
                         match(T__14);
-                setState(96);
-                        ((NodeNameContext)_localctx).f = _input.LT(1);
-				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__15) | (1L << T__16) | (1L << T__17) | (1L << T__18))) != 0)) ) {
+                        setState(96);
+                        ((NodeNameContext) _localctx).f = _input.LT(1);
+                        _la = _input.LA(1);
+                        if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__15) | (1L << T__16) | (1L << T__17) | (1L << T__18))) != 0)) ) {
 					((NodeNameContext)_localctx).f = (Token)_errHandler.recoverInline(this);
 				}
 				else {

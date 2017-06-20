@@ -47,7 +47,7 @@ object ContextInSensitiveGen {
 
   def rewriteComponent(oldComp: Model): Model = {
     val newModel = org.sireum.awas.ast.Rewriter.build[Model](TraversalMode.TOP_DOWN) {
-      case c: ComponentDecl => {
+      case c: ComponentDecl =>
         var propMap = imapEmpty[Id, MSet[Name]]
         if (c.behaviour.isDefined) {
           val props = ListMap(mineBehaviorProp(c.behaviour.get).toSeq.sortBy(_._1.value): _*).map { f => Propagation(f._1, f._2) }
@@ -56,15 +56,14 @@ object ContextInSensitiveGen {
             c.withSM, c.ports, props.toVector,
             flows, c.transitions, c.behaviour, c.properties)
         } else c
-      }
     }(oldComp)
     newModel.nodeLocMap = oldComp.nodeLocMap
     newModel.fileUriOpt = oldComp.fileUriOpt
     newModel
   }
 
-  def mineBehaviorProp(behaviour: Behaviour): IMap[Id, IVector[Name]] = {
-    var res = imapEmpty[Id, MSet[Name]]
+  def mineBehaviorProp(behaviour: Behaviour): IMap[Id, IVector[Fault]] = {
+    var res = imapEmpty[Id, MSet[Fault]]
     behaviour.exprs.foreach {
       expr => {
         if (expr.lhs.isDefined) {
@@ -105,7 +104,7 @@ object ContextInSensitiveGen {
                 val rtinfo = mineTokens(rt._1, rt._2)
                 res :+= Flow(buildNewId("flow"),
                   None,
-                  ivectorEmpty[Name],
+                  ivectorEmpty[Fault],
                   Some(rtinfo._1), rtinfo._2.toVector)
             }
           }
@@ -119,7 +118,7 @@ object ContextInSensitiveGen {
                 res :+= Flow(buildNewId("flow"),
                   Some(ltinfo._1), ltinfo._2.toVector,
                   None,
-                  ivectorEmpty[Name])
+                  ivectorEmpty[Fault])
             }
           }
 
@@ -146,18 +145,16 @@ object ContextInSensitiveGen {
     res.sortBy(_.id.value)
   }
 
-  def mineTokens(id: Id, one: One): (Id, MSet[Name]) = {
+  def mineTokens(id: Id, one: One): (Id, MSet[Fault]) = {
     val newId = buildId(id.value)
-    val res = msetEmpty[Name]
+    val res = msetEmpty[Fault]
     one match {
-      case fault: Fault => {
-        res += buildName(fault.enum.value)
-      }
-      case fs: FaultSet => {
+      case fault: Fault =>
+        res += Fault(buildName(fault.enum.value))
+      case fs: FaultSet =>
         fs.value.foreach {
-          fse => res += buildName(fse.enum.value)
+          fse => res += Fault(buildName(fse.enum.value))
         }
-      }
     }
     (newId, res)
   }

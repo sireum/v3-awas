@@ -16,13 +16,13 @@ public class Antlr4AQLexer extends Lexer {
             T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
             T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
             T__17 = 18, T__18 = 19, INTEGER = 20, REAL = 21, STRING = 22, ID = 23, WS = 24, COMMENT = 25,
-            LINE_COMMENT=26, ERROR_CHAR=27;
-	public static final String[] ruleNames = {
+            LINE_COMMENT = 26, ERROR_CHAR = 27;
+    public static final String[] ruleNames = {
             "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
             "T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16",
             "T__17", "T__18", "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT",
             "LINE_COMMENT", "ERROR_CHAR"
-	};
+    };
     /**
      * @deprecated Use {@link #VOCABULARY} instead.
      */
@@ -62,14 +62,14 @@ public class Antlr4AQLexer extends Lexer {
                     "\2\2\67\u00d0\3\2\2\29:\7?\2\2:\4\3\2\2\2;<\7/\2\2<\6\3\2\2\2=>\7w\2\2" +
                     ">?\7p\2\2?@\7k\2\2@A\7q\2\2AB\7p\2\2B\b\3\2\2\2CD\7k\2\2DE\7p\2\2EF\7" +
                     "v\2\2FG\7g\2\2GH\7t\2\2HI\7u\2\2IJ\7g\2\2JK\7e\2\2KL\7v\2\2L\n\3\2\2\2" +
-                    "MN\7/\2\2NO\7@\2\2O\f\3\2\2\2PQ\7>\2\2QR\7/\2\2R\16\3\2\2\2ST\7*\2\2T" +
-                    "\20\3\2\2\2UV\7+\2\2V\22\3\2\2\2WX\7}\2\2X\24\3\2\2\2YZ\7.\2\2Z\26\3\2" +
-                    "\2\2[\\\7\177\2\2\\\30\3\2\2\2]^\7,\2\2^\32\3\2\2\2_`\7)\2\2`\34\3\2\2" +
-                    "\2ab\7\60\2\2b\36\3\2\2\2cd\7<\2\2d \3\2\2\2ef\7k\2\2fg\7p\2\2g\"\3\2" +
-                    "\2\2hi\7q\2\2ij\7w\2\2jk\7v\2\2k$\3\2\2\2lm\7u\2\2mn\7q\2\2no\7w\2\2o" +
-                    "p\7t\2\2pq\7e\2\2qr\7g\2\2r&\3\2\2\2st\7u\2\2tu\7k\2\2uv\7p\2\2vw\7m\2" +
-                    "\2w(\3\2\2\2x\u0081\7\62\2\2y}\t\2\2\2z|\t\3\2\2{z\3\2\2\2|\177\3\2\2" +
-                    "\2}{\3\2\2\2}~\3\2\2\2~\u0081\3\2\2\2\177}\3\2\2\2\u0080x\3\2\2\2\u0080" +
+                    "MN\7/\2\2NO\7@\2\2O\f\3\2\2\2PQ\7\u0080\2\2QR\7@\2\2R\16\3\2\2\2ST\7*" +
+                    "\2\2T\20\3\2\2\2UV\7+\2\2V\22\3\2\2\2WX\7}\2\2X\24\3\2\2\2YZ\7.\2\2Z\26" +
+                    "\3\2\2\2[\\\7\177\2\2\\\30\3\2\2\2]^\7,\2\2^\32\3\2\2\2_`\7)\2\2`\34\3" +
+                    "\2\2\2ab\7\60\2\2b\36\3\2\2\2cd\7<\2\2d \3\2\2\2ef\7k\2\2fg\7p\2\2g\"" +
+                    "\3\2\2\2hi\7q\2\2ij\7w\2\2jk\7v\2\2k$\3\2\2\2lm\7u\2\2mn\7q\2\2no\7w\2" +
+                    "\2op\7t\2\2pq\7e\2\2qr\7g\2\2r&\3\2\2\2st\7u\2\2tu\7k\2\2uv\7p\2\2vw\7" +
+                    "m\2\2w(\3\2\2\2x\u0081\7\62\2\2y}\t\2\2\2z|\t\3\2\2{z\3\2\2\2|\177\3\2" +
+                    "\2\2}{\3\2\2\2}~\3\2\2\2~\u0081\3\2\2\2\177}\3\2\2\2\u0080x\3\2\2\2\u0080" +
                     "y\3\2\2\2\u0081*\3\2\2\2\u0082\u008b\7\62\2\2\u0083\u0087\t\2\2\2\u0084" +
                     "\u0086\t\3\2\2\u0085\u0084\3\2\2\2\u0086\u0089\3\2\2\2\u0087\u0085\3\2" +
                     "\2\2\u0087\u0088\3\2\2\2\u0088\u008b\3\2\2\2\u0089\u0087\3\2\2\2\u008a" +
@@ -103,9 +103,9 @@ public class Antlr4AQLexer extends Lexer {
     protected static final PredictionContextCache _sharedContextCache =
             new PredictionContextCache();
     private static final String[] _LITERAL_NAMES = {
-		null, "'='", "'-'", "'union'", "'intersect'", "'->'", "'<-'", "'('", "')'", 
-		"'{'", "','", "'}'", "'*'", "'''", "'.'", "':'", "'in'", "'out'", "'source'", 
-		"'sink'"
+            null, "'='", "'-'", "'union'", "'intersect'", "'->'", "'~>'", "'('", "')'",
+            "'{'", "','", "'}'", "'*'", "'''", "'.'", "':'", "'in'", "'out'", "'source'",
+            "'sink'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
@@ -121,7 +121,8 @@ public class Antlr4AQLexer extends Lexer {
     };
 
     static {
-        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
+    }
 
     static {
         tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -168,7 +169,8 @@ public class Antlr4AQLexer extends Lexer {
 	public String[] getRuleNames() { return ruleNames; }
 
 	@Override
-    public String getSerializedATN() { return _serializedATN;
+    public String getSerializedATN() {
+        return _serializedATN;
     }
 
     @Override

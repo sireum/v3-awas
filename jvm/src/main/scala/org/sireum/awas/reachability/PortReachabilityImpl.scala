@@ -75,8 +75,7 @@ class PortReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
   }
 
   override def forwardReach(criterion: ResourceUri): ISet[ResourceUri] = {
-    if (criterion.startsWith(H.COMPONENT_TYPE) ||
-      criterion.startsWith(H.CONNECTION_TYPE)) {
+    if (isNode(criterion)) {
       val onode = graph.getNode(criterion)
       if (onode.isDefined) {
         forwardReach(onode.get).map(_.getUri)
@@ -88,13 +87,21 @@ class PortReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
     }
   }
 
+  private def isNode(uri: ResourceUri): Boolean = {
+    if (uri.startsWith(H.COMPONENT_TYPE) ||
+      uri.startsWith(H.CONNECTION_TYPE)) {
+      true
+    } else {
+      false
+    }
+  }
+
   override def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri] = {
     criterion.flatMap(backwardReach)
   }
 
   override def backwardReach(criterion: ResourceUri): ISet[ResourceUri] = {
-    if (criterion.startsWith(H.COMPONENT_TYPE) ||
-      criterion.startsWith(H.CONNECTION_TYPE)) {
+    if (isNode(criterion)) {
       val onode = graph.getNode(criterion)
       if (onode.isDefined) {
         backwardReach(onode.get).map(_.getUri)
@@ -105,4 +112,61 @@ class PortReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
       backwardPortReach(criterion)
     }
   }
+
+  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri]): ISet[Set[ResourceUri]] = {
+    source.flatMap(x => target.flatMap(y => reachPath(x, y)))
+  }
+
+  def reachPath(source: ResourceUri, target: ResourceUri): ISet[Set[ResourceUri]] = {
+    if (isNode(source) || isNode(target)) {
+      val snode = graph.getNode(source)
+      val tnode = graph.getNode(target)
+      if (snode.isDefined && tnode.isDefined) {
+        reachPath(snode.get, tnode.get).map(p => p.map(_.getUri))
+      } else {
+        isetEmpty[ISet[ResourceUri]]
+      }
+    } else {
+      val snode = graph.getNode(source)
+      val tnode = graph.getNode(target)
+      if (snode.isDefined && tnode.isDefined) {
+        val nodePath = reachPath(snode.get, tnode.get).map(p => p.map(_.getUri))
+        nodePath.map(getPathPorts)
+      } else {
+        isetEmpty[ISet[ResourceUri]]
+      }
+    }
+  }
+
+  /**
+    * Uses the node path to find port path
+    *
+    * @param path set of nodes
+    * @return port path for a node path
+    */
+  private def getPathPorts(path: ISet[ResourceUri]): ISet[ResourceUri] = {
+    var result = isetEmpty[ResourceUri]
+    path.foreach { nuri =>
+      val node = graph.getNode(nuri)
+      if (node.isDefined) {
+        node.get.inPorts.foreach { p =>
+          if (path.intersect(graph.getPredecessorPorts(p).flatMap { f: ResourceUri =>
+            graph.getNode(f)
+          }.toSet[FlowNode].map(_.getUri)).nonEmpty) {
+            result += p
+          }
+        }
+        node.get.outPorts.foreach { p =>
+          if (path.intersect(graph.getSuccessorPorts(p).flatMap { f: ResourceUri =>
+            graph.getNode(f)
+          }.toSet[FlowNode].map(_.getUri)).nonEmpty) {
+            result += p
+          }
+        }
+      }
+    }
+    result
+  }
+
 }
+

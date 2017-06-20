@@ -40,9 +40,9 @@ object QueryEval {
 }
 
 final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
-  var result = ilinkedMapEmpty[String, QRes]
+  var result: ILinkedMap[String, QRes] = ilinkedMapEmpty[String, QRes]
 
-  var queries = ilinkedMapEmpty[String, QueryExpr]
+  var queries: ILinkedMap[String, QueryExpr] = ilinkedMapEmpty[String, QueryExpr]
 
   def eval(m: Model): QueryEval.Result = {
     m.queryStmt.foreach {
@@ -71,8 +71,7 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
       case "union" => QueryResult.union(lhs, rhs)
       case "intersect" => QueryResult.intersect(lhs, rhs)
       case "-" => QueryResult.diff(lhs, rhs)
-      case "->" => {
-        val er = ErrorReachability(graph)
+      case "->" =>
         if (lhs.unitRes.isEmpty && rhs.unitRes.nonEmpty) {
           backwardReach(rhs)
         } else if (rhs.unitRes.isEmpty && lhs.unitRes.nonEmpty) {
@@ -84,7 +83,13 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
         } else {
           QRes(isetEmpty[UnitResult])
         }
-      }
+      case "~>" =>
+        val er = ErrorReachability(graph)
+        if (lhs.unitRes.nonEmpty && rhs.unitRes.nonEmpty) {
+          pathReach(lhs, rhs)
+        } else {
+          QRes(isetEmpty[UnitResult])
+        }
     }
   }
 
@@ -106,6 +111,24 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
           }
       }
       QRes(res.map(it => ErrorResult(it._1, it._2)).toSet)
+    }
+  }
+
+  def pathReach(source: QRes, target: QRes): QRes = {
+    val er = ErrorReachability(graph)
+    val minSType = QueryResult.getMinType(source)
+    val minTType = QueryResult.getMinType(target)
+    val minType = if (minSType <= minTType) minSType else minTType
+    if (minType <= QResMinType.PathUri) {
+      val as = QueryResult.convertToType(source, QResMinType.Uri)
+      val at = QueryResult.convertToType(target, QResMinType.Uri)
+      QRes(er.reachPathSet(as.toPorts, at.toPorts).map(PathResult))
+    } else {
+      val as = QueryResult.convertToType(source, QResMinType.Error)
+      val at = QueryResult.convertToType(target, QResMinType.Error)
+      val src = as.unitRes.collect { case er: ErrorResult => er.port -> er.errors }.toMap
+      val sink = at.unitRes.collect { case er: ErrorResult => er.port -> er.errors }.toMap
+      QRes(er.errorPathReachMap(src, sink).map(ErrorPathResult))
     }
   }
 

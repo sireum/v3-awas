@@ -1,0 +1,12 @@
+q2
+ -------------- 
+port-out:$$example/Query/simplePCA.awas$app#cmd_out[ error:$$example/Query/simplePCA.awas$guidewords#applied_too_long, error:$$example/Query/simplePCA.awas$guidewords#provided_not_appropriate, error:$$example/Query/simplePCA.awas$guidewords#provided_too_early ]
+port-in:$$example/Query/simplePCA.awas$pump#cmd_in[ error:$$example/Query/simplePCA.awas$guidewords#applied_too_long, error:$$example/Query/simplePCA.awas$guidewords#provided_not_appropriate, error:$$example/Query/simplePCA.awas$guidewords#provided_too_early ]
+port-out-virtual:$$example/Query/simplePCA.awas$cmd#pump/cmd_in[ error:$$example/Query/simplePCA.awas$guidewords#applied_too_long, error:$$example/Query/simplePCA.awas$guidewords#provided_not_appropriate, error:$$example/Query/simplePCA.awas$guidewords#provided_too_early ]
+port-in:$$example/Query/simplePCA.awas$patient#pump_in[ error:$$example/Query/simplePCA.awas$hazards#overinfuse ]
+port-out:$$example/Query/simplePCA.awas$pump#dose[ error:$$example/Query/simplePCA.awas$hazards#overinfuse ]
+port-in-virtual:$$example/Query/simplePCA.awas$infuse#pump/dose[ error:$$example/Query/simplePCA.awas$hazards#overinfuse ]
+port-in-virtual:$$example/Query/simplePCA.awas$cmd#app/cmd_out[ error:$$example/Query/simplePCA.awas$guidewords#applied_too_long, error:$$example/Query/simplePCA.awas$guidewords#provided_not_appropriate, error:$$example/Query/simplePCA.awas$guidewords#provided_too_early ]
+port-out-virtual:$$example/Query/simplePCA.awas$infuse#patient/pump_in[ error:$$example/Query/simplePCA.awas$hazards#overinfuse ]
+
+ -------------- 

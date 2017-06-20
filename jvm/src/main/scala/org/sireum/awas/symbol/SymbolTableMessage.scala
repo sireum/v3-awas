@@ -57,8 +57,11 @@ object SymbolTableMessage {
   val DUPLICATE_CONNECTION =
     "Connection declaration '%s' had already been defined"
 
-  val Missing_TYPE_DECL =
+  val MISSING_TYPE_DECL =
     "Error '%s' not found in the associated type declaration"
+
+  val TYPE_RESOLUTION_FAILURE =
+    "Error '%s' declared in more than one type declaration"
 
   val MISSING_PORT_DECL =
     "port '%s' not declared in this component"
