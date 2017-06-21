@@ -94,14 +94,19 @@ object FlowGraph {
 
         if(fromNode.isDefined && toNode.isDefined) {
           val fedge = result.addEdge(fromNode.get, connNode)
-          val fromPortUri = Resource.getResource(st.connection(conn).fromPort).get.toUri
-          result.addPortEdge(fromPortUri, fedge)
-          result.addPortEdge(connNode.inPorts.head, fedge)
-
+          val fromPortRes = Resource.getResource(st.connection(conn).fromPort)
+          if(fromPortRes.isDefined) {
+            val fromPortUri = fromPortRes.get.toUri
+            result.addPortEdge(fromPortUri, fedge)
+            result.addPortEdge(connNode.inPorts.head, fedge)
+          }
           val tedge = result.addEdge(connNode, toNode.get)
-          val toPortUri = Resource.getResource(st.connection(conn).toPort).get.toUri
-          result.addPortEdge(toPortUri, tedge)
-          result.addPortEdge(connNode.outPorts.head, tedge)
+          val toPortRes = Resource.getResource(st.connection(conn).toPort)
+          if(toPortRes.isDefined) {
+            val toPortUri = toPortRes.get.toUri
+            result.addPortEdge(toPortUri, tedge)
+            result.addPortEdge(connNode.outPorts.head, tedge)
+          }
         }
     }
     result

@@ -48,6 +48,9 @@ object PrettyPrinter {
       case o : One =>
         new PrettyPrinter(sb).print(o)
         false
+      case p : Port =>
+        new PrettyPrinter(sb).print(p,0)
+        false
     })(n)
     sb.toString().trim
   }
@@ -377,7 +380,7 @@ final class PrettyPrinter(sb: StringBuilder) {
 //      case o : Wildcard => sb.append("_")
 //      case o : Variable => print(o.id)
       case o : Fault =>
-        print(o.enum)
+        print(o)
       case o : FaultSet =>
         sb.append("{")
         print(o.value.head)
@@ -387,6 +390,10 @@ final class PrettyPrinter(sb: StringBuilder) {
         }
         sb.append("}")
     }
+  }
+
+  def print(f : Fault) : Unit = {
+    print(f.enum)
   }
 
   def print(ad : AliasDecl, indent: Natural) : Unit ={

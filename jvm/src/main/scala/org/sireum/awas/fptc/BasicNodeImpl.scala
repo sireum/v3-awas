@@ -40,7 +40,7 @@ class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
     portList ++= compST.ports.toSeq
   } else {
     val conDecl = st.connection(uri)
-
+    require(Resource.getResource(conDecl).isDefined)
     val inPortUri = Resource(H.PORT_IN_VIRTUAL_TYPE,
       Resource.getResource(conDecl).get,
       conDecl.fromComp.value.map(_.value).mkString("/") + "/" + conDecl.fromPort.value,

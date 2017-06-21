@@ -26,6 +26,8 @@
 package org.sireum.awas.test.Query
 
 
+import java.util
+
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -44,7 +46,7 @@ object QueryTest {
   val provider = new QueryTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")
-  def parameters = {
+  def parameters: util.ArrayList[Array[Object]] = {
     val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
     val r = new java.util.ArrayList[Array[Object]](ps.size)
     for (p <- ps) {

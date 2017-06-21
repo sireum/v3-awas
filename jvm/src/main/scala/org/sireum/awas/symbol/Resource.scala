@@ -27,7 +27,7 @@ package org.sireum.awas.symbol
 
 import java.net.URI
 
-import org.sireum.awas.ast.Node
+import org.sireum.awas.ast.{Node, PrettyPrinter}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
@@ -35,7 +35,7 @@ object Resource {
 
   //TODO: Refactor this, to restrict the exposure of resourceInfo,
   // use of private is a temp fix
-  private[Resource] val resourceInfo = MIdMap[Node, Resource]()
+  private[Resource] val resourceInfo = MIdMap[Node, Resource]
 
   private[Resource] val resourceUri = mmapEmpty[String, Resource]
 
@@ -66,12 +66,12 @@ object Resource {
   }
 
   def useDefResolve(use: Node, defn: Node): Unit = {
-    assert(resourceInfo.get(defn).isDefined)
+    require(resourceInfo.get(defn).isDefined, "node definition :"+PrettyPrinter.print(defn)+" must have an associated resource")
     val defResource = resourceInfo(defn)
     resourceInfo(use) = ResourceBean(defResource.uriType,
       defResource.uriPaths, defResource.uri,
-      Some(!defResource.isDef))
-    resourceUri(resourceInfo(use).toUri.split(":").last) = resourceInfo(defn)
+      Some(false))
+    resourceUri(resourceInfo(use).toUri.split(':').last) = resourceInfo(defn)
 
   }
 

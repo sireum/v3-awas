@@ -51,7 +51,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("awas")
+      p.toLowerCase.contains("simple")
     }
 
     filesEqual.toVector.map { x =>
@@ -59,7 +59,6 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
       println(inputFileName)
       val fileWithOutExt = extensor(inputFileName).toString
 
-      val modelFile = x
       val queryFile = extensor(x) + ".aq"
 
       val outputFileName = fileWithOutExt + ".qres"

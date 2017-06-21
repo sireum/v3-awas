@@ -380,7 +380,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         if (Resource.getParentUri(elem.head).isDefined) {
           Resource.useDefResolve(f, st.typeTable(Resource.getParentUri(elem.head).get).enumElement(elem.head))
         } else {
-          assert(false)
+          //should never hit
+          reporter.report(errorMessageGen(MISSING_TYPE_DECL,
+            f,
+            m, fif))
         }
       }
     } else {
