@@ -49,7 +49,6 @@ object IntraComponentChecks {
         val cd = st.component(c)
         checkFlows(cst, cd)
     }
-
   }
 
   def checkFlows(cst: ComponentSymbolTable, cd: ComponentDecl)(

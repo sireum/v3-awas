@@ -411,6 +411,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       p.errorTypes.foreach {
         et => {
           mineFault(m, et, r, tt)
+          if (Resource.getResource(et).isDefined) {
+            tempSet += Resource.getResource(et).get.toUri
+          }
           //          val etUri = tt.enumElements.find(_.endsWith(H.ID_SEPARATOR + et.value.last.value))
           //          if (etUri.isDefined) {
           //            tempSet += etUri.get

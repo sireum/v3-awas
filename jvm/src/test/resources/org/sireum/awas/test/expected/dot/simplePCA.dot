@@ -1,0 +1,26 @@
+strict digraph G {
+  pump [ label="{In Port|<cmd_in>cmd_in} |component
+pump|{Out Port|<dose>dose} " shape="record" ];
+  app [ label="{In Port|<spo2_val>spo2_val} |component
+app|{Out Port|<cmd_out>cmd_out} " shape="record" ];
+  patient [ label="{In Port|<pump_in>pump_in} |component
+patient|{Out Port|<signal>signal} " shape="record" ];
+  pulse_ox [ label="{In Port|<signal>signal} |component
+pulse_ox|{Out Port|<spo2_val>spo2_val} " shape="record" ];
+  infuse [ label="connection
+infuse" shape="record" ];
+  read [ label="connection
+read" shape="record" ];
+  cmd [ label="connection
+cmd" shape="record" ];
+  spo2 [ label="connection
+spo2" shape="record" ];
+  pump -> infuse [ tailport="dose" ];
+  infuse -> patient [ headport="pump_in" ];
+  patient -> read [ tailport="signal" ];
+  read -> pulse_ox [ headport="signal" ];
+  app -> cmd [ tailport="cmd_out" ];
+  cmd -> pump [ headport="cmd_in" ];
+  pulse_ox -> spo2 [ tailport="spo2_val" ];
+  spo2 -> app [ headport="spo2_val" ];
+}
