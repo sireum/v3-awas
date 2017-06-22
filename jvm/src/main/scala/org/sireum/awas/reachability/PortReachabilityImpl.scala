@@ -131,7 +131,7 @@ class PortReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
       val tnode = graph.getNode(target)
       if (snode.isDefined && tnode.isDefined) {
         val nodePath = reachPath(snode.get, tnode.get).map(p => p.map(_.getUri))
-        nodePath.map(getPathPorts)
+        nodePath.map(getPathPorts).map(_+source+target)
       } else {
         isetEmpty[ISet[ResourceUri]]
       }

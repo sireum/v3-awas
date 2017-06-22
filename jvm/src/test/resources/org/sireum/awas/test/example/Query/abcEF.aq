@@ -4,3 +4,12 @@ q3 = * -> A.aIn{Error.Low}
 q4 = 'q1 intersect 'q3
 q5 = A.aIn -> *
 q6 = 'q4 union 'q5
+//testing path queries
+q7 = A ~> C
+q8 = A.aIn ~> C.cOut
+q9 = A.aIn{Error.High} ~> C.cOut{Error.High} //no path exists between the source and target: expected empty
+q10 = A.aIn{Error.High} ~> B.bOut2{Error.Low}
+//testing type coercion
+q11 = 'q5 intersect 'q10
+//TODO: the following is not working as expected
+q12 = 'q7 union (A.aIn{Error.High} ~> B.bOut2{Error.Low})

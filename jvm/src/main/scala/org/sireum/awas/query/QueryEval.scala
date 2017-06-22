@@ -84,7 +84,6 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
           QRes(isetEmpty[UnitResult])
         }
       case "~>" =>
-        val er = ErrorReachability(graph)
         if (lhs.unitRes.nonEmpty && rhs.unitRes.nonEmpty) {
           pathReach(lhs, rhs)
         } else {

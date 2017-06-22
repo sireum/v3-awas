@@ -85,3 +85,43 @@ port-in:$$example/Query/abcEF.awas$C#cIn
 port-in-virtual:$$example/Query/abcEF.awas$B2C#B/bOut
 
  -------------- 
+q7
+ -------------- 
+{ component:$$example/Query/abcEF.awas#A, component:$$example/Query/abcEF.awas#B, component:$$example/Query/abcEF.awas#C, connection:$$example/Query/abcEF.awas#A2B, connection:$$example/Query/abcEF.awas#B2C } 
+
+ -------------- 
+q8
+ -------------- 
+{ port-in-virtual:$$example/Query/abcEF.awas$A2B#A/aOut, port-in-virtual:$$example/Query/abcEF.awas$B2C#B/bOut, port-in:$$example/Query/abcEF.awas$A#aIn, port-in:$$example/Query/abcEF.awas$B#bIn, port-in:$$example/Query/abcEF.awas$C#cIn, port-out-virtual:$$example/Query/abcEF.awas$A2B#B/bIn, port-out-virtual:$$example/Query/abcEF.awas$B2C#C/cIn, port-out:$$example/Query/abcEF.awas$A#aOut, port-out:$$example/Query/abcEF.awas$B#bOut, port-out:$$example/Query/abcEF.awas$C#cOut } 
+
+ -------------- 
+q9
+ -------------- 
+
+ -------------- 
+q10
+ -------------- 
+Path 01:
+port-out:$$example/Query/abcEF.awas$B#bOut2{error:$$example/Query/abcEF.awas$Error#Low}
+port-in:$$example/Query/abcEF.awas$B#bIn{error:$$example/Query/abcEF.awas$Error#Low}
+port-in-virtual:$$example/Query/abcEF.awas$A2B#A/aOut{error:$$example/Query/abcEF.awas$Error#Low}
+port-in:$$example/Query/abcEF.awas$A#aIn{error:$$example/Query/abcEF.awas$Error#High}
+port-out:$$example/Query/abcEF.awas$A#aOut{error:$$example/Query/abcEF.awas$Error#Low}
+port-out-virtual:$$example/Query/abcEF.awas$A2B#B/bIn{error:$$example/Query/abcEF.awas$Error#Low}
+ -------------- 
+q11
+ -------------- 
+port-in:$$example/Query/abcEF.awas$A#aIn
+port-out:$$example/Query/abcEF.awas$B#bOut2
+port-in:$$example/Query/abcEF.awas$B#bIn
+port-out-virtual:$$example/Query/abcEF.awas$A2B#B/bIn
+port-in-virtual:$$example/Query/abcEF.awas$A2B#A/aOut
+port-out:$$example/Query/abcEF.awas$A#aOut
+
+ -------------- 
+q12
+ -------------- 
+{ port-in-virtual:$$example/Query/abcEF.awas$A2B#A/aOut, port-in:$$example/Query/abcEF.awas$A#aIn, port-in:$$example/Query/abcEF.awas$B#bIn, port-out-virtual:$$example/Query/abcEF.awas$A2B#B/bIn, port-out:$$example/Query/abcEF.awas$A#aOut, port-out:$$example/Query/abcEF.awas$B#bOut2 } 
+{ component:$$example/Query/abcEF.awas#A, component:$$example/Query/abcEF.awas#B, component:$$example/Query/abcEF.awas#C, connection:$$example/Query/abcEF.awas#A2B, connection:$$example/Query/abcEF.awas#B2C } 
+
+ -------------- 

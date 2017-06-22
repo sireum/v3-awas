@@ -8,7 +8,6 @@ object QResMinType extends Enumeration {
   val Uri, PathUri, Error, PathError = Value
 }
 
-
 sealed trait QueryResult extends Product
 
 sealed trait UnitResult extends QueryResult
@@ -16,8 +15,8 @@ sealed trait UnitResult extends QueryResult
 final case class QRes(unitRes: ISet[UnitResult])
   extends QueryResult {
   def toPorts: ISet[ResourceUri] = {
-    var res = isetEmpty[ResourceUri]
-    this.unitRes.flatMap { (f: QueryResult) =>
+
+    var res = this.unitRes.flatMap { (f: QueryResult) =>
       f match {
         case u: UriResult => isetEmpty[ResourceUri] + u.value
         case p: PathResult => p.values
@@ -31,15 +30,16 @@ final case class QRes(unitRes: ISet[UnitResult])
 
   override def toString: String = {
     var res = ""
-    this.unitRes.toSeq.sortWith(_.hashCode() < _.hashCode()).foreach {
+    val sortedURes = this.unitRes.toSeq.sortWith(_.hashCode() < _.hashCode())
+    sortedURes.foreach {
       case u: UriResult => res = res + u.value.toString + "\n"
       case p: PathResult => res =
         res + "{ " + p.values.toSeq.sorted.mkString(", ") + " } \n"
       case e: ErrorResult => res =
         res + e.port.toString + "[ " + e.errors.toSeq.sorted.mkString(", ") + " ]\n"
       case ep: ErrorPathResult => res =
-        res + ep.path.toSeq.sortWith(_.hashCode() < _.hashCode()).map(it =>
-          it._1.toString + "[ " + it._2.toSeq.sorted.mkString(", ") + " ] \n")
+        res + "Path "+sortedURes.indexOf(ep)+1+":\n"+ep.path.toSeq.sortWith(_.hashCode() < _.hashCode()).map(it =>
+          it._1.toString + "{" + it._2.toSeq.sorted.mkString(", ") + "}").mkString("\n")
       case _ =>
     }
     res
