@@ -223,8 +223,29 @@ public class Antlr4AwasBaseListener implements Antlr4AwasListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProperty(Antlr4AwasParser.PropertyContext ctx) { }
-	/**
+    @Override
+    public void enterFlowc(Antlr4AwasParser.FlowcContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitFlowc(Antlr4AwasParser.FlowcContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterProperty(Antlr4AwasParser.PropertyContext ctx) {
+    }
+
+    /**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>

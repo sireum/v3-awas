@@ -51,7 +51,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("abce")
+      p.toLowerCase.contains("awas")
     }
 
     filesEqual.toVector.map { x =>

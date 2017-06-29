@@ -25,6 +25,7 @@
 
 package org.sireum.awas.query
 
+import org.sireum.awas.query.FilterID.FilterID
 import org.sireum.util.{IVector, ivector, ivectorEmpty}
 
 object QueryNode {
@@ -65,7 +66,15 @@ final case class NodeEmpty() extends PrimaryExpr
 final case class QueryName(id: Id) extends PrimaryExpr
 
 final case class NodeName(ids: QueryNode.Seq[Id],
-                          filter: Option[String])
+                          filter: Option[FilterID])
+
+object FilterID extends Enumeration {
+  type FilterID = Value
+  val IN = Value("in")
+  val OUT = Value("out")
+  val SOURCE = Value("source")
+  val SINK = Value("sink")
+}
 
 object Id {
   def apply(value: String): Id = {

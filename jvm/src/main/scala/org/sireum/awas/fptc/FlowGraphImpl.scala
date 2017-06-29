@@ -31,15 +31,14 @@ import java.util
 import org.jgrapht.DirectedGraph
 import org.jgrapht.ext._
 import org.jgrapht.graph.DefaultDirectedGraph
-import org.sireum.awas.graph.AwasGraphUpdate
 import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
-  self =>
+class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
+  self: FlowGraph[FlowNode] =>
 
-  type FEdge = FptcEdge[FlowNode]
+  type FEdge = FlowEdge[FlowNode]
   override val graph: DirectedGraph[FlowNode, FEdge] = {
     new DefaultDirectedGraph[FlowNode, FEdge](
       (source: FlowNode, target: FlowNode) => FlowEdgeImpl(self, source, target)
@@ -99,6 +98,7 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
   }
   var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
   var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
+  var edgePortsMap: IMap[Edge, (ResourceUri, ResourceUri)] = imapEmpty[Edge, (ResourceUri, ResourceUri)]
 
   override def toDot: String = {
     val de = new DOTExporter[FlowNode, FEdge](nIdProvider,
@@ -110,11 +110,7 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
   }
 
   def addPortEdge(port: ResourceUri, edge: FEdge): Unit = {
-    if (portEdgeMap.keySet.contains(port)) {
-      portEdgeMap += port -> (portEdgeMap(port) + edge)
-    } else {
-      portEdgeMap += port -> (isetEmpty[FEdge] + edge)
-    }
+    portEdgeMap += port -> (portEdgeMap.getOrElse(port, isetEmpty[FEdge]) + edge)
   }
 
   override def addEdge(from: FlowNode, to: FlowNode): FlowEdgeImpl = {
@@ -129,8 +125,27 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
     n
   }
 
+  override def addEdgePortRelation(edge: FlowEdge[FlowNode],
+                                   source: ResourceUri,
+                                   target: ResourceUri): Unit = {
+    assert(!edgePortsMap.contains(edge))
+    edgePortsMap += (edge -> (source, target))
+  }
+
 
   override def getNode(n: FlowNode): FlowNode = n
+
+  def getNode(uri: ResourceUri): Option[FlowNode] = {
+    if (uri.startsWith(H.COMPONENT_TYPE) ||
+      uri.startsWith(H.CONNECTION_TYPE)) {
+      FlowNode.getNode(uri)
+    } else {
+      portNodeMap.get(uri)
+    }
+  }
+
+  override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
+    portEdgeMap.getOrElse(port, isetEmpty[FEdge])
 
   override def getSuccessorPorts(port: ResourceUri): CSet[ResourceUri] = {
     var result = isetEmpty[ResourceUri]
@@ -152,18 +167,6 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
     result
   }
 
-  def getNode(uri: ResourceUri): Option[FlowNode] = {
-    if (uri.startsWith(H.COMPONENT_TYPE) ||
-      uri.startsWith(H.CONNECTION_TYPE)) {
-      FlowNode.getNode(uri)
-    } else {
-      portNodeMap.get(uri)
-    }
-  }
-
-  override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
-    portEdgeMap.getOrElse(port, isetEmpty[FEdge])
-
   override def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri] = {
     var result = isetEmpty[ResourceUri]
     val node = getNode(port)
@@ -182,4 +185,10 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with AwasGraphUpdate[FlowNode] {
     }
     result
   }
+
+  override def getPortsFromEdge(edge: Edge): Option[(ResourceUri, ResourceUri)] = {
+    edgePortsMap.get(edge)
+  }
 }
+
+

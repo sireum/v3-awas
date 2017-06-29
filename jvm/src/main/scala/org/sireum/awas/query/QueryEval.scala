@@ -40,6 +40,8 @@ object QueryEval {
 }
 
 final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
+  val H = SymbolTableHelper
+
   var result: ILinkedMap[String, QRes] = ilinkedMapEmpty[String, QRes]
 
   var queries: ILinkedMap[String, QueryExpr] = ilinkedMapEmpty[String, QueryExpr]
@@ -170,31 +172,17 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
   def eval(nn: NodeName, errorSet: ISeq[ISeq[Id]]): QRes = {
     var res = isetEmpty[ResourceUri]
     if (errorSet.isEmpty) {
-      val uri = getCompOrPortUri(nn)
-      if (uri.isDefined) {
-        res = res + uri.get
-      }
-      QRes(res.map(UriResult))
+      val uris = getCompOrPortUri(nn)
+      QRes(uris.map(UriResult))
     } else {
-      assert(nn.ids.length == 2)
-      val uri = getCompOrPortUri(nn)
-      if (uri.isDefined) {
-        var errorUri = isetEmpty[ResourceUri]
-        errorSet.foreach { f =>
-          val x = SymbolTableHelper.getErrorUri(st, f.map(_.value).mkString("."))
-          if (x.isDefined) {
-            errorUri = errorUri + x.get
-          }
-        }
-        QRes(isetEmpty[UnitResult] +
-          ErrorResult(uri.get, errorUri))
-      } else {
-        QRes(isetEmpty[UnitResult])
-      }
+      val uris = getCompOrPortUri(nn)
+      val errorUri = errorSet.flatMap(es =>
+        SymbolTableHelper.getErrorUri(st, es.map(_.value).mkString("."))).toSet
+      QRes(isetEmpty[UnitResult] ++ uris.map(ErrorResult(_, errorUri)))
     }
   }
 
-  def getCompOrPortUri(n: NodeName): Option[ResourceUri] = {
+  def getCompOrPortUri(n: NodeName): ISet[ResourceUri] = {
     if (n.ids.length == 2) {
       val compId = n.ids(0)
       val pid = n.ids(1)
@@ -202,16 +190,23 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
       if (comp.isDefined) {
         val port = st.component(comp.get).ports.find(_.id.value == pid.value)
         if (port.isDefined && Resource.getResource(port.get).isDefined) {
-          Some(Resource.getResource(port.get).get.toUri)
+          isetEmpty[ResourceUri] + Resource.getResource(port.get).get.toUri
         } else {
-          None
+          isetEmpty[ResourceUri]
         }
       } else {
-        None
+        isetEmpty[ResourceUri]
+      }
+    } else if (n.ids.length == 1 && n.filter.isDefined) {
+      val nodes = graph.nodes.filter(_.getUri.endsWith(H.ID_SEPARATOR + n.ids(0).value))
+
+      n.filter.get match {
+        case FilterID.IN => nodes.flatMap(_.inPorts).toSet
+        case FilterID.OUT => nodes.flatMap(_.outPorts).toSet
+        case _ => isetEmpty[ResourceUri]
       }
     } else {
-      val compId = n.ids(0)
-      st.components.find(_.endsWith(compId.value))
+      graph.nodes.filter(_.getUri.endsWith(H.ID_SEPARATOR + n.ids(0).value)).map(_.getUri).toSet
     }
   }
 }

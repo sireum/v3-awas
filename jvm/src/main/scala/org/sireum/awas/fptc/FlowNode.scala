@@ -46,7 +46,7 @@ trait FptcNodeUpdate {
 }
 
 object FlowNode {
-  type Edge = FptcEdge[FlowNode]
+  type Edge = FlowEdge[FlowNode]
   private var nodepool = imapEmpty[ResourceUri, FlowNode]
 
   def createNode(uri: ResourceUri, st: SymbolTable): FlowNode = {

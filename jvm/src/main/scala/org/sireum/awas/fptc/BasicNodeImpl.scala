@@ -25,7 +25,7 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
+import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.isetEmpty
 
@@ -39,20 +39,8 @@ class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
     val compST = st.componentTable(uri)
     portList ++= compST.ports.toSeq
   } else {
-    val conDecl = st.connection(uri)
-    require(Resource.getResource(conDecl).isDefined)
-    val inPortUri = Resource(H.PORT_IN_VIRTUAL_TYPE,
-      Resource.getResource(conDecl).get,
-      conDecl.fromComp.value.map(_.value).mkString("/") + "/" + conDecl.fromPort.value,
-      Some(true))
-
-    val outPortUri = Resource(H.PORT_OUT_VIRTUAL_TYPE,
-      Resource.getResource(conDecl).get,
-      conDecl.toComp.value.map(_.value).mkString("/") + "/" + conDecl.toPort.value,
-      Some(true))
-
-    portList += inPortUri.toUri
-    portList += outPortUri.toUri
+    val connST = st.connectionTable(uri)
+    portList ++= connST.ports.toSeq
   }
 
   override def getResourceType: String = if(uri.startsWith(H.COMPONENT_TYPE)) H.COMPONENT_TYPE

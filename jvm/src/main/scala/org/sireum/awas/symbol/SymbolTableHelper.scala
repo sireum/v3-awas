@@ -40,6 +40,10 @@ object SymbolTableHelper {
   //dummy parent uri
   val HEAD = "head"
 
+  //connection port ID
+  val INPUT_CONN_PORT_ID = "in"
+  val OUTPUT_CONN_PORT_ID = "out"
+
   val MODEL_TYPE = "model"
 
   val TYPE_TYPE = "type"
@@ -137,8 +141,6 @@ object SymbolTableHelper {
       }
     }
   }
-
-  def isFlowDefined(cst: ComponentSymbolTable): Boolean = cst.flows.nonEmpty
 
   def getCompId(st: SymbolTable, compUri: ResourceUri): Option[String] = {
     if (st.components.toSet.contains(compUri)) {

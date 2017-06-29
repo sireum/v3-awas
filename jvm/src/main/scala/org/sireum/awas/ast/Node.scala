@@ -73,10 +73,9 @@ final case class ComponentDecl(compName: Id,
 final case class ConnectionDecl(connName: Id,
                                 fromComp: Name,
                                 fromPort: Id,
-                                fromE:Node.Seq[Name],
                                 toComp: Name,
                                 toPort: Id,
-                                toE:Node.Seq[Name],
+                                connFlow: Node.Seq[CFlow],
                                 behaviour: Option[Behaviour],
                                 properties:Node.Seq[Property]) extends Node
 
@@ -90,6 +89,10 @@ final case class Flow(id: Id,
                       fromE: Node.Seq[Fault],
                       to:Option[Id],
                       toE: Node.Seq[Fault]) extends Node
+
+final case class CFlow(id: Id,
+                       fromE: Node.Seq[Fault] = Node.emptySeq[Fault],
+                       toE: Node.Seq[Fault] = Node.emptySeq[Fault]) extends Node
 
 final case class Property(id: Id, propType: Type, value: Option[Init]) extends Node
 

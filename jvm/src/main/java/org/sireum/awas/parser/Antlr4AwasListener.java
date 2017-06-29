@@ -189,8 +189,21 @@ public interface Antlr4AwasListener extends ParseTreeListener {
 	 */
 	void exitFlow(Antlr4AwasParser.FlowContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Antlr4AwasParser#property}.
-	 * @param ctx the parse tree
+     * Enter a parse tree produced by {@link Antlr4AwasParser#flowc}.
+     * @param ctx the parse tree
+     */
+    void enterFlowc(Antlr4AwasParser.FlowcContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link Antlr4AwasParser#flowc}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitFlowc(Antlr4AwasParser.FlowcContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link Antlr4AwasParser#property}.
+     * @param ctx the parse tree
 	 */
 	void enterProperty(Antlr4AwasParser.PropertyContext ctx);
 	/**

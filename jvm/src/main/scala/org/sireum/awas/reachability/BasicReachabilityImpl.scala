@@ -63,11 +63,12 @@ class BasicReachabilityImpl(graph: FlowGraph[FlowNode]) extends BasicReachabilit
       workList = workList :+ criterion
       while (workList.nonEmpty) {
         val current = workList.head
-        if (!result.contains(current))
+        if (!result.contains(current)) {
           workList = workList ++ (if (isForward) graph.getSuccessorNodes(current)
           else graph.getPredecessorNodes(current))
+          result += current
+        }
         workList = workList.tail
-        result += current
       }
     }
     result

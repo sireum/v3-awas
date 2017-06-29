@@ -65,6 +65,8 @@ trait SymbolTable {
 
   def connection(connectionUri: ResourceUri): ConnectionDecl
 
+  def connectionTable(connUri: ResourceUri): ConnectionSymbolTable
+
   def compStateMachine(compUri: ResourceUri): Option[ResourceUri]
 
   def constants: Iterable[ResourceUri]
@@ -85,6 +87,7 @@ sealed case class SymbolTableData
  componentDeclTable: MMap[ResourceUri, ComponentDecl] = mmapEmpty,
  componentSymbolTable: MMap[ResourceUri, ComponentSymbolTable] = mmapEmpty,
  connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,
+ connectionSymbolTabel: MMap[ResourceUri, ConnectionSymbolTable] = mmapEmpty,
  compSMTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
  compTypeTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty
@@ -98,6 +101,8 @@ class STProducer extends SymbolTable {
   val compSymbolTableMap: MMap[ResourceUri, CompST] = mmapEmpty[ResourceUri, CompST]
 
   val compMap: MMap[ResourceUri, CompST] = mmapEmpty[ResourceUri, CompST]
+
+  val connMap: MMap[ResourceUri, ConnST] = mmapEmpty[ResourceUri, ConnST]
 
   val modelMap: MMap[ResourceUri, Model] = mmapEmpty[ResourceUri, Model]
 
@@ -144,6 +149,17 @@ class STProducer extends SymbolTable {
   def componentSymbolTableProducer(curi: ResourceUri): CompST = {
     assert(tables.componentDeclTable.contains(curi))
     compMap.getOrElseUpdate(curi, new CompST(curi))
+  }
+
+  def connectionTable(connUri: ResourceUri): ConnectionSymbolTable = {
+    val nST = connectionSymbolTableProducer(connUri)
+    tables.connectionSymbolTabel(connUri) = nST
+    nST
+  }
+
+  def connectionSymbolTableProducer(curi: ResourceUri): ConnST = {
+    assert(tables.connectionTable.keySet.contains(curi))
+    connMap.getOrElseUpdate(curi, new ConnST(curi))
   }
 
   override def compStateMachine(compUri: ResourceUri): Option[ResourceUri] = {
@@ -206,7 +222,6 @@ class STProducer extends SymbolTable {
     override def port(portUri: ResourceUri): Option[Port] =
       Option(tables.portTable.getOrElse(portUri, null))
 
-
     override def propagation(portUri: ResourceUri): Set[ResourceUri] = {
       if(tables.propagationTable.contains(portUri))
         tables.propagationTable(portUri).toSet
@@ -217,6 +232,24 @@ class STProducer extends SymbolTable {
     override def flows: Iterable[ResourceUri] = tables.flowTable.keys
 
     override def flow(flowUri: ResourceUri): Flow = tables.flowTable(flowUri)
+
+    override def flowRelate(portUri: ResourceUri): Set[ResourceUri] = {
+      tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
+    }
+  }
+
+  class ConnST(val connUri: ResourceUri) extends ConnectionSymbolTable {
+    val tables = ConnectionTableData()
+
+    override def symbolTable: SymbolTable = st
+
+    override def connection: ConnectionDecl = st.tables.connectionTable(connUri)
+
+    override def ports: Iterable[ResourceUri] = tables.portTable
+
+    override def flows: Iterable[ResourceUri] = tables.flowTable.keys
+
+    override def flow(flowUri: ResourceUri): CFlow = tables.flowTable(flowUri)
 
     override def flowRelate(portUri: ResourceUri): Set[ResourceUri] = {
       tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
@@ -249,6 +282,26 @@ sealed case class ComponentTableData
  portTable: MMap[ResourceUri, Port] = mmapEmpty,
  propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  flowTable: MMap[ResourceUri, Flow] = mmapEmpty,
+ flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty
+)
+
+trait ConnectionSymbolTable {
+  def symbolTable: SymbolTable
+
+  def connection: ConnectionDecl
+
+  def ports: Iterable[ResourceUri]
+
+  def flows: Iterable[ResourceUri]
+
+  def flow(flowUri: ResourceUri): CFlow
+
+  def flowRelate(portUri: ResourceUri): Set[ResourceUri]
+}
+
+sealed case class ConnectionTableData
+(portTable: MSet[ResourceUri] = msetEmpty,
+ flowTable: MMap[ResourceUri, CFlow] = mmapEmpty,
  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty
 )
 

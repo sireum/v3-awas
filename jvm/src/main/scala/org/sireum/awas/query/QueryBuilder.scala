@@ -89,7 +89,17 @@ final class QueryBuilder private() {
   }
 
   def build(ctx: NodeNameContext): NodeName = {
-    NodeName(ctx.ids.map(buildId), if (ctx.f != null) Some(ctx.f.getText) else None)
+    if (ctx.f != null) {
+      ctx.f.getText.toLowerCase match {
+        case "in" => NodeName(ctx.ids.map(buildId), Some(FilterID.IN))
+        case "out" => NodeName(ctx.ids.map(buildId), Some(FilterID.OUT))
+        case "source" => NodeName(ctx.ids.map(buildId), Some(FilterID.SOURCE))
+        case "sink" => NodeName(ctx.ids.map(buildId), Some(FilterID.SINK))
+        case _ => NodeName(ctx.ids.map(buildId), None)
+      }
+    } else {
+      NodeName(ctx.ids.map(buildId), None)
+    }
   }
 
   def buildId(t: Token): Id = {

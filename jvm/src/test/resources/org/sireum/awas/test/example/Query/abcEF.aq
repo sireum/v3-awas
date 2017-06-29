@@ -13,3 +13,9 @@ q10 = A.aIn{Error.High} ~> B.bOut2{Error.Low}
 q11 = 'q5 intersect 'q10
 //TODO: the following is not working as expected
 q12 = 'q7 union (A.aIn{Error.High} ~> B.bOut2{Error.Low})
+//testing connection error
+q13 = B2C:in{Error.Low} -> *
+q14 = B2C:out{Error.Low} -> *
+q15 = * -> A2B:out{Error.Low}
+q16 = A:in{Error.High} -> *
+q17 = q1 - q16 //this should be empty

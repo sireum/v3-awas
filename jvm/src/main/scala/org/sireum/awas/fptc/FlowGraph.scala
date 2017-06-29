@@ -29,7 +29,7 @@ package org.sireum.awas.fptc
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.{Builder, Model}
-import org.sireum.awas.graph.{AwasEdge, AwasGraph}
+import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -45,13 +45,22 @@ trait FlowGraph[Node] extends AwasGraph[Node] {
   def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri]
 
   def getNode(port: ResourceUri): Option[Node]
+
+  def getPortsFromEdge(edge: Edge): Option[(ResourceUri, ResourceUri)]
 }
 
-trait FptcEdge[Node] extends AwasEdge[Node] {
+trait FlowGraphUpdate[Node] extends AwasGraphUpdate[Node] {
+  self: FlowGraph[Node] =>
+
+  def addEdgePortRelation(edge: FlowEdge[Node], source: ResourceUri, target: ResourceUri): Unit
+}
+
+trait FlowEdge[Node] extends AwasEdge[Node] {
   def sourcePort: Option[ResourceUri]
 
   def targetPort: Option[ResourceUri]
 }
+
 
 /**
   * Factory Methods to build graph
@@ -99,6 +108,7 @@ object FlowGraph {
             val fromPortUri = fromPortRes.get.toUri
             result.addPortEdge(fromPortUri, fedge)
             result.addPortEdge(connNode.inPorts.head, fedge)
+            result.addEdgePortRelation(fedge, fromPortUri, connNode.inPorts.head)
           }
           val tedge = result.addEdge(connNode, toNode.get)
           val toPortRes = Resource.getResource(st.connection(conn).toPort)
@@ -106,6 +116,7 @@ object FlowGraph {
             val toPortUri = toPortRes.get.toUri
             result.addPortEdge(toPortUri, tedge)
             result.addPortEdge(connNode.outPorts.head, tedge)
+            result.addEdgePortRelation(tedge, connNode.outPorts.head, toPortUri)
           }
         }
     }

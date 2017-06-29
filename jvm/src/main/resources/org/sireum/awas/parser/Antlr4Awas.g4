@@ -41,10 +41,9 @@ componentDecl
 connectionDecl
   : connName=ID ':'
     fromComponent=name '.' fromPort=ID
-    ( '{' fromE+=name ( ',' fromE+=name )* '}' )?
     '->'
     toComponent=name '.' toPort=ID
-    ( '{' toE+=name ( ',' toE+=name )* '}' )?
+    ( 'flows' flowc* )?
     ( 'behavior' behaviour)?
     ( 'properties' property* )?
   ;
@@ -89,6 +88,13 @@ flow
      (from=ID ('{' fromE+=fault ( ',' fromE+=fault )* '}')? | '*')
     '->'
     (to=ID ('{' toE+=fault ( ',' toE+=fault )* '}')? | '*')
+  ;
+
+flowc
+  :  id = ID ':'
+  (('{' fromE+=fault ( ',' fromE+=fault )* '}')? | '*')
+  '->'
+  (('{' toE+=fault ( ',' toE+=fault )* '}')? | '*')
   ;
 
 property

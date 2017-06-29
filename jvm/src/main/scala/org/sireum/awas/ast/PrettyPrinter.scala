@@ -246,30 +246,24 @@ final class PrettyPrinter(sb: StringBuilder) {
     print(cd.fromComp)
     sb.append(".")
     print(cd.fromPort)
-    if(cd.fromE.nonEmpty) {
-      sb.append("{")
-      print(cd.fromE.head)
-      for(et <- cd.fromE.tail) {
-        sb.append(", ")
-        print(et)
-      }
-      sb.append("}")
-    }
+
     sb.append(" -> ")
     print(cd.toComp)
     sb.append(".")
     print(cd.toPort)
-
-    if(cd.toE.nonEmpty) {
-      sb.append("{")
-      print(cd.toE.head)
-      for(et <- cd.toE.tail) {
-        sb.append(", ")
-        print(et)
-      }
-      sb.append("}")
-    }
     println()
+
+    if (cd.connFlow.nonEmpty) {
+      printIndent(indent + 1)
+      sb.append("flows")
+      println()
+      print(cd.connFlow.head, indent + 2)
+      for (cp <- cd.connFlow.tail) {
+        println()
+        print(cp, indent + 2)
+      }
+      println()
+    }
     if(cd.behaviour.isDefined) {
       printIndent(indent+1)
       sb.append("behavior")
@@ -520,7 +514,36 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
   }
 
-
+  def print(f: CFlow, indent: Natural): Unit = {
+    printIndent(indent)
+    print(f.id)
+    sb.append(" : ")
+    if (f.fromE.isEmpty) {
+      sb.append("*")
+    }
+    else {
+      sb.append("{")
+      print(f.fromE.head)
+      for (fe <- f.fromE.tail) {
+        sb.append(", ")
+        print(fe)
+      }
+      sb.append("}")
+    }
+    sb.append(" -> ")
+    if (f.toE.isEmpty) {
+      sb.append("*")
+    }
+    else {
+      sb.append("{")
+      print(f.toE.head)
+      for (te <- f.toE.tail) {
+        sb.append(", ")
+        print(te)
+      }
+      sb.append("}")
+    }
+  }
 
   def print(p : Property, indent: Natural) : Unit={
     printIndent(indent)

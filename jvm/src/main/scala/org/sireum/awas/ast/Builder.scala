@@ -86,10 +86,9 @@ final class Builder private() {
     ConnectionDecl(buildId(ctx.connName),
       build(ctx.fromComponent),
       buildId(ctx.fromPort),
-      ctx.fromE.map(build),
       build(ctx.toComponent),
       buildId(ctx.toPort),
-      ctx.toE.map(build),
+      ctx.flowc().map(build),
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
       ctx.property().map(build)) at ctx
   }
@@ -130,6 +129,12 @@ final class Builder private() {
       arbitraryToken(ctx.from),
       ctx.fromE.map(build),
       arbitraryToken(ctx.to),
+      ctx.toE.map(build)) at ctx
+  }
+
+  def build(ctx: FlowcContext): CFlow = {
+    CFlow(buildId(ctx.id),
+      ctx.fromE.map(build),
       ctx.toE.map(build)) at ctx
   }
 

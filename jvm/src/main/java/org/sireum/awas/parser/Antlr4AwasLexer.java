@@ -12,7 +12,14 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Antlr4AwasLexer extends Lexer {
-	public static final int
+    static {
+        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
+    }
+
+    protected static final DFA[] _decisionToDFA;
+    protected static final PredictionContextCache _sharedContextCache =
+            new PredictionContextCache();
+    public static final int
             T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
             T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
             T__17 = 18, T__18 = 19, T__19 = 20, T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24,
@@ -21,6 +28,14 @@ public class Antlr4AwasLexer extends Lexer {
             T__38 = 39, T__39 = 40, T__40 = 41, T__41 = 42, T__42 = 43, T__43 = 44, T__44 = 45,
             T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, INTEGER = 51, REAL = 52,
             STRING = 53, ID = 54, WS = 55, COMMENT = 56, LINE_COMMENT = 57, ERROR_CHAR = 58;
+    public static String[] channelNames = {
+            "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+    };
+
+    public static String[] modeNames = {
+            "DEFAULT_MODE"
+    };
+
     public static final String[] ruleNames = {
             "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
             "T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16",
@@ -31,11 +46,94 @@ public class Antlr4AwasLexer extends Lexer {
             "T__49", "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT",
             "ERROR_CHAR"
     };
+
+    private static final String[] _LITERAL_NAMES = {
+            null, "'types'", "'behavior'", "'constants'", "'components'", "'connections'",
+            "':'", "'with'", "','", "'ports'", "'propagations'", "'flows'", "'transitions'",
+            "'properties'", "'.'", "'->'", "'alias'", "'='", "'enum'", "'extends'",
+            "'{'", "'}'", "'lattice'", "'record'", "'in'", "'out'", "'*'", "'-['",
+            "']->'", "'('", "')'", "'Option'", "'['", "']'", "'Set'", "'Seq'", "'Map'",
+            "'Boolean'", "'Integer'", "'Real'", "'String'", "'Component'", "'Port'",
+            "'_'", "'true'", "'false'", "'None'", "'Some'", "'::'", "'states'", "'events'"
+    };
+    private static final String[] _SYMBOLIC_NAMES = {
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT",
+            "LINE_COMMENT", "ERROR_CHAR"
+    };
+    public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+
     /**
      * @deprecated Use {@link #VOCABULARY} instead.
      */
     @Deprecated
     public static final String[] tokenNames;
+
+    static {
+        tokenNames = new String[_SYMBOLIC_NAMES.length];
+        for (int i = 0; i < tokenNames.length; i++) {
+            tokenNames[i] = VOCABULARY.getLiteralName(i);
+            if (tokenNames[i] == null) {
+                tokenNames[i] = VOCABULARY.getSymbolicName(i);
+            }
+
+            if (tokenNames[i] == null) {
+                tokenNames[i] = "<INVALID>";
+            }
+        }
+    }
+
+    @Override
+    @Deprecated
+    public String[] getTokenNames() {
+        return tokenNames;
+    }
+
+    @Override
+
+    public Vocabulary getVocabulary() {
+        return VOCABULARY;
+    }
+
+
+    public Antlr4AwasLexer(CharStream input) {
+        super(input);
+        _interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+    }
+
+    @Override
+    public String getGrammarFileName() {
+        return "Antlr4Awas.g4";
+    }
+
+    @Override
+    public String[] getRuleNames() {
+        return ruleNames;
+    }
+
+    @Override
+    public String getSerializedATN() {
+        return _serializedATN;
+    }
+
+    @Override
+    public String[] getChannelNames() {
+        return channelNames;
+    }
+
+    @Override
+    public String[] getModeNames() {
+        return modeNames;
+    }
+
+    @Override
+    public ATN getATN() {
+        return _ATN;
+    }
+
     public static final String _serializedATN =
             "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2<\u01e2\b\1\4\2\t" +
                     "\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13" +
@@ -51,9 +149,9 @@ public class Antlr4AwasLexer extends Lexer {
                     "\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13" +
                     "\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r" +
                     "\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3" +
-                    "\16\3\16\3\16\3\17\3\17\3\20\3\20\3\21\3\21\3\22\3\22\3\22\3\23\3\23\3" +
-                    "\23\3\23\3\23\3\23\3\24\3\24\3\25\3\25\3\25\3\25\3\25\3\26\3\26\3\26\3" +
-                    "\26\3\26\3\26\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\30\3" +
+                    "\16\3\16\3\16\3\17\3\17\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3" +
+                    "\22\3\22\3\23\3\23\3\23\3\23\3\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3" +
+                    "\24\3\25\3\25\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\30\3" +
                     "\30\3\30\3\30\3\30\3\30\3\30\3\31\3\31\3\31\3\32\3\32\3\32\3\32\3\33\3" +
                     "\33\3\34\3\34\3\34\3\35\3\35\3\35\3\35\3\36\3\36\3\37\3\37\3 \3 \3 \3" +
                     " \3 \3 \3 \3!\3!\3\"\3\"\3#\3#\3#\3#\3$\3$\3$\3$\3%\3%\3%\3%\3&\3&\3&" +
@@ -86,8 +184,8 @@ public class Antlr4AwasLexer extends Lexer {
                     "\3w\3\2\2\2\5}\3\2\2\2\7\u0086\3\2\2\2\t\u0090\3\2\2\2\13\u009b\3\2\2" +
                     "\2\r\u00a7\3\2\2\2\17\u00a9\3\2\2\2\21\u00ae\3\2\2\2\23\u00b0\3\2\2\2" +
                     "\25\u00b6\3\2\2\2\27\u00c3\3\2\2\2\31\u00c9\3\2\2\2\33\u00d5\3\2\2\2\35" +
-                    "\u00e0\3\2\2\2\37\u00e2\3\2\2\2!\u00e4\3\2\2\2#\u00e6\3\2\2\2%\u00e9\3" +
-                    "\2\2\2\'\u00ef\3\2\2\2)\u00f1\3\2\2\2+\u00f6\3\2\2\2-\u00fe\3\2\2\2/\u0106" +
+                    "\u00e0\3\2\2\2\37\u00e2\3\2\2\2!\u00e5\3\2\2\2#\u00eb\3\2\2\2%\u00ed\3" +
+                    "\2\2\2\'\u00f2\3\2\2\2)\u00fa\3\2\2\2+\u00fc\3\2\2\2-\u00fe\3\2\2\2/\u0106" +
                     "\3\2\2\2\61\u010d\3\2\2\2\63\u0110\3\2\2\2\65\u0114\3\2\2\2\67\u0116\3" +
                     "\2\2\29\u0119\3\2\2\2;\u011d\3\2\2\2=\u011f\3\2\2\2?\u0121\3\2\2\2A\u0128" +
                     "\3\2\2\2C\u012a\3\2\2\2E\u012c\3\2\2\2G\u0130\3\2\2\2I\u0134\3\2\2\2K" +
@@ -123,25 +221,25 @@ public class Antlr4AwasLexer extends Lexer {
                     "\u00d8\7q\2\2\u00d8\u00d9\7r\2\2\u00d9\u00da\7g\2\2\u00da\u00db\7t\2\2" +
                     "\u00db\u00dc\7v\2\2\u00dc\u00dd\7k\2\2\u00dd\u00de\7g\2\2\u00de\u00df" +
                     "\7u\2\2\u00df\34\3\2\2\2\u00e0\u00e1\7\60\2\2\u00e1\36\3\2\2\2\u00e2\u00e3" +
-                    "\7}\2\2\u00e3 \3\2\2\2\u00e4\u00e5\7\177\2\2\u00e5\"\3\2\2\2\u00e6\u00e7" +
-                    "\7/\2\2\u00e7\u00e8\7@\2\2\u00e8$\3\2\2\2\u00e9\u00ea\7c\2\2\u00ea\u00eb" +
-                    "\7n\2\2\u00eb\u00ec\7k\2\2\u00ec\u00ed\7c\2\2\u00ed\u00ee\7u\2\2\u00ee" +
-                    "&\3\2\2\2\u00ef\u00f0\7?\2\2\u00f0(\3\2\2\2\u00f1\u00f2\7g\2\2\u00f2\u00f3" +
-                    "\7p\2\2\u00f3\u00f4\7w\2\2\u00f4\u00f5\7o\2\2\u00f5*\3\2\2\2\u00f6\u00f7" +
-                    "\7g\2\2\u00f7\u00f8\7z\2\2\u00f8\u00f9\7v\2\2\u00f9\u00fa\7g\2\2\u00fa" +
-                    "\u00fb\7p\2\2\u00fb\u00fc\7f\2\2\u00fc\u00fd\7u\2\2\u00fd,\3\2\2\2\u00fe" +
-                    "\u00ff\7n\2\2\u00ff\u0100\7c\2\2\u0100\u0101\7v\2\2\u0101\u0102\7v\2\2" +
-                    "\u0102\u0103\7k\2\2\u0103\u0104\7e\2\2\u0104\u0105\7g\2\2\u0105.\3\2\2" +
-                    "\2\u0106\u0107\7t\2\2\u0107\u0108\7g\2\2\u0108\u0109\7e\2\2\u0109\u010a" +
-                    "\7q\2\2\u010a\u010b\7t\2\2\u010b\u010c\7f\2\2\u010c\60\3\2\2\2\u010d\u010e" +
-                    "\7k\2\2\u010e\u010f\7p\2\2\u010f\62\3\2\2\2\u0110\u0111\7q\2\2\u0111\u0112" +
-                    "\7w\2\2\u0112\u0113\7v\2\2\u0113\64\3\2\2\2\u0114\u0115\7,\2\2\u0115\66" +
-                    "\3\2\2\2\u0116\u0117\7/\2\2\u0117\u0118\7]\2\2\u01188\3\2\2\2\u0119\u011a" +
-                    "\7_\2\2\u011a\u011b\7/\2\2\u011b\u011c\7@\2\2\u011c:\3\2\2\2\u011d\u011e" +
-                    "\7*\2\2\u011e<\3\2\2\2\u011f\u0120\7+\2\2\u0120>\3\2\2\2\u0121\u0122\7" +
-                    "Q\2\2\u0122\u0123\7r\2\2\u0123\u0124\7v\2\2\u0124\u0125\7k\2\2\u0125\u0126" +
-                    "\7q\2\2\u0126\u0127\7p\2\2\u0127@\3\2\2\2\u0128\u0129\7]\2\2\u0129B\3" +
-                    "\2\2\2\u012a\u012b\7_\2\2\u012bD\3\2\2\2\u012c\u012d\7U\2\2\u012d\u012e" +
+                    "\7/\2\2\u00e3\u00e4\7@\2\2\u00e4 \3\2\2\2\u00e5\u00e6\7c\2\2\u00e6\u00e7" +
+                    "\7n\2\2\u00e7\u00e8\7k\2\2\u00e8\u00e9\7c\2\2\u00e9\u00ea\7u\2\2\u00ea" +
+                    "\"\3\2\2\2\u00eb\u00ec\7?\2\2\u00ec$\3\2\2\2\u00ed\u00ee\7g\2\2\u00ee" +
+                    "\u00ef\7p\2\2\u00ef\u00f0\7w\2\2\u00f0\u00f1\7o\2\2\u00f1&\3\2\2\2\u00f2" +
+                    "\u00f3\7g\2\2\u00f3\u00f4\7z\2\2\u00f4\u00f5\7v\2\2\u00f5\u00f6\7g\2\2" +
+                    "\u00f6\u00f7\7p\2\2\u00f7\u00f8\7f\2\2\u00f8\u00f9\7u\2\2\u00f9(\3\2\2" +
+                    "\2\u00fa\u00fb\7}\2\2\u00fb*\3\2\2\2\u00fc\u00fd\7\177\2\2\u00fd,\3\2" +
+                    "\2\2\u00fe\u00ff\7n\2\2\u00ff\u0100\7c\2\2\u0100\u0101\7v\2\2\u0101\u0102" +
+                    "\7v\2\2\u0102\u0103\7k\2\2\u0103\u0104\7e\2\2\u0104\u0105\7g\2\2\u0105" +
+                    ".\3\2\2\2\u0106\u0107\7t\2\2\u0107\u0108\7g\2\2\u0108\u0109\7e\2\2\u0109" +
+                    "\u010a\7q\2\2\u010a\u010b\7t\2\2\u010b\u010c\7f\2\2\u010c\60\3\2\2\2\u010d" +
+                    "\u010e\7k\2\2\u010e\u010f\7p\2\2\u010f\62\3\2\2\2\u0110\u0111\7q\2\2\u0111" +
+                    "\u0112\7w\2\2\u0112\u0113\7v\2\2\u0113\64\3\2\2\2\u0114\u0115\7,\2\2\u0115" +
+                    "\66\3\2\2\2\u0116\u0117\7/\2\2\u0117\u0118\7]\2\2\u01188\3\2\2\2\u0119" +
+                    "\u011a\7_\2\2\u011a\u011b\7/\2\2\u011b\u011c\7@\2\2\u011c:\3\2\2\2\u011d" +
+                    "\u011e\7*\2\2\u011e<\3\2\2\2\u011f\u0120\7+\2\2\u0120>\3\2\2\2\u0121\u0122" +
+                    "\7Q\2\2\u0122\u0123\7r\2\2\u0123\u0124\7v\2\2\u0124\u0125\7k\2\2\u0125" +
+                    "\u0126\7q\2\2\u0126\u0127\7p\2\2\u0127@\3\2\2\2\u0128\u0129\7]\2\2\u0129" +
+                    "B\3\2\2\2\u012a\u012b\7_\2\2\u012bD\3\2\2\2\u012c\u012d\7U\2\2\u012d\u012e" +
                     "\7g\2\2\u012e\u012f\7v\2\2\u012fF\3\2\2\2\u0130\u0131\7U\2\2\u0131\u0132" +
                     "\7g\2\2\u0132\u0133\7s\2\2\u0133H\3\2\2\2\u0134\u0135\7O\2\2\u0135\u0136" +
                     "\7c\2\2\u0136\u0137\7r\2\2\u0137J\3\2\2\2\u0138\u0139\7D\2\2\u0139\u013a" +
@@ -197,51 +295,6 @@ public class Antlr4AwasLexer extends Lexer {
                     "\u01a3\u01a9\u01ab\u01b4\u01bb\u01be\u01c3\u01cd\u01db\3\b\2\2";
     public static final ATN _ATN =
             new ATNDeserializer().deserialize(_serializedATN.toCharArray());
-    protected static final DFA[] _decisionToDFA;
-    protected static final PredictionContextCache _sharedContextCache =
-            new PredictionContextCache();
-    private static final String[] _LITERAL_NAMES = {
-            null, "'types'", "'behavior'", "'constants'", "'components'", "'connections'",
-            "':'", "'with'", "','", "'ports'", "'propagations'", "'flows'", "'transitions'",
-		"'properties'", "'.'", "'{'", "'}'", "'->'", "'alias'", "'='", "'enum'", 
-		"'extends'", "'lattice'", "'record'", "'in'", "'out'", "'*'", "'-['", 
-		"']->'", "'('", "')'", "'Option'", "'['", "']'", "'Set'", "'Seq'", "'Map'", 
-		"'Boolean'", "'Integer'", "'Real'", "'String'", "'Component'", "'Port'", 
-		"'_'", "'true'", "'false'", "'None'", "'Some'", "'::'", "'states'", "'events'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", 
-		"LINE_COMMENT", "ERROR_CHAR"
-	};
-	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
-    public static String[] channelNames = {
-            "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
-    };
-    public static String[] modeNames = {
-            "DEFAULT_MODE"
-    };
-
-    static {
-        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
-    }
-
-    static {
-        tokenNames = new String[_SYMBOLIC_NAMES.length];
-        for (int i = 0; i < tokenNames.length; i++) {
-            tokenNames[i] = VOCABULARY.getLiteralName(i);
-            if (tokenNames[i] == null) {
-                tokenNames[i] = VOCABULARY.getSymbolicName(i);
-            }
-
-            if (tokenNames[i] == null) {
-                tokenNames[i] = "<INVALID>";
-            }
-        }
-    }
 
     static {
         _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
@@ -249,39 +302,4 @@ public class Antlr4AwasLexer extends Lexer {
             _decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
         }
     }
-
-    public Antlr4AwasLexer(CharStream input) {
-        super(input);
-        _interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
-    }
-
-	@Override
-	@Deprecated
-	public String[] getTokenNames() {
-		return tokenNames;
-	}
-
-	@Override
-
-	public Vocabulary getVocabulary() {
-		return VOCABULARY;
-	}
-
-	@Override
-	public String getGrammarFileName() { return "Antlr4Awas.g4"; }
-
-	@Override
-	public String[] getRuleNames() { return ruleNames; }
-
-	@Override
-	public String getSerializedATN() { return _serializedATN; }
-
-	@Override
-	public String[] getChannelNames() { return channelNames; }
-
-	@Override
-	public String[] getModeNames() { return modeNames; }
-
-	@Override
-	public ATN getATN() { return _ATN; }
 }

@@ -26,12 +26,12 @@
 package org.sireum.awas.graph
 
 import org.jgrapht.DirectedGraph
-import org.sireum.awas.fptc.FptcEdge
+import org.sireum.awas.fptc.FlowEdge
 import org.sireum.util.CSet
 
 trait AwasGraph[Node] {
   self =>
-  type Edge = FptcEdge[Node]
+  type Edge = FlowEdge[Node]
 
   def graph : DirectedGraph[Node, Edge]
 

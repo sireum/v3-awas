@@ -123,7 +123,7 @@ object QueryResult {
 
   def convertToType(in: QRes, minType: QResMinType): QRes = {
     val res = QRes(isetEmpty[UnitResult])
-    assert(isSameType(in))
+    assert(minType <= getMinType(in))
     minType match {
       case QResMinType.Uri => QRes(in.unitRes.map(toMinType(_, minType)).flatMap(_.unitRes))
       case QResMinType.PathUri => QRes(in.unitRes.map(toMinType(_, minType)).flatMap(_.unitRes))
