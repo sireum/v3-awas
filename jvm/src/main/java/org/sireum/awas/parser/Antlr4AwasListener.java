@@ -204,7 +204,7 @@ public interface Antlr4AwasListener extends ParseTreeListener {
     /**
      * Enter a parse tree produced by {@link Antlr4AwasParser#property}.
      * @param ctx the parse tree
-	 */
+     */
 	void enterProperty(Antlr4AwasParser.PropertyContext ctx);
 	/**
 	 * Exit a parse tree produced by {@link Antlr4AwasParser#property}.

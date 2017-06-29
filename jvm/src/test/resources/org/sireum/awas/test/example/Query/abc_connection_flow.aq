@@ -1,0 +1,5 @@
+q1 = B2C:in{Error.Low} -> *
+q2 = B2C:out{Error.Low} -> *
+q3 = * -> A2B:out{Error.Low}
+q4 = A:in{Error.High} -> *
+q5 = * -> C.cIn{Error.High}

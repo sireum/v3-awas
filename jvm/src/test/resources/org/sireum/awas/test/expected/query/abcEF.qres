@@ -119,12 +119,6 @@ port-out:$$example/Query/abcEF.awas$A#aOut
 port-out-virtual:$$example/Query/abcEF.awas$A2B#out
 
  -------------- 
-q12
- -------------- 
-{ port-in-virtual:$$example/Query/abcEF.awas$A2B#in, port-in:$$example/Query/abcEF.awas$A#aIn, port-in:$$example/Query/abcEF.awas$B#bIn, port-out-virtual:$$example/Query/abcEF.awas$A2B#out, port-out:$$example/Query/abcEF.awas$A#aOut, port-out:$$example/Query/abcEF.awas$B#bOut2 } 
-{ component:$$example/Query/abcEF.awas#A, component:$$example/Query/abcEF.awas#B, component:$$example/Query/abcEF.awas#C, connection:$$example/Query/abcEF.awas#A2B, connection:$$example/Query/abcEF.awas#B2C } 
-
- -------------- 
 q13
  -------------- 
 port-in-virtual:$$example/Query/abcEF.awas$B2C#in[ error:$$example/Query/abcEF.awas$Error#Low ]

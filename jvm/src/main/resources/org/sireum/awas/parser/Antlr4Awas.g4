@@ -92,9 +92,9 @@ flow
 
 flowc
   :  id = ID ':'
-  (('{' fromE+=fault ( ',' fromE+=fault )* '}')? | '*')
+  ( fromE+=fault | ('{' fromE+=fault ( ',' fromE+=fault )* '}') | '*')
   '->'
-  (('{' toE+=fault ( ',' toE+=fault )* '}')? | '*')
+  (  toE+=fault |('{' toE+=fault ( ',' toE+=fault )* '}') | '*')
   ;
 
 property

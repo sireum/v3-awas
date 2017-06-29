@@ -246,7 +246,7 @@ public class Antlr4AwasBaseListener implements Antlr4AwasListener {
     }
 
     /**
-	 * {@inheritDoc}
+     * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */

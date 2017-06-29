@@ -1,0 +1,20 @@
+strict digraph G {
+  A [ label="{In Port|<aIn>aIn} |component
+A|{Out Port|<aOut>aOut} " shape="record" ];
+  C [ label="{In Port|<cIn>cIn} |component
+C|{Out Port|<cOut>cOut} " shape="record" ];
+  B [ label="{In Port|<bIn>bIn} |component
+B|{Out Port|<bOut2>bOut2|<bOut>bOut} " shape="record" ];
+  B2A [ label="connection
+B2A" shape="record" ];
+  A2B [ label="connection
+A2B" shape="record" ];
+  B2C [ label="connection
+B2C" shape="record" ];
+  B -> B2A [ tailport="bOut2" ];
+  B2A -> A [ headport="aIn" ];
+  A -> A2B [ tailport="aOut" ];
+  A2B -> B [ headport="bIn" ];
+  B -> B2C [ tailport="bOut" ];
+  B2C -> C [ headport="cIn" ];
+}
