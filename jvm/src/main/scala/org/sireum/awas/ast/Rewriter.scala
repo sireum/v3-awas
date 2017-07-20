@@ -78,13 +78,15 @@ object Rewriter {
       stateMachines: Node.Seq[_],
       constants: Node.Seq[_],
       components: Node.Seq[_],
-      connections: Node.Seq[_]) = es
+      connections: Node.Seq[_],
+      deployments: Node.Seq[_]) = es
       org.sireum.awas.ast.Model(
         cast(types),
         cast(stateMachines),
         cast(constants),
         cast(components),
-        cast(connections))
+        cast(connections),
+        cast(deployments))
     })
   )
 

@@ -34,8 +34,10 @@ object SymbolTableHelper {
   //      use the below defined map to record the dependency between files
   type DependencyMap = MMap[FileResourceUri, MSet[FileResourceUri]]
 
-  //uri id seperator
+  //uri seperators
   val ID_SEPARATOR = "#"
+  val TYPE_SEPARATOR = ":"
+  val ANCESTOR_SEPARATOR = "$"
 
   //dummy parent uri
   val HEAD = "head"
@@ -43,6 +45,10 @@ object SymbolTableHelper {
   //connection port ID
   val INPUT_CONN_PORT_ID = "in"
   val OUTPUT_CONN_PORT_ID = "out"
+
+  //canonical bind port ID
+  val INPUT_BIND_PORT_ID = "bind_in"
+  val OUTPUT_BIND_PORT_ID = "bind_out"
 
   val MODEL_TYPE = "model"
 
@@ -62,6 +68,9 @@ object SymbolTableHelper {
   val VIRTUAL_PORT_TYPE = "virtual"
   val PORT_OUT_VIRTUAL_TYPE = "port-out-virtual"
   val PORT_IN_VIRTUAL_TYPE = "port-in-virtual"
+  val BIND_PORT_TYPE = "bind"
+  val PORT_IN_BIND_TYPE = "port-in-bind"
+  val PORT_OUT_BIND_TYPE = "port-out-bind"
   val FLOW_TYPE = "flow"
   val CONNECTION_TYPE = "connection"
 
@@ -164,6 +173,21 @@ object SymbolTableHelper {
         None
       }
     }
+  }
+
+  //returns empty string if there is no id_seperator found
+  def uri2IdString(uri: ResourceUri): String = {
+    val uriArray = uri.split(ID_SEPARATOR)
+    if (uriArray.nonEmpty) {
+      uriArray.last
+    } else ""
+  }
+
+  def uri2TypeString(uri: ResourceUri): String = {
+    val uriArray = uri.split(TYPE_SEPARATOR)
+    if (uriArray.nonEmpty) {
+      uriArray.head
+    } else ""
   }
 
 }

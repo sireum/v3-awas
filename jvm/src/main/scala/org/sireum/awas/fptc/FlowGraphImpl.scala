@@ -96,9 +96,9 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
       res.asJava
     }
   }
-  var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
-  var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
-  var edgePortsMap: IMap[Edge, (ResourceUri, ResourceUri)] = imapEmpty[Edge, (ResourceUri, ResourceUri)]
+  private var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
+  private var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
+  private var edgePortsMap: IMap[Edge, (ResourceUri, ResourceUri)] = imapEmpty[Edge, (ResourceUri, ResourceUri)]
 
   override def toDot: String = {
     val de = new DOTExporter[FlowNode, FEdge](nIdProvider,

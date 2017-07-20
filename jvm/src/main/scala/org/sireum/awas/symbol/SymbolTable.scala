@@ -65,6 +65,10 @@ trait SymbolTable {
 
   def connection(connectionUri: ResourceUri): ConnectionDecl
 
+  def deployments: Iterable[(ResourceUri, ResourceUri)]
+
+  def deployment(nodePairUri: (ResourceUri, ResourceUri)): DeploymentDecl
+
   def connectionTable(connUri: ResourceUri): ConnectionSymbolTable
 
   def compStateMachine(compUri: ResourceUri): Option[ResourceUri]
@@ -88,6 +92,7 @@ sealed case class SymbolTableData
  componentSymbolTable: MMap[ResourceUri, ComponentSymbolTable] = mmapEmpty,
  connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,
  connectionSymbolTabel: MMap[ResourceUri, ConnectionSymbolTable] = mmapEmpty,
+ deploymentDeclTable: MMap[(ResourceUri, ResourceUri), DeploymentDecl] = mmapEmpty,
  compSMTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
  compTypeTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty
@@ -103,6 +108,8 @@ class STProducer extends SymbolTable {
   val compMap: MMap[ResourceUri, CompST] = mmapEmpty[ResourceUri, CompST]
 
   val connMap: MMap[ResourceUri, ConnST] = mmapEmpty[ResourceUri, ConnST]
+
+  val deployMap: MSet[(ResourceUri, ResourceUri)] = msetEmpty[(ResourceUri, ResourceUri)]
 
   val modelMap: MMap[ResourceUri, Model] = mmapEmpty[ResourceUri, Model]
 
@@ -125,6 +132,10 @@ class STProducer extends SymbolTable {
   override def connections: Iterable[ResourceUri] = tables.connectionTable.keys
 
   override def connection(connectionUri: ResourceUri): ConnectionDecl = tables.connectionTable(connectionUri)
+
+  override def deployments: Iterable[(ResourceUri, ResourceUri)] = tables.deploymentDeclTable.keys
+
+  override def deployment(nodePairUri: (ResourceUri, ResourceUri)): DeploymentDecl = tables.deploymentDeclTable(nodePairUri)
 
   override def stateMachines: Iterable[ResourceUri] = tables.stateMachineDeclTable.keys
 
@@ -255,6 +266,7 @@ class STProducer extends SymbolTable {
       tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
     }
   }
+
 }
 
 trait ComponentSymbolTable {

@@ -107,21 +107,48 @@ object FlowGraph {
           if(fromPortRes.isDefined) {
             val fromPortUri = fromPortRes.get.toUri
             result.addPortEdge(fromPortUri, fedge)
-            result.addPortEdge(connNode.inPorts.head, fedge)
-            result.addEdgePortRelation(fedge, fromPortUri, connNode.inPorts.head)
+            result.addPortEdge(connNode.inPorts.
+              find(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).get, fedge)
+            result.addEdgePortRelation(fedge, fromPortUri, connNode.inPorts.
+              find(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).get)
           }
           val tedge = result.addEdge(connNode, toNode.get)
           val toPortRes = Resource.getResource(st.connection(conn).toPort)
           if(toPortRes.isDefined) {
             val toPortUri = toPortRes.get.toUri
             result.addPortEdge(toPortUri, tedge)
-            result.addPortEdge(connNode.outPorts.head, tedge)
-            result.addEdgePortRelation(tedge, connNode.outPorts.head, toPortUri)
+            result.addPortEdge(connNode.outPorts.
+              find(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).get, tedge)
+            result.addEdgePortRelation(tedge, connNode.outPorts.
+              find(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).get, toPortUri)
           }
+        }
+    }
+
+    st.deployments.foreach {
+      dep =>
+        val fromNode = FlowNode.getNode(dep._1)
+        val toNode = FlowNode.getNode(dep._2)
+        if (fromNode.isDefined && toNode.isDefined) {
+          val edge1 = result.addEdge(fromNode.get, toNode.get)
+          val frompUri1 = fromNode.get.outPorts.find(_.startsWith(H.PORT_OUT_BIND_TYPE)).get
+          val topUri1 = toNode.get.inPorts.find(_.startsWith(H.PORT_IN_BIND_TYPE)).get
+          result.addPortEdge(frompUri1, edge1)
+          result.addPortEdge(topUri1, edge1)
+          result.addEdgePortRelation(edge1, frompUri1, topUri1)
+
+          val edge2 = result.addEdge(toNode.get, fromNode.get)
+          val frompUri2 = toNode.get.outPorts.find(_.startsWith(H.PORT_OUT_BIND_TYPE)).get
+          val topUri2 = fromNode.get.inPorts.find(_.startsWith(H.PORT_IN_BIND_TYPE)).get
+
+          result.addPortEdge(frompUri2, edge2)
+          result.addPortEdge(topUri2, edge2)
+          result.addEdgePortRelation(edge2, frompUri2, topUri2)
         }
     }
     result
   }
+
 
   private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FlowNode] = {
     val res = getResource(node)

@@ -60,8 +60,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   val H = SymbolTableHelper
 
   def miner(m: Model)(implicit reporter: AccumulatingTagReporter): Model =
-    connectionMiner(componentElemMiner(stateMachineMiner(
-      typeDeclMiner(modelMiner(m)))))
+    deploymentMiner(connectionMiner(componentElemMiner(stateMachineMiner(
+      typeDeclMiner(modelMiner(m))))))
 
   def modelMiner(m: Model): Model = {
     var parentRes = Resource(H.HEAD)
@@ -85,9 +85,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   /**
     * Type miner : Currently mines only Enum type
     *
-    * @param m
-    * @param reporter
-    * @return
+    * @param m        model
+    * @param reporter to collect errors
+    * @return model and side effect : mine enum type error table
     */
   def typeDeclMiner(m: Model)(
     implicit reporter: AccumulatingTagReporter): Model = {
@@ -132,9 +132,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   /**
     * State machine miner
     *
-    * @param m
-    * @param reporter
-    * @return
+    * @param m        model
+    * @param reporter for collecting symbolc errors
+    * @return the model itself, as side effect build the table
     */
   def stateMachineMiner(m: Model)
                        (implicit reporter: AccumulatingTagReporter): Model = {
@@ -482,6 +482,81 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     m
   }
 
+  def deploymentMiner(m: Model)(
+    implicit reporter: AccumulatingTagReporter): Model = {
+    var parentRes = Resource(H.HEAD)
+    Visitor.build({
+      case m: Model =>
+        require(Resource.getResource(m).isDefined)
+        parentRes = Resource.getResource(m).get
+        true
+      case deploy: DeploymentDecl =>
+        require(Resource.getResource(m).isDefined)
+        parentRes = Resource.getResource(m).get
+        val fromUri = getComponentOrConnectionUri(deploy.fromNode)
+        val toUri = getComponentOrConnectionUri(deploy.toNode)
+
+        if (fromUri.isDefined) {
+          Resource.useDefResolve(deploy.fromNode,
+            if (fromUri.get.startsWith(H.COMPONENT_TYPE)) st.componentDeclTable(fromUri.get)
+            else st.componentDeclTable(fromUri.get))
+        } else {
+          reporter.report(errorMessageGen(DUPLICATE_CONNECTION,
+            deploy,
+            m, deploy.fromNode.value.last.value))
+        }
+
+        if (toUri.isDefined) {
+          Resource.useDefResolve(deploy.fromNode,
+            if (toUri.get.startsWith(H.COMPONENT_TYPE)) st.componentDeclTable(toUri.get)
+            else st.connectionTable(toUri.get))
+        } else {
+          reporter.report(errorMessageGen(DUPLICATE_CONNECTION,
+            deploy,
+            m, deploy.toNode.value.last.value))
+        }
+
+        if (fromUri.isDefined && toUri.isDefined) {
+          stp.tables.deploymentDeclTable += ((fromUri.get, toUri.get) -> deploy)
+          addBindPortsToNodes(fromUri.get)
+          addBindPortsToNodes(toUri.get)
+        }
+        //add ports
+
+        false
+    })(m)
+    m
+
+  }
+
+  def addBindPortsToNodes(nodeUri: ResourceUri): Unit = {
+    if (nodeUri.startsWith(H.COMPONENT_TYPE)) {
+      val pt = stp.compMap(nodeUri).tables.portTable
+      pt(Resource(H.PORT_IN_BIND_TYPE,
+        Resource.getDefResource(nodeUri).get,
+        H.INPUT_BIND_PORT_ID, Some(true)).toUri) = Port(isIn = true, Id(H.INPUT_BIND_PORT_ID), None)
+
+      pt(Resource(H.PORT_OUT_BIND_TYPE,
+        Resource.getDefResource(nodeUri).get,
+        H.OUTPUT_BIND_PORT_ID, Some(true)).toUri) = Port(isIn = false, Id(H.OUTPUT_BIND_PORT_ID), None)
+    } else {
+      val pt = stp.connMap(nodeUri).tables.portTable
+      pt += Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
+        H.INPUT_BIND_PORT_ID, Some(true)).toUri
+      pt += Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get,
+        H.OUTPUT_BIND_PORT_ID, Some(true)).toUri
+    }
+  }
+
+  def getComponentOrConnectionUri(node: Name): Option[ResourceUri] = {
+    if (findComponent(node).isDefined) {
+      findComponent(node)
+    } else {
+      findConnection(node)
+    }
+  }
+
+
   def compPortCheck(m: Model, comp: Name, port: Id)(
     implicit reporter: AccumulatingTagReporter) : Unit = {
     val fcompUri = findComponent(comp)
@@ -504,6 +579,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
   def findComponent(compName: Name): Option[ResourceUri] = {
     st.componentDeclTable.keySet.find(_.endsWith(H.ID_SEPARATOR + compName.value.last.value))
+  }
+
+  def findConnection(connName: Name): Option[ResourceUri] = {
+    st.connectionTable.keySet.find(_.endsWith(H.ID_SEPARATOR + connName.value.last.value))
   }
 
 }

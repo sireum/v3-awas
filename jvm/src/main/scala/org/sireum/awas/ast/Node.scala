@@ -50,7 +50,8 @@ final case class Model(types: Node.Seq[TypeDecl],
                        stateMachines: Node.Seq[StateMachineDecl],
                        constants: Node.Seq[ConstantDecl],
                        components: Node.Seq[ComponentDecl],
-                       connections: Node.Seq[ConnectionDecl]) extends UnitNode {
+                       connections: Node.Seq[ConnectionDecl],
+                       deployment: Node.Seq[DeploymentDecl]) extends UnitNode {
 
 //  var sourceURI = Option[FileResourceUri]
 }
@@ -73,12 +74,15 @@ final case class ComponentDecl(compName: Id,
 final case class ConnectionDecl(connName: Id,
                                 fromComp: Name,
                                 fromPort: Id,
+                                isAccess: Boolean,
                                 toComp: Name,
                                 toPort: Id,
                                 connFlow: Node.Seq[CFlow],
                                 behaviour: Option[Behaviour],
                                 properties:Node.Seq[Property]) extends Node
 
+final case class DeploymentDecl(fromNode: Name,
+                                toNode: Name) extends Node
 
 final case class Port(isIn : Boolean, id : Id, name: Option[Name]) extends Node
 

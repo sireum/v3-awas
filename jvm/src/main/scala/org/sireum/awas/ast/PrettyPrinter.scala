@@ -115,6 +115,17 @@ final class PrettyPrinter(sb: StringBuilder) {
       }
       println()
     }
+
+    if (m.deployment.nonEmpty) {
+      sb.append("deployment")
+      println()
+      print(m.deployment.head, indent + 1)
+      for (dep <- m.deployment.tail) {
+        println()
+        print(dep, indent + 1)
+      }
+      println()
+    }
   }
 
   def print(td: TypeDecl, indent: Natural) : Unit = {
@@ -161,7 +172,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     printIndent(localIndent)
     print(compd.compName)
     println()
-    if(!compd.withSM.isEmpty) {
+    if (compd.withSM.nonEmpty) {
       localIndent = localIndent+1
       printIndent(localIndent)
       sb.append("with ")
@@ -246,8 +257,11 @@ final class PrettyPrinter(sb: StringBuilder) {
     print(cd.fromComp)
     sb.append(".")
     print(cd.fromPort)
-
-    sb.append(" -> ")
+    if (cd.isAccess) {
+      sb.append(" <-> ")
+    } else {
+      sb.append(" -> ")
+    }
     print(cd.toComp)
     sb.append(".")
     print(cd.toPort)
@@ -282,6 +296,14 @@ final class PrettyPrinter(sb: StringBuilder) {
       }
       println()
     }
+  }
+
+  def print(dep: DeploymentDecl, indent: Natural): Unit = {
+    printIndent(indent)
+    print(dep.fromNode)
+    sb.append(" <-> ")
+    print(dep.toNode)
+    println()
   }
 
   def print(t: Transition, indent: Natural) : Unit = {

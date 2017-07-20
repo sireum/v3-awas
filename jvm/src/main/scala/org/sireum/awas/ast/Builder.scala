@@ -43,7 +43,8 @@ final class Builder private() {
       ctx.behaviorDecl().map(build),
       ctx.constantDecl().map(build),
       ctx.componentDecl().map(build),
-      ctx.connectionDecl().map(build)
+      ctx.connectionDecl().map(build),
+      ctx.deploymentDecl().map(build)
     ) at ctx
     r.nodeLocMap = this.nodeLocMap
     r.fileUriOpt = fileUriOpt
@@ -86,11 +87,21 @@ final class Builder private() {
     ConnectionDecl(buildId(ctx.connName),
       build(ctx.fromComponent),
       buildId(ctx.fromPort),
+      if (ctx.connType.getText == "<->") {
+        true
+      } else {
+        false
+      },
       build(ctx.toComponent),
       buildId(ctx.toPort),
       ctx.flowc().map(build),
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
       ctx.property().map(build)) at ctx
+  }
+
+  def build(ctx: DeploymentDeclContext): DeploymentDecl = {
+    DeploymentDecl(build(ctx.fromComponent),
+      build(ctx.toComponent)) at ctx
   }
 
   def build(ctx: TypeAliasDeclContext): AliasDecl = {

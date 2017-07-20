@@ -57,6 +57,9 @@ object SymbolTableMessage {
   val DUPLICATE_CONNECTION =
     "Connection declaration '%s' had already been defined"
 
+  val MISSING_COMPONENT_OR_CONNECTION =
+    "Component or Connection '%s' not found in the model"
+
   val MISSING_TYPE_DECL =
     "Error '%s' not found in the associated type declaration"
 

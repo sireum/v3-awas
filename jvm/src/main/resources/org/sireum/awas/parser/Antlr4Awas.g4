@@ -14,6 +14,7 @@ model
     ( 'constants' constantDecl* )?
     ( 'components' componentDecl* )?
     ( 'connections' connectionDecl* )?
+    ( 'deployment' deploymentDecl* )?
   ;
 
 typeDecl
@@ -41,11 +42,17 @@ componentDecl
 connectionDecl
   : connName=ID ':'
     fromComponent=name '.' fromPort=ID
-    '->'
+    connType=('->' | '<->')
     toComponent=name '.' toPort=ID
     ( 'flows' flowc* )?
     ( 'behavior' behaviour)?
     ( 'properties' property* )?
+  ;
+
+deploymentDecl
+  : fromComponent=name
+    '<->'
+    toComponent=name
   ;
 
 typeAliasDecl
