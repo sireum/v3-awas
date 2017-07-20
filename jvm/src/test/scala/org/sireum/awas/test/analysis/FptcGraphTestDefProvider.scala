@@ -28,8 +28,9 @@ package org.sireum.awas.test.analysis
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
+import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.fptc.FlowGraph
-import org.sireum.awas.symbol.SymbolTable
+import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.TestUtils
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test._
@@ -41,15 +42,15 @@ final class FptcGraphTestDefProvider(tf: TestFramework)
 extends TestDefProvider {
 
   val testDirs = Seq(
-    //    makePath("..", "example", "awas-lang"),
-    //    makePath("..", "example", "fptc"),
-    //    makePath("..", "example", "Query"),
-    makePath("..", "example", "bindings")
+    makePath("..", "example", "awas-lang"),
+    makePath("..", "example", "fptc"),
+    makePath("..", "example", "Query")
+    //makePath("..", "example", "bindings")
   )
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -87,9 +88,9 @@ extends TestDefProvider {
       case Some(m) =>
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         var st = SymbolTable(m)
-        //val updatedModel = ContextInSensitiveGen(m, st)
-        //Resource.reset
-        //st = SymbolTable(updatedModel)
+        val updatedModel = ContextInSensitiveGen(m, st)
+        Resource.reset()
+        st = SymbolTable(updatedModel)
         val graph = FlowGraph(m, st)
         Some(graph.toDot)
     }
