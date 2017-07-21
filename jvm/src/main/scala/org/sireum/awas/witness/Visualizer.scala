@@ -13,7 +13,7 @@ import org.sireum.util.jvm.FileUtil.{fileUri, readFile}
 object Visualizer {
   def main(args: Array[String]): Unit = {
     val modelFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/Query/abcEF.awas"
-    val outputPath = "/workspace-v3/sireum-v3/awas/js/src/main/resources/min/graphVar.js"
+    val outputPath = "awas/js/target/scala-2.12/classes/min/jquery.js"
     val queryFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/Query/abcEF.aq"
     val basePath = Paths.get(fileUri(this.getClass, s".."))
     val relativeUri = basePath.relativize(Paths.get(modelFile))

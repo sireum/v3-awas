@@ -5,7 +5,7 @@ import org.scalajs.dom.html.{Anchor, Button, Div}
 import org.scalajs.dom.raw.Node
 import org.scalajs.dom.{Element, MouseEvent, document}
 import org.scalajs.jquery.jQuery
-import org.sireum.util.JSutil._
+import org.sireum.common.JSutil._
 import org.sireum.util._
 
 import scala.scalajs.js
