@@ -28,10 +28,10 @@ build:
   on_success:
     - mkdir -p shippable/testresults
     - rm -f ./shippable/testresults/*
-    - cp ./jvm/target/test-reports/* shippable/testresults
+    - rsync -avzh --ignore-errors ./jvm/target/test-reports/* shippable/testresults
   on_failure:
     - mkdir -p shippable/testresults
     - rm -f ./shippable/testresults/*
-    - cp ./jvm/target/test-reports/* shippable/testresults
+    - rsync -avzh --ignore-errors ./jvm/target/test-reports/* shippable/testresults
   push:
   cache: true
