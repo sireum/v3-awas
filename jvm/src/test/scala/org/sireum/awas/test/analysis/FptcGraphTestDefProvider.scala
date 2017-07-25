@@ -42,7 +42,7 @@ final class FptcGraphTestDefProvider(tf: TestFramework)
 extends TestDefProvider {
 
   val testDirs = Seq(
-    makePath("..", "example", "awas-lang"),
+    //makePath("..", "example", "awas-lang"),
     makePath("..", "example", "fptc"),
     makePath("..", "example", "Query")
     //makePath("..", "example", "bindings")
