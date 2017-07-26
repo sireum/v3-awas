@@ -22,7 +22,7 @@ build:
     - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
     - cd sireum-v3
     - ln -s ../ ./awas
-    - ./bin/sbt-launch.sh "project awas" test
+    - ./bin/sbt-launch.sh "project awas-jvm" test
     - cd ..
   post_ci:
   on_success:
