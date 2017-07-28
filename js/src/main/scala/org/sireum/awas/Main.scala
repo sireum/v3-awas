@@ -3,7 +3,7 @@ package org.sireum.awas
 import facades.{GraphQuery, GraphViz, SvgPanZoom}
 import org.scalajs.dom.html.{Anchor, Button, Div}
 import org.scalajs.dom.raw.Node
-import org.scalajs.dom.{Element, MouseEvent, document}
+import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
 import org.sireum.common.JSutil._
 import org.sireum.util._
@@ -15,6 +15,8 @@ import scalatags.Text.tags2.nav
 
 @JSExportTopLevel("org.sireum.awas.Main")
 object Main {
+
+  var uriNodeMap: IMap[String, Node] = imapEmpty[String, Node]
 
   @JSExport
   def main(): Unit = {
@@ -38,17 +40,28 @@ object Main {
       }
     }
     $[Button](mainDiv, "#clear-button").onclick = (_: MouseEvent) => clear(res)
-    document.body.appendChild(mainDiv)
-    //    qButton.foreach(it => it.asInstanceOf[Anchor].onclick = (_:MouseEvent) => {
-    //      println("clicked : \n"+it.innerHTML)
-    //      clear(res)
-    //      res = highlight(it.getAttribute("id"))
-    //    })
-    SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+    document.onreadystatechange = (_: Event) => {
+      document.body.appendChild(mainDiv)
+      SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+      computeHeight()
+    }
+
+    window.onresize = (_: UIEvent) => computeHeight()
+
   }
 
-
-  var uriNodeMap: IMap[String, Node] = imapEmpty[String, Node]
+  def computeHeight(): Unit = {
+    val totalHeight = window.innerHeight
+    val headHeight = $[Div]("#header").clientHeight
+    val footHeight = $[Div]("#footer").clientHeight
+    val bodyHeight = totalHeight - (headHeight + footHeight + 23)
+    val graphHeight = (bodyHeight / 2) - 75
+    val queryHeight = bodyHeight / 2
+    val graph = $[Div]("#graph-view")
+    graph.style.height = s"${graphHeight}px"
+    val query = $[Div]("#query-box")
+    query.style.height = s"${queryHeight}px"
+  }
 
   def clear(res: ISet[Node]): Unit = {
     res.foreach(_.asInstanceOf[Element].firstElementChild.setAttribute("fill", "#ffffff"))
@@ -84,22 +97,22 @@ object Main {
 
   def mainPage(): Frag = {
     val temp: Seq[(String, String)] = GraphQuery.queryExp.toSeq
-    div(id := "view", width := "100%", height := "100%",
-      nav(cls := "hero is-primary",
+    div(id := "view", width := "100%",
+      div(cls := "hero is-primary", id := "header",
         div(cls := "hero-body",
           div(cls := "container",
             h1(cls := "title", raw("&nbsp; Awas Witness Visualizer"))))),
       //body
-      div(cls := "container is-fullheight",
+      div(cls := "container",
         div(cls := "tile is-ancestor",
           div(cls := "tile is-parent is-vertical",
             div(cls := "tile is-child",
-              div(cls := "box",
+              div(id := "graph-box", cls := "box",
                 h2(cls := "subtitle", "Dependence Graph"),
-                figure(id := "graph-view", cls := "svg is-3by2")
+                figure(id := "graph-view", cls := "image ")
               )),
             div(cls := "tile is-child",
-              div(cls := "box", maxHeight := "54vh", minHeight := "30vh", overflow := "scroll",
+              div(id := "query-box", cls := "box", overflow := "scroll",
                 nav(cls := "level", div(cls := "level-left",
                   div(cls := "level-item", h2(cls := "subtitle", "Queries"))),
                   div(cls := "level-right", div(cls := "level-item", button(id := "clear-button", cls := "button", "Clear")))),
@@ -121,7 +134,7 @@ object Main {
                 )
               ))))),
       //footer
-      nav(id := "footer", cls := "nav", bottom := "0",
+      div(id := "footer", cls := "nav", bottom := "0",
         div(cls := "nav-item",
           p(bottom := "10px", right := "10px", position := "absolute",
             span(color := "white",
