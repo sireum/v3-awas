@@ -1,31 +1,32 @@
 package org.sireum.awas.reachability
 
+import org.sireum.awas.ast.{CFlow, Flow}
+import org.sireum.awas.collector.CollectorErrorHelper.{MISSING_CRITERIA, ReachAnalysisStage, errorMessageGen}
+import org.sireum.awas.collector.{Collector, FlowErrorNextCollector, FlowErrorPathCollector, ResultType}
+import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
 
-class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
-  PortReachabilityImpl(graph) with ErrorReachability[FlowNode]
+class ErrorReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) extends
+  PortReachabilityImpl(st, graph) with ErrorReachability[FlowNode]
   with PortReachability[FlowNode] with BasicReachability[FlowNode] {
 
-  override def forwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]]):
-  IMap[ResourceUri, Set[ResourceUri]] = {
-    var result = imapEmpty[ResourceUri, Set[ResourceUri]]
-    errorRes.foldLeft(result) { case (a, (k, v)) => unionErrors(a, forwardErrorReach(k, v)) }
-    result
+  override def forwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]])
+  : Collector = {
+    errorRes.foldLeft(Collector(st, graph))((c, n) => c union forwardErrorReach(n._1, n._2))
   }
 
   override def forwardErrorReach(port: ResourceUri, errors: ISet[ResourceUri]):
-  IMap[ResourceUri, Set[ResourceUri]] = {
+  Collector = {
     errorReach(port, errors, isForward = true)
   }
 
   override def backwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]])
-  : IMap[ResourceUri, Set[ResourceUri]] = {
-    var result = imapEmpty[ResourceUri, Set[ResourceUri]]
-    errorRes.foldLeft(result) { case (a, (k, v)) => unionErrors(a, backwardErrorReach(k, v)) }
-    result
+  : Collector = {
+    errorRes.foldLeft(Collector(st, graph))((c, n) => c union backwardErrorReach(n._1, n._2))
   }
 
   def unionErrors(op1: IMap[ResourceUri, ISet[ResourceUri]],
@@ -41,47 +42,82 @@ class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
   }
 
   override def backwardErrorReach(port: ResourceUri, errors: ISet[ResourceUri]):
-  IMap[ResourceUri, Set[ResourceUri]] = {
+  Collector = {
     errorReach(port, errors, isForward = false)
   }
 
-  def errorReach(port: ResourceUri, errors: ISet[ResourceUri], isForward: Boolean):
-  IMap[ResourceUri, Set[ResourceUri]] = {
+  def errorReach(port: ResourceUri,
+                 errors: ISet[ResourceUri],
+                 isForward: Boolean): Collector = {
+
     var workList = ilistEmpty[(ResourceUri, ResourceUri)]
     val result = mmapEmpty[ResourceUri, MSet[ResourceUri]]
+    var resEdges = isetEmpty[Edge]
+    var resError = isetEmpty[Tag]
+    var resFlows = isetEmpty[ResourceUri]
+
     if (port.startsWith(H.PORT_TYPE) && graph.getNode(port).isDefined) {
       workList = workList ++ errors.map((port, _))
+    } else {
+      resError += errorMessageGen(MISSING_CRITERIA,
+        port, ReachAnalysisStage.Port)
+    }
       while (workList.nonEmpty) {
         val current = workList.head
         if (addErrors(result, current._1, current._2)) {
-          workList = workList ++ (if (isForward) getSuccessorError(current)
+          val temp = (if (isForward) getSuccessorError(current)
           else getPredecessorError(current))
-
+          workList = workList ++ temp.tuples
+          resEdges = resEdges ++ temp.edges
+          resFlows = resFlows ++ temp.flows
+          resError = resError ++ temp.errors
         }
         workList = workList.tail
       }
-    }
-    result.map(v => (v._1, v._2.toSet)).toMap
+    Collector(st,
+      graph,
+      result.map(v => (v._1, v._2.toSet)).toMap,
+      resFlows, resEdges, isForward, isetEmpty[ResourceUri] + port, resError)
   }
 
-  def getPredecessorError(tuple: (ResourceUri, ResourceUri)): IList[(ResourceUri, ResourceUri)] = {
-    var result = ilistEmpty[(ResourceUri, ResourceUri)]
-    if (tuple._1.startsWith(H.PORT_TYPE)) {
+  def getPredecessorError(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector = {
+    assert(tuple._1.startsWith(H.PORT_TYPE))
       val node = graph.getNode(tuple._1)
       if (node.isDefined && tuple._1.startsWith(H.PORT_OUT_TYPE)) {
-        result = result ++ node.get.errorBackward(tuple)
-      } else if (node.isDefined) {
+        node.get.errorBackward(tuple)
+      } else {
+        var result = isetEmpty[(ResourceUri, ResourceUri)]
+        var edges = isetEmpty[Edge]
         //propagation case
-        graph.getEdgeForPort(tuple._1).foreach {
-          e =>
-            e.sourcePort match {
-              case Some(x) => result = result :+ (x, tuple._2)
-              case _ =>
+        graph.getEdgeForPort(tuple._1).foreach { e =>
+          if (e.sourcePort.isDefined) {
+            result = result + ((e.sourcePort.get, tuple._2))
+            edges += e
             }
         }
+        FlowErrorNextCollector(result, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
       }
+  }
+
+  def getSuccessorError(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector = {
+    //only port can be associated with error to calculate successor error
+    var result = ilistEmpty[(ResourceUri, ResourceUri)]
+    assert(tuple._1.startsWith(H.PORT_TYPE))
+    val node = graph.getNode(tuple._1)
+    if (node.isDefined && tuple._1.startsWith(H.PORT_IN_TYPE)) {
+      node.get.errorForward(tuple)
+    } else {
+      var result = ilistEmpty[(ResourceUri, ResourceUri)]
+      var edges = isetEmpty[Edge]
+      //propagation case
+      graph.getEdgeForPort(tuple._1).foreach { e =>
+        if (e.targetPort.isDefined) {
+          edges += e
+          result = result :+ (e.targetPort.get, tuple._2)
+        }
+      }
+      FlowErrorNextCollector(result.toSet, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
     }
-    result
   }
 
   /**
@@ -107,65 +143,118 @@ class ErrorReachabilityImpl[Node](graph: FlowGraph[FlowNode]) extends
 
   def errorPathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
                         target: IMap[ResourceUri, ISet[ResourceUri]]):
-  ISet[IMap[ResourceUri, Set[ResourceUri]]] = {
-    source.toSet.flatMap { x: ((ResourceUri, ISet[ResourceUri])) =>
-      target.toSet.flatMap { y: ((ResourceUri, ISet[ResourceUri])) =>
-        errorPathReach(x._1, x._2, y._1, y._2)
-      }
-    }
+  Collector = {
+
+    source.toSet.foldLeft(Collector(st, graph))((c, n) => c union
+      target.toSet.foldLeft(Collector(st, graph))((c2, n2) => c2 union
+        errorPathReach(n._1, n._2, n2._1, n2._2)))
   }
 
   def errorPathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
                      targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
-  ISet[IMap[ResourceUri, Set[ResourceUri]]] = {
-    reachPath(sourcePort, targetPort).par.flatMap(pathErrorRefine(_, sourcePort,
-      sourceErrors, targetPort, targetErrors)).seq
+  Collector = {
+    val paths = reachPath(sourcePort, targetPort).getPaths.par.flatMap(it => pathErrorRefine(it, sourcePort,
+      sourceErrors, targetPort, targetErrors)).toSet
+    Collector(st, graph, paths.toVector, Some(ResultType.Error))
   }
 
-  private def pathErrorRefine(path: ISet[ResourceUri],
+
+  //TODO: Rework this method, refactor, high cyclomatic complex
+  private def pathErrorRefine(path: Collector,
                               sourcePort: ResourceUri,
                               sourceErrors: ISet[ResourceUri],
                               targetPort: ResourceUri,
                               targetErrors: ISet[ResourceUri]):
-  ISet[IMap[ResourceUri, ISet[ResourceUri]]] = {
-    var paths = isetEmpty[ISeq[(ResourceUri, ResourceUri)]]
+  ISet[Collector] = {
+    var paths = isetEmpty[FlowErrorPathCollector]
 
     sourceErrors.foreach(e => paths = paths +
-      (ilistEmpty[(ResourceUri, ResourceUri)] :+ (sourcePort, e)))
-    var result = isetEmpty[IMap[ResourceUri, ISet[ResourceUri]]]
+      FlowErrorPathCollector(ilistEmpty[(ResourceUri, ResourceUri)] :+ (sourcePort, e),
+        isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag]))
+
+    var result = isetEmpty[Collector]
+
+    var resPaths = isetEmpty[FlowErrorPathCollector]
+
+    var resCycle = isetEmpty[FlowErrorPathCollector]
 
     while (paths.nonEmpty) {
       val current = paths.head
       paths = paths - current
-      if (current.last._1 == targetPort) {
-        result = result + current.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap
+      if (current.path.last._1 == targetPort) {
+        resPaths = resPaths + current
       } else {
-        getSuccessorError(current.last).filter(x => path.contains(x._1))
-          .foreach(x => paths = paths + (current :+ x))
-      }
-    }
-    result
-  }
-
-  def getSuccessorError(tuple: (ResourceUri, ResourceUri)): IList[(ResourceUri, ResourceUri)] = {
-    //only port can be associated with error to calculate successor error
-    var result = ilistEmpty[(ResourceUri, ResourceUri)]
-    if (tuple._1.startsWith(H.PORT_TYPE)) {
-      val node = graph.getNode(tuple._1)
-      if (node.isDefined && tuple._1.startsWith(H.PORT_IN_TYPE)) {
-        result = result ++ node.get.errorForward(tuple)
-      } else if (node.isDefined) {
-        //propagation case
-        graph.getEdgeForPort(tuple._1).foreach {
-          e =>
-            e.targetPort match {
-              case Some(x) => result = result :+ (x, tuple._2)
-              case _ =>
+        val tNext = getSuccessorError(current.path.last)
+        tNext.tuples.foreach { t =>
+          if (path.getPorts.contains(t._1)) {
+            if (current.path.toSet.contains(t)) {
+              resCycle = resCycle + current
+            } else {
+              if (tNext.edges.nonEmpty) {
+                paths = paths + FlowErrorPathCollector(current.path :+ t,
+                  current.edges union graph.getEdges(current.path.last._1, t._1),
+                  current.flows, current.errors union tNext.errors)
+              } else {
+                if (tNext.flows.size <= 1) {
+                  paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
+                    current.flows ++ tNext.flows, current.errors union tNext.errors)
+                } else {
+                  val cnode = graph.getNode(current.path.last._1)
+                  val nnode = graph.getNode(t._1)
+                  if (cnode.isDefined && nnode.isDefined &&
+                    cnode.get == nnode.get) {
+                    var flows = isetEmpty[ResourceUri]
+                    if (cnode.get.isComponent) {
+                      flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
+                        nnode.get.getFlows.get(it).get.asInstanceOf[Flow].to.isDefined &&
+                        nnode.get.getFlows.get(it).get.asInstanceOf[Flow].to.get.value ==
+                          H.getPortId(st, nnode.get.getUri, t._1) &&
+                        nnode.get.getFlows.get(it).get.asInstanceOf[Flow].toE.toSet.contains(t._2)
+                      )
+                    } else {
+                      flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
+                        nnode.get.getFlows.get(it).get.asInstanceOf[CFlow].toE.toSet.contains(t._2))
+                    }
+                    paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
+                      current.flows ++ flows, current.errors union tNext.errors)
+                  }
+                }
+              }
             }
+          }
         }
       }
     }
+
+    val pathCycle = resPaths.map(it => (it, resCycle.filter(it2 => it2.path.toSet.intersect(it.path.toSet).nonEmpty)))
+
+    var tempPaths = isetEmpty[FlowErrorNextCollector]
+
+    pathCycle.foreach { it =>
+      tempPaths = tempPaths + FlowErrorNextCollector(it._1.path.toSet, it._1.edges, it._1.flows, it._1.errors)
+
+      val cycles = unionPaths(it._1, it._2.foldLeft(FlowErrorPathCollector(ivectorEmpty[(ResourceUri, ResourceUri)],
+        isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag]))((c, n) => unionPaths(c, n)))
+
+      tempPaths = tempPaths + FlowErrorNextCollector(cycles.path.toSet, cycles.edges, cycles.flows, cycles.errors)
+
+    }
+
+    result = result ++ tempPaths.map(it => Collector(st, graph, it.tuples.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap,
+      ResultType.Error, it.edges, it.flows, isetEmpty[ResourceUri] + sourcePort + targetPort, it.errors))
+
+
+    //    result = result + Collector(st, graph,
+    //      current.path.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap,
+    //      ResultType.Error, current.edges, current.flows,
+    //      isetEmpty[ResourceUri] + sourcePort+targetPort, current.errors)
+
     result
+  }
+
+  def unionPaths(op1: FlowErrorPathCollector, op2: FlowErrorPathCollector): FlowErrorPathCollector = {
+    FlowErrorPathCollector((op1.path.toSet ++ op2.path.toSet).toVector, op1.edges ++ op2.edges,
+      op1.flows ++ op2.flows, op1.errors ++ op2.errors)
   }
 
   def intersectErrors(op1: IMap[ResourceUri, ISet[ResourceUri]],

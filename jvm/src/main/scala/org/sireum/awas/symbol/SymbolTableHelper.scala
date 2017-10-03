@@ -30,6 +30,7 @@ import org.sireum.util._
 
 object SymbolTableHelper {
 
+
   //TODO: In future if we are supporting models defined in more than one file
   //      use the below defined map to record the dependency between files
   type DependencyMap = MMap[FileResourceUri, MSet[FileResourceUri]]
@@ -106,6 +107,26 @@ object SymbolTableHelper {
 
   def isConnection(r: Resource): Boolean = r.uriType == CONNECTION_TYPE
 
+  def isPort(r: ResourceUri): Boolean = {
+    val t = Resource.getDefResource(r)
+    t.isDefined && isPort(t.get)
+  }
+
+  def isInPort(r: ResourceUri): Boolean = {
+    val t = Resource.getDefResource(r)
+    t.isDefined && isInPort(t.get)
+  }
+
+  def isOutPort(r: ResourceUri): Boolean = {
+    val t = Resource.getDefResource(r)
+    t.isDefined && isOutPort(t.get)
+  }
+
+  def isFlow(uri: ResourceUri): Boolean = {
+    val t = Resource.getDefResource(uri)
+    t.isDefined && isFlow(t.get)
+  }
+
   //dot separated canonical resource name, TODO: rewrite later with the model name
   def getUriFromString(st: SymbolTable, completeName: String): Option[ResourceUri] = {
     val cmlist = completeName.split('.')
@@ -116,6 +137,10 @@ object SymbolTableHelper {
     } else {
       None
     }
+  }
+
+  def getUriType(uri: ResourceUri): String = {
+    uri.split(TYPE_SEPARATOR).head
   }
 
   def getPortUri(st: SymbolTable, completeName: String): Option[ResourceUri] = {

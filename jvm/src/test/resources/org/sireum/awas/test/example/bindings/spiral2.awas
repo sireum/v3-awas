@@ -38,6 +38,9 @@ components
       out Fingerclip_OUT
       in IV_IN
       out IV_OUT
+    flows
+      Absorb: Vein -> *
+      BloodSaturation: * -> BloodSat
 
   MedicalPlatform //processor
     ports

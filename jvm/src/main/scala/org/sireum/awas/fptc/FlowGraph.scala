@@ -29,20 +29,23 @@ package org.sireum.awas.fptc
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.{Builder, Model}
+import org.sireum.awas.collector.FlowCollector
 import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{AccumulatingTagReporter, CSet, ConsoleTagReporter, FileResourceUri}
+import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri}
 
 trait FlowGraph[Node] extends AwasGraph[Node] {
   def toDot: String
 
   def getEdgeForPort(port: ResourceUri): Set[Edge]
 
-  def getSuccessorPorts(port: ResourceUri): CSet[ResourceUri]
+  def getEdges(sourcePort: ResourceUri, targetPort: ResourceUri): Set[Edge]
 
-  def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri]
+  def getSuccessorPorts(port: ResourceUri): FlowCollector
+
+  def getPredecessorPorts(port: ResourceUri): FlowCollector
 
   def getNode(port: ResourceUri): Option[Node]
 

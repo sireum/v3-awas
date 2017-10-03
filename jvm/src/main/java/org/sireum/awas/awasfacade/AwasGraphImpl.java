@@ -59,8 +59,8 @@ public class AwasGraphImpl implements AwasGraph {
     public AwasGraphImpl(FlowGraph<FlowNode> graph, SymbolTable st) {
         this.graph = graph;
         this.st = st;
-        this.pr = PortReachability$.MODULE$.apply(graph);
-        this.er = ErrorReachability$.MODULE$.apply(graph);
+        this.pr = PortReachability$.MODULE$.apply(graph, st);
+        this.er = ErrorReachability$.MODULE$.apply(graph, st);
     }
 
     /**
@@ -71,7 +71,7 @@ public class AwasGraphImpl implements AwasGraph {
      */
     @Override
     public Set<String> forwardReach(String criterion) {
-        return toJavaSet((pr.forwardReach(criterion)));
+        return toJavaSet((pr.forwardReach(criterion)).getPorts());
     }
 
     /**
@@ -82,17 +82,17 @@ public class AwasGraphImpl implements AwasGraph {
      */
     @Override
     public Set<String> backwardReach(String criterion) {
-        return toJavaSet((pr.backwardReach(criterion)));
+        return toJavaSet((pr.backwardReach(criterion)).getPorts());
     }
 
     @Override
     public Set<String> forwardPortReach(String criterion) {
-        return toJavaSet((pr.forwardPortReach(criterion)));
+        return toJavaSet((pr.forwardPortReach(criterion)).getPorts());
     }
 
     @Override
     public Set<String> backwardPortReach(String criterion) {
-        return toJavaSet((pr.backwardPortReach(criterion)));
+        return toJavaSet((pr.backwardPortReach(criterion)).getPorts());
     }
 
     /**
@@ -107,7 +107,7 @@ public class AwasGraphImpl implements AwasGraph {
     public Set<String> forwardReachUsingNames(String criterion) {
         return toJavaSet(pr.forwardReach(
                 toJavaOptional(SymbolTableHelper
-                        .getUriFromString(st, criterion)).orElse(""))
+                        .getUriFromString(st, criterion)).orElse("")).getPorts()
         );
     }
 
@@ -122,8 +122,7 @@ public class AwasGraphImpl implements AwasGraph {
     @Override
     public Set<String> backwardReachUsingNames(String criterion) {
         return toJavaSet(pr.backwardReach(
-                toJavaOptional(SymbolTableHelper
-                        .getUriFromString(st, criterion)).orElse(""))
+                toJavaOptional(SymbolTableHelper.getUriFromString(st, criterion)).orElse("")).getPorts()
         );
     }
 
@@ -138,7 +137,7 @@ public class AwasGraphImpl implements AwasGraph {
             errorsUri.add(errorUri);
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.forwardErrorReach(
-                portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet());
+                portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
         return AwasUtil.toJavaMap(temp);
     }
 
@@ -152,7 +151,7 @@ public class AwasGraphImpl implements AwasGraph {
                     getErrorUri(st, error)).orElse("");
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.backwardErrorReach(
-                portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet());
+                portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
         return AwasUtil.toJavaMap(temp);
     }
 

@@ -25,6 +25,9 @@
 
 package org.sireum.awas.fptc
 
+
+import org.sireum.awas.ast.Node
+import org.sireum.awas.collector.{FlowErrorNextCollector, FlowCollector}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -32,13 +35,17 @@ import org.sireum.util._
 trait FlowNode extends BasicNode {
   def getFptcPropagation(port : ResourceUri) : Set[ResourceUri]
 
-  def flowForward(port: ResourceUri): Set[ResourceUri]
+  def flowForward(port: ResourceUri): FlowCollector
 
-  def flowBackward(port: ResourceUri): Set[ResourceUri]
+  def flowBackward(port: ResourceUri): FlowCollector
 
-  def errorForward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)]
+  def errorForward(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector
 
-  def errorBackward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)]
+  def errorBackward(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector
+
+  def isFlowDefined: Boolean
+
+  def getFlows: IMap[ResourceUri, Node]
 }
 
 trait FptcNodeUpdate {
@@ -66,3 +73,4 @@ object FlowNode {
     nodepool = imapEmpty[ResourceUri, FlowNode]
   }
 }
+

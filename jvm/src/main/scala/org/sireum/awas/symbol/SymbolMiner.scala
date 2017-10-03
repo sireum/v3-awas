@@ -102,6 +102,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
       case ed: EnumDecl =>
         val r = Resource(H.ENUM_TYPE, parentRes, ed.name.value, Some(true), ed)
+        st.symbol2Uri(ed.name.value) = r.toUri
         st.typeDeclTable(r.toUri) = ed
         val tType = new stp.TypeT(r.toUri)
         st.typeTable(r.toUri) = tType
@@ -109,7 +110,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         val tempSet = mmapEmpty[ResourceUri, Id]
         ed.elements.foreach { elem =>
           val er = Resource(H.ERROR_TYPE, r, elem.value, Some(true), elem)
-
+          tt.symbol2Uri(elem.value) = er.toUri
           if (!tempSet.keySet.contains(er.toUri))
             tempSet(er.toUri) = elem
           else {
@@ -146,6 +147,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         parentRes = Resource.getResource(m).get
 
         val r = Resource(H.STATE_MACHINE_TYPE, parentRes, sm.smName.value, Some(true), sm)
+        st.symbol2Uri(sm.smName.value) = r.toUri
         st.stateMachineDeclTable(r.toUri) = sm
         val smt = stp.stateMachineTableProducer(r.toUri)
         parentRes = r
@@ -153,6 +155,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         sm.states.foreach {
           s => {
             val sr = Resource(H.STATE_TYPE, parentRes, s.value, Some(true), s)
+            smt.tables.symbol2Uri(s.value) = sr.toUri
             if (!smt.tables.statesTable.keySet.contains(sr.toUri))
               smt.tables.statesTable(sr.toUri) = s
             else {
@@ -166,6 +169,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         sm.events.foreach {
           e => {
             val se = Resource(H.EVENT_TYPE, parentRes, e.value, Some(true), e)
+            smt.tables.symbol2Uri(e.value) = se.toUri
             if (!smt.tables.eventsTable.keySet.contains(se.toUri))
               smt.tables.eventsTable(se.toUri) = e
             else {
@@ -175,9 +179,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
               )
             }
           }
-
         }
-
       }
         false
 
@@ -196,6 +198,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
       case comp: ComponentDecl =>
         val r = Resource(H.COMPONENT_TYPE, parentRes, comp.compName.value, Some(true), comp)
+        st.symbol2Uri(comp.compName.value) = r.toUri
         if (!st.componentDeclTable.keySet.contains(r.toUri)) {
           st.componentDeclTable(r.toUri) = comp
           val compTableProducer = stp.componentSymbolTableProducer(r.toUri)
@@ -227,6 +230,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           comp.flows.foreach {
             flow => {
               val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
+              compTableProducer.tables.symbol2Uri(flow.id.value) = fr.toUri
               if (!compTableProducer.tables.flowTable.contains(fr.toUri)) {
                 compTableProducer.tables.flowTable(fr.toUri) = flow
                 flowCheck(m, flow, fr.toUri, r, tt)
@@ -270,6 +274,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       if (fromP.isDefined) {
         Resource.useDefResolve(flow.from.get, ctp.port(fromP.get).get)
         ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
+        ctp.tables.portFlowRelation.getOrElseUpdate(fr, msetEmpty[ResourceUri]) += fromP.get
         if (flow.fromE.nonEmpty) {
           flow.fromE.foreach {
             f => mineFault(m, f, r, tt)
@@ -287,6 +292,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       if (fromP.isDefined) {
         Resource.useDefResolve(flow.to.get, ctp.port(fromP.get).get)
         ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
+        ctp.tables.portFlowRelation.getOrElseUpdate(fr, msetEmpty[ResourceUri]) += fromP.get
         if (flow.toE.nonEmpty) {
           flow.toE.foreach {
             f => mineFault(m, f, r, tt)
@@ -375,7 +381,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   def propagationMiner(m: Model, p: Propagation, r: Resource, tt: ISet[TypeTable])(
     implicit reporter: AccumulatingTagReporter): Unit = {
     val ctp = stp.compMap(r.toUri)
-    val portUri = ctp.tables.portTable.keySet.find(_.endsWith(H.ID_SEPARATOR + p.id.value))
+    val portUri = ctp.getUriFromSymbol(p.id.value)
 
     if (portUri.isEmpty) {
       reporter.report(errorMessageGen(MISSING_PORT_DECL,
@@ -405,13 +411,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     implicit reporter: AccumulatingTagReporter): Unit = {
     val ctp = stp.compMap(r.toUri)
     val pr = Resource(if (p.isIn) H.PORT_IN_TYPE else H.PORT_OUT_TYPE, r, p.id.value, Some(true), p)
+    ctp.tables.symbol2Uri(p.id.value) = pr.toUri
     if (!ctp.tables.portTable.keySet.contains(pr.toUri)) {
       ctp.tables.portTable(pr.toUri) = p
     } else {
       reporter.report(errorMessageGen(DUPLICATE_PORT,
         p,
         m, p.id.value))
-
     }
   }
 
@@ -429,7 +435,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         parentRes = Resource.getResource(m).get
 
         val r = Resource(H.CONNECTION_TYPE, parentRes, conn.connName.value, Some(true), conn)
-
+        st.symbol2Uri(conn.connName.value) = r.toUri
         if (!st.connectionTable.contains(r.toUri)) {
           st.connectionTable(r.toUri) = conn
           compPortCheck(m, conn.fromComp, conn.fromPort)
@@ -437,18 +443,24 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
           val ntp = stp.connectionSymbolTableProducer(r.toUri)
 
-          ntp.tables.portTable += Resource(H.PORT_IN_VIRTUAL_TYPE,
+          val inr = Resource(H.PORT_IN_VIRTUAL_TYPE,
             r,
             H.INPUT_CONN_PORT_ID,
-            Some(true)).toUri
+            Some(true))
 
-          ntp.tables.portTable += Resource(H.PORT_OUT_VIRTUAL_TYPE,
+          val outr = Resource(H.PORT_OUT_VIRTUAL_TYPE,
             r,
             H.OUTPUT_CONN_PORT_ID,
-            Some(true)).toUri
+            Some(true))
+
+          ntp.tables.symbol2Uri(H.INPUT_CONN_PORT_ID) = inr.toUri
+          ntp.tables.symbol2Uri(H.OUTPUT_CONN_PORT_ID) = outr.toUri
+          ntp.tables.portTable += inr.toUri
+          ntp.tables.portTable += outr.toUri
 
           conn.connFlow.foreach { flow =>
             val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
+            ntp.tables.symbol2Uri(flow.id.value) = fr.toUri
             if (!ntp.tables.flowTable.contains(fr.toUri)) {
               ntp.tables.flowTable(fr.toUri) = flow
               if (flow.fromE.nonEmpty) {
@@ -456,6 +468,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
                   ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head,
                   msetEmpty[ResourceUri]
                 ) += fr.toUri
+                ntp.tables.portFlowRelation.getOrElseUpdate(
+                  fr.toUri, msetEmpty[ResourceUri]
+                ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head
                 flow.fromE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
               }
               if (flow.toE.nonEmpty) {
@@ -463,6 +478,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
                   ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head,
                   msetEmpty[ResourceUri]
                 ) += fr.toUri
+                ntp.tables.portFlowRelation.getOrElseUpdate(
+                  fr.toUri, msetEmpty[ResourceUri]
+                ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head
                 flow.toE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
               }
             } else {
@@ -493,13 +511,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       case deploy: DeploymentDecl =>
         require(Resource.getResource(m).isDefined)
         parentRes = Resource.getResource(m).get
-        val fromUri = getComponentOrConnectionUri(deploy.fromNode)
-        val toUri = getComponentOrConnectionUri(deploy.toNode)
+        val fromUri = getComponentOrConnectionUri(deploy.fromNode.value.last.value)
+        val toUri = getComponentOrConnectionUri(deploy.toNode.value.last.value)
 
         if (fromUri.isDefined) {
           Resource.useDefResolve(deploy.fromNode,
             if (fromUri.get.startsWith(H.COMPONENT_TYPE)) st.componentDeclTable(fromUri.get)
-            else st.componentDeclTable(fromUri.get))
+            else st.connectionTable(fromUri.get))
         } else {
           reporter.report(errorMessageGen(DUPLICATE_CONNECTION,
             deploy,
@@ -532,13 +550,14 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   def addBindPortsToNodes(nodeUri: ResourceUri): Unit = {
     if (nodeUri.startsWith(H.COMPONENT_TYPE)) {
       val pt = stp.compMap(nodeUri).tables.portTable
+      val port1 = Port(isIn = true, Id(H.INPUT_BIND_PORT_ID), None)
       pt(Resource(H.PORT_IN_BIND_TYPE,
         Resource.getDefResource(nodeUri).get,
-        H.INPUT_BIND_PORT_ID, Some(true)).toUri) = Port(isIn = true, Id(H.INPUT_BIND_PORT_ID), None)
-
+        H.INPUT_BIND_PORT_ID, Some(true), port1).toUri) = port1
+      val port2 = Port(isIn = false, Id(H.OUTPUT_BIND_PORT_ID), None)
       pt(Resource(H.PORT_OUT_BIND_TYPE,
         Resource.getDefResource(nodeUri).get,
-        H.OUTPUT_BIND_PORT_ID, Some(true)).toUri) = Port(isIn = false, Id(H.OUTPUT_BIND_PORT_ID), None)
+        H.OUTPUT_BIND_PORT_ID, Some(true), port2).toUri) = port2
     } else {
       val pt = stp.connMap(nodeUri).tables.portTable
       pt += Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
@@ -548,12 +567,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
   }
 
-  def getComponentOrConnectionUri(node: Name): Option[ResourceUri] = {
-    if (findComponent(node).isDefined) {
-      findComponent(node)
-    } else {
-      findConnection(node)
-    }
+  def getComponentOrConnectionUri(node: String): Option[ResourceUri] = {
+    stp.getUriFromSymbol(node)
   }
 
 
@@ -562,7 +577,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     val fcompUri = findComponent(comp)
     if (fcompUri.isDefined) {
       Resource.useDefResolve(comp, stp.component(fcompUri.get))
-      val fportUri = stp.compMap(fcompUri.get).ports.find(_.endsWith(H.ID_SEPARATOR + port.value))
+      val fportUri = stp.compMap(fcompUri.get).getUriFromSymbol(port.value)
       if (fportUri.isDefined) {
         Resource.useDefResolve(port, stp.componentTable(fcompUri.get).port(fportUri.get).get)
       } else {
@@ -578,11 +593,11 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
   def findComponent(compName: Name): Option[ResourceUri] = {
-    st.componentDeclTable.keySet.find(_.endsWith(H.ID_SEPARATOR + compName.value.last.value))
+    st.symbol2Uri.get(compName.value.last.value)
   }
 
   def findConnection(connName: Name): Option[ResourceUri] = {
-    st.connectionTable.keySet.find(_.endsWith(H.ID_SEPARATOR + connName.value.last.value))
+    st.symbol2Uri.get(connName.value.last.value)
   }
 
 }

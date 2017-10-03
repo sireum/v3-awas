@@ -43,14 +43,14 @@ extends TestDefProvider {
 
   val testDirs = Seq(
     //makePath("..", "example", "awas-lang"),
-    makePath("..", "example", "fptc"),
-    makePath("..", "example", "Query")
-    //makePath("..", "example", "bindings")
+    //makePath("..", "example", "fptc"),
+    //makePath("..", "example", "Query")
+    makePath("..", "example", "bindings")
   )
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
 
-  val generateExpected = false
+  val generateExpected = true
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -77,7 +77,6 @@ extends TestDefProvider {
         readFile(toUri(makePath(expectedDir, outputFileName)))._1)
     }
   }
-
 
   def dotGraphPrinter(infileUri: FileResourceUri, model: String): Option[String] = {
     import org.sireum.util.jvm.FileUtil._

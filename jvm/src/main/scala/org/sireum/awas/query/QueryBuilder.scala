@@ -29,6 +29,7 @@ import org.antlr.v4.runtime._
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.sireum.aq.parser.Antlr4AQParser._
 import org.sireum.aq.parser.{Antlr4AQLexer, Antlr4AQParser}
+import org.sireum.awas.query.FilterID.FilterID
 import org.sireum.util._
 
 final class QueryBuilder private() {
@@ -47,6 +48,22 @@ final class QueryBuilder private() {
     ctx match {
       case ctx: PrimaryExprContext => build(ctx.pexpr)
       case ctx: BinaryContext => build(ctx)
+      case ctx: FilterExprContext => build(ctx)
+    }
+  }
+
+  def build(ctx: FilterExprContext): FilterExpr = {
+    FilterExpr(build(ctx.l), build(ctx.op))
+  }
+
+  def build(ctx: FilterContext): FilterID = {
+    ctx.getText.toLowerCase match {
+      case "node" => FilterID.NODE
+      case "port" => FilterID.PORT
+      case "in-port" => FilterID.IN
+      case "out-port" => FilterID.OUT
+      case "error" => FilterID.ERROR
+      case "porterror" => FilterID.PORTERROR
     }
   }
 
@@ -89,17 +106,7 @@ final class QueryBuilder private() {
   }
 
   def build(ctx: NodeNameContext): NodeName = {
-    if (ctx.f != null) {
-      ctx.f.getText.toLowerCase match {
-        case "in" => NodeName(ctx.ids.map(buildId), Some(FilterID.IN))
-        case "out" => NodeName(ctx.ids.map(buildId), Some(FilterID.OUT))
-        case "source" => NodeName(ctx.ids.map(buildId), Some(FilterID.SOURCE))
-        case "sink" => NodeName(ctx.ids.map(buildId), Some(FilterID.SINK))
-        case _ => NodeName(ctx.ids.map(buildId), None)
-      }
-    } else {
-      NodeName(ctx.ids.map(buildId), None)
-    }
+    NodeName(ctx.ids.map(buildId))
   }
 
   def buildId(t: Token): Id = {

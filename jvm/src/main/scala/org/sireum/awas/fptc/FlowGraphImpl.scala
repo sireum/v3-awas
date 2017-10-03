@@ -31,6 +31,8 @@ import java.util
 import org.jgrapht.DirectedGraph
 import org.jgrapht.ext._
 import org.jgrapht.graph.DefaultDirectedGraph
+import org.sireum.awas.collector.CollectorErrorHelper._
+import org.sireum.awas.collector.FlowCollector
 import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -132,7 +134,6 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
     edgePortsMap += (edge -> (source, target))
   }
 
-
   override def getNode(n: FlowNode): FlowNode = n
 
   def getNode(uri: ResourceUri): Option[FlowNode] = {
@@ -147,43 +148,73 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
   override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
     portEdgeMap.getOrElse(port, isetEmpty[FEdge])
 
-  override def getSuccessorPorts(port: ResourceUri): CSet[ResourceUri] = {
-    var result = isetEmpty[ResourceUri]
+  override def getEdges(sourcePort: ResourceUri, targetPort: ResourceUri): ISet[Edge] = {
+    var res = isetEmpty[Edge]
+    edgePortsMap.foreach { v =>
+      if (v._2 == (sourcePort, targetPort)) {
+        res = res + v._1
+      }
+    }
+    res
+  }
+
+  override def getSuccessorPorts(port: ResourceUri): FlowCollector = {
     val node = getNode(port)
     if (node.isDefined) {
       if (port.startsWith(H.PORT_IN_TYPE)) {
-        result = result ++ node.get.flowForward(port)
+        node.get.flowForward(port)
       } else {
         //outport: use edge to get the successor
+        var res = isetEmpty[ResourceUri]
+        var edges = isetEmpty[Edge]
+
         getEdgeForPort(port).foreach {
           e =>
             e.targetPort match {
-              case Some(x) => result = result + x
+              case Some(x) => {
+                res = res + x
+                edges = edges + e
+              }
               case _ =>
             }
         }
+        FlowCollector(res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
       }
+    } else {
+      FlowCollector(isetEmpty[ResourceUri],
+        isetEmpty[Edge],
+        isetEmpty[ResourceUri],
+        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port))
     }
-    result
   }
 
-  override def getPredecessorPorts(port: ResourceUri): CSet[ResourceUri] = {
-    var result = isetEmpty[ResourceUri]
+  override def getPredecessorPorts(port: ResourceUri): FlowCollector = {
     val node = getNode(port)
     if (node.isDefined) {
+
       if (port.startsWith(H.PORT_IN_TYPE)) {
+        var res = isetEmpty[ResourceUri]
+        var edges = isetEmpty[Edge]
         getEdgeForPort(port).foreach { e =>
           e.sourcePort match {
-            case Some(x) => result = result + x
+            case Some(x) => {
+              res = res + x
+              edges = edges + e
+            }
             case _ =>
           }
         }
+        FlowCollector(res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
       } else {
         //outport: use edge to get the successor
-        result = result ++ node.get.flowBackward(port)
+        node.get.flowBackward(port)
       }
+    } else {
+      FlowCollector(isetEmpty[ResourceUri],
+        isetEmpty[Edge],
+        isetEmpty[ResourceUri],
+        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port))
     }
-    result
   }
 
   override def getPortsFromEdge(edge: Edge): Option[(ResourceUri, ResourceUri)] = {

@@ -1,0 +1,22 @@
+
+PatientVein = Patient.Vein
+
+Infusion_paths = * -> Infuse_Drug
+
+PulseOx_SpO2_influences_infusion = PulseOx.SpO2-> *
+
+all_hazardous_situation_overdose = * -> Patient.Vein{Error.TooMuchAnalgesic}
+
+Cap_to_Pump = Capnography.ETCO2 -> PCA.infuse
+
+Cap_to_Pump_paths = Capnography.ETCO2 ~> PCA.infuse
+
+Cap_to_pump_hazard_1 = Capnography.RespiratoryRate{Error.RespirationRateHigh} -> PCA.infuse{Error.TooMuchAnalgesic}
+
+Cap_to_pump_hazard_1_path = Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly} ~> PCA.infuse{Error.TooMuchAnalgesic}
+
+Cap_to_pump_hazard_2 = Capnography.ETCO2{Error.ETCO2Early} -> PCA.infuse{Error.TooMuchAnalgesic}
+
+PulseOx_to_pump_check =  PulseOx.SpO2{Error.NoSpO2} -> * //dont know how to handle the incomming error, when no flows are propagation defined
+
+Control_Loop = Patient.BloodSat ~> Patient.Vein

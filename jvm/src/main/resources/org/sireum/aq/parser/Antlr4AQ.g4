@@ -21,8 +21,17 @@ expr
 | l=expr op='-' r=expr                           #Binary
 | l=expr op=('union' | 'intersect') r=expr       #Binary
 | l=expr op=('->' | '~>') r=expr                 #Binary
+| l=expr ':' op=filter                           #FilterExpr
 ;
 
+filter
+: 'node' | 'NODE'                                #Node
+| 'port' | 'PORT'                                #Port
+| 'in-port' | 'IN-PORT'                          #In
+| 'out-port' | 'OUT-PORT'                        #Out
+| 'error' | 'ERROR'                              #Error
+| 'porterror' | 'PORTERROR'                      #PortError
+;
 
 pexpr
 : nodeNameError                                  #NodeN
@@ -41,7 +50,7 @@ errorId
 ;
 
 nodeName
-  : ids+=ID ( '.' ids+=ID )* (':' f=('in' | 'out' | 'source' | 'sink'))?
+  : ids+=ID ( '.' ids+=ID )* //(':' f=('in' | 'out'))?
   ;
 
 INTEGER

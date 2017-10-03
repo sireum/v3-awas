@@ -1,0 +1,10 @@
+/*
+Control_Loop = Patient.BloodSat ~> Patient.Vein
+
+Connections = {Blood_Sat, Report_SpO2, Issue_Ticket, Infuse_Drug}
+
+Bus = {MedicalPlatform, Tube, Device_Network, Wire}
+
+Components = {Patient, Application, PulseOx, PCA}
+*/
+End_To_End_Flow = Patient.BloodSaturation ~> Patient.Absorb

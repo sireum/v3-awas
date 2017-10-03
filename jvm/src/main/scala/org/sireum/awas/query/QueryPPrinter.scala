@@ -32,6 +32,7 @@ final class QueryPPrinter(stg: STGroup) {
     qe match {
       case be: BinaryExpr => print(be)
       case pe: PrimaryExpr => print(pe)
+      case fe: FilterExpr => print(fe)
     }
   }
 
@@ -51,6 +52,12 @@ final class QueryPPrinter(stg: STGroup) {
       case ne: NodeEmpty => print(ne)
       case qres: QueryName => print(qres)
     }
+  }
+
+  def print(fe: FilterExpr): ST = {
+    val temp = stg.getInstanceOf("filterExpr")
+    temp.add("expr", print(fe.lhs))
+    temp.add("op", fe.op.toString)
   }
 
   def print(p: Paren): ST = {
@@ -84,8 +91,6 @@ final class QueryPPrinter(stg: STGroup) {
   def print(nn: NodeName): ST = {
     val temp = stg.getInstanceOf("nodeName")
     temp.add("id", nn.ids.map(print).asJava)
-    if (nn.filter.isDefined)
-      temp.add("filter", nn.filter.get.toString)
     temp
   }
 

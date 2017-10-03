@@ -75,7 +75,7 @@ object Resource {
 
   }
 
-  def apply(uriType: String): Resource = build(uriType, ivectorEmpty[String], "")
+  def apply(uriType: String): Resource = build(uriType, ivectorEmpty[String] :+ "AWAS", "")
 
   def apply(uriType: String,
             uriPath: ISeq[String],
@@ -109,8 +109,8 @@ object Resource {
     val res = ResourceBean(uriType, uriPath, uri, isDef)
     if (n.isDefined) {
       resourceInfo(n.get) = res
-      resourceUri(res.toUri.split(":").last) = res
     }
+    resourceUri(res.toUri.split(":").last) = res
     res
   }
 

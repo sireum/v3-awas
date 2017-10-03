@@ -1,0 +1,44 @@
+strict digraph G {
+  Tube [ label="{In Port|<bind_in>bind_in} |component
+  Tube|{Out Port|<bind_out>bind_out} " shape="record" ];
+  Patient [ label="{In Port|<IV_IN>IV_IN|<Fingerclip_IN>Fingerclip_IN|<Vein>Vein} |component
+Patient|{Out Port|<Fingerclip_OUT>Fingerclip_OUT|<BloodSat>BloodSat|<IV_OUT>IV_OUT} " shape="record" ];
+  PCA [ label="{In Port|<Ticket_Rec_IN>Ticket_Rec_IN|<control>control|<Pump_Out_IN>Pump_Out_IN} |component
+PCA|{Out Port|<Pump_Out_OUT>Pump_Out_OUT|<Ticket_Rec_OUT>Ticket_Rec_OUT|<infuse>infuse} " shape="record" ];
+  Application [ label="{In Port|<bind_in>bind_in|<SpO2>SpO2} |component
+Application|{Out Port|<Ticket>Ticket|<bind_out>bind_out} " shape="record" ];
+  PulseOx [ label="{In Port|<Data_Send_IN>Data_Send_IN|<Saturation>Saturation|<Read_Into_IN>Read_Into_IN} |component
+PulseOx|{Out Port|<Data_Send_OUT>Data_Send_OUT|<SpO2>SpO2|<Read_Into_OUT>Read_Into_OUT} " shape="record" ];
+  Device_Network [ label="{In Port|<bind_in>bind_in} |component
+Device_Network|{Out Port|<bind_out>bind_out} " shape="record" ];
+  Wire [ label="{In Port|<bind_in>bind_in} |component
+Wire|{Out Port|<bind_out>bind_out} " shape="record" ];
+  MedicalPlatform [ label="{In Port|<Net_Ac_IN>Net_Ac_IN|<bind_in>bind_in} |component
+MedicalPlatform|{Out Port|<bind_out>bind_out|<Net_Ac_OUT>Net_Ac_OUT} " shape="record" ];
+  Issue_Ticket [ label="connection
+Issue_Ticket" shape="record" ];
+  Report_SpO2 [ label="connection
+Report_SpO2" shape="record" ];
+  Blood_Sat [ label="connection
+Blood_Sat" shape="record" ];
+  Infuse_Drug [ label="connection
+Infuse_Drug" shape="record" ];
+  Application -> Issue_Ticket [ tailport="Ticket" ];
+  Issue_Ticket -> PCA [ headport="control" ];
+  PulseOx -> Report_SpO2 [ tailport="SpO2" ];
+  Report_SpO2 -> Application [ headport="SpO2" ];
+  Patient -> Blood_Sat [ tailport="BloodSat" ];
+  Blood_Sat -> PulseOx [ headport="Saturation" ];
+  PCA -> Infuse_Drug [ tailport="infuse" ];
+  Infuse_Drug -> Patient [ headport="Vein" ];
+  Wire -> Blood_Sat [ tailport="bind_out" ];
+  Blood_Sat -> Wire [ headport="bind_in" ];
+  Device_Network -> Report_SpO2 [ tailport="bind_out" ];
+  Report_SpO2 -> Device_Network [ headport="bind_in" ];
+  Tube -> Infuse_Drug [ tailport="bind_out" ];
+  Infuse_Drug -> Tube [ headport="bind_in" ];
+  MedicalPlatform -> Application [ tailport="bind_out" headport="bind_in" ];
+  Application -> MedicalPlatform [ tailport="bind_out" headport="bind_in" ];
+  Device_Network -> Issue_Ticket [ tailport="bind_out" ];
+  Issue_Ticket -> Device_Network [ headport="bind_in" ];
+}

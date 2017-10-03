@@ -46,9 +46,7 @@ import java.util.Optional;
 public class AwasGraphBuilder {
 
     public static Optional<AwasGraph> build(String path) throws Exception {
-        Path basePath = Paths.get(FileUtil.fileUri(ReachabilityExample.class, ".."));
-        Path relativeUri = basePath.relativize(Paths.get(FileUtil.toUri(path)));
-        Some<String> optUri = Some.apply(relativeUri.toString());
+        Some<String> optUri = Some.apply(path);
 
         Optional<Model> modelOpt = JavaConverters.toJavaOptional(Builder.apply(optUri,
                 FileUtil.readFile(FileUtil.toUri(path))._1(),

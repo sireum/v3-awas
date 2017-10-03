@@ -25,6 +25,7 @@
 
 package org.sireum.awas.reachability
 
+import org.sireum.awas.collector.Collector
 import org.sireum.util.ISet
 
 trait BasicReachability[Node] {
@@ -34,14 +35,14 @@ trait BasicReachability[Node] {
     * @param criterion Graph node from which reachability is computed
     * @return [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  def forwardReach(criterion : Node) : ISet[Node]
+  def forwardReach(criterion: Node): Collector
 
   /**
     * Returns the forward reachability/slice for the set of criterion
     * @param criterion Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  def forwardReachSetNode(criterion: Set[Node]): ISet[Node]
+  def forwardReachSetNode(criterion: Set[Node]): Collector
 
   /**
     * Returns the backward reachability/slice of the criterion
@@ -49,14 +50,14 @@ trait BasicReachability[Node] {
     * @param criterion Graph node to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  def backwardReach(criterion : Node) : ISet[Node]
+  def backwardReach(criterion: Node): Collector
 
   /**
     * Returns the backward reachability/slice for the set of criterion
     * @param criterions Set of graph nodes to which reachability is computed
     * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
     */
-  def backwardReachSetNode(criterions: Set[Node]): ISet[Node]
+  def backwardReachSetNode(criterions: Set[Node]): Collector
 
   /**
     * Returns the set of paths from source to target
@@ -64,5 +65,5 @@ trait BasicReachability[Node] {
     * @param target Ending node of paths
     * @return a [[ISet]] of Paths, each path consists of a set of nodes
     */
-  def reachPath(source : Node, target:Node): ISet[Set[Node]]
+  def reachPath(source: Node, target: Node): Collector
 }

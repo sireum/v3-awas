@@ -4,9 +4,11 @@ import java.io.StringWriter
 import java.util
 
 import org.jgrapht.ext.{ComponentAttributeProvider, DOTExporter, StringComponentNameProvider}
+import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.symbol.SymbolTableHelper
-import org.sireum.util.{FileResourceUri, mlinkedMapEmpty}
+import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.util.{FileResourceUri, IMap, mlinkedMapEmpty}
 
 import scalatags.Text.all._
 
@@ -21,7 +23,7 @@ object SvgGenerator {
     sw.toString
       .replaceAll("label=\"<<", "label=<<")
       .replaceAll(">>\"", ">>")
-      .replace("strict digraph G {", "strict digraph G { \n rankdir=LR;")
+      .replace("strict digraph G {", "strict digraph G { \n rankdir=LR; ")
   }
 
   type Edge = FlowEdge[FlowNode]
@@ -48,59 +50,82 @@ object SvgGenerator {
     override def getName(vertex: FlowNode): String = {
       val inPorts = vertex.inPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
       val outPorts = vertex.outPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
-      val label = table(attr("border") := 0,
+      val errors = vertex.ports.map(it => (it, vertex.getPropagation(it).toSeq)).toMap
+      val flows = vertex.getFlows.map(it => (it._1, PrettyPrinter.print(it._2))).toSeq
+      val label = tag("font")(attr("POINT-SIZE") := 12, table(attr("border") := 0,
         attr("cellborder") := 1,
         attr("cellspacing") := 0,
         attr("cellpadding") := 1,
         attr("VALIGN") := "Middle",
         tr(
-          td(colspan := 3, attr("bgcolor") := "#eeccff",
+          td(if (vertex.isFlowDefined) colspan := 3 else colspan := 2, // attr("bgcolor") := "#eeccff",
+            attr("cellpadding") := 5, attr("href") := "templink", attr("target") := vertex.getUri,
             b(
               if (vertex.isComponent) "Component: " + H.uri2IdString(vertex.getUri)
               else "Connection: " + H.uri2IdString(vertex.getUri))
           )
         ),
-        tr(
-          td(
-            attr("align") := "Center")
-          (attr("bgcolor") := "#F8F8F8")
-          (
-            i("In ports")
-          ),
-          td(
-            attr("align") := "Center")
-          (attr("bgcolor") := "#F8F8F8")
-          (i("Flows")),
-          td(
-            attr("align") := "Center")
-          (attr("bgcolor") := "#F8F8F8")
-          (i("Out ports"))
-        ),
-        tr(td(attr("cellpadding") := 0, table(attr("border") := 0,
-          attr("cellspacing") := 0, attr("cellpadding") := 0,
-          for ((portid, uri, text) <- inPorts) yield
-            tr(
-              td(attr("port") := portid, attr("href") := "templink", attr("border") := 0,
-                attr("target") := uri, attr("cellpadding") := 0, id := "badlink",
-                attr("cellspacing") := 0, tabledata(text))
-            ))),
-          td(),
-          td(attr("cellpadding") := 0, table(attr("border") := 0,
-            attr("cellspacing") := 0, attr("cellpadding") := 0,
-            for ((portid, uri, text) <- outPorts) yield
-              tr(
-                td(attr("port") := portid, attr("href") := "templink", attr("border") := 0,
-                  attr("target") := uri, attr("cellpadding") := 0, id := "badlink",
-                  attr("cellspacing") := 0, tabledata(text))
-              ))))
-      ).render
+        if (vertex.isFlowDefined) tr(
+          td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
+          td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Flows")),
+          td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Out ports")))
+        else
+          tr(
+            td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
+            td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Out ports"))),
+        if (vertex.isFlowDefined) tr(portContent(inPorts, errors),
+          flowContent(flows), portContent(outPorts, errors))
+        else tr(portContent(inPorts, errors),
+          portContent(outPorts, errors))
+      )).render
       "<" + label + ">"
     }
   }
 
-  private def tabledata(text: String) = table(attr("border") := 0,
+  private def flowContent(flows: Seq[(ResourceUri, String)]) =
+    td(attr("cellpadding") := 0, table(attr("border") := 0,
+      attr("cellspacing") := 0, attr("cellpadding") := 0,
+      for ((uri, text) <- flows) yield
+        tr(td(attr("cellpadding") := 0, table(attr("border") := 0,
+          attr("cellspacing") := 0, attr("cellpadding") := 0,
+          tr(td(attr("border") := 0, attr("href") := "templink",
+            attr("target") := uri, attr("cellpadding") := 0, id := "badlink",
+            attr("cellspacing") := 0, tabledata(text, false)))
+        )))
+    ))
+
+  private def portContent(inPorts: Seq[(String, ResourceUri, String)],
+                          errors: IMap[String, Seq[String]]) =
+    td(attr("cellpadding") := 0, table(attr("border") := 0,
+      attr("cellspacing") := 0, attr("cellpadding") := 0, attr("ROWS") := "*",
+      for ((portid, uri, text) <- inPorts) yield
+        tr(td(attr("cellpadding") := 0,
+          table(attr("border") := 0,
+            attr("cellspacing") := 0, attr("cellpadding") := 0,
+            tr(td(attr("port") := portid, attr("href") := "templink", attr("border") := 0,
+              if (errors(uri).size > 1) colspan := errors(uri).size else colspan := 1,
+              //if(errors(uri).isEmpty) attr("border") := 1 else attr("border") := 0, attr("sides") := "B",
+              attr("target") := uri, attr("cellpadding") := 0, id := "badlink",
+              attr("cellspacing") := 0, tabledata(text, false))),
+            tr(
+              if (errors(uri).nonEmpty)
+                for (error <- errors(uri)) yield
+                  td(attr("target") := "Error" + ":" + uri + ':' + error, attr("href") := "templink",
+                    attr("cellpadding") := 2, //id := "badlink", attr("border") := 1, attr("sides") := "B",
+                    attr("cellspacing") := 0, tag("font")(attr("POINT-SIZE") := 8,
+                      tabledata(H.uri2IdString(error),
+                        if (inPorts.last != (portid, uri, text)) true else false)))
+              else
+                td()
+            )
+          )))))
+
+
+  private def tabledata(text: String, border: Boolean) = table(attr("border") := 0,
     attr("bgcolor") := "white", attr("cellborder") := 0, attr("cellspacing") := 0,
-    attr("cellpadding") := 0, tr(td(text)))
+    attr("cellpadding") := 0, tr(if (border) td(//attr("border") := 0, attr("sides") := "B",
+      attr("cellspacing") := 0, attr("cellpadding") := 0, text)
+    else td(text)))
 
 
   private val eAttrProvider = new ComponentAttributeProvider[Edge] {
@@ -110,10 +135,15 @@ object SvgGenerator {
       if (component.source.isComponent) {
         res("tailport") = component.sourcePort.get.split('$').last
         res("headport") = component.targetPort.get.split('$').last
+        res("edgehref") = "templink"
+        res("target") = "Edge+" + component.sourcePort.get + ":" + component.targetPort.get
+        res("arrowsize") = ".5"
       }
       if (component.target.isComponent) {
         res("headport") = component.targetPort.get.split('$').last
         res("tailport") = component.sourcePort.get.split('$').last
+        res("edgehref") = "templink"
+        res("target") = "Edge+" + component.sourcePort.get + ":" + component.targetPort.get
       }
       res.asJava
     }

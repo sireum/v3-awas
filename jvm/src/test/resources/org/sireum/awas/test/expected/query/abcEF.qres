@@ -1,164 +1,151 @@
 q1
  -------------- 
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in[ error:$$example/Query/abcEF.awas$Error#Low ]
+Error: 
+
+Missing flow relationship for port & Error: 'port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, error:$AWAS$$example/Query/abcEF.awas$Error#Low'
 
  -------------- 
 q2
  -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$B2C#in[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$B#bOut[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out[ error:$$example/Query/abcEF.awas$Error#High ]
-port-out-virtual:$$example/Query/abcEF.awas$B2C#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in[ error:$$example/Query/abcEF.awas$Error#High ]
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#High ]
-port-out:$$example/Query/abcEF.awas$C#cOut[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$C#cIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
+Error: 
+
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 
  -------------- 
 q3
  -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
+Error: 
+
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 
  -------------- 
 q4
  -------------- 
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in[ error:$$example/Query/abcEF.awas$Error#Low ]
+Error: 
+
+Missing flow relationship for port & Error: 'port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, error:$AWAS$$example/Query/abcEF.awas$Error#Low'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 
  -------------- 
 q5
  -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in
-port-out:$$example/Query/abcEF.awas$B#bOut
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out
-port-in:$$example/Query/abcEF.awas$A#aIn
-port-out:$$example/Query/abcEF.awas$B#bOut2
-port-out:$$example/Query/abcEF.awas$C#cOut
-port-in:$$example/Query/abcEF.awas$B#bIn
-port-out-virtual:$$example/Query/abcEF.awas$B2C#out
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in
-port-in-virtual:$$example/Query/abcEF.awas$B2C#in
-port-out:$$example/Query/abcEF.awas$A#aOut
-port-in:$$example/Query/abcEF.awas$C#cIn
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out
+Warning: 
+
+Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#A2B'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2C'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2A'
+{ port-in-virtual:$AWAS$$example/Query/abcEF.awas$A2B#in, 
+port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2A#in, 
+port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2C#in, 
+port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, 
+port-in:$AWAS$$example/Query/abcEF.awas$B#bIn, 
+port-in:$AWAS$$example/Query/abcEF.awas$C#cIn, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2A#out, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2C#out, 
+port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, 
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut, 
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, 
+port-out:$AWAS$$example/Query/abcEF.awas$C#cOut } 
 
  -------------- 
 q6
  -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in
-port-out:$$example/Query/abcEF.awas$B#bOut
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out
-port-in:$$example/Query/abcEF.awas$A#aIn
-port-out:$$example/Query/abcEF.awas$B#bOut2
-port-out:$$example/Query/abcEF.awas$C#cOut
-port-in:$$example/Query/abcEF.awas$B#bIn
-port-out-virtual:$$example/Query/abcEF.awas$B2C#out
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in
-port-in-virtual:$$example/Query/abcEF.awas$B2C#in
-port-out:$$example/Query/abcEF.awas$A#aOut
-port-in:$$example/Query/abcEF.awas$C#cIn
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out
+Error: 
+
+Missing flow relationship for port & Error: 'port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, error:$AWAS$$example/Query/abcEF.awas$Error#Low'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 
  -------------- 
 q7
  -------------- 
-{ component:$$example/Query/abcEF.awas#A, component:$$example/Query/abcEF.awas#B, component:$$example/Query/abcEF.awas#C, connection:$$example/Query/abcEF.awas#A2B, connection:$$example/Query/abcEF.awas#B2C } 
+{ component:$AWAS$$example/Query/abcEF.awas#A, 
+component:$AWAS$$example/Query/abcEF.awas#B, 
+component:$AWAS$$example/Query/abcEF.awas#C, 
+connection:$AWAS$$example/Query/abcEF.awas#A2B, 
+connection:$AWAS$$example/Query/abcEF.awas#B2A, 
+connection:$AWAS$$example/Query/abcEF.awas#B2C } 
 
  -------------- 
 q8
  -------------- 
-{ port-in-virtual:$$example/Query/abcEF.awas$A2B#in, port-in-virtual:$$example/Query/abcEF.awas$B2C#in, port-in:$$example/Query/abcEF.awas$A#aIn, port-in:$$example/Query/abcEF.awas$B#bIn, port-in:$$example/Query/abcEF.awas$C#cIn, port-out-virtual:$$example/Query/abcEF.awas$A2B#out, port-out-virtual:$$example/Query/abcEF.awas$B2C#out, port-out:$$example/Query/abcEF.awas$A#aOut, port-out:$$example/Query/abcEF.awas$B#bOut, port-out:$$example/Query/abcEF.awas$C#cOut } 
+{ port-in-virtual:$AWAS$$example/Query/abcEF.awas$A2B#in, 
+port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2A#in, 
+port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2C#in, 
+port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, 
+port-in:$AWAS$$example/Query/abcEF.awas$B#bIn, 
+port-in:$AWAS$$example/Query/abcEF.awas$C#cIn, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2A#out, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2C#out, 
+port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, 
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut, 
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, 
+port-out:$AWAS$$example/Query/abcEF.awas$C#cOut } 
 
  -------------- 
 q9
  -------------- 
+{  } 
 
  -------------- 
 q10
  -------------- 
-Path 01:
-port-out:$$example/Query/abcEF.awas$B#bOut2{error:$$example/Query/abcEF.awas$Error#Low}
-port-in:$$example/Query/abcEF.awas$B#bIn{error:$$example/Query/abcEF.awas$Error#Low}
-port-in:$$example/Query/abcEF.awas$A#aIn{error:$$example/Query/abcEF.awas$Error#High}
-port-out:$$example/Query/abcEF.awas$A#aOut{error:$$example/Query/abcEF.awas$Error#Low}
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out{error:$$example/Query/abcEF.awas$Error#Low}
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in{error:$$example/Query/abcEF.awas$Error#Low}
+{ port-in-virtual:$AWAS$$example/Query/abcEF.awas$A2B#in[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ]
+port-in:$AWAS$$example/Query/abcEF.awas$A#aIn[ error:$AWAS$$example/Query/abcEF.awas$Error#High ]
+port-in:$AWAS$$example/Query/abcEF.awas$B#bIn[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ]
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ]
+port-out:$AWAS$$example/Query/abcEF.awas$A#aOut[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ]
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ] } 
+
  -------------- 
 q11
  -------------- 
-port-in:$$example/Query/abcEF.awas$A#aIn
-port-out:$$example/Query/abcEF.awas$B#bOut2
-port-in:$$example/Query/abcEF.awas$B#bIn
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in
-port-out:$$example/Query/abcEF.awas$A#aOut
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out
+Warning: 
+
+Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#A2B'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2C'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2A'
+{ port-in-virtual:$AWAS$$example/Query/abcEF.awas$A2B#in, 
+port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, 
+port-in:$AWAS$$example/Query/abcEF.awas$B#bIn, 
+port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, 
+port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, 
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2 } 
+
+ -------------- 
+q12
+ -------------- 
+{ component:$AWAS$$example/Query/abcEF.awas#A, 
+component:$AWAS$$example/Query/abcEF.awas#B, 
+component:$AWAS$$example/Query/abcEF.awas#C, 
+connection:$AWAS$$example/Query/abcEF.awas#A2B, 
+connection:$AWAS$$example/Query/abcEF.awas#B2A, 
+connection:$AWAS$$example/Query/abcEF.awas#B2C } 
+
+ -------------- 
+nq1
+ -------------- 
+{ component:$AWAS$$example/Query/abcEF.awas#A } 
+
+ -------------- 
+nq2
+ -------------- 
+{ port-in:$AWAS$$example/Query/abcEF.awas$A#aIn } 
+
+ -------------- 
+nq3
+ -------------- 
+{ port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ]
+port-out:$AWAS$$example/Query/abcEF.awas$B#bOut[ error:$AWAS$$example/Query/abcEF.awas$Error#Low ] } 
 
  -------------- 
 q13
  -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$B2C#in[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2C#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$C#cOut[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$C#cIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-
- -------------- 
-q14
- -------------- 
-port-out-virtual:$$example/Query/abcEF.awas$B2C#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$C#cOut[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$C#cIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-
- -------------- 
-q15
- -------------- 
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in[ error:$$example/Query/abcEF.awas$Error#High ]
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-
- -------------- 
-q16
- -------------- 
-port-out:$$example/Query/abcEF.awas$B#bOut2[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$B2A#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$B#bIn[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out:$$example/Query/abcEF.awas$A#aOut[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$B2A#in[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-out-virtual:$$example/Query/abcEF.awas$A2B#out[ error:$$example/Query/abcEF.awas$Error#Low ]
-port-in:$$example/Query/abcEF.awas$A#aIn[ error:$$example/Query/abcEF.awas$Error#High, error:$$example/Query/abcEF.awas$Error#Low ]
-port-in-virtual:$$example/Query/abcEF.awas$A2B#in[ error:$$example/Query/abcEF.awas$Error#Low ]
-
- -------------- 
-q17
- -------------- 
+{ port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2C#in } 
 
  -------------- 

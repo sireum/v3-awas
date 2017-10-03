@@ -80,6 +80,8 @@ trait SymbolTable {
   def uris(file: FileResourceUri): MSet[ResourceUri]
 
   def compTypeDecl(compUri: ResourceUri): Set[ResourceUri]
+
+  def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
 sealed case class SymbolTableData
@@ -95,7 +97,8 @@ sealed case class SymbolTableData
  deploymentDeclTable: MMap[(ResourceUri, ResourceUri), DeploymentDecl] = mmapEmpty,
  compSMTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
  compTypeTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
- constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty
+ constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty,
+ symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
 class STProducer extends SymbolTable {
@@ -187,6 +190,11 @@ class STProducer extends SymbolTable {
     tables.compTypeTable.getOrElse(compUri, isetEmpty[ResourceUri]).toSet
   }
 
+  override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
+    tables.symbol2Uri.get(symbol)
+  }
+
+
   class TypeT(val typeDeclUri: ResourceUri) extends TypeTable {
 
     val tables = TypeTableData()
@@ -200,6 +208,9 @@ class STProducer extends SymbolTable {
     override def enumElement(enumElemUri: ResourceUri): Id =
       tables.enumTable(typeDeclUri)(enumElemUri)
 
+    override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
+      tables.symbol2Uri.get(symbol)
+    }
   }
 
   class SMT(val smDeclUri: ResourceUri) extends StateMachineTable {
@@ -213,6 +224,10 @@ class STProducer extends SymbolTable {
     override def state(stateUri: ResourceUri): Node = tables.statesTable(stateUri)
 
     override def event(eventUri: ResourceUri): Node = tables.eventsTable(eventUri)
+
+    override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
+      tables.symbol2Uri.get(symbol)
+    }
   }
 
   class CompST(val compUri: ResourceUri) extends ComponentSymbolTable {
@@ -244,8 +259,16 @@ class STProducer extends SymbolTable {
 
     override def flow(flowUri: ResourceUri): Flow = tables.flowTable(flowUri)
 
-    override def flowRelate(portUri: ResourceUri): Set[ResourceUri] = {
+    override def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri] = {
       tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
+    }
+
+    override def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri] = {
+      tables.portFlowRelation.getOrElse(flowUri, isetEmpty).toSet
+    }
+
+    override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
+      tables.symbol2Uri.get(symbol)
     }
   }
 
@@ -262,8 +285,16 @@ class STProducer extends SymbolTable {
 
     override def flow(flowUri: ResourceUri): CFlow = tables.flowTable(flowUri)
 
-    override def flowRelate(portUri: ResourceUri): Set[ResourceUri] = {
+    override def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri] = {
       tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
+    }
+
+    override def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri] = {
+      tables.portFlowRelation.getOrElse(flowUri, isetEmpty).toSet
+    }
+
+    override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
+      tables.symbol2Uri.get(symbol)
     }
   }
 
@@ -286,7 +317,11 @@ trait ComponentSymbolTable {
 
   def flow(flowUri: ResourceUri): Flow
 
-  def flowRelate(portUri: ResourceUri): Set[ResourceUri]
+  def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
+
+  def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
+
+  def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
 sealed case class ComponentTableData
@@ -294,7 +329,9 @@ sealed case class ComponentTableData
  portTable: MMap[ResourceUri, Port] = mmapEmpty,
  propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  flowTable: MMap[ResourceUri, Flow] = mmapEmpty,
- flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty
+ flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
 trait ConnectionSymbolTable {
@@ -308,13 +345,19 @@ trait ConnectionSymbolTable {
 
   def flow(flowUri: ResourceUri): CFlow
 
-  def flowRelate(portUri: ResourceUri): Set[ResourceUri]
+  def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
+
+  def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
+
+  def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
 sealed case class ConnectionTableData
 (portTable: MSet[ResourceUri] = msetEmpty,
  flowTable: MMap[ResourceUri, CFlow] = mmapEmpty,
- flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty
+ flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
 trait TypeTable {
@@ -325,10 +368,13 @@ trait TypeTable {
   def enumElements: Set[ResourceUri]
 
   def enumElement(enumElemUri : ResourceUri) : Id
+
+  def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
 sealed case class TypeTableData
-(enumTable: MMap[ResourceUri, MMap[ResourceUri, Id]] = mmapEmpty)
+(enumTable: MMap[ResourceUri, MMap[ResourceUri, Id]] = mmapEmpty,
+ symbol2Uri: MMap[String, ResourceUri] = mmapEmpty)
 
 trait StateMachineTable {
   def symbolTable: SymbolTable
@@ -340,9 +386,11 @@ trait StateMachineTable {
   def events: Iterable[ResourceUri]
 
   def event(eventUri : ResourceUri) : Node
+
+  def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
 sealed case class StateMachineData
 (statesTable: MLinkedMap[ResourceUri, Node] = mlinkedMapEmpty,
- eventsTable: MMap[ResourceUri, Node] = mmapEmpty
-)
+ eventsTable: MMap[ResourceUri, Node] = mmapEmpty,
+ symbol2Uri: MMap[String, ResourceUri] = mmapEmpty)

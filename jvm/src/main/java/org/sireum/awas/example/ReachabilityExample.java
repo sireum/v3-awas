@@ -78,18 +78,18 @@ public class ReachabilityExample {
                 }
 
                 // step 2: Construct the reachability object
-                PortReachability<FlowNode> pr = PortReachability$.MODULE$.apply(graph);
+                PortReachability<FlowNode> pr = PortReachability$.MODULE$.apply(graph, st);
 
                 // step 3: invoke the right method based on the direction
                 if (criterion != null) {
                     if (Objects.equals(args[1].toLowerCase(), "forward")) {
                         System.out.println("Forward reachability for the criterion: " + args[2]);
                         JavaConverters.toJavaSet(
-                                pr.forwardReach(criterion)).forEach(System.out::println);
+                                pr.forwardReach(criterion).getPorts()).forEach(System.out::println);
                     } else {
                         System.out.println("Backward reachability for the criterion: " + args[2]);
                         JavaConverters.toJavaSet(
-                                pr.backwardReach(criterion)).forEach(System.out::println);
+                                pr.backwardReach(criterion).getPorts()).forEach(System.out::println);
                     }
                 } else {
                     if (args.length == 3)

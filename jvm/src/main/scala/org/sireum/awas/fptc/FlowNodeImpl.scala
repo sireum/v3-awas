@@ -25,6 +25,9 @@
 
 package org.sireum.awas.fptc
 
+import org.sireum.awas.ast.Node
+import org.sireum.awas.collector.CollectorErrorHelper._
+import org.sireum.awas.collector.{FlowErrorNextCollector, FlowCollector}
 import org.sireum.awas.symbol._
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -63,7 +66,7 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     fptcPropagation += (port -> (etSet + error_type))
   }
 
-  def isFlowDefined: Boolean = {
+  override def isFlowDefined: Boolean = {
     if (uriType == H.COMPONENT_TYPE) {
       st.componentTable(uri).flows.nonEmpty
     } else {
@@ -71,148 +74,169 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     }
   }
 
+  override def getFlows: IMap[ResourceUri, Node] = {
+    if (isComponent & compST.isDefined) {
+      compST.get.flows.map(it => (it, compST.get.flow(it))).toMap
+    } else {
+      connST.get.flows.map(it => (it, connST.get.flow(it))).toMap
+    }
+  }
+
   override def getFptcPropagation(port: ResourceUri): Set[ResourceUri] = fptcPropagation(port)
 
   private def getCompFlowError(tuple: (ResourceUri, ResourceUri),
-                               isForward: Boolean): ISet[(ResourceUri, ResourceUri)] = {
+                               isForward: Boolean): FlowErrorNextCollector = {
     //flows are defined, but may not be complete
     //in forward we care only the path and sink
     require(isComponent && compST.isDefined, "object state is not satisfying the requirment")
     var result = isetEmpty[(ResourceUri, ResourceUri)]
+    var flows = isetEmpty[ResourceUri]
+    var errors = isetEmpty[Tag]
     var found = false
-
-    compST.get.flowRelate(tuple._1).foreach { fUri => //takes cares of path and sink
-      val flow = compST.get.flow(fUri)
-      val source = if (isForward) flow.from else flow.to
-      val target = if (isForward) flow.to else flow.from
-      val sourceE = if (isForward) flow.fromE else flow.toE
-      val targetE = if (isForward) flow.toE else flow.fromE
-      if (source.isDefined &&
-        Resource.getResource(source.get).isDefined &&
-        (Resource.getResource(source.get).get.toUri == tuple._1) &&
-        sourceE.flatMap(Resource.getResource(_)).map(_.toUri).contains(tuple._2)) {
-        found = true
-        if (target.isDefined && Resource.getResource(target.get).isDefined) {
-          result = result ++ targetE.flatMap(Resource.getResource(_)).
-            map(_.toUri).map((Resource.getResource(target.get).get.toUri, _))
+    if (isFlowDefined) {
+      compST.get.getFlowsFromPort(tuple._1).foreach { fUri => //takes cares of path and sink
+        val flow = compST.get.flow(fUri)
+        val source = if (isForward) flow.from else flow.to
+        val target = if (isForward) flow.to else flow.from
+        val sourceE = if (isForward) flow.fromE else flow.toE
+        val targetE = if (isForward) flow.toE else flow.fromE
+        if (source.isDefined &&
+          Resource.getResource(source.get).isDefined &&
+          (Resource.getResource(source.get).get.toUri == tuple._1) &&
+          sourceE.flatMap(Resource.getResource(_)).map(_.toUri).contains(tuple._2)) {
+          found = true
+          flows += fUri
+          if (target.isDefined && Resource.getResource(target.get).isDefined) {
+            result = result ++ targetE.flatMap(Resource.getResource(_)).
+              map(_.toUri).map((Resource.getResource(target.get).get.toUri, _))
           }
+        }
       }
-    }
-    if (!found && compST.get.port(tuple._1).isDefined) { //if flow is not defined for this port and error
-      val port = compST.get.port(tuple._1).get
-      val tos = if (isForward) flowForward(tuple._1) else flowBackward(tuple._1)
-      tos.foreach { it =>
-        result = result ++ compST.get.propagation(it).map((it, _))
+
+      if (!found && compST.get.port(tuple._1).isDefined) { //if flow is not defined for this port and error
+        val port = compST.get.port(tuple._1).get
+        errors += errorMessageGen(INSUFFICIENT_FLOW_INFO_ERROR,
+          tuple._1 + ", " + tuple._2, ReachAnalysisStage.FlowError)
+        val tos = if (isForward) flowForward(tuple._1) else flowBackward(tuple._1)
+        errors ++= tos.errors
+        flows ++= tos.flows
+        val tempPorts = tos.ports
+        tempPorts.foreach { it =>
+          result = result ++ compST.get.propagation(it).map((it, _))
+        }
       }
-      System.err.println("Missing flow definition for port and error :" + tuple._1 + " -> " + tuple._2)
+    } else {
+      result = result ++ outPorts.flatMap(it => getPropagation(it).map(e => (it, e))).toSet
+      errors += warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.FlowError)
     }
-    result
+    FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors)
   }
 
   private def getConnFlowError(tuple: (ResourceUri, ResourceUri),
-                               isForward: Boolean): ISet[(ResourceUri, ResourceUri)] = {
+                               isForward: Boolean): FlowErrorNextCollector = {
     var result = isetEmpty[(ResourceUri, ResourceUri)]
+    var flows = isetEmpty[ResourceUri]
+    var errors = isetEmpty[Tag]
     var found = false
     require(!isComponent && connST.isDefined, "object state is not satisfying the requirment")
     val ports = if (isForward) outPorts else inPorts
-    connST.get.flowRelate(tuple._1).foreach { furi =>
-      val flow = connST.get.flow(furi)
-      val sourceE = if (isForward) flow.fromE else flow.toE
-      val targetE = if (isForward) flow.toE else flow.fromE
-      if (sourceE.nonEmpty &&
-        sourceE.flatMap(Resource.getResource(_)).map(_.toUri).contains(tuple._2)) {
-        found = true
-        result = result ++ targetE.flatMap(Resource.getResource(_))
-          .map(_.toUri).map(e => (ports.head, e))
+    if (isFlowDefined) {
+      connST.get.getFlowsFromPort(tuple._1).foreach { furi =>
+        val flow = connST.get.flow(furi)
+        val sourceE = if (isForward) flow.fromE else flow.toE
+        val targetE = if (isForward) flow.toE else flow.fromE
+        if (sourceE.nonEmpty &&
+          sourceE.flatMap(Resource.getResource(_)).map(_.toUri).contains(tuple._2)) {
+          found = true
+          flows += furi
+          result = result ++ targetE.flatMap(Resource.getResource(_))
+            .map(_.toUri).map(e => (ports.head, e))
         }
+      }
+      if (!found) {
+        //propagate on the conservative step
+        errors += errorMessageGen(INSUFFICIENT_FLOW_INFO_ERROR,
+          tuple._1 + ", " + tuple._2, ReachAnalysisStage.FlowError)
+        result ++= ports.map(op => (op, tuple._2))
+      }
+    } else {
+      errors += warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.FlowError)
+      result ++= ports.map(op => (op, tuple._2))
     }
-    if (!found) {
-      //propagate on the conservative step
-      result += ((ports.head, tuple._2))
-      System.err.println("Missing flow definition for port and error :" + tuple._1 + " -> " + tuple._2)
-    }
-    result
+    FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors)
   }
 
   private def errorFlowNext(tuple: (ResourceUri, ResourceUri),
-                            isForward: Boolean): ISet[(ResourceUri, ResourceUri)] = {
-    var result = isetEmpty[(ResourceUri, ResourceUri)]
-    if (!isFlowDefined) {
-      val ports = if (isForward) outPorts else inPorts
-      if (isComponent) {
-        //if it is a component, use propagation to compute result
-        ports.foreach { op =>
-          result ++= compST.get.propagation(op).map((f: ResourceUri) => (op, f))
-        }
-        return result
-      } else {
-        //for connections without flows, just propagate the error
-        result ++= ports.map(op => (op, tuple._2))
-        return result
-      }
-    } else {
-      //flows are defined, but may not be complete
-      //in forward we care only the path and sink
+                            isForward: Boolean): FlowErrorNextCollector = {
+
       if (isComponent && compST.isDefined) {
-        result = result ++ getCompFlowError(tuple, isForward)
-      } else if (!isComponent && connST.isDefined) {
-        result = result ++ getConnFlowError(tuple, isForward)
+        getCompFlowError(tuple, isForward)
       } else {
-        //node that's not a component and not a connection too? something is wrong
-        assert(false)
+        getConnFlowError(tuple, isForward)
       }
-    }
-    result
   }
 
-  override def flowForward(port: ResourceUri): Set[ResourceUri] = {
+  override def flowForward(port: ResourceUri): FlowCollector = {
+    flowNext(port, isForward = true)
+  }
+
+  private def flowNext(port: ResourceUri, isForward: Boolean): FlowCollector = {
     var result = isetEmpty[ResourceUri]
-    if (isComponent && !isFlowDefined) {
-      result ++= outPorts
+    var edges = isetEmpty[Edge]
+    var flows = isetEmpty[ResourceUri]
+    var errors = isetEmpty[Tag]
+
+    var res = FlowCollector(result, edges, flows, errors)
+
+    if (!isFlowDefined) {
+      //we know, if we are performing a forward analysis,
+      // and calculating intra flow(this method), then given port is input
+      if (isForward) result ++= outPorts else result ++= inPorts
+      errors = errors + warningMessageGen(FLOW_INFO_MISSING,
+        uri,
+        ReachAnalysisStage.Port)
+
+      FlowCollector(result, edges, flows, errors)
     } else {
-      if (port.startsWith(H.PORT_IN_TYPE) &&
-        isComponent && H.getPortId(st, uri, port).isDefined) {
-        compST.get.flowRelate(port).foreach { f =>
-          if (compST.get.flow(f).from.isDefined &&
-            compST.get.flow(f).to.isDefined) {
-            result = result ++ outPorts.filter(H.getPortId(st, uri, _).get ==
-              compST.get.flow(f).to.get.value)
+      if (isComponent && compST.isDefined && H.isPort(port) && compST.get.getFlowsFromPort(port).nonEmpty) {
+        compST.get.getFlowsFromPort(port).foreach { f =>
+          if (isForward && compST.get.flow(f).from.isDefined) {
+            flows = flows + f
+            if (compST.get.flow(f).to.isDefined)
+              result = result ++ outPorts.filter(H.getPortId(st, uri, _).get ==
+                compST.get.flow(f).to.get.value)
+          } else if (!isForward && compST.get.flow(f).to.isDefined) {
+            flows = flows + f
+            if (compST.get.flow(f).from.isDefined)
+              result = result ++ inPorts.filter(H.getPortId(st, uri, _).get ==
+                compST.get.flow(f).from.get.value)
+          } else {
+            errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO,
+              port,
+              ReachAnalysisStage.Port)
           }
         }
+      } else if (!isComponent && connST.isDefined && H.isPort(port)) {
+        if (isForward) result ++= outPorts else result ++= inPorts
       } else {
-        result += outPorts.head
+        errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO,
+          port,
+          ReachAnalysisStage.Port)
       }
+      FlowCollector(result, edges, flows, errors)
     }
-    result
   }
 
-  override def errorForward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)] = {
+  override def flowBackward(port: ResourceUri): FlowCollector = {
+    flowNext(port, isForward = false)
+  }
+
+  override def errorForward(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector = {
     errorFlowNext(tuple, isForward = true)
   }
 
-  override def errorBackward(tuple: (ResourceUri, ResourceUri)): ISet[(ResourceUri, ResourceUri)] = {
+  override def errorBackward(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector = {
     errorFlowNext(tuple, isForward = false)
-  }
-
-  override def flowBackward(port: ResourceUri): Set[ResourceUri] = {
-    var result = isetEmpty[ResourceUri]
-    if (isComponent && !isFlowDefined) {
-      result ++= inPorts
-    } else {
-      if (port.startsWith(H.PORT_OUT_TYPE) &&
-        isComponent && H.getPortId(st, uri, port).isDefined) {
-        compST.get.flowRelate(port).foreach { f =>
-          if (compST.get.flow(f).from.isDefined &&
-            compST.get.flow(f).to.isDefined) {
-            result = result ++ inPorts.filter(H.getPortId(st, uri, _).get ==
-              compST.get.flow(f).from.get.value)
-          }
-        }
-      } else {
-        result += inPorts.head
-      }
-    }
-    result
   }
 
 }

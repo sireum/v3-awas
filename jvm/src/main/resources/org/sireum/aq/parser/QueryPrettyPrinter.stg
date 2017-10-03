@@ -35,6 +35,10 @@ parenExpr(expr) ::= <<
 ($expr$)
 >>
 
+filterExpr(expr, op) ::= <<
+$expr$:$op$
+>>
+
 qName(id) ::= <<
 $id$
 >>
@@ -64,5 +68,5 @@ $ids; separator="."$
 >>
 
 nodeName(id, filter) ::= <<
-$id; separator="."$$if(filter)$:$filter$$endif$
+$id; separator="."$
 >>

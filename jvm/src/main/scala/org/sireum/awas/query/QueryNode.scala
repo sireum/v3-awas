@@ -54,6 +54,9 @@ final case class BinaryExpr(lhs: QueryExpr,
 
 sealed trait PrimaryExpr extends QueryExpr
 
+final case class FilterExpr(lhs: QueryExpr,
+                            op: FilterID) extends QueryExpr
+
 final case class NodeNameError(nodeName: NodeName,
                                errorSet: QueryNode.Seq[QueryNode.Seq[Id]]) extends PrimaryExpr
 
@@ -65,15 +68,18 @@ final case class NodeEmpty() extends PrimaryExpr
 
 final case class QueryName(id: Id) extends PrimaryExpr
 
-final case class NodeName(ids: QueryNode.Seq[Id],
-                          filter: Option[FilterID])
+final case class NodeName(ids: QueryNode.Seq[Id])
 
 object FilterID extends Enumeration {
   type FilterID = Value
-  val IN = Value("in")
-  val OUT = Value("out")
+  val IN = Value("in-port")
+  val OUT = Value("out-port")
   val SOURCE = Value("source")
   val SINK = Value("sink")
+  val NODE = Value("node")
+  val PORT = Value("port")
+  val PORTERROR = Value("porterror")
+  val ERROR = Value("error")
 }
 
 object Id {

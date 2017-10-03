@@ -1,0 +1,196 @@
+types
+  enum Error {SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2,
+  ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2,
+  RespirationRateLow, RespirationRateHigh, RespirationRateEarly, RespirationRateLate, NoRespirationRate,
+  TicketTooLong, TicketTooShort, EarlyTicket, LateTicket, NoTicket,
+  PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse, TooMuchAnalgesic}
+
+components
+  Patient
+  with Error
+    ports
+      out BloodSat
+      in Fingerclip_BUS_IN
+      out Fingerclip_BUS_OUT
+      in IV_BUS_IN
+      out IV_BUS_OUT
+      out HeartBeat
+      out Exhale
+      in Vein
+    flows
+      Absorb: Vein -> *
+      BloodSaturation: * -> BloodSat
+      Exhalation: * -> Exhale
+      Heart_Beat: * -> HeartBeat
+
+  PulseOx
+  with Error
+    ports
+      in Saturation
+      out SpO2
+      in HeartBeat
+      out Pulse
+
+      in Read_Into_BUS_IN
+      out Read_Into_BUS_OUT
+      in Data_Send_BUS_OUT
+      out Data_Send_BUS_OUT
+    propagations
+      SpO2 = {SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+      Pulse = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+    flows
+      Read_SpO2:  Saturation -> SpO2
+      Read_Pulse: HeartBeat -> Pulse
+      SpO2Error: * -> SpO2{SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+      PulseError: * -> Pulse{PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+
+  Capnography
+  with Error
+    ports
+      out ETCO2
+      out RespiratoryRate
+      in Respiration
+    propagations
+      ETCO2 = {ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2}
+      RespiratoryRate = {RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+    flows
+      ETCO2Error: * -> ETCO2{ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2}
+      RRError: * -> RespiratoryRate{RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+
+  Application
+  with Error
+    ports
+      in SpO2
+      out Ticket
+      in Pulse
+      in EKG
+      in RR
+      in ETCO2
+      in Parameter_Entry
+    propagations
+      SpO2 = {SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+      ETCO2 = {ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2}
+      RR = {RespirationRateLow, RespirationRateHigh, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+      Ticket = {TicketTooLong, TicketTooShort, EarlyTicket, LateTicket, NoTicket}
+      Pulse = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+    flows
+       SpO2High: SpO2{SpO2ValueHigh} -> Ticket{TicketTooLong}
+       SpO2Low: SpO2{SpO2ValueLow} -> Ticket{TicketTooShort}
+       SpO2Early:   SpO2{SpO2Early} -> Ticket{EarlyTicket}
+       SpO2Late:   SpO2{SpO2Late} -> Ticket{LateTicket}
+       NoSpO2:   SpO2{NoSpO2} -> Ticket{NoTicket}
+
+       ETCO2High:   ETCO2{ETCO2ValueHigh} -> Ticket{TicketTooLong}
+       ETCO2Low:   ETCO2{ETCO2ValueLow} -> Ticket{TicketTooShort}
+       ETCO2Early:   ETCO2{ETCO2Early} -> Ticket{EarlyTicket}
+       ETCO2Late:   ETCO2{ETCO2Late} -> Ticket{LateTicket}
+       NoETCO2:   ETCO2{NoETCO2} -> Ticket{NoTicket}
+
+       RRHigh:   RR{RespirationRateHigh} -> Ticket{TicketTooLong}
+       RRLow:   RR{RespirationRateLow} -> Ticket{TicketTooShort}
+       RREarly:   RR{RespirationRateEarly} -> Ticket{EarlyTicket}
+       RRLate:   RR{RespirationRateLate} -> Ticket{LateTicket}
+       NoRR:   RR{NoRespirationRate} -> Ticket{NoTicket}
+
+       PulseHigh:   Pulse{PulseValueHigh} -> Ticket{TicketTooLong}
+       PulseLow:   Pulse{PulseValueLow} -> Ticket{TicketTooShort}
+       PulseEarly:   Pulse{PulseEarly} -> Ticket{EarlyTicket}
+       PulseLate:   Pulse{PulseLate} -> Ticket{LateTicket}
+       NoPulse:   Pulse{NoPulse} -> Ticket{NoTicket}
+
+   PCA
+   with Error
+     ports
+       in control
+       out infuse
+       in Pump_Out_INBUS
+       out Pump_Out_OUTBUS
+       in Ticket_Rec_INBUS
+       in Ticket_Rec_OUTBUS
+
+     propagations
+       control = {TicketTooLong, TicketTooShort, NoTicket, EarlyTicket, LateTicket}
+       infuse = {TooMuchAnalgesic}
+
+     flows
+       BadCommand2Infuse: control{TicketTooLong, EarlyTicket, LateTicket} -> infuse{TooMuchAnalgesic}
+       NonDangers: control{TicketTooShort, NoTicket} -> *
+       SpontaneousError: * -> infuse{TooMuchAnalgesic}
+
+   EKG
+   with Error
+     ports
+       in Lead1
+       in Lead2
+       in Lead3
+       out EKG
+       out HR
+     propagations
+       HR = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+     flows
+       Lead1Read:   Lead1 -> EKG
+       Lead2Read:   Lead2 -> EKG
+       Lead3Read:   Lead3 -> EKG
+
+       HRLead1:   Lead1 -> HR
+       HRLead2:   Lead2 -> HR
+       HRLead3:   Lead3 -> HR
+       HRError: * -> HR{PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+
+   MAP
+     ports
+       in Net_Ac_INBUS
+       out Net_Ac_OUTBUS
+
+   Device_Network
+
+   Tube
+
+   FingerClipWire
+
+   EKGLead1Wire
+
+   EKGLead2Wire
+
+   EKGLead3Wire
+
+   CapnometerWire
+
+
+connections
+  Blood_Sat: Patient.BloodSat -> PulseOx.Saturation
+  EKG_1: Patient.HeartBeat -> EKG.Lead1
+  EKG_2: Patient.HeartBeat -> EKG.Lead2
+  EKG_3: Patient.HeartBeat -> EKG.Lead3
+  		
+  Pulse_PulseOx: Patient.HeartBeat -> PulseOx.HeartBeat
+  		
+  Cap_Read: Patient.Exhale -> Capnography.Respiration
+  		
+  ETCO2_Report: Capnography.ETCO2 -> Application.ETCO2
+  RR_Report: Capnography.RespiratoryRate -> Application.RR
+  		
+  Pulse_Report_PulseOx: PulseOx.Pulse -> Application.Pulse
+  Report_SpO2: PulseOx.SpO2 -> Application.SpO2
+  		
+  Pulse_Report_EKG: EKG.HR -> Application.Pulse
+  EKG_Report: EKG.EKG -> Application.EKG
+  		
+  Issue_Ticket: Application.Ticket -> PCA.control
+  Infuse_Drug: PCA.infuse -> Patient.Vein
+
+deployment
+ Device_Network <-> Report_SpO2
+ Device_Network <->  Issue_Ticket
+ Device_Network <->  Pulse_Report_PulseOx
+ Device_Network <->  Pulse_Report_EKG
+ Device_Network <->  ETCO2_Report
+ Device_Network <->  RR_Report
+ Device_Network <->  EKG_Report
+ Tube <-> Infuse_Drug
+ FingerClipWire <-> Blood_Sat
+ EKGLead1Wire <-> EKG_1
+ EKGLead2Wire <-> EKG_2
+ EKGLead3Wire <-> EKG_3
+ CapnometerWire <-> Cap_Read
+ MAP <-> Application

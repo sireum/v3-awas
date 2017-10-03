@@ -51,6 +51,9 @@ object PrettyPrinter {
       case p : Port =>
         new PrettyPrinter(sb).print(p,0)
         false
+      case f: Flow =>
+        new PrettyPrinter(sb).print(f, 0)
+        false
     })(n)
     sb.toString().trim
   }
@@ -513,26 +516,30 @@ final class PrettyPrinter(sb: StringBuilder) {
       case None => sb.append("*")
       case _ =>
         print(f.from.get)
-        sb.append("{")
-        print(f.fromE.head)
-        for(fe <- f.fromE.tail) {
-          sb.append(", ")
-          print(fe)
+        if (f.fromE.nonEmpty) {
+          sb.append("{")
+          print(f.fromE.head)
+          for (fe <- f.fromE.tail) {
+            sb.append(", ")
+            print(fe)
+          }
+          sb.append("}")
         }
-        sb.append("}")
     }
     sb.append(" -> ")
     f.to match {
       case None => sb.append("*")
       case _ =>
         print(f.to.get)
-        sb.append("{")
-        print(f.toE.head)
-        for(te <- f.toE.tail) {
-          sb.append(", ")
-          print(te)
+        if (f.toE.nonEmpty) {
+          sb.append("{")
+          print(f.toE.head)
+          for (te <- f.toE.tail) {
+            sb.append(", ")
+            print(te)
+          }
+          sb.append("}")
         }
-        sb.append("}")
     }
   }
 

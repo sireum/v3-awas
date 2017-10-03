@@ -25,39 +25,40 @@
 
 package org.sireum.awas.reachability
 
+import org.sireum.awas.collector.Collector
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.ISet
 
 
 trait PortReachability[Node] extends BasicReachability[Node]{
-  def forwardPortReach(criterion: ResourceUri): ISet[ResourceUri]
+  def forwardPortReach(criterion: ResourceUri): Collector
 
-  def backwardPortReach(criterion: ResourceUri): ISet[ResourceUri]
+  def backwardPortReach(criterion: ResourceUri): Collector
 
-  def forwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri]
+  def forwardPortReachSet(criterions: Set[ResourceUri]): Collector
 
-  def backwardPortReachSet(criterions: Set[ResourceUri]): ISet[ResourceUri]
+  def backwardPortReachSet(criterions: Set[ResourceUri]): Collector
 
-  def forwardPortReach(criterion: FlowNode): ISet[ResourceUri]
+  def forwardPortReach(criterion: FlowNode): Collector
 
-  def backwardPortReach(criterion: FlowNode): ISet[ResourceUri]
+  def backwardPortReach(criterion: FlowNode): Collector
 
-  def forwardReach(criterion: ResourceUri): ISet[ResourceUri]
+  def forwardReach(criterion: ResourceUri): Collector
 
-  def backwardReach(criterion: ResourceUri): ISet[ResourceUri]
+  def backwardReach(criterion: ResourceUri): Collector
 
-  def forwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri]
+  def forwardReachSet(criterion: Set[ResourceUri]): Collector
 
-  def backwardReachSet(criterion: Set[ResourceUri]): ISet[ResourceUri]
+  def backwardReachSet(criterion: Set[ResourceUri]): Collector
 
-  def reachPath(source: ResourceUri, target: ResourceUri): ISet[Set[ResourceUri]]
+  def reachPath(source: ResourceUri, target: ResourceUri): Collector
 
-  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri]): ISet[Set[ResourceUri]]
+  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri]): Collector
 }
 
 object PortReachability {
-  def apply(graph: FlowGraph[FlowNode]): PortReachability[FlowNode] = {
-    new PortReachabilityImpl[FlowNode](graph)
+  def apply(graph: FlowGraph[FlowNode], st: SymbolTable): PortReachability[FlowNode] = {
+    new PortReachabilityImpl[FlowNode](st, graph)
   }
 }

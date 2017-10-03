@@ -1,3 +1,4 @@
+
 q1 = A.aIn{Error.High} -> *
 q2 = * -> C.cOut{Error.High}
 q3 = * -> A.aIn{Error.Low}
@@ -11,11 +12,19 @@ q9 = A.aIn{Error.High} ~> C.cOut{Error.High} //no path exists between the source
 q10 = A.aIn{Error.High} ~> B.bOut2{Error.Low}
 //testing type coercion
 q11 = 'q5 intersect 'q10
+
 //TODO: the following query is not working as expected: fine grained type coercion required
-//q12 = 'q7 union (A.aIn{Error.High} ~> B.bOut2{Error.Low})
+q12 = 'q7 union (A.aIn{Error.High} ~> B.bOut2{Error.Low})
 //testing connection error
-q13 = B2C:in{Error.Low} -> *
-q14 = B2C:out{Error.Low} -> *
-q15 = * -> A2B:out{Error.Low}
-q16 = A:in{Error.High} -> *
+nq1 = A
+nq2 = A:in-port
+nq3 = B:out-port:porterror
+
+q13 = B2C:in-port
+/*
+q14 = B2C{Error.Low} -> *
+q15 = * -> A2B{Error.Low}
+q16 = A{Error.High} -> *
 q17 = q1 - q16 //this should be empty
+
+*/

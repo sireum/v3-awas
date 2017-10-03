@@ -1,65 +1,77 @@
 infant_backreach
  -------------- 
-component:$$example/Query/IsoletteModelFlow.awas#Nurse
-connection:$$example/Query/IsoletteModelFlow.awas#o4
-component:$$example/Query/IsoletteModelFlow.awas#OperatorInterface
-connection:$$example/Query/IsoletteModelFlow.awas#i2
-component:$$example/Query/IsoletteModelFlow.awas#TempSensor
-connection:$$example/Query/IsoletteModelFlow.awas#o2
-component:$$example/Query/IsoletteModelFlow.awas#Thermostat
-connection:$$example/Query/IsoletteModelFlow.awas#o3
-component:$$example/Query/IsoletteModelFlow.awas#HeatSource
-connection:$$example/Query/IsoletteModelFlow.awas#o1
-connection:$$example/Query/IsoletteModelFlow.awas#h2
-component:$$example/Query/IsoletteModelFlow.awas#Air
-component:$$example/Query/IsoletteModelFlow.awas#Infant
-connection:$$example/Query/IsoletteModelFlow.awas#h1
-connection:$$example/Query/IsoletteModelFlow.awas#i1
-connection:$$example/Query/IsoletteModelFlow.awas#t2
-connection:$$example/Query/IsoletteModelFlow.awas#t1
+{ component:$AWAS$$example/Query/IsoletteModelFlow.awas#Air, 
+component:$AWAS$$example/Query/IsoletteModelFlow.awas#HeatSource, 
+component:$AWAS$$example/Query/IsoletteModelFlow.awas#Infant, 
+component:$AWAS$$example/Query/IsoletteModelFlow.awas#Nurse, 
+component:$AWAS$$example/Query/IsoletteModelFlow.awas#OperatorInterface, 
+component:$AWAS$$example/Query/IsoletteModelFlow.awas#TempSensor, 
+component:$AWAS$$example/Query/IsoletteModelFlow.awas#Thermostat, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#h1, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#h2, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#i1, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#i2, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o1, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o2, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o3, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o4, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#t1, 
+connection:$AWAS$$example/Query/IsoletteModelFlow.awas#t2 } 
 
  -------------- 
 air_infant
  -------------- 
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$t2#out
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$h1#in
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$t2#in
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$o3#out
-port-in:$$example/Query/IsoletteModelFlow.awas$Air#from_heater
-port-in:$$example/Query/IsoletteModelFlow.awas$Infant#heat_in
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$i2#out
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$i2#in
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$h1#out
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$i1#out
-port-out:$$example/Query/IsoletteModelFlow.awas$Thermostat#heater_ctrl
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$h2#in
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$o2#in
-port-in:$$example/Query/IsoletteModelFlow.awas$Thermostat#sensed_temp
-port-out:$$example/Query/IsoletteModelFlow.awas$TempSensor#air_temp
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$o2#out
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$h2#out
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$t1#out
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$t1#in
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$o4#out
-port-in:$$example/Query/IsoletteModelFlow.awas$Nurse#monitor
-port-out:$$example/Query/IsoletteModelFlow.awas$OperatorInterface#settings_out
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$o1#in
-port-in:$$example/Query/IsoletteModelFlow.awas$OperatorInterface#feedback_in
-port-in:$$example/Query/IsoletteModelFlow.awas$HeatSource#on_heater
-port-in:$$example/Query/IsoletteModelFlow.awas$OperatorInterface#settings_in
-port-out:$$example/Query/IsoletteModelFlow.awas$OperatorInterface#feedback_out
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$o4#in
-port-in:$$example/Query/IsoletteModelFlow.awas$Thermostat#settings
-port-out:$$example/Query/IsoletteModelFlow.awas$HeatSource#heater_output
-port-out:$$example/Query/IsoletteModelFlow.awas$Air#to_infant
-port-out-virtual:$$example/Query/IsoletteModelFlow.awas$o1#out
-port-out:$$example/Query/IsoletteModelFlow.awas$Thermostat#feedback
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$o3#in
-port-in-virtual:$$example/Query/IsoletteModelFlow.awas$i1#in
-port-in:$$example/Query/IsoletteModelFlow.awas$Air#from_infant
-port-out:$$example/Query/IsoletteModelFlow.awas$Nurse#set_params
-port-in:$$example/Query/IsoletteModelFlow.awas$TempSensor#air_heat
-port-out:$$example/Query/IsoletteModelFlow.awas$Infant#heat_out
-port-out:$$example/Query/IsoletteModelFlow.awas$Air#to_sensor
+Warning: 
+
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#i1'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o4'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#t1'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o2'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o3'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#i2'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#h2'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#h1'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#t2'
+Missing flow relationships for node 'connection:$AWAS$$example/Query/IsoletteModelFlow.awas#o1'
+{ port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$h1#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$h2#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$i1#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$i2#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o1#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o2#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o3#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o4#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$t1#in, 
+port-in-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$t2#in, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$Air#from_heater, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$Air#from_infant, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$HeatSource#on_heater, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$Infant#heat_in, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$Nurse#monitor, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$OperatorInterface#feedback_in, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$OperatorInterface#settings_in, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$TempSensor#air_heat, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$Thermostat#sensed_temp, 
+port-in:$AWAS$$example/Query/IsoletteModelFlow.awas$Thermostat#settings, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$h1#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$h2#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$i1#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$i2#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o1#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o2#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o3#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$o4#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$t1#out, 
+port-out-virtual:$AWAS$$example/Query/IsoletteModelFlow.awas$t2#out, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$Air#to_infant, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$Air#to_sensor, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$HeatSource#heater_output, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$Infant#heat_out, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$Nurse#set_params, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$OperatorInterface#feedback_out, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$OperatorInterface#settings_out, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$TempSensor#air_temp, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$Thermostat#feedback, 
+port-out:$AWAS$$example/Query/IsoletteModelFlow.awas$Thermostat#heater_ctrl } 
 
  -------------- 

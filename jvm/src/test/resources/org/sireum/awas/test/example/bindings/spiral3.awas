@@ -1,0 +1,144 @@
+components
+  Patient
+    ports
+      out BloodSat
+      in Fingerclip_BUS_IN
+      out Fingerclip_BUS_OUT
+      in IV_BUS_IN
+      out IV_BUS_OUT
+      out HeartBeat
+      out Exhale
+      in Vein
+    flows
+      Absorb: Vein -> *
+      BloodSaturation: * -> BloodSat
+      Exhalation: * -> Exhale
+      Heart_Beat: * -> HeartBeat
+
+  PulseOx
+      ports
+        in Saturation
+        out SpO2
+        in HeartBeat
+        out Pulse
+
+        in Read_Into_BUS_IN
+        out Read_Into_BUS_OUT
+        in Data_Send_BUS_OUT
+        out Data_Send_BUS_OUT
+
+      flows
+        Read_SpO2:  Saturation -> SpO2
+        Read_Pulse: HeartBeat -> Pulse
+
+  Capnography
+     ports
+       out ETCO2
+       out RespiratoryRate
+       in Respiration
+
+     flows
+       Rate_Read:  Respiration -> RespiratoryRate
+       ETCO2_Read: Respiration -> ETCO2
+
+   Application
+      ports
+        in SpO2
+        out Ticket
+        in Pulse
+        in EKG
+        in RR
+        in ETCO2
+
+      flows
+         Check_SpO2: SpO2 -> Ticket
+         Check_Pulse:  Pulse -> Ticket
+         Check_RR:  RR -> Ticket
+         Check_ETCO2:  ETCO2 -> Ticket
+         EKG_Store: EKG -> *
+
+  PCA
+       ports
+         in control
+         out infuse
+         in Pump_Out_INBUS
+         out Pump_Out_OUTBUS
+         in Ticket_Rec_INBUS
+         in Ticket_Rec_OUTBUS
+
+       flows
+         Pump: control -> infuse
+
+   EKG
+       ports
+         in Lead1
+         in Lead2
+         in Lead3
+         out EKG
+         out HR
+
+       flows
+         Lead1Read:   Lead1 -> EKG
+         Lead2Read:   Lead2 -> EKG
+         Lead3Read:   Lead3 -> EKG
+
+         HRLead1:   Lead1 -> HR
+         HRLead2:   Lead2 -> HR
+         HRLead3:   Lead3 -> HR
+
+     MAP
+       ports
+         in Net_Ac_INBUS
+         out Net_Ac_OUTBUS
+
+     Device_Network
+
+     Tube
+
+     FingerClipWire
+
+     EKGLead1Wire
+
+     EKGLead2Wire
+
+     EKGLead3Wire
+
+     CapnometerWire
+
+connections
+  Blood_Sat: Patient.BloodSat -> PulseOx.Saturation
+  EKG_1: Patient.HeartBeat -> EKG.Lead1
+  EKG_2: Patient.HeartBeat -> EKG.Lead2
+  EKG_3: Patient.HeartBeat -> EKG.Lead3
+
+  Pulse_PulseOx: Patient.HeartBeat -> PulseOx.HeartBeat
+
+  Cap_Read: Patient.Exhale -> Capnography.Respiration
+
+  ETCO2_Report: Capnography.ETCO2 -> Application.ETCO2
+  RR_Report: Capnography.RespiratoryRate -> Application.RR
+
+  Pulse_Report_PulseOx: PulseOx.Pulse -> Application.Pulse
+  Report_SpO2: PulseOx.SpO2 -> Application.SpO2
+
+  Pulse_Report_EKG: EKG.HR -> Application.Pulse
+  EKG_Report: EKG.EKG -> Application.EKG
+
+  Issue_Ticket: Application.Ticket -> PCA.control
+  Infuse_Drug: PCA.infuse -> Patient.Vein
+
+deployment
+ Device_Network <-> Report_SpO2
+ Device_Network <->  Issue_Ticket
+ Device_Network <->  Pulse_Report_PulseOx
+ Device_Network <->  Pulse_Report_EKG
+ Device_Network <->  ETCO2_Report
+ Device_Network <->  RR_Report
+ Device_Network <->  EKG_Report
+ Tube <-> Infuse_Drug
+ FingerClipWire <-> Blood_Sat
+ EKGLead1Wire <-> EKG_1
+ EKGLead2Wire <-> EKG_2
+ EKGLead3Wire <-> EKG_3
+ CapnometerWire <-> Cap_Read
+ MAP <-> Application

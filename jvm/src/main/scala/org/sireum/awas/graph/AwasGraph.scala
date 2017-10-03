@@ -70,6 +70,11 @@ trait AwasGraph[Node] {
     graph.getAllEdges(n1, n2).asScala
   }
 
+  def getEdge(n: Node): CSet[Edge] = {
+    import scala.collection.JavaConverters._
+    graph.edgesOf(n).asScala
+  }
+
   def getIncomingEdges(node : Node) : CSet[Edge] = {
     import scala.collection.JavaConverters._
     graph.incomingEdgesOf(node).asScala
