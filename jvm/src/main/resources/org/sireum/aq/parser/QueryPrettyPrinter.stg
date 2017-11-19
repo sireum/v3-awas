@@ -39,6 +39,42 @@ filterExpr(expr, op) ::= <<
 $expr$:$op$
 >>
 
+forwardExpr(expr) ::= <<
+reach forward $expr$
+>>
+
+backwardExpr(expr) ::= <<
+reach backward $expr$
+>>
+
+chopExpr(sExpr, tExpr) ::= <<
+reach from $sExpr$ to $tExpr$
+>>
+
+pathExpr(sExpr, tExpr, wExpr) ::= <<
+reach paths from $sExpr$ to $tExpr$ $if(wExpr)$ with $wExpr$$endif$
+>>
+
+simpleWith(op, expr) ::= <<
+$op$($expr$)
+>>
+
+unaryRegEx(op, expr) ::= <<
+$expr$$op$
+>>
+
+binaryRegEx(lhs, op, rhs) ::= <<
+$lhs$ $op$ $rhs$
+>>
+
+parenRegEx(expr) ::= <<
+($expr$)
+>>
+
+anyRegEx() ::= <<
+_
+>>
+
 qName(id) ::= <<
 $id$
 >>
@@ -52,11 +88,11 @@ qRes(id) ::= <<
 >>
 
 nnError(nn, errorSet) ::= <<
-$nn$$if(errorSet)${$errorSet; separator=","$}$endif$
+$nn$$if(errorSet)${$errorSet; separator=", "$}$endif$
 >>
 
 nSet(ns) ::= <<
-{$ns; separator=","$}
+{$ns; separator=", "$}
 >>
 
 errorId(ids) ::= <<

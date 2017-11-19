@@ -1,22 +1,57 @@
 
 PatientVein = Patient.Vein
 
-Infusion_paths = * -> Infuse_Drug
+// * -> Infuse_Drug
+Infusion_paths = reach backward Infuse_Drug
 
-PulseOx_SpO2_influences_infusion = PulseOx.SpO2-> *
+// PulseOx.SpO2 -> *
+PulseOx_SpO2_influences_infusion = reach forward PulseOx.SpO2
 
-all_hazardous_situation_overdose = * -> Patient.Vein{Error.TooMuchAnalgesic}
+// * -> Patient.Vein{Error.TooMuchAnalgesic}
+all_hazardous_situation_overdose = reach backward Patient.Vein{Error.TooMuchAnalgesic}
 
-Cap_to_Pump = Capnography.ETCO2 -> PCA.infuse
+//Capnography.ETCO2 -> PCA.infuse
+Cap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse
 
-Cap_to_Pump_paths = Capnography.ETCO2 ~> PCA.infuse
+//Capnography.ETCO2 ~> PCA.infuse
+Cap_to_Pump_paths = reach paths from Capnography.ETCO2 to PCA.infuse
 
-Cap_to_pump_hazard_1 = Capnography.RespiratoryRate{Error.RespirationRateHigh} -> PCA.infuse{Error.TooMuchAnalgesic}
+//Capnography.RespiratoryRate{Error.RespirationRateHigh} -> PCA.infuse{Error.TooMuchAnalgesic}
+Cap_to_pump_hazard_1 = reach from Capnography.RespiratoryRate{Error.RespirationRateHigh}
+                             to PCA.infuse{Error.TooMuchAnalgesic}
 
-Cap_to_pump_hazard_1_path = Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly} ~> PCA.infuse{Error.TooMuchAnalgesic}
+//Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly} ~> PCA.infuse{Error.TooMuchAnalgesic}
+Cap_to_pump_hazard_1_path = reach paths from Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly}
+                                        to PCA.infuse{Error.TooMuchAnalgesic}
 
-Cap_to_pump_hazard_2 = Capnography.ETCO2{Error.ETCO2Early} -> PCA.infuse{Error.TooMuchAnalgesic}
+//Capnography.ETCO2{Error.ETCO2Early} -> PCA.infuse{Error.TooMuchAnalgesic}
+Cap_to_pump_hazard_2 = reach from Capnography.ETCO2{Error.ETCO2Early}
+                             to PCA.infuse{Error.TooMuchAnalgesic}
 
-PulseOx_to_pump_check =  PulseOx.SpO2{Error.NoSpO2} -> * //dont know how to handle the incomming error, when no flows are propagation defined
+//PulseOx_to_pump_check =  PulseOx.SpO2{Error.NoSpO2} -> * //dont know how to handle the incomming error, when no flows are propagation defined
 
-Control_Loop = Patient.BloodSat ~> Patient.Vein
+//Patient.BloodSat ~> Patient.Vein
+Control_Loop = reach paths from Patient.BloodSat to Patient.Vein
+
+//Patient.Heart_Beat -> *
+Flow_HeartBeat = reach forward Patient.Heart_Beat
+
+base_case = reach paths from Capnography to PCA
+
+all_constraint_test1 = reach paths from Capnography to PCA with all({Device_Network, Application})
+
+some_constraint_test1 = reach paths from Capnography to PCA with some({Report_SpO2, RR_Report})
+
+none_constraint_test1 = reach paths from Capnography to PCA with none(Device_Network)
+
+base_case_ports = reach paths from Capnography.ETCO2 to PCA.infuse
+
+none_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with none(Device_Network)
+
+some_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with some({Application.RR, Application.Pulse})
+
+all_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with all({RR_Report.out, Pulse_Report_EKG.out})
+
+//test_regex_test1 = reach paths from Capnography to PCA with ((Device_Network, EKG_Report)*, _*, PCA | (Application, Issue_Ticket))
+
+//test_regex_test2 = reach paths from Capnography to PCA with (_*, Device_Network, EKG_Report, _*)

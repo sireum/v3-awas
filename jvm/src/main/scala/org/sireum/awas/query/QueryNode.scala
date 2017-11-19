@@ -52,6 +52,41 @@ final case class BinaryExpr(lhs: QueryExpr,
                             op: String,
                             rhs: QueryExpr) extends QueryExpr
 
+sealed trait ReachExpr extends QueryExpr
+
+final case class ForwardExpr(expr : QueryExpr) extends ReachExpr
+
+final case class BackwardExpr(expr : QueryExpr) extends ReachExpr
+
+final case class ChopExpr(source : QueryExpr, target: QueryExpr)
+  extends ReachExpr
+
+final case class PathExpr(source : QueryExpr,
+                          target:QueryExpr,
+                          withExpr : Option[WithExpr]) extends ReachExpr
+
+sealed trait WithExpr extends QueryNode
+
+final case class SimpleWith(op: String, expr: QueryExpr) extends WithExpr
+
+//final case class RegExWith()
+
+sealed trait RegExExpr extends WithExpr
+
+final case class UnaryRegEx(op: String, expr : RegExExpr) extends RegExExpr
+
+final case class BinaryRegEx(lhs : RegExExpr,
+                             op : String,
+                             rhs : RegExExpr) extends RegExExpr
+
+trait PrimaryRegEx extends RegExExpr
+
+final case class ParenRegEx(regExExpr: RegExExpr) extends PrimaryRegEx
+
+final case class Any() extends PrimaryRegEx
+
+final case class IdRegEx(rId : NodeNameError) extends PrimaryRegEx
+
 sealed trait PrimaryExpr extends QueryExpr
 
 final case class FilterExpr(lhs: QueryExpr,

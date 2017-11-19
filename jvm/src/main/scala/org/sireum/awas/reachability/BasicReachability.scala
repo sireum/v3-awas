@@ -26,6 +26,7 @@
 package org.sireum.awas.reachability
 
 import org.sireum.awas.collector.Collector
+import org.sireum.awas.query.ConstraintExpr
 import org.sireum.util.ISet
 
 trait BasicReachability[Node] {
@@ -66,4 +67,6 @@ trait BasicReachability[Node] {
     * @return a [[ISet]] of Paths, each path consists of a set of nodes
     */
   def reachPath(source: Node, target: Node): Collector
+
+  def reachPath(source: Node, target: Node, constraint: ConstraintExpr): Collector
 }

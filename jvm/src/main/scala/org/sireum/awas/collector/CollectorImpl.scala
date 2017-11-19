@@ -83,6 +83,12 @@ case class CollectorImpl(symbolTable: SymbolTable,
             portErrorsUnion(c, n.getPortErrors))
         }
         resPortError.keySet.flatMap(it => graph.getNode(it))
+//      case Some(ResultType.Flow) =>
+//        if(hasPath && resFlows.isEmpty) {
+//          resFlows = resPaths.foldLeft(isetEmpty[ResourceUri])((c , n) =>
+//          c union n.getFlows)
+//        }
+//        resFlows.flatMap(it => graph.get)
       case _ =>
         resNodes.flatMap(it => graph.getNode(it))
     }

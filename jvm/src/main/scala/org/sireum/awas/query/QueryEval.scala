@@ -28,6 +28,7 @@ package org.sireum.awas.query
 import org.sireum.awas.collector.CollectorErrorHelper.{ReachAnalysisStage, _}
 import org.sireum.awas.collector.{Collector, Operator, ResultType}
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.query.ConstraintKind.ConstraintKind
 import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -40,6 +41,17 @@ object QueryEval {
     new QueryEval(graph, st).eval(m)
   }
 }
+
+object ConstraintKind extends Enumeration {
+  type ConstraintKind = Value
+  val All, Some, None, Regex = Value
+}
+
+//Data structure to store the eval of a WithExpr, can be simple or regex,
+//in case of regex, we need automaton, and for simple we need collector and type
+case class ConstraintExpr(kind : ConstraintKind,
+                          simple: Option[Collector],
+                          regex: Option[Any])
 
 final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
   val H = SymbolTableHelper
@@ -66,8 +78,11 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
       case binary: BinaryExpr => eval(binary)
       case primary: PrimaryExpr => eval(primary)
       case filter: FilterExpr => eval(filter)
+      case reach: ReachExpr => eval(reach)
     }
   }
+
+
 
   def eval(fexp: FilterExpr): Collector = {
     val lhs: Collector = eval(fexp.lhs)
@@ -106,6 +121,43 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
     }
   }
 
+  def eval(rexp: ReachExpr): Collector = {
+    rexp match {
+      case fexp: ForwardExpr => forwardReach(eval(fexp.expr))
+      case bexp: BackwardExpr => backwardReach(eval(bexp.expr))
+      case cexp: ChopExpr =>
+        val sourceRes = forwardReach(eval(cexp.source))
+        val targetRes = backwardReach(eval(cexp.target))
+        sourceRes intersect targetRes
+      case pexp: PathExpr => {
+        val source = eval(pexp.source)
+        val target = eval(pexp.target)
+        val constrain = pexp.withExpr
+        if(constrain.isDefined) {
+          val cExp = eval(constrain.get)
+          pathReach(source, target, Some(cExp))
+        } else {
+          pathReach(source, target, None)
+        }
+      }
+    }
+  }
+
+  def eval(wexp: WithExpr):ConstraintExpr = {
+    wexp match {
+      case se : SimpleWith =>
+        ConstraintExpr(
+          se.op match {
+            case "all" => ConstraintKind.All
+            case "some" => ConstraintKind.Some
+            case "none" => ConstraintKind.None
+          }, Some(eval(se.expr)), None)
+      case re : RegExExpr =>
+        ConstraintExpr(ConstraintKind.Regex, None, None)
+    }
+  }
+
+
   def eval(bexp: BinaryExpr): Collector = {
     val lhs: Collector = eval(bexp.lhs)
     val rhs: Collector = eval(bexp.rhs)
@@ -113,24 +165,6 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
       case "union" => lhs union rhs
       case "intersect" => lhs intersect rhs
       case "-" => lhs diff rhs
-      case "->" =>
-        if (lhs.getResultType.isEmpty && rhs.getResultType.isDefined) {
-          backwardReach(rhs)
-        } else if (rhs.getResultType.isEmpty && lhs.getResultType.nonEmpty) {
-          forwardReach(lhs)
-        } else if (lhs.getResultType.nonEmpty && rhs.getResultType.nonEmpty) {
-          val lhsres = forwardReach(lhs)
-          val rhsres = backwardReach(rhs)
-          lhsres intersect rhsres
-        } else {
-          Collector(st, graph)
-        }
-      case "~>" =>
-        if (lhs.getResultType.isDefined && rhs.getResultType.isDefined) {
-          pathReach(lhs, rhs)
-        } else {
-          Collector(st, graph)
-        }
     }
   }
 
@@ -138,7 +172,7 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
     reach(criterion, isForward = false)
   }
 
-  def pathReach(source: Collector, target: Collector): Collector = {
+  def pathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
     val er = ErrorReachability(graph, st)
     val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
       if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
@@ -149,9 +183,18 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
     }
 
     resType match {
-      case Some(ResultType.Node) => er.reachPathSet(source.getNodes.map(_.getUri),
+      case Some(ResultType.Node) => {if(constraint.isDefined) {
+        er.reachPathSet(source.getNodes.map(_.getUri),
+          target.getNodes.map(_.getUri), constraint.get)
+      } else {
+        er.reachPathSet(source.getNodes.map(_.getUri),
         target.getNodes.map(_.getUri))
-      case Some(ResultType.Port) => er.reachPathSet(source.getPorts, target.getPorts)
+      }}
+      case Some(ResultType.Port) => {if(constraint.isDefined) {
+        er.reachPathSet(source.getPorts, target.getPorts, constraint.get)
+      } else {
+        er.reachPathSet(source.getPorts, target.getPorts)
+      }}
       case Some(ResultType.Error) => er.errorPathReachMap(source.getPortErrors, target.getPortErrors)
       case _ => Collector(st, graph, source.getErrors ++ target.getErrors +
         errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))

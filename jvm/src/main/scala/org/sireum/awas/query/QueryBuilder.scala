@@ -48,8 +48,94 @@ final class QueryBuilder private() {
     ctx match {
       case ctx: PrimaryExprContext => build(ctx.pexpr)
       case ctx: BinaryContext => build(ctx)
+      case ctx: ReachExContext => build(ctx.reachExprs())
       case ctx: FilterExprContext => build(ctx)
     }
+  }
+
+  def build(ctx: ReachExprsContext): ReachExpr = {
+    ctx match {
+      case ctx: ForwardContext => build(ctx)
+      case ctx: BackwardContext => build(ctx)
+      case ctx: ChopContext => build(ctx)
+      case ctx: PathContext => build(ctx)
+    }
+  }
+
+  def build(ctx: ForwardContext): ForwardExpr = {
+    ForwardExpr(build(ctx.e))
+  }
+
+  def build(ctx: BackwardContext): BackwardExpr = {
+    BackwardExpr(build(ctx.e))
+  }
+
+  def build(ctx: ChopContext): ChopExpr = {
+    ChopExpr(build(ctx.s), build(ctx.t))
+  }
+
+  def build(ctx: PathContext): PathExpr = {
+    PathExpr(build(ctx.s), build(ctx.t), if(ctx.we == null) None else Some(build(ctx.we)))
+  }
+
+  def build(ctx: WithExprContext): WithExpr = {
+    ctx match {
+      case ctx: SimpleConstraintContext => build(ctx)
+      case ctx: RegExConstraintContext => build(ctx)
+    }
+  }
+
+  def build(ctx: SimpleConstraintContext): SimpleWith = {
+    SimpleWith(ctx.op.getText, build(ctx.e))
+  }
+
+  def build(ctx: RegExConstraintContext): RegExExpr = {
+    build(ctx.regExpr())
+  }
+
+  def build(ctx: RegExprContext): RegExExpr = {
+    ctx match {
+      case ctx: RegExUnaryContext => build(ctx)
+      case ctx: RegExConcatContext => build(ctx)
+      case ctx: RegExUnionContext => build(ctx)
+      case ctx: RegExPrimaryContext => build(ctx)
+    }
+  }
+
+  def build(ctx : RegExUnaryContext): UnaryRegEx = {
+    UnaryRegEx(ctx.op.getText, build(ctx.e))
+  }
+
+  def build(ctx: RegExConcatContext): BinaryRegEx = {
+    BinaryRegEx(build(ctx.l), ctx.op.getText, build(ctx.r))
+  }
+
+  def build(ctx: RegExUnionContext): BinaryRegEx = {
+    BinaryRegEx(build(ctx.l), ctx.op.getText, build(ctx.r))
+  }
+
+  def build(ctx: RegExPrimaryContext): PrimaryRegEx = {
+    build(ctx.primaryRExpr())
+  }
+
+  def build(ctx: PrimaryRExprContext): PrimaryRegEx = {
+    ctx match {
+      case ctx: IdContext => build(ctx)
+      case ctx: RegExParenContext => build(ctx)
+      case ctx: AnyContext => build(ctx)
+    }
+  }
+
+  def build(ctx: IdContext): IdRegEx = {
+    IdRegEx(build(ctx.nodeNameError()))
+  }
+
+  def build(ctx: RegExParenContext) : ParenRegEx = {
+    ParenRegEx(build(ctx.regExpr()))
+  }
+
+  def build(ctx: AnyContext): Any = {
+    Any()
   }
 
   def build(ctx: FilterExprContext): FilterExpr = {
@@ -148,7 +234,7 @@ object QueryBuilder {
     parser.addErrorListener(new BaseErrorListener {
       var errors = 0
 
-      override def syntaxError(recognizer: Recognizer[_, _],
+       def syntaxError(recognizer: Recognizer[_, _],
                                offendingSymbol: Any,
                                line: PosInteger,
                                charPositionInLine: PosInteger,

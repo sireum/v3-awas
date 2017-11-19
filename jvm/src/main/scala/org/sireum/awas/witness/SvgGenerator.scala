@@ -23,7 +23,7 @@ object SvgGenerator {
     sw.toString
       .replaceAll("label=\"<<", "label=<<")
       .replaceAll(">>\"", ">>")
-      .replace("strict digraph G {", "strict digraph G { \n rankdir=LR; ")
+      .replace("strict digraph G {", "strict digraph G { \n rankdir=TB; ")
   }
 
   type Edge = FlowEdge[FlowNode]
@@ -137,13 +137,19 @@ object SvgGenerator {
         res("headport") = component.targetPort.get.split('$').last
         res("edgehref") = "templink"
         res("target") = "Edge+" + component.sourcePort.get + ":" + component.targetPort.get
-        res("arrowsize") = ".5"
+        res("arrowsize") = ".7"
+        res("weight") = "1"
+        res("penwidth") = "2"
       }
       if (component.target.isComponent) {
         res("headport") = component.targetPort.get.split('$').last
         res("tailport") = component.sourcePort.get.split('$').last
         res("edgehref") = "templink"
         res("target") = "Edge+" + component.sourcePort.get + ":" + component.targetPort.get
+        res("arrowsize") = ".7"
+        res("weight") = "1"
+        res("penwidth") = "2"
+
       }
       res.asJava
     }

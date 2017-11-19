@@ -19,71 +19,169 @@ object Main {
 
   var uriNodeMap: IMap[String, Node] = imapEmpty[String, Node]
 
+
   @JSExport
   def main(): Unit = {
     var svg = GraphViz.Viz(GraphQuery.graph)
     val mainDiv = render[Div](mainPage())
 
-    val graphDiv = mainDiv.querySelector("#graph-view")
+    val config = js.Dictionary(
+      ("settings", js.Dictionary(
+        ("showPopoutIcon", false),
+        ("showCloseIcon", false)
+      )),
+      ("content", js.Array(
+        js.Dictionary(
+          ("type", "column"),
+          ("content", js.Array(
+            js.Dictionary(
+              ("type", "component"),
+              ("componentName", "graph"),
+              ("componentState", js.Dictionary(("label", "A"))),
+              ("isClosable",false)
+            ),
+            js.Dictionary(
+              ("type", "component"),
+              ("componentName", "query"),
+              ("componentState", js.Dictionary(("label", "B"))),
+              ("isClosable",false)
+            )
+          ))
+        )
+      ))
+    )
+
+    val mainBox:Element = mainDiv.querySelector("#main-container")
     val tempElem = templateContent(raw(svg)).querySelectorAll("svg")(0)
     processSvg(tempElem.asInstanceOf[Element])
 
-    graphDiv.appendChild(tempElem)
-    val qButton = mainDiv.querySelectorAll("#query-button")
+    val gl = new GoldenLayout(config, jQuery(mainBox))
     var res = imapEmpty[Node, String]
-    for (i <- 0 until qButton.length) {
-      qButton.item(i).firstChild.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-        val anch = qButton.item(i).childNodes.item(1).asInstanceOf[Anchor]
-        clear(res)
-        res = highlight(anch.getAttribute("id"))
-      }
-    }
-    $[Button](mainDiv, "#clear-button").onclick = (_: MouseEvent) => clear(res)
+
+    //    val graphDiv = mainDiv.querySelector("#graph-view")
+//
+//    graphDiv.appendChild(tempElem)
+
+//
+//    $[Button](mainDiv, "#clear-button").onclick = (_: MouseEvent) => clear(res)
 
     document.onreadystatechange = (_: Event) => {
+
       document.body.appendChild(mainDiv)
-      SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-      TreeTable("#query-table").treetable(js.Dictionary.apply[js.Any](
-        ("expandable", true),
-        ("indenterTemplate", "<span style='display:run-in; vertical-align: middle' class=\"indenter\"></span>"),
-        ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
-        ("onNodeExpand", { (x: js.Any) => {
-          val exp = x.asInstanceOf[TreeNode].expander(0)
-          val oldChild = exp.firstElementChild
-          val newChild = templateContent(
-            raw("<i class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
-          exp.appendChild(newChild)
-          exp.removeChild(oldChild)
+
+      if(document.readyState == "complete") {
+        gl.registerComponent("graph", {(container: Container, componentState : js.Dictionary[Object]) => {
+          container.getElement().append(tempElem)
         }
-        }: js.ThisFunction),
-        ("onNodeCollapse", { (x: js.Any) => {
-          val exp = x.asInstanceOf[TreeNode].expander(0)
-          val oldChild = exp.firstElementChild
-          val newChild = templateContent(
-            raw("<i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
-          exp.appendChild(newChild)
-          exp.removeChild(oldChild)
+        }:js.Function)
+
+        gl.registerComponent("query", {(container: Container, componentState : js.Dictionary[Object]) => {
+          container.getElement().css(js.Dictionary{("overflow","auto")})
+          container.getElement().html(queryBox().render)
         }
-        }: js.ThisFunction)
-      ))
-      computeHeight()
+        }:js.Function)
+
+        gl.init()
+        computeHeight(gl)
+ //     if(gl.isInitialised) {
+
+        SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+
+        val qButton = mainDiv.querySelectorAll("#query-button")
+        for (i <- 0 until qButton.length) {
+          qButton.item(i).firstChild.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+            //println("clicked")
+            val anch = qButton.item(i).childNodes.item(1).asInstanceOf[Anchor]
+            clear(res)
+            res = highlight(anch.getAttribute("id"))
+          }
+        }
+        $[Button](mainDiv, "#clear-button").onclick = (_: MouseEvent) => clear(res)
+      }
+
+
+
+      if(document.readyState == "complete") {
+        TreeTable("#query-table").treetable(js.Dictionary.apply[js.Any](
+          ("expandable", true),
+          ("indenterTemplate", "<span style='display:run-in; vertical-align: middle' class=\"indenter\"></span>"),
+          ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
+          ("onNodeExpand", { (x: js.Any) => {
+            val exp = x.asInstanceOf[TreeNode].expander(0)
+            val oldChild = exp.firstElementChild
+            val newChild = templateContent(
+              raw("<i class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
+            exp.appendChild(newChild)
+            exp.removeChild(oldChild)
+          }}: js.ThisFunction),
+          ("onNodeCollapse", { (x: js.Any) => {
+            val exp = x.asInstanceOf[TreeNode].expander(0)
+            val oldChild = exp.firstElementChild
+            val newChild = templateContent(
+              raw("<i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
+            exp.appendChild(newChild)
+            exp.removeChild(oldChild)
+          }}: js.ThisFunction)
+        ))
+      }
     }
-    window.onresize = (_: UIEvent) => computeHeight()
+
+//    gl.on("columnCreated", {() => {
+//      println("event fired column")
+//      gl.root.setSize(100,100)
+//      computeHeight(gl)
+//    }})
+//
+//    gl.on("rowCreated", {() => {
+//      println("event fired row")
+//      computeHeight(gl)
+//    }})
+//
+//
+//    gl.on("stackCreated", {() => {
+//      println("event fired stack")
+//      computeHeight(gl)
+//    }})
+//
+//
+//    gl.on("tabCreated", {() => {
+//      println("event fired tab")
+//      computeHeight(gl)
+//    }})
+
+
+    window.onresize = (_: UIEvent) => computeHeight(gl)
   }
 
 
-  def computeHeight(): Unit = {
+
+
+  def computeHeight(gl : GoldenLayout): Unit = {
     val totalHeight = window.innerHeight
     val headHeight = $[Div]("#header").clientHeight
     val footHeight = $[Div]("#footer").clientHeight
-    val bodyHeight = totalHeight - (headHeight + footHeight + 23)
-    val graphHeight = (bodyHeight / 2) - 75
-    val queryHeight = bodyHeight / 2
-    val graph = $[Div]("#graph-view")
-    graph.style.height = s"${graphHeight}px"
-    val query = $[Div]("#query-box")
-    query.style.height = s"${queryHeight}px"
+    val bodyHeight = totalHeight - (headHeight + footHeight)
+//    val graphHeight = (bodyHeight / 2) - 75
+//    val queryHeight = bodyHeight / 2
+    val graph = $[Div]("#body")
+    graph.style.height = s"${bodyHeight}px"
+//    val query = $[Div]("#query-box")
+//    query.style.height = s"${queryHeight}px"
+    gl.updateSize(scalajs.js.undefined, scalajs.js.undefined)
   }
+
+//  def computeHeight(): Unit = {
+//    val totalHeight = window.innerHeight
+//    val headHeight = $[Div]("#header").clientHeight
+//    val footHeight = $[Div]("#footer").clientHeight
+//    val bodyHeight = totalHeight - (headHeight + footHeight + 23)
+//    val graphHeight = (bodyHeight / 2) - 75
+//    val queryHeight = bodyHeight / 2
+//    val graph = $[Div]("#graph-view")
+//    graph.style.height = s"${graphHeight}px"
+//    val query = $[Div]("#query-box")
+//    query.style.height = s"${queryHeight}px"
+//  }
 
   def clear(res: IMap[Node, String]): Unit = {
     res.foreach { it =>
@@ -185,28 +283,41 @@ object Main {
           div(cls := "container",
             h1(cls := "title", raw("&nbsp; Awas Witness Visualizer"))))),
       //body
-      div(cls := "container",
-        div(cls := "tile is-ancestor",
-          div(cls := "tile is-parent is-vertical",
-            div(cls := "tile is-child",
-              div(id := "graph-box", cls := "box",
-                h2(cls := "subtitle", "Dependence Graph"),
-                figure(id := "graph-view", cls := "image ")
-              )),
-            div(cls := "tile is-child",
-              div(id := "query-box", cls := "box", overflow := "scroll",
-                nav(cls := "level", div(cls := "level-left",
-                  div(cls := "level-item", h2(cls := "subtitle", "Queries"))),
-                  div(cls := "level-right", div(cls := "level-item",
-                    button(id := "clear-button", cls := "button", "Clear")))),
-                queryTableBuild(temp)
-              ))))),
+      div(id:= "body", cls := "container",style:="display:inherit",
+      div(id:= "main-container", width := "100%", height := "100%")),
+//      div(cls := "container",
+//        div(cls := "tile is-ancestor",
+//          div(cls := "tile is-parent is-vertical",
+//            div(cls := "tile is-child",
+//              div(id := "graph-box", cls := "box",
+//                h2(cls := "subtitle", "Dependence Graph"),
+//                figure(id := "graph-view", cls := "image ")
+//              )),
+//            div(cls := "tile is-child",
+//              div(id := "query-box", cls := "box", overflow := "scroll",
+//                nav(cls := "level", div(cls := "level-left",
+//                  div(cls := "level-item", h2(cls := "subtitle", "Queries"))),
+//                  div(cls := "level-right", div(cls := "level-item",
+//                    button(id := "clear-button", cls := "button", "Clear")))),
+//                queryTableBuild(temp)
+//              ))))),
       //footer
-      div(id := "footer", cls := "nav", bottom := "0",
+      div(id := "footer", cls := "nav", bottom := "0",style:="display:inherit",
         div(cls := "nav-item",
           p(bottom := "10px", right := "10px", position := "absolute",
             span(color := "white",
               "SAnToS Laboratory, Kansas State University"))))
+    )
+  }
+
+  private def queryBox() : Frag = {
+    val temp: Seq[(String, String)] = GraphQuery.queryExp.toSeq
+    div(id := "query-box", cls := "box", overflow := "auto",
+      nav(cls := "level", div(cls := "level-left",
+        div(cls := "level-item", h2(cls := "subtitle", "Queries"))),
+        div(cls := "level-right", div(cls := "level-item",
+          button(id := "clear-button", cls := "button", "Clear")))),
+      queryTableBuild(temp)
     )
   }
 

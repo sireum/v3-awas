@@ -20,8 +20,34 @@ expr
 : pexpr                                          #PrimaryExpr
 | l=expr op='-' r=expr                           #Binary
 | l=expr op=('union' | 'intersect') r=expr       #Binary
-| l=expr op=('->' | '~>') r=expr                 #Binary
+| 'reach' reachExprs                             #ReachEx
+//| l=expr op=('->' | '~>') r=expr                 #Binary
 | l=expr ':' op=filter                           #FilterExpr
+;
+
+reachExprs
+: 'forward' e=expr                                            #Forward
+| 'backward' e=expr                                           #Backward
+| 'from' s=expr 'to' t=expr                                   #Chop
+| 'paths' 'from' s=expr 'to' t=expr ('with' we=withExpr)?     #Path
+;
+
+withExpr
+: op=('some' | 'all' | 'none') '(' e=expr ')'                 #SimpleConstraint
+| regExpr                                                     #RegExConstraint
+;
+
+regExpr
+: e=regExpr op=('*' | '+' | '?')                              #RegExUnary
+| l=regExpr op=',' r=regExpr                                  #RegExConcat
+| l=regExpr op='|' r=regExpr                                  #RegExUnion
+| primaryRExpr                                                #RegExPrimary
+;
+
+primaryRExpr
+: nodeNameError                                               #Id
+| '(' regExpr ')'                                             #RegExParen
+| '_'                                                         #Any
 ;
 
 filter
@@ -31,6 +57,10 @@ filter
 | 'out-port' | 'OUT-PORT'                        #Out
 | 'error' | 'ERROR'                              #Error
 | 'porterror' | 'PORTERROR'                      #PortError
+| 'flows' | 'FLOWS'                              #Flows
+| 'flow-source' | 'FLOW-SOURCE'                  #Source
+| 'flow-sink' | 'FLOW-SINK'                      #Sink
+| 'flow-path' | 'FLOW-PATH'                      #Path
 ;
 
 pexpr
@@ -38,7 +68,7 @@ pexpr
 | '(' expr ')'                                   #Paren
 | '{' nodeNameError(','  nodeNameError)+ '}'     #NodeSet
 | '*'                                            #Empty
-| '\''id=ID                                     #QueryRes
+| '\''id=ID                                      #QueryRes
 ;
 
 nodeNameError

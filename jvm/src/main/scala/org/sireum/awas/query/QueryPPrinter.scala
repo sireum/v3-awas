@@ -33,6 +33,7 @@ final class QueryPPrinter(stg: STGroup) {
       case be: BinaryExpr => print(be)
       case pe: PrimaryExpr => print(pe)
       case fe: FilterExpr => print(fe)
+      case re: ReachExpr => print(re)
     }
   }
 
@@ -58,6 +59,51 @@ final class QueryPPrinter(stg: STGroup) {
     val temp = stg.getInstanceOf("filterExpr")
     temp.add("expr", print(fe.lhs))
     temp.add("op", fe.op.toString)
+  }
+
+  def print(re: ReachExpr): ST = {
+    re match {
+      case fe : ForwardExpr => print(fe)
+      case be : BackwardExpr => print(be)
+      case ce : ChopExpr => print(ce)
+      case pe : PathExpr => print(pe)
+    }
+  }
+
+  def print(fe : ForwardExpr): ST = {
+    val temp = stg.getInstanceOf("forwardExpr")
+    temp.add("expr", print(fe.expr))
+  }
+
+  def print(fe : BackwardExpr): ST = {
+    val temp = stg.getInstanceOf("backwardExpr")
+    temp.add("expr", print(fe.expr))
+  }
+
+  def print(ce: ChopExpr): ST = {
+    val temp = stg.getInstanceOf("chopExpr")
+    temp.add("sExpr", print(ce.source))
+    temp.add("tExpr", print(ce.target))
+  }
+
+  def print(pe : PathExpr): ST = {
+    val temp = stg.getInstanceOf("pathExpr")
+    if(pe.withExpr.isDefined)
+      temp.add("wExpr", print(pe.withExpr.get))
+    temp.add("sExpr", print(pe.source))
+    temp.add("tExpr", print(pe.target))
+
+  }
+
+  def print(we : WithExpr): ST = {
+    we match {
+      case se: SimpleWith => {
+        val temp = stg.getInstanceOf("simpleWith")
+        temp.add("op", se.op)
+        temp.add("expr", print(se.expr))
+      }
+      case re: RegExExpr => print(re)
+    }
   }
 
   def print(p: Paren): ST = {

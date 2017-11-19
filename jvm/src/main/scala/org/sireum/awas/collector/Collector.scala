@@ -53,7 +53,7 @@ trait Collector {
 
 object ResultType extends Enumeration {
   type ResultType = Value
-  val Node, Port, Error = Value
+  val Node, Port, Error, Flow = Value
 }
 
 object Operator extends Enumeration {

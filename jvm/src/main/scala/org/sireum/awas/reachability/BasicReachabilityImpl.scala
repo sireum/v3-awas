@@ -30,6 +30,7 @@ import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector._
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -113,6 +114,7 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode]) extends
   }
 
   def manOf[T: Manifest](t: T): Manifest[T] = manifest[T]
+
   /**
     * Returns the set of paths from source to target
     *
@@ -132,9 +134,11 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode]) extends
         asScala.map(_.getVertexList.asScala.toSet)
 
       val temp = pathNodes.map(it => (it, scc.filter(_.intersect(it).nonEmpty).filterNot(it2 => it.subsetOf(it2))
-        .foldLeft(isetEmpty[FlowNode])((c, n) => c.union(n)).union(it))).toMap.values.toSet
+        .foldLeft(isetEmpty[FlowNode])((c, n) => c.union(n)).union(it))).toMap
 
-      val paths = temp.map(it2 =>
+      val temp2 = temp.keys.toSet union temp.values.toSet
+
+      val paths = temp2.map(it2 =>
         Collector(st,
           graph,
           it2,
@@ -159,6 +163,19 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode]) extends
       }
       Collector(st, graph, paths.toVector, Some(ResultType.Node))
     }
+  }
+
+  def reachPath(source: FlowNode, target: FlowNode, constraint: ConstraintExpr): Collector = {
+    val pathCollector = reachPath(source, target)
+    val paths = constraint.kind match {
+      case ConstraintKind.All => pathCollector.getPaths.filter(it =>
+        constraint.simple.get.getNodes.subsetOf(it.getNodes))
+      case ConstraintKind.Some => pathCollector.getPaths.filter(it =>
+        constraint.simple.get.getNodes.intersect(it.getNodes).nonEmpty)
+      case ConstraintKind.None => pathCollector.getPaths.filter(it =>
+        constraint.simple.get.getNodes.intersect(it.getNodes).isEmpty)
+    }
+    Collector(st, graph, paths.toVector, Some(ResultType.Node))
   }
 
   def getEdgesInPath(pathNodes: ISet[FlowNode]): Set[Edge] = {

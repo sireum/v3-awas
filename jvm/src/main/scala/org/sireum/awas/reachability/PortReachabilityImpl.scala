@@ -30,6 +30,7 @@ import org.sireum.awas.collector.CollectorErrorHelper.{MISSING_CRITERIA, ReachAn
 import org.sireum.awas.collector.{Collector, CollectorErrorHelper, FlowCollector, ResultType}
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -138,6 +139,77 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
     temp
   }
 
+
+
+  override def reachPathSet(source: Set[ResourceUri],
+                            target: Set[ResourceUri],
+                            constraint: ConstraintExpr): Collector = {
+    val temp = source.foldLeft(Collector(st, graph))((c, n) => c union
+      target.foldLeft(Collector(st, graph))((c2, n2) => c2 union reachPathWith(n, n2, constraint)))
+    temp
+  }
+
+  private def nodeReachPath(source: ResourceUri, target: ResourceUri, cExp : Option[ConstraintExpr]): Collector = {
+    val snode = graph.getNode(source)
+    val tnode = graph.getNode(target)
+    if (snode.isDefined && tnode.isDefined) {
+      if(cExp.isDefined) {
+        reachPath(snode.get, tnode.get, cExp.get)
+      } else {
+        reachPath(snode.get, tnode.get)
+      }
+    } else {
+      Collector(st, graph,
+        isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, source, ReachAnalysisStage.Node) +
+          errorMessageGen(CollectorErrorHelper.MISSING_NODE, target, ReachAnalysisStage.Node))
+    }
+  }
+
+  def reachPathWith(source: ResourceUri, target: ResourceUri, constraint: ConstraintExpr): Collector = {
+    import scala.collection.JavaConverters._
+    if (isNode(source) || isNode(target)) {
+      nodeReachPath(source, target, Some(constraint))
+    }
+    else {
+      val snode = graph.getNode(source)
+      val tnode = graph.getNode(target)
+      if (snode.isDefined && tnode.isDefined) {
+        val allGraphPath = new AllDirectedPaths[FlowNode, graph.Edge](graph.graph)
+        val scc = graph.getCycles.map(_.toSet)
+        val sccPorts = scc.map(getPortsFromNodes)
+        var pathPorts = isetEmpty[(ISet[Edge], ISet[ResourceUri])]
+        if (snode.get != tnode.get) {
+          allGraphPath.getAllPaths(snode.get, tnode.get, true, null)
+            .asScala.map(_.getEdgeList.asScala.toSet).toSet.foreach { it: ISet[Edge] =>
+            val tempPorts = it.flatMap(_.sourcePort) union it.flatMap(_.targetPort)
+            val start = if (H.isInPort(source)) graph.getSuccessorPorts(source).ports else isetEmpty[ResourceUri] + source
+            val end = if (H.isOutPort(target)) graph.getPredecessorPorts(target).ports else isetEmpty[ResourceUri] + target
+            if (tempPorts.intersect(start).nonEmpty && tempPorts.intersect(end).nonEmpty) {
+              pathPorts = pathPorts.+((it, tempPorts))
+            }
+          }
+        } else {
+          pathPorts = scc.filter(_.contains(snode.get)).map(getPortsFromNodes).filter(it =>
+            it._2.contains(source) && it._2.contains(target))
+        }
+        val pathCyclePorts = pathPorts.map(it => (it, sccPorts.filter(_._2.intersect(it._2).nonEmpty)))
+        var paths = getPaths(pathCyclePorts, source, target, Some(constraint))
+
+        val pathCollectors = paths.toVector.map(it => Collector(st, graph, isetEmpty[FlowNode],
+          it.ports, ResultType.Port, it.edges, it.flows,
+          isetEmpty[ResourceUri] + source + target, isetEmpty[Tag]))
+
+        val c = Collector(st, graph, pathCollectors, Some(ResultType.Port))
+        c
+      } else {
+        Collector(st, graph,
+          isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_PORT, source, ReachAnalysisStage.Port) +
+            errorMessageGen(CollectorErrorHelper.MISSING_PORT, target, ReachAnalysisStage.Port))
+      }
+    }
+
+  }
+
   /**
     * This method computes paths from source port to target ports
     * There are two kinds of paths, simple and with cycle
@@ -151,15 +223,7 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
   def reachPath(source: ResourceUri, target: ResourceUri): Collector = {
     import scala.collection.JavaConverters._
     if (isNode(source) || isNode(target)) {
-      val snode = graph.getNode(source)
-      val tnode = graph.getNode(target)
-      if (snode.isDefined && tnode.isDefined) {
-        reachPath(snode.get, tnode.get)
-      } else {
-        Collector(st, graph,
-          isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, source, ReachAnalysisStage.Node) +
-            errorMessageGen(CollectorErrorHelper.MISSING_NODE, target, ReachAnalysisStage.Node))
-      }
+      nodeReachPath(source, target, None)
     } else {
       val snode = graph.getNode(source)
       val tnode = graph.getNode(target)
@@ -183,25 +247,7 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
             it._2.contains(source) && it._2.contains(target))
         }
         val pathCyclePorts = pathPorts.map(it => (it, sccPorts.filter(_._2.intersect(it._2).nonEmpty)))
-        var paths = isetEmpty[FlowCollector]
-        pathCyclePorts.foreach { it =>
-          var simplePathPorts: ISet[ResourceUri] = if (H.isInPort(source)) it._1._2 + source else it._1._2 - source
-          simplePathPorts = if (H.isOutPort(target)) simplePathPorts + target else simplePathPorts - target
-          val simplePathEdges = it._1._1
-          val cycles = it._2
-          val (simpleFlows, valid) = getPathEdgesFlowsValidity(simplePathPorts)
-          if (valid) {
-            val validCycles = cycles.filter(it => getPathEdgesFlowsValidity(it._2)._2)
-            val ports = simplePathPorts + source + target ++
-              validCycles.foldLeft(isetEmpty[ResourceUri])((c, n) => c union n._2)
-            val edges = simplePathEdges ++ validCycles.foldLeft(isetEmpty[Edge])((c, n) => n._1 union c)
-            val flows = simpleFlows ++ validCycles.foldLeft(isetEmpty[ResourceUri])((c, n) =>
-              getPathEdgesFlowsValidity(n._2)._1 union c)
-            paths = paths + FlowCollector(ports, edges, flows, isetEmpty[Tag])
-            paths = paths + FlowCollector(simplePathPorts + source + target,
-              simplePathEdges, simpleFlows, isetEmpty[Tag])
-          }
-        }
+        var paths = getPaths(pathCyclePorts, source, target, None)
 
         val pathCollectors = paths.toVector.map(it => Collector(st, graph, isetEmpty[FlowNode],
           it.ports, ResultType.Port, it.edges, it.flows,
@@ -215,6 +261,79 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
             errorMessageGen(CollectorErrorHelper.MISSING_PORT, target, ReachAnalysisStage.Port))
       }
     }
+  }
+
+  private def getPaths(pathCyclePorts: ISet[((ISet[Edge], ISet[ResourceUri]),
+    ISet[(ISet[Edge], ISet[ResourceUri])])],
+                       source : ResourceUri,
+                       target: ResourceUri,
+                       constraint: Option[ConstraintExpr]): ISet[FlowCollector] = {
+
+
+    var paths = isetEmpty[FlowCollector]
+    pathCyclePorts.foreach { it =>
+      var simplePathPorts: ISet[ResourceUri] = if (H.isInPort(source)) it._1._2 + source else it._1._2 - source
+      simplePathPorts = if (H.isOutPort(target)) simplePathPorts + target else simplePathPorts - target
+      val simplePathEdges = it._1._1
+      val cycles = it._2
+      val (simpleFlows, valid) = getPathEdgesFlowsValidity(simplePathPorts)
+      simplePathPorts = simplePathPorts + source + target
+
+      if (valid ) {
+        val validCycles = cycles.filter(it => getPathEdgesFlowsValidity(it._2)._2)
+        val simplePath = FlowCollector(simplePathPorts,
+          simplePathEdges, simpleFlows, isetEmpty[Tag])
+        if(constraint.isEmpty) {
+          paths = paths + simplePath
+          paths = paths + getComplexPath(simplePath, validCycles)
+        } else {
+          val con = constraint.get.simple.get
+          constraint.get.kind match {
+            case ConstraintKind.All => {
+              if(con.getPorts.subsetOf(simplePath.ports)) {
+                paths = paths + simplePath
+                paths = paths + getComplexPath(simplePath, validCycles)
+              } else {
+                val tPath = getComplexPath(simplePath, validCycles)
+                if(con.getPorts.subsetOf(tPath.ports)) {
+                  paths = paths + tPath
+                }
+              }
+            }
+            case ConstraintKind.Some => {
+              if(simplePath.ports.intersect(con.getPorts).nonEmpty) {
+                paths = paths + simplePath
+                paths = paths + getComplexPath(simplePath, validCycles)
+              } else {
+                val tPath = getComplexPath(simplePath, validCycles)
+                if(tPath.ports.intersect(con.getPorts).nonEmpty) {
+                  paths = paths + tPath
+                }
+              }
+            }
+            case ConstraintKind.None => {
+              if(simplePath.ports.intersect(con.getPorts).isEmpty) {
+                paths = paths + simplePath
+                paths = paths + getComplexPath(simplePath,
+                  validCycles.filter(_._2.intersect(con.getPorts).isEmpty))
+              }
+            }
+          }
+        }
+
+      }
+    }
+    paths
+  }
+
+  private def getComplexPath(simplePath: FlowCollector,
+                             validCycles: ISet[(ISet[Edge], ISet[ResourceUri])]):FlowCollector = {
+    val ports = simplePath.ports ++
+      validCycles.foldLeft(isetEmpty[ResourceUri])((c, n) => c union n._2)
+    val edges = simplePath.edges ++ validCycles.foldLeft(isetEmpty[Edge])((c, n) => n._1 union c)
+    val flows = simplePath.flows ++ validCycles.foldLeft(isetEmpty[ResourceUri])((c, n) =>
+      getPathEdgesFlowsValidity(n._2)._1 union c)
+     FlowCollector(ports, edges, flows, isetEmpty[Tag])
   }
 
   private def getPathEdgesFlowsValidity(ports: ISet[ResourceUri])
