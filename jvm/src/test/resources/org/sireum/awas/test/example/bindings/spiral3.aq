@@ -1,10 +1,9 @@
-/*
-Control_Loop = Patient.BloodSat ~> Patient.Vein
+Control_Loop = reach paths from Patient.BloodSat to Patient.Vein
 
 Connections = {Blood_Sat, Report_SpO2, Issue_Ticket, Infuse_Drug}
 
-Bus = {MedicalPlatform, Tube, Device_Network, Wire}
+Bus = {MAP, Tube, Device_Network, EKGLead1Wire}
 
 Components = {Patient, Application, PulseOx, PCA}
-*/
-End_To_End_Flow = Patient.BloodSaturation ~> Patient.Absorb
+
+End_To_End_Flow = reach paths from Patient.BloodSaturation to Patient.Absorb

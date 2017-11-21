@@ -1,29 +1,28 @@
-/*
 fetch_component = PulseOx
 
 fetch_pumps_ports = PCA:port
 
 fetch_a_port = PCA.control
 
-fetch_only_inports = Patient:in
+fetch_only_inports = Patient:in-port
 
-reach_all_from_pulseox = PulseOx -> *
+reach_all_from_pulseox = reach forward PulseOx
 
-reach_patient_from_all = * -> Patient
+reach_patient_from_all = reach backward Patient
 
 use_result_of_a_query = 'reach_all_from_pulseox:port
 
-get_ports_from_pulseox_2_app = PulseOx.SpO2 -> Application.Ticket
+get_ports_from_pulseox_2_app = reach from PulseOx.SpO2 to Application.Ticket
 
 previous_interms_of_nodes = 'get_ports_from_pulseox_2_app:node
 
-get_path_from_pulseox_to_app = PulseOx.SpO2 ~> Application.Ticket
+get_path_from_pulseox_to_app = reach paths from PulseOx.SpO2 to Application.Ticket
 
-find_pump_to_patient_union_with_above = (PCA ~> Patient) union 'get_path_from_pulseox_to_app
+find_pump_to_patient_union_with_above = (reach paths from PCA to Patient) union 'get_path_from_pulseox_to_app
 
-fix_the_loss_of_precision = (PCA ~> Patient):port union 'get_path_from_pulseox_to_app
-*/
-Control_Loop = Patient.BloodSat ~> Patient.Vein
+fix_the_loss_of_precision = (reach paths from PCA to Patient):port union 'get_path_from_pulseox_to_app
+
+Control_Loop = reach paths from Patient.BloodSat to Patient.Vein
 
 connections = {Blood_Sat, Report_SpO2, Issue_Ticket, Infuse_Drug}
 

@@ -4,13 +4,13 @@
 //component reachability
 //----------------------------------------------------------------------
 
-patient_reach = Patient -> *
-app_backreach = * -> App
+patient_reach = reach forward Patient
+app_backreach = reach backward  App
 
-patient_backreach = * -> Patient
-patient_reach_2 =  Patient -> *
+patient_backreach = reach backward Patient
+patient_reach_2 =  reach forward Patient
 //due to the loop it provides everything
-patient_to_App = Patient -> App
+patient_to_App = reach from Patient to App
 
 //use the tick(') to use the result of another query
 patient_to_App2 = 'patient_reach intersect 'app_backreach
@@ -19,7 +19,7 @@ patient_to_App2 = 'patient_reach intersect 'app_backreach
 //flow reachability
 //----------------------------------------------------------------------
 
-spo2_reach = PulseOx.spo2 -> *
+spo2_reach = reach forward PulseOx.spo2
 
 
 

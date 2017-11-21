@@ -1,0 +1,267 @@
+fetch_component
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral2.awas#PulseOx } 
+
+ -------------- 
+fetch_pumps_ports
+ -------------- 
+{ port-in:$AWAS$$example/bindings/spiral2.awas$PCA#Pump_Out_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#Ticket_Rec_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#control, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#Pump_Out_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#Ticket_Rec_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#infuse } 
+
+ -------------- 
+fetch_a_port
+ -------------- 
+{ port-in:$AWAS$$example/bindings/spiral2.awas$PCA#control } 
+
+ -------------- 
+fetch_only_inports
+ -------------- 
+{ port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Fingerclip_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#IV_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Vein } 
+
+ -------------- 
+reach_all_from_pulseox
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral2.awas#Application, 
+component:$AWAS$$example/bindings/spiral2.awas#Device_Network, 
+component:$AWAS$$example/bindings/spiral2.awas#MedicalPlatform, 
+component:$AWAS$$example/bindings/spiral2.awas#PCA, 
+component:$AWAS$$example/bindings/spiral2.awas#Patient, 
+component:$AWAS$$example/bindings/spiral2.awas#PulseOx, 
+component:$AWAS$$example/bindings/spiral2.awas#Tube, 
+component:$AWAS$$example/bindings/spiral2.awas#Wire, 
+connection:$AWAS$$example/bindings/spiral2.awas#Blood_Sat, 
+connection:$AWAS$$example/bindings/spiral2.awas#Infuse_Drug, 
+connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket, 
+connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2 } 
+
+ -------------- 
+reach_patient_from_all
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral2.awas#Application, 
+component:$AWAS$$example/bindings/spiral2.awas#Device_Network, 
+component:$AWAS$$example/bindings/spiral2.awas#MedicalPlatform, 
+component:$AWAS$$example/bindings/spiral2.awas#PCA, 
+component:$AWAS$$example/bindings/spiral2.awas#Patient, 
+component:$AWAS$$example/bindings/spiral2.awas#PulseOx, 
+component:$AWAS$$example/bindings/spiral2.awas#Tube, 
+component:$AWAS$$example/bindings/spiral2.awas#Wire, 
+connection:$AWAS$$example/bindings/spiral2.awas#Blood_Sat, 
+connection:$AWAS$$example/bindings/spiral2.awas#Infuse_Drug, 
+connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket, 
+connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2 } 
+
+ -------------- 
+use_result_of_a_query
+ -------------- 
+{ port-in-bind:$AWAS$$example/bindings/spiral2.awas$Application#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Blood_Sat#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$MedicalPlatform#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Tube#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Wire#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Blood_Sat#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Application#SpO2, 
+port-in:$AWAS$$example/bindings/spiral2.awas$MedicalPlatform#Net_Ac_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#Pump_Out_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#Ticket_Rec_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#control, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Fingerclip_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#IV_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Vein, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PulseOx#Data_Send_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PulseOx#Read_Into_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PulseOx#Saturation, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Application#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Blood_Sat#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$MedicalPlatform#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Tube#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Wire#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Blood_Sat#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral2.awas$MedicalPlatform#Net_Ac_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#Pump_Out_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#Ticket_Rec_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#infuse, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#BloodSat, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#Fingerclip_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#IV_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#Data_Send_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#Read_Into_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#SpO2 } 
+
+ -------------- 
+get_ports_from_pulseox_2_app
+ -------------- 
+Warning: 
+
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2'
+Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral2.awas#Wire'
+Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral2.awas#Device_Network'
+Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral2.awas#Tube'
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Blood_Sat'
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Infuse_Drug'
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket'
+{ port-in-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Application#SpO2, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#SpO2 } 
+
+ -------------- 
+previous_interms_of_nodes
+ -------------- 
+Warning: 
+
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2'
+Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral2.awas#Wire'
+Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral2.awas#Device_Network'
+Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral2.awas#Tube'
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Blood_Sat'
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Infuse_Drug'
+Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket'
+{ component:$AWAS$$example/bindings/spiral2.awas#Application, 
+component:$AWAS$$example/bindings/spiral2.awas#Device_Network, 
+component:$AWAS$$example/bindings/spiral2.awas#PulseOx, 
+connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket, 
+connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2 } 
+
+ -------------- 
+get_path_from_pulseox_to_app
+ -------------- 
+{ port-in-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Application#SpO2, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#SpO2 } 
+
+ -------------- 
+find_pump_to_patient_union_with_above
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral2.awas#Application, 
+component:$AWAS$$example/bindings/spiral2.awas#Device_Network, 
+component:$AWAS$$example/bindings/spiral2.awas#PCA, 
+component:$AWAS$$example/bindings/spiral2.awas#Patient, 
+component:$AWAS$$example/bindings/spiral2.awas#PulseOx, 
+component:$AWAS$$example/bindings/spiral2.awas#Tube, 
+connection:$AWAS$$example/bindings/spiral2.awas#Infuse_Drug, 
+connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket, 
+connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2 } 
+
+ -------------- 
+fix_the_loss_of_precision
+ -------------- 
+{ port-in-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Tube#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Application#SpO2, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#Pump_Out_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#Ticket_Rec_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#control, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Fingerclip_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#IV_IN, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Vein, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Tube#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#Pump_Out_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#Ticket_Rec_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#infuse, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#BloodSat, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#Fingerclip_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#IV_OUT, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#SpO2 } 
+
+ -------------- 
+Control_Loop
+ -------------- 
+{ port-in-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Blood_Sat#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Application#SpO2, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PCA#control, 
+port-in:$AWAS$$example/bindings/spiral2.awas$Patient#Vein, 
+port-in:$AWAS$$example/bindings/spiral2.awas$PulseOx#Saturation, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Blood_Sat#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Infuse_Drug#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral2.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PCA#infuse, 
+port-out:$AWAS$$example/bindings/spiral2.awas$Patient#BloodSat, 
+port-out:$AWAS$$example/bindings/spiral2.awas$PulseOx#SpO2 } 
+
+ -------------- 
+connections
+ -------------- 
+{ connection:$AWAS$$example/bindings/spiral2.awas#Blood_Sat, 
+connection:$AWAS$$example/bindings/spiral2.awas#Infuse_Drug, 
+connection:$AWAS$$example/bindings/spiral2.awas#Issue_Ticket, 
+connection:$AWAS$$example/bindings/spiral2.awas#Report_SpO2 } 
+
+ -------------- 
+Bus
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral2.awas#Device_Network, 
+component:$AWAS$$example/bindings/spiral2.awas#MedicalPlatform, 
+component:$AWAS$$example/bindings/spiral2.awas#Tube, 
+component:$AWAS$$example/bindings/spiral2.awas#Wire } 
+
+ -------------- 
+components
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral2.awas#Application, 
+component:$AWAS$$example/bindings/spiral2.awas#PCA, 
+component:$AWAS$$example/bindings/spiral2.awas#Patient, 
+component:$AWAS$$example/bindings/spiral2.awas#PulseOx } 
+
+ -------------- 

@@ -38,7 +38,10 @@ import org.sireum.util.jvm.FileUtil._
 
 
 final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
-  val testDirs = Seq(makePath("..", "example", "Query"))
+  val testDirs = Seq(
+    makePath("..", "example", "Query"),
+    makePath("..", "example", "bindings")
+  )
 
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))

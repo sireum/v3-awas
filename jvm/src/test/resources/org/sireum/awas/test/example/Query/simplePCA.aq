@@ -1,1 +1,1 @@
-q2 = * -> patient.pump_in{hazards.overinfuse}
+q2 = reach backward patient.pump_in{hazards.overinfuse}

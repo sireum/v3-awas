@@ -1,4 +1,4 @@
-infant_backreach = * -> Infant
+infant_backreach = reach backward Infant
 
-air_infant = Air.to_infant -> Infant.heat_in
+air_infant = reach from Air.to_infant to Infant.heat_in
 

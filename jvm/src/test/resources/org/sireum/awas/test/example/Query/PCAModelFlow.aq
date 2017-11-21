@@ -1,11 +1,11 @@
 
-spo2_reach = PulseOx.spo2 -> *
+spo2_reach = reach forward PulseOx.spo2
 
-spo2_reachback = * -> PulseOx.spo2
+spo2_reachback = reach backward PulseOx.spo2
 
-spo2_pump = PulseOx.spo2 -> Pump.drug
+spo2_pump = reach from PulseOx.spo2 to Pump.drug
 
 //this will result in empty because there is no intersection between node level and port level
 //TODO: Add converters between port-level and node-level uris
-spo2_pump2 = PulseOx.spo2 -> Pump
+spo2_pump2 = reach from PulseOx.spo2 to Pump
 

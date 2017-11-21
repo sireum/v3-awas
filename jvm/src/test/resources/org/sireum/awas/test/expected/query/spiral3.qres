@@ -1,0 +1,118 @@
+Control_Loop
+ -------------- 
+{ port-in-bind:$AWAS$$example/bindings/spiral3.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$EKG_Report#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$ETCO2_Report#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_EKG#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$RR_Report#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Blood_Sat#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Infuse_Drug#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#EKG, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#ETCO2, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#Pulse, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#RR, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#SpO2, 
+port-in:$AWAS$$example/bindings/spiral3.awas$PCA#control, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Patient#Vein, 
+port-in:$AWAS$$example/bindings/spiral3.awas$PulseOx#Saturation, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$EKG_Report#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$ETCO2_Report#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_EKG#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$RR_Report#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Blood_Sat#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$EKG_Report#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Infuse_Drug#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral3.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral3.awas$PCA#infuse, 
+port-out:$AWAS$$example/bindings/spiral3.awas$Patient#BloodSat, 
+port-out:$AWAS$$example/bindings/spiral3.awas$PulseOx#Pulse, 
+port-out:$AWAS$$example/bindings/spiral3.awas$PulseOx#SpO2 } 
+
+ -------------- 
+Connections
+ -------------- 
+{ connection:$AWAS$$example/bindings/spiral3.awas#Blood_Sat, 
+connection:$AWAS$$example/bindings/spiral3.awas#Infuse_Drug, 
+connection:$AWAS$$example/bindings/spiral3.awas#Issue_Ticket, 
+connection:$AWAS$$example/bindings/spiral3.awas#Report_SpO2 } 
+
+ -------------- 
+Bus
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral3.awas#Device_Network, 
+component:$AWAS$$example/bindings/spiral3.awas#EKGLead1Wire, 
+component:$AWAS$$example/bindings/spiral3.awas#MAP, 
+component:$AWAS$$example/bindings/spiral3.awas#Tube } 
+
+ -------------- 
+Components
+ -------------- 
+{ component:$AWAS$$example/bindings/spiral3.awas#Application, 
+component:$AWAS$$example/bindings/spiral3.awas#PCA, 
+component:$AWAS$$example/bindings/spiral3.awas#Patient, 
+component:$AWAS$$example/bindings/spiral3.awas#PulseOx } 
+
+ -------------- 
+End_To_End_Flow
+ -------------- 
+{ port-in-bind:$AWAS$$example/bindings/spiral3.awas$Device_Network#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$EKG_Report#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$ETCO2_Report#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_EKG#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$RR_Report#bind_in, 
+port-in-bind:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#bind_in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Blood_Sat#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Infuse_Drug#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#in, 
+port-in-virtual:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#EKG, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#ETCO2, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#Pulse, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#RR, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Application#SpO2, 
+port-in:$AWAS$$example/bindings/spiral3.awas$PCA#control, 
+port-in:$AWAS$$example/bindings/spiral3.awas$Patient#Vein, 
+port-in:$AWAS$$example/bindings/spiral3.awas$PulseOx#Saturation, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Device_Network#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$EKG_Report#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$ETCO2_Report#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_EKG#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$RR_Report#bind_out, 
+port-out-bind:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#bind_out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Blood_Sat#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$EKG_Report#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Infuse_Drug#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/bindings/spiral3.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/bindings/spiral3.awas$Application#Ticket, 
+port-out:$AWAS$$example/bindings/spiral3.awas$PCA#infuse, 
+port-out:$AWAS$$example/bindings/spiral3.awas$Patient#BloodSat, 
+port-out:$AWAS$$example/bindings/spiral3.awas$PulseOx#Pulse, 
+port-out:$AWAS$$example/bindings/spiral3.awas$PulseOx#SpO2 } 
+
+ -------------- 
