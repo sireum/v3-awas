@@ -3,7 +3,7 @@ package org.sireum.awas.witness
 import java.io.StringWriter
 import java.util
 
-import org.jgrapht.ext.{ComponentAttributeProvider, DOTExporter, StringComponentNameProvider}
+import org.jgrapht.io._
 import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.symbol.SymbolTableHelper
@@ -31,11 +31,11 @@ object SvgGenerator {
   val H = SymbolTableHelper
 
   private val attProvider = new ComponentAttributeProvider[FlowNode] {
-    override def getComponentAttributes(node: FlowNode): util.Map[String, String] = {
+    override def getComponentAttributes(node: FlowNode): util.Map[String, Attribute] = {
       import scala.collection.JavaConverters._
-      val res = mlinkedMapEmpty[String, String]
-      res("shape") = "plaintext"
-      res("id") = node.getUri
+      val res = mlinkedMapEmpty[String, Attribute]
+      res("shape") = new DefaultAttribute("plaintext", AttributeType.STRING)
+      res("id") = new DefaultAttribute(node.getUri, AttributeType.STRING)
       res.asJava
     }
   }
@@ -129,26 +129,26 @@ object SvgGenerator {
 
 
   private val eAttrProvider = new ComponentAttributeProvider[Edge] {
-    override def getComponentAttributes(component: Edge): util.Map[String, String] = {
+    override def getComponentAttributes(component: Edge): util.Map[String, Attribute] = {
       import scala.collection.JavaConverters._
-      val res = mlinkedMapEmpty[String, String]
+      val res = mlinkedMapEmpty[String, Attribute]
       if (component.source.isComponent) {
-        res("tailport") = component.sourcePort.get.split('$').last
-        res("headport") = component.targetPort.get.split('$').last
-        res("edgehref") = "templink"
-        res("target") = "Edge+" + component.sourcePort.get + ":" + component.targetPort.get
-        res("arrowsize") = ".7"
-        res("weight") = "1"
-        res("penwidth") = "2"
+        res("tailport") = new DefaultAttribute(component.sourcePort.get.split('$').last, AttributeType.STRING)
+        res("headport") = new DefaultAttribute(component.targetPort.get.split('$').last, AttributeType.STRING)
+        res("edgehref") = new DefaultAttribute("templink", AttributeType.STRING)
+        res("target") = new DefaultAttribute("Edge+" + component.sourcePort.get + ":" + component.targetPort.get, AttributeType.STRING)
+        res("arrowsize") = new DefaultAttribute(".7", AttributeType.STRING)
+        res("weight") = new DefaultAttribute("1", AttributeType.STRING)
+        res("penwidth") = new DefaultAttribute("2", AttributeType.STRING)
       }
       if (component.target.isComponent) {
-        res("headport") = component.targetPort.get.split('$').last
-        res("tailport") = component.sourcePort.get.split('$').last
-        res("edgehref") = "templink"
-        res("target") = "Edge+" + component.sourcePort.get + ":" + component.targetPort.get
-        res("arrowsize") = ".7"
-        res("weight") = "1"
-        res("penwidth") = "2"
+        res("headport") = new DefaultAttribute(component.targetPort.get.split('$').last, AttributeType.STRING)
+        res("tailport") = new DefaultAttribute(component.sourcePort.get.split('$').last, AttributeType.STRING)
+        res("edgehref") = new DefaultAttribute("templink", AttributeType.STRING)
+        res("target") = new DefaultAttribute("Edge+" + component.sourcePort.get + ":" + component.targetPort.get, AttributeType.STRING)
+        res("arrowsize") = new DefaultAttribute(".7", AttributeType.STRING)
+        res("weight") = new DefaultAttribute("1", AttributeType.STRING)
+        res("penwidth") = new DefaultAttribute("2", AttributeType.STRING)
 
       }
       res.asJava

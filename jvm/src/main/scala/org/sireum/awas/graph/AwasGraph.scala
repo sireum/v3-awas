@@ -25,7 +25,7 @@
 
 package org.sireum.awas.graph
 
-import org.jgrapht.DirectedGraph
+import org.jgrapht.Graph
 import org.sireum.awas.fptc.FlowEdge
 import org.sireum.util.CSet
 
@@ -33,7 +33,7 @@ trait AwasGraph[Node] {
   self =>
   type Edge = FlowEdge[Node]
 
-  def graph : DirectedGraph[Node, Edge]
+  def graph : Graph[Node, Edge]
 
   def nodes: Iterable[Node] = {
     import scala.collection.JavaConverters._

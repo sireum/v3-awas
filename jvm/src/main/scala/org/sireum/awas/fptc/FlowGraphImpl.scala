@@ -28,8 +28,8 @@ package org.sireum.awas.fptc
 import java.io.StringWriter
 import java.util
 
-import org.jgrapht.DirectedGraph
-import org.jgrapht.ext._
+import org.jgrapht.Graph
+import org.jgrapht.io._
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector.FlowCollector
@@ -41,7 +41,7 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
   self: FlowGraph[FlowNode] =>
 
   type FEdge = FlowEdge[FlowNode]
-  override val graph: DirectedGraph[FlowNode, FEdge] = {
+  override val graph: Graph[FlowNode, FEdge] = {
     new DefaultDirectedGraph[FlowNode, FEdge](
       (source: FlowNode, target: FlowNode) => FlowEdgeImpl(self, source, target)
     )
@@ -49,10 +49,10 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
   val H = SymbolTableHelper
 
   protected val attProvider = new ComponentAttributeProvider[FlowNode] {
-    override def getComponentAttributes(component: FlowNode): util.Map[String, String] = {
+    override def getComponentAttributes(component: FlowNode): util.Map[String, Attribute] = {
       import scala.collection.JavaConverters._
-      val res = mlinkedMapEmpty[String, String]
-      res("shape") = "record"
+      val res = mlinkedMapEmpty[String, Attribute]
+      res("shape") = new DefaultAttribute("record", AttributeType.STRING)
       res.asJava
     }
   }
@@ -86,14 +86,14 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
   }
 
   protected val eAttrProvider = new ComponentAttributeProvider[FEdge] {
-    override def getComponentAttributes(component: FEdge): util.Map[String, String] = {
+    override def getComponentAttributes(component: FEdge): util.Map[String, Attribute] = {
       import scala.collection.JavaConverters._
-      val res = mlinkedMapEmpty[String, String]
+      val res = mlinkedMapEmpty[String, Attribute]
       if (component.source.isComponent) {
-        res("tailport") = component.sourcePort.get.split(H.ID_SEPARATOR).last
+        res("tailport") = new DefaultAttribute(component.sourcePort.get.split(H.ID_SEPARATOR).last, AttributeType.STRING)
       }
       if (component.target.isComponent) {
-        res("headport") = component.targetPort.get.split(H.ID_SEPARATOR).last
+        res("headport") = new DefaultAttribute(component.targetPort.get.split(H.ID_SEPARATOR).last, AttributeType.STRING)
       }
       res.asJava
     }

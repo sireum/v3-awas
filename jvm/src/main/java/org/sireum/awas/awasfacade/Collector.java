@@ -1,6 +1,5 @@
 package org.sireum.awas.awasfacade;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.sireum.awas.collector.Operator;
 import org.sireum.awas.collector.ResultType;
 import org.sireum.awas.fptc.FlowEdge;
