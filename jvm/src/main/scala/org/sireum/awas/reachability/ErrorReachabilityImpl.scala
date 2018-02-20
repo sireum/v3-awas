@@ -198,7 +198,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) e
                 if (tNext.flows.size <= 1) {
                   paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
                     current.flows ++ tNext.flows, current.errors union tNext.errors)
-                } else {
+                } else { //more than one flow so, branch for each flow
                   val cnode = graph.getNode(current.path.last._1)
                   val nnode = graph.getNode(t._1)
                   if (cnode.isDefined && nnode.isDefined &&
@@ -206,14 +206,13 @@ class ErrorReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) e
                     var flows = isetEmpty[ResourceUri]
                     if (cnode.get.isComponent) {
                       flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
-                        nnode.get.getFlows.get(it).get.asInstanceOf[Flow].to.isDefined &&
-                        nnode.get.getFlows.get(it).get.asInstanceOf[Flow].to.get.value ==
-                          H.getPortId(st, nnode.get.getUri, t._1) &&
-                        nnode.get.getFlows.get(it).get.asInstanceOf[Flow].toE.toSet.contains(t._2)
+                        nnode.get.getFlows(it).toPortUri.isDefined &&
+                        nnode.get.getFlows(it).toPortUri.get == t._1 &&
+                        nnode.get.getFlows(it).toFaults.contains(t._2)
                       )
                     } else {
                       flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
-                        nnode.get.getFlows.get(it).get.asInstanceOf[CFlow].toE.toSet.contains(t._2))
+                        nnode.get.getFlows(it).toFaults.contains(t._2))
                     }
                     paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
                       current.flows ++ flows, current.errors union tNext.errors)

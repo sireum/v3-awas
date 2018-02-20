@@ -54,13 +54,13 @@ class BasicNodeImpl(uri : ResourceUri, st : SymbolTable) extends BasicNode {
 
   override def outPorts: Iterable[ResourceUri] = ports.filter(_.startsWith(H.PORT_OUT_TYPE))
 
-
   override def getPropagation(port: ResourceUri): Set[ResourceUri] = {
     if(getResourceType == H.COMPONENT_TYPE) {
       val compST = st.componentTable(uri)
       compST.propagation(port)
     } else {
-      isetEmpty[ResourceUri]
+      val connSt = st.connectionTable(uri)
+      connSt.propagation(port)
     }
   }
 

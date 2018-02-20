@@ -74,13 +74,31 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     }
   }
 
-  override def getFlows: IMap[ResourceUri, Node] = {
+  override def getFlows: IMap[ResourceUri, FlowTableData] = {
     if (isComponent & compST.isDefined) {
       compST.get.flows.map(it => (it, compST.get.flow(it))).toMap
     } else {
       connST.get.flows.map(it => (it, connST.get.flow(it))).toMap
     }
   }
+
+  def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri] = {
+    if (isComponent & compST.isDefined) {
+      compST.get.getPortsFromFlows(flowUri)
+    } else {
+      connST.get.getPortsFromFlows(flowUri)
+    }
+  }
+
+  def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri] = {
+    if (isComponent & compST.isDefined) {
+      compST.get.getFlowsFromPort(portUri)
+    } else {
+      connST.get.getFlowsFromPort(portUri)
+    }
+  }
+
+
 
   override def getFptcPropagation(port: ResourceUri): Set[ResourceUri] = fptcPropagation(port)
 
@@ -96,19 +114,16 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     if (isFlowDefined) {
       compST.get.getFlowsFromPort(tuple._1).foreach { fUri => //takes cares of path and sink
         val flow = compST.get.flow(fUri)
-        val source = if (isForward) flow.from else flow.to
-        val target = if (isForward) flow.to else flow.from
-        val sourceE = if (isForward) flow.fromE else flow.toE
-        val targetE = if (isForward) flow.toE else flow.fromE
-        if (source.isDefined &&
-          Resource.getResource(source.get).isDefined &&
-          (Resource.getResource(source.get).get.toUri == tuple._1) &&
-          sourceE.flatMap(Resource.getResource(_)).map(_.toUri).contains(tuple._2)) {
+        val source = if (isForward) flow.fromPortUri else flow.toPortUri
+        val target = if (isForward) flow.toPortUri else flow.fromPortUri
+        val sourceE = if (isForward) flow.fromFaults else flow.toFaults
+        val targetE = if (isForward) flow.toFaults else flow.fromFaults
+        if ((source.isDefined && source.get == tuple._1) &&
+          sourceE.contains(tuple._2)) {
           found = true
           flows += fUri
-          if (target.isDefined && Resource.getResource(target.get).isDefined) {
-            result = result ++ targetE.flatMap(Resource.getResource(_)).
-              map(_.toUri).map((Resource.getResource(target.get).get.toUri, _))
+          if (target.isDefined) {
+            result = result ++ targetE.map((target.get, _))
           }
         }
       }
@@ -143,14 +158,15 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     if (isFlowDefined) {
       connST.get.getFlowsFromPort(tuple._1).foreach { furi =>
         val flow = connST.get.flow(furi)
-        val sourceE = if (isForward) flow.fromE else flow.toE
-        val targetE = if (isForward) flow.toE else flow.fromE
+        val src = if (isForward) flow.fromPortUri else flow.toPortUri
+        val target = if (isForward) flow.toPortUri else flow.fromPortUri
+        val sourceE = if (isForward) flow.fromFaults else flow.toFaults
+        val targetE = if (isForward) flow.toFaults else flow.fromFaults
         if (sourceE.nonEmpty &&
-          sourceE.flatMap(Resource.getResource(_)).map(_.toUri).contains(tuple._2)) {
+          sourceE.contains(tuple._2)) {
           found = true
           flows += furi
-          result = result ++ targetE.flatMap(Resource.getResource(_))
-            .map(_.toUri).map(e => (ports.head, e))
+          result = result ++ targetE.flatMap(e => if (target.isDefined) Some((target.get, e)) else None)
         }
       }
       if (!found) {
@@ -200,16 +216,14 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     } else {
       if (isComponent && compST.isDefined && H.isPort(port) && compST.get.getFlowsFromPort(port).nonEmpty) {
         compST.get.getFlowsFromPort(port).foreach { f =>
-          if (isForward && compST.get.flow(f).from.isDefined) {
+          if (isForward && compST.get.flow(f).fromPortUri.isDefined) {
             flows = flows + f
-            if (compST.get.flow(f).to.isDefined)
-              result = result ++ outPorts.filter(H.getPortId(st, uri, _).get ==
-                compST.get.flow(f).to.get.value)
-          } else if (!isForward && compST.get.flow(f).to.isDefined) {
+            if (compST.get.flow(f).toPortUri.isDefined)
+              result = result + compST.get.flow(f).toPortUri.get
+          } else if (!isForward && compST.get.flow(f).toPortUri.isDefined) {
             flows = flows + f
-            if (compST.get.flow(f).from.isDefined)
-              result = result ++ inPorts.filter(H.getPortId(st, uri, _).get ==
-                compST.get.flow(f).from.get.value)
+            if (compST.get.flow(f).fromPortUri.isDefined)
+              result = result + compST.get.flow(f).fromPortUri.get
           } else {
             errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO,
               port,

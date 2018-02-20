@@ -1,39 +1,29 @@
 
 PatientVein = Patient.Vein
 
-// * -> Infuse_Drug
 Infusion_paths = reach backward Infuse_Drug
 
-// PulseOx.SpO2 -> *
 PulseOx_SpO2_influences_infusion = reach forward PulseOx.SpO2
 
-// * -> Patient.Vein{Error.TooMuchAnalgesic}
 all_hazardous_situation_overdose = reach backward Patient.Vein{Error.TooMuchAnalgesic}
 
-//Capnography.ETCO2 -> PCA.infuse
 Cap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse
 
-//Capnography.ETCO2 ~> PCA.infuse
 Cap_to_Pump_paths = reach paths from Capnography.ETCO2 to PCA.infuse
 
-//Capnography.RespiratoryRate{Error.RespirationRateHigh} -> PCA.infuse{Error.TooMuchAnalgesic}
 Cap_to_pump_hazard_1 = reach from Capnography.RespiratoryRate{Error.RespirationRateHigh}
                              to PCA.infuse{Error.TooMuchAnalgesic}
 
-//Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly} ~> PCA.infuse{Error.TooMuchAnalgesic}
 Cap_to_pump_hazard_1_path = reach paths from Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly}
                                         to PCA.infuse{Error.TooMuchAnalgesic}
 
-//Capnography.ETCO2{Error.ETCO2Early} -> PCA.infuse{Error.TooMuchAnalgesic}
 Cap_to_pump_hazard_2 = reach from Capnography.ETCO2{Error.ETCO2Early}
                              to PCA.infuse{Error.TooMuchAnalgesic}
 
 //PulseOx_to_pump_check =  PulseOx.SpO2{Error.NoSpO2} -> * //dont know how to handle the incomming error, when no flows are propagation defined
 
-//Patient.BloodSat ~> Patient.Vein
 Control_Loop = reach paths from Patient.BloodSat to Patient.Vein
 
-//Patient.Heart_Beat -> *
 Flow_HeartBeat = reach forward Patient.Heart_Beat
 
 base_case = reach paths from Capnography to PCA

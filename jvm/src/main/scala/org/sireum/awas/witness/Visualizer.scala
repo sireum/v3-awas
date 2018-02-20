@@ -37,14 +37,14 @@ object Visualizer {
       FileUtil.delete(Paths.get(outputFolder))
     }
 
-    //    val web =toFilePath(fileUri(this.getClass, "/org/sireum/web"))
+    //val web =toFilePath(fileUri(this.getClass, "/org/sireum/web"))
     def test(isDir: Boolean, path: Path) = {
       val basePath = Paths.get(this.getClass.getResource("/org/sireum/web").getPath)
       val tempPath = path.toAbsolutePath
       val relPath = basePath.relativize(tempPath)
 
       Files.copy(tempPath, Paths.get(outputFolder + relPath.toString))
-      //relPath.toString
+      relPath.toString
     }
 
     walkFileTree(Paths.get(web.getPath), test, false)

@@ -1,428 +1,421 @@
 PatientVein
  -------------- 
-{ port-in:$AWAS$$example/bindings/spiral4.awas$Patient#Vein } 
+{ port-in:$AWAS$$example/sscate/spiral4.awas$Patient#Vein } 
 
  -------------- 
 Infusion_paths
  -------------- 
-{ component:$AWAS$$example/bindings/spiral4.awas#Application, 
-component:$AWAS$$example/bindings/spiral4.awas#Capnography, 
-component:$AWAS$$example/bindings/spiral4.awas#CapnometerWire, 
-component:$AWAS$$example/bindings/spiral4.awas#Device_Network, 
-component:$AWAS$$example/bindings/spiral4.awas#EKG, 
-component:$AWAS$$example/bindings/spiral4.awas#EKGLead1Wire, 
-component:$AWAS$$example/bindings/spiral4.awas#EKGLead2Wire, 
-component:$AWAS$$example/bindings/spiral4.awas#EKGLead3Wire, 
-component:$AWAS$$example/bindings/spiral4.awas#FingerClipWire, 
-component:$AWAS$$example/bindings/spiral4.awas#MAP, 
-component:$AWAS$$example/bindings/spiral4.awas#PCA, 
-component:$AWAS$$example/bindings/spiral4.awas#Patient, 
-component:$AWAS$$example/bindings/spiral4.awas#PulseOx, 
-component:$AWAS$$example/bindings/spiral4.awas#Tube, 
-connection:$AWAS$$example/bindings/spiral4.awas#Blood_Sat, 
-connection:$AWAS$$example/bindings/spiral4.awas#Cap_Read, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_1, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_2, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_3, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#ETCO2_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Infuse_Drug, 
-connection:$AWAS$$example/bindings/spiral4.awas#Issue_Ticket, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_EKG, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#RR_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Report_SpO2 } 
+{ component:$AWAS$$example/sscate/spiral4.awas#Application, 
+component:$AWAS$$example/sscate/spiral4.awas#Capnography, 
+component:$AWAS$$example/sscate/spiral4.awas#CapnometerWire, 
+component:$AWAS$$example/sscate/spiral4.awas#Device_Network, 
+component:$AWAS$$example/sscate/spiral4.awas#EKG, 
+component:$AWAS$$example/sscate/spiral4.awas#EKGLead1Wire, 
+component:$AWAS$$example/sscate/spiral4.awas#EKGLead2Wire, 
+component:$AWAS$$example/sscate/spiral4.awas#EKGLead3Wire, 
+component:$AWAS$$example/sscate/spiral4.awas#FingerClipWire, 
+component:$AWAS$$example/sscate/spiral4.awas#MAP, 
+component:$AWAS$$example/sscate/spiral4.awas#PCA, 
+component:$AWAS$$example/sscate/spiral4.awas#Patient, 
+component:$AWAS$$example/sscate/spiral4.awas#PulseOx, 
+component:$AWAS$$example/sscate/spiral4.awas#Tube, 
+connection:$AWAS$$example/sscate/spiral4.awas#Blood_Sat, 
+connection:$AWAS$$example/sscate/spiral4.awas#Cap_Read, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_1, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_2, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_3, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#ETCO2_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Infuse_Drug, 
+connection:$AWAS$$example/sscate/spiral4.awas#Issue_Ticket, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_EKG, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#RR_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Report_SpO2 } 
 
  -------------- 
 PulseOx_SpO2_influences_infusion
  -------------- 
 Error: 
 
-Missing flow relationship for port 'port-in:$AWAS$$example/bindings/spiral4.awas$Application#EKG'
+Missing flow relationship for port 'port-in:$AWAS$$example/sscate/spiral4.awas$Application#EKG'
 
  -------------- 
 all_hazardous_situation_overdose
  -------------- 
 Warning: 
 
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#Issue_Ticket'
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_EKG'
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_PulseOx'
-Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral4.awas#Device_Network'
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#Report_SpO2'
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#RR_Report'
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#ETCO2_Report'
-Missing flow relationships for node 'component:$AWAS$$example/bindings/spiral4.awas#Tube'
-Missing flow relationships for node 'connection:$AWAS$$example/bindings/spiral4.awas#Infuse_Drug'
-{ port-in-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2ValueHigh ]
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Infuse_Drug#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ]
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#LateTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateLate ]
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_in[ error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2ValueHigh ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2ValueHigh ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Infuse_Drug#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#LateTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateLate ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2ValueHigh ]
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2[ error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2ValueHigh ]
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#Pulse[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateLate ]
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#SpO2[ error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2ValueHigh ]
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#LateTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-in:$AWAS$$example/bindings/spiral4.awas$Patient#Vein[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ]
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_out[ error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2ValueHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#LateTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateLate, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2ValueHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Tube#bind_out[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2ValueHigh ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Infuse_Drug#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#LateTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateLate ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2ValueHigh ]
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#LateTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#ETCO2[ error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#ETCO2ValueHigh ]
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#RespiratoryRate[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateLate ]
-port-out:$AWAS$$example/bindings/spiral4.awas$EKG#HR[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ]
-port-out:$AWAS$$example/bindings/spiral4.awas$PulseOx#Pulse[ error:$AWAS$$example/bindings/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseLate, error:$AWAS$$example/bindings/spiral4.awas$Error#PulseValueHigh ]
-port-out:$AWAS$$example/bindings/spiral4.awas$PulseOx#SpO2[ error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/bindings/spiral4.awas$Error#SpO2ValueHigh ] } 
+Missing flow relationships for node 'component:$AWAS$$example/sscate/spiral4.awas#Tube'
+Missing flow relationships for node 'component:$AWAS$$example/sscate/spiral4.awas#Device_Network'
+{ port-in-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2ValueHigh ]
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Infuse_Drug#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ]
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#LateTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateLate ]
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_in[ error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2ValueHigh ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2ValueHigh ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Infuse_Drug#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#LateTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateLate ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2ValueHigh ]
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2[ error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2ValueHigh ]
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#Pulse[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateLate ]
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#SpO2[ error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2ValueHigh ]
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#LateTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-in:$AWAS$$example/sscate/spiral4.awas$Patient#Vein[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ]
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_out[ error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2ValueHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#LateTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateLate, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2ValueHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Tube#&bind_out[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2ValueHigh ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Infuse_Drug#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#LateTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateLate ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2ValueHigh ]
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#LateTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#ETCO2[ error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#ETCO2ValueHigh ]
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#RespiratoryRate[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateLate ]
+port-out:$AWAS$$example/sscate/spiral4.awas$EKG#HR[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ]
+port-out:$AWAS$$example/sscate/spiral4.awas$PulseOx#Pulse[ error:$AWAS$$example/sscate/spiral4.awas$Error#PulseEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseLate, error:$AWAS$$example/sscate/spiral4.awas$Error#PulseValueHigh ]
+port-out:$AWAS$$example/sscate/spiral4.awas$PulseOx#SpO2[ error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Early, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2Late, error:$AWAS$$example/sscate/spiral4.awas$Error#SpO2ValueHigh ] } 
 
  -------------- 
 Cap_to_Pump
  -------------- 
 Error: 
 
-Missing flow relationship for port 'port-in:$AWAS$$example/bindings/spiral4.awas$Application#EKG'
+Missing flow relationship for port 'port-in:$AWAS$$example/sscate/spiral4.awas$Application#EKG'
 
  -------------- 
 Cap_to_Pump_paths
  -------------- 
-{ port-in-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#Pulse, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#SpO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#out, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#ETCO2, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse } 
+{ port-in-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#Pulse, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#SpO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#ETCO2, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse } 
 
  -------------- 
 Cap_to_pump_hazard_1
  -------------- 
 Error: 
 
-Missing flow relationship for port & Error: 'port-in:$AWAS$$example/bindings/spiral4.awas$Patient#Vein, error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic'
+Missing flow relationship for port & Error: 'port-in:$AWAS$$example/sscate/spiral4.awas$Patient#Vein, error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic'
 
  -------------- 
 Cap_to_pump_hazard_1_path
  -------------- 
-{ port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#in[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh ]
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh ]
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh ]
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket[ error:$AWAS$$example/bindings/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/bindings/spiral4.awas$Error#TicketTooLong ]
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#RespiratoryRate[ error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/bindings/spiral4.awas$Error#RespirationRateHigh ]
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse[ error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic ] } 
+{ port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#in[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh ]
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh ]
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh ]
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket[ error:$AWAS$$example/sscate/spiral4.awas$Error#EarlyTicket, error:$AWAS$$example/sscate/spiral4.awas$Error#TicketTooLong ]
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#RespiratoryRate[ error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateEarly, error:$AWAS$$example/sscate/spiral4.awas$Error#RespirationRateHigh ]
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse[ error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic ] } 
 
  -------------- 
 Cap_to_pump_hazard_2
  -------------- 
 Error: 
 
-Missing flow relationship for port & Error: 'port-in:$AWAS$$example/bindings/spiral4.awas$Patient#Vein, error:$AWAS$$example/bindings/spiral4.awas$Error#TooMuchAnalgesic'
+Missing flow relationship for port & Error: 'port-in:$AWAS$$example/sscate/spiral4.awas$Patient#Vein, error:$AWAS$$example/sscate/spiral4.awas$Error#TooMuchAnalgesic'
 
  -------------- 
 Control_Loop
  -------------- 
-{ port-in-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Blood_Sat#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Infuse_Drug#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#in, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#EKG, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#Pulse, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#SpO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Patient#Vein, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PulseOx#Saturation, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Blood_Sat#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$EKG_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Infuse_Drug#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#out, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Patient#BloodSat, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PulseOx#Pulse, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PulseOx#SpO2 } 
+{ port-in-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Blood_Sat#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Infuse_Drug#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#in, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#EKG, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#Pulse, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#SpO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Patient#Vein, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PulseOx#Saturation, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Blood_Sat#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$EKG_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Infuse_Drug#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Patient#BloodSat, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PulseOx#Pulse, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PulseOx#SpO2 } 
 
  -------------- 
 Flow_HeartBeat
  -------------- 
 Error: 
 
-Missing flow relationship for port 'port-in:$AWAS$$example/bindings/spiral4.awas$Application#EKG'
+Missing flow relationship for port 'port-in:$AWAS$$example/sscate/spiral4.awas$Application#EKG'
 
  -------------- 
 base_case
  -------------- 
-{ component:$AWAS$$example/bindings/spiral4.awas#Application, 
-component:$AWAS$$example/bindings/spiral4.awas#Capnography, 
-component:$AWAS$$example/bindings/spiral4.awas#Device_Network, 
-component:$AWAS$$example/bindings/spiral4.awas#EKG, 
-component:$AWAS$$example/bindings/spiral4.awas#MAP, 
-component:$AWAS$$example/bindings/spiral4.awas#PCA, 
-component:$AWAS$$example/bindings/spiral4.awas#Patient, 
-component:$AWAS$$example/bindings/spiral4.awas#PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Blood_Sat, 
-connection:$AWAS$$example/bindings/spiral4.awas#Cap_Read, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_1, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_2, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_3, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#ETCO2_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Infuse_Drug, 
-connection:$AWAS$$example/bindings/spiral4.awas#Issue_Ticket, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_EKG, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#RR_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Report_SpO2 } 
+{ component:$AWAS$$example/sscate/spiral4.awas#Application, 
+component:$AWAS$$example/sscate/spiral4.awas#Capnography, 
+component:$AWAS$$example/sscate/spiral4.awas#Device_Network, 
+component:$AWAS$$example/sscate/spiral4.awas#EKG, 
+component:$AWAS$$example/sscate/spiral4.awas#MAP, 
+component:$AWAS$$example/sscate/spiral4.awas#PCA, 
+component:$AWAS$$example/sscate/spiral4.awas#Patient, 
+component:$AWAS$$example/sscate/spiral4.awas#PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Blood_Sat, 
+connection:$AWAS$$example/sscate/spiral4.awas#Cap_Read, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_1, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_2, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_3, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#ETCO2_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Infuse_Drug, 
+connection:$AWAS$$example/sscate/spiral4.awas#Issue_Ticket, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_EKG, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#RR_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Report_SpO2 } 
 
  -------------- 
 all_constraint_test1
  -------------- 
-{ component:$AWAS$$example/bindings/spiral4.awas#Application, 
-component:$AWAS$$example/bindings/spiral4.awas#Capnography, 
-component:$AWAS$$example/bindings/spiral4.awas#Device_Network, 
-component:$AWAS$$example/bindings/spiral4.awas#EKG, 
-component:$AWAS$$example/bindings/spiral4.awas#MAP, 
-component:$AWAS$$example/bindings/spiral4.awas#PCA, 
-component:$AWAS$$example/bindings/spiral4.awas#Patient, 
-component:$AWAS$$example/bindings/spiral4.awas#PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Blood_Sat, 
-connection:$AWAS$$example/bindings/spiral4.awas#Cap_Read, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_1, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_2, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_3, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#ETCO2_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Infuse_Drug, 
-connection:$AWAS$$example/bindings/spiral4.awas#Issue_Ticket, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_EKG, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#RR_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Report_SpO2 } 
+{ component:$AWAS$$example/sscate/spiral4.awas#Application, 
+component:$AWAS$$example/sscate/spiral4.awas#Capnography, 
+component:$AWAS$$example/sscate/spiral4.awas#Device_Network, 
+component:$AWAS$$example/sscate/spiral4.awas#EKG, 
+component:$AWAS$$example/sscate/spiral4.awas#MAP, 
+component:$AWAS$$example/sscate/spiral4.awas#PCA, 
+component:$AWAS$$example/sscate/spiral4.awas#Patient, 
+component:$AWAS$$example/sscate/spiral4.awas#PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Blood_Sat, 
+connection:$AWAS$$example/sscate/spiral4.awas#Cap_Read, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_1, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_2, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_3, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#ETCO2_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Infuse_Drug, 
+connection:$AWAS$$example/sscate/spiral4.awas#Issue_Ticket, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_EKG, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#RR_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Report_SpO2 } 
 
  -------------- 
 some_constraint_test1
  -------------- 
-{ component:$AWAS$$example/bindings/spiral4.awas#Application, 
-component:$AWAS$$example/bindings/spiral4.awas#Capnography, 
-component:$AWAS$$example/bindings/spiral4.awas#Device_Network, 
-component:$AWAS$$example/bindings/spiral4.awas#EKG, 
-component:$AWAS$$example/bindings/spiral4.awas#MAP, 
-component:$AWAS$$example/bindings/spiral4.awas#PCA, 
-component:$AWAS$$example/bindings/spiral4.awas#Patient, 
-component:$AWAS$$example/bindings/spiral4.awas#PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Blood_Sat, 
-connection:$AWAS$$example/bindings/spiral4.awas#Cap_Read, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_1, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_2, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_3, 
-connection:$AWAS$$example/bindings/spiral4.awas#EKG_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#ETCO2_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Infuse_Drug, 
-connection:$AWAS$$example/bindings/spiral4.awas#Issue_Ticket, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_EKG, 
-connection:$AWAS$$example/bindings/spiral4.awas#Pulse_Report_PulseOx, 
-connection:$AWAS$$example/bindings/spiral4.awas#RR_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Report_SpO2 } 
+{ component:$AWAS$$example/sscate/spiral4.awas#Application, 
+component:$AWAS$$example/sscate/spiral4.awas#Capnography, 
+component:$AWAS$$example/sscate/spiral4.awas#Device_Network, 
+component:$AWAS$$example/sscate/spiral4.awas#EKG, 
+component:$AWAS$$example/sscate/spiral4.awas#MAP, 
+component:$AWAS$$example/sscate/spiral4.awas#PCA, 
+component:$AWAS$$example/sscate/spiral4.awas#Patient, 
+component:$AWAS$$example/sscate/spiral4.awas#PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Blood_Sat, 
+connection:$AWAS$$example/sscate/spiral4.awas#Cap_Read, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_1, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_2, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_3, 
+connection:$AWAS$$example/sscate/spiral4.awas#EKG_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#ETCO2_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Infuse_Drug, 
+connection:$AWAS$$example/sscate/spiral4.awas#Issue_Ticket, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_EKG, 
+connection:$AWAS$$example/sscate/spiral4.awas#Pulse_Report_PulseOx, 
+connection:$AWAS$$example/sscate/spiral4.awas#RR_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Report_SpO2 } 
 
  -------------- 
 none_constraint_test1
  -------------- 
-{ component:$AWAS$$example/bindings/spiral4.awas#Application, 
-component:$AWAS$$example/bindings/spiral4.awas#Capnography, 
-component:$AWAS$$example/bindings/spiral4.awas#PCA, 
-connection:$AWAS$$example/bindings/spiral4.awas#ETCO2_Report, 
-connection:$AWAS$$example/bindings/spiral4.awas#Issue_Ticket, 
-connection:$AWAS$$example/bindings/spiral4.awas#RR_Report } 
+{ component:$AWAS$$example/sscate/spiral4.awas#Application, 
+component:$AWAS$$example/sscate/spiral4.awas#Capnography, 
+component:$AWAS$$example/sscate/spiral4.awas#PCA, 
+connection:$AWAS$$example/sscate/spiral4.awas#ETCO2_Report, 
+connection:$AWAS$$example/sscate/spiral4.awas#Issue_Ticket, 
+connection:$AWAS$$example/sscate/spiral4.awas#RR_Report } 
 
  -------------- 
 base_case_ports
  -------------- 
-{ port-in-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#Pulse, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#SpO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#out, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#ETCO2, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse } 
+{ port-in-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#Pulse, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#SpO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#ETCO2, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse } 
 
  -------------- 
 none_constraint_ports
  -------------- 
-{ port-in-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#ETCO2, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse } 
+{ port-in-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#ETCO2, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse } 
 
  -------------- 
 some_constraint_ports
  -------------- 
-{ port-in-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#Pulse, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#SpO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#out, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#ETCO2, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse } 
+{ port-in-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#Pulse, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#SpO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#ETCO2, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse } 
 
  -------------- 
 all_constraint_ports
  -------------- 
-{ port-in-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_in, 
-port-in-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#in, 
-port-in-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#in, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#ETCO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#Pulse, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#RR, 
-port-in:$AWAS$$example/bindings/spiral4.awas$Application#SpO2, 
-port-in:$AWAS$$example/bindings/spiral4.awas$PCA#control, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Device_Network#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$EKG_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$RR_Report#bind_out, 
-port-out-bind:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#bind_out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$ETCO2_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Issue_Ticket#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_EKG#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Pulse_Report_PulseOx#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$RR_Report#out, 
-port-out-virtual:$AWAS$$example/bindings/spiral4.awas$Report_SpO2#out, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Application#Ticket, 
-port-out:$AWAS$$example/bindings/spiral4.awas$Capnography#ETCO2, 
-port-out:$AWAS$$example/bindings/spiral4.awas$PCA#infuse } 
+{ port-in-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_in, 
+port-in-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#in, 
+port-in-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#in, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#ETCO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#Pulse, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#RR, 
+port-in:$AWAS$$example/sscate/spiral4.awas$Application#SpO2, 
+port-in:$AWAS$$example/sscate/spiral4.awas$PCA#control, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Device_Network#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$EKG_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$RR_Report#&bind_out, 
+port-out-bind:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#&bind_out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$ETCO2_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Issue_Ticket#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_EKG#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Pulse_Report_PulseOx#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$RR_Report#out, 
+port-out-virtual:$AWAS$$example/sscate/spiral4.awas$Report_SpO2#out, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Application#Ticket, 
+port-out:$AWAS$$example/sscate/spiral4.awas$Capnography#ETCO2, 
+port-out:$AWAS$$example/sscate/spiral4.awas$PCA#infuse } 
 
  -------------- 

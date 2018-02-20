@@ -143,6 +143,7 @@ final class QueryBuilder private() {
   }
 
   def build(ctx: FilterContext): FilterID = {
+    val x = ctx.getText.toLowerCase
     ctx.getText.toLowerCase match {
       case "node" => FilterID.NODE
       case "port" => FilterID.PORT
@@ -150,6 +151,8 @@ final class QueryBuilder private() {
       case "out-port" => FilterID.OUT
       case "error" => FilterID.ERROR
       case "porterror" => FilterID.PORTERROR
+      case "flow-source" => FilterID.SOURCE
+
     }
   }
 

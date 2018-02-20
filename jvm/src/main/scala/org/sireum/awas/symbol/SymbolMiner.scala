@@ -29,6 +29,8 @@ import org.sireum.awas.ast._
 import org.sireum.awas.symbol.SymbolTableMessage._
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
+
+import scala.collection.convert.Wrappers.MutableSetWrapper
 /**
   * Created by hariharan on 12/17/16.
   */
@@ -223,25 +225,11 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
           val tt = stp.compTypeDecl(r.toUri).map(stp.typeTable)
 
-          comp.ports.foreach(portMiner(m, _, comp, r))
+          comp.ports.foreach(portMiner(m, _, r))
 
           comp.propagations.foreach(propagationMiner(m, _, r, tt))
 
-          comp.flows.foreach {
-            flow => {
-              val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
-              compTableProducer.tables.symbol2Uri(flow.id.value) = fr.toUri
-              if (!compTableProducer.tables.flowTable.contains(fr.toUri)) {
-                compTableProducer.tables.flowTable(fr.toUri) = flow
-                flowCheck(m, flow, fr.toUri, r, tt)
-
-              } else {
-                reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-                  flow.id,
-                  m, flow.id.value))
-              }
-            }
-          }
+          comp.flows.foreach(flowMiner(m, _, r, tt))
 
           if (comp.behaviour.isDefined) {
             val ttUri = stp.compTypeDecl(r.toUri)
@@ -264,47 +252,58 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     m
   }
 
-  //TODO: modularize this method: Bad cyclomatic complexity
-  def flowCheck(m: Model, flow: Flow, fr: ResourceUri, r: Resource, tt: ISet[TypeTable])(
-    implicit reporter: AccumulatingTagReporter): Unit = {
+  def flowMiner(m: Model, flow: Flow, r: Resource, tt: ISet[TypeTable])
+               (implicit reporter: AccumulatingTagReporter): Unit = {
+    val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
+    val ctp = stp.componentSymbolTableProducer(r.toUri)
+    ctp.tables.symbol2Uri(flow.id.value) = fr.toUri
+    if (!ctp.tables.flowTable.contains(fr.toUri)) {
+      val from = flowCheck(m, flow, fr.toUri, r, tt, isFrom = true)
+      val to = flowCheck(m, flow, fr.toUri, r, tt, isFrom = false)
+      ctp.tables.flowTable(fr.toUri) = FlowTableData(fr.toUri, from._1, to._1, from._2, to._2)
+
+    } else {
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
+        flow.id,
+        m, flow.id.value))
+    }
+  }
+
+
+  def flowCheck(m: Model,
+                flow: Flow,
+                fr: ResourceUri,
+                r: Resource,
+                tt: ISet[TypeTable],
+                isFrom: Boolean)(
+                 implicit reporter: AccumulatingTagReporter): (Option[ResourceUri], ISet[ResourceUri]) = {
     val ctp = stp.compMap(r.toUri)
 
-    if (flow.from.isDefined) {
-      val fromP = ctp.ports.find(_.endsWith(H.ID_SEPARATOR + flow.from.get.value))
+    val port = if (isFrom) flow.from else flow.to
+    val errors = if (isFrom) flow.fromE else flow.toE
+    var res: (Option[ResourceUri], ISet[ResourceUri]) = (None, isetEmpty[ResourceUri])
+    if (port.isDefined) {
+      val fromP = ctp.ports.find(p => H.getPortId(stp, r.toUri, p).getOrElse("") == port.get.value)
       if (fromP.isDefined) {
-        Resource.useDefResolve(flow.from.get, ctp.port(fromP.get).get)
+        Resource.useDefResolve(port.get, ctp.port(fromP.get).get)
         ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
         ctp.tables.portFlowRelation.getOrElseUpdate(fr, msetEmpty[ResourceUri]) += fromP.get
-        if (flow.fromE.nonEmpty) {
-          flow.fromE.foreach {
+        if (errors.nonEmpty) {
+          errors.foreach {
             f => mineFault(m, f, r, tt)
           }
+          res = (fromP, errors.flatMap(e => Resource.getResource(e)).map(_.toUri).toSet)
+        } else {
+          res = (fromP, isetEmpty[ResourceUri])
         }
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
           flow,
           m, flow.from.get.value))
+        res = (None, isetEmpty[ResourceUri])
       }
     }
-
-    if (flow.to.isDefined) {
-      val fromP = ctp.ports.find(_.endsWith(H.ID_SEPARATOR + flow.to.get.value))
-      if (fromP.isDefined) {
-        Resource.useDefResolve(flow.to.get, ctp.port(fromP.get).get)
-        ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
-        ctp.tables.portFlowRelation.getOrElseUpdate(fr, msetEmpty[ResourceUri]) += fromP.get
-        if (flow.toE.nonEmpty) {
-          flow.toE.foreach {
-            f => mineFault(m, f, r, tt)
-          }
-        }
-      } else {
-        reporter.report(errorMessageGen(MISSING_PORT_DECL,
-          flow,
-          m, flow.id.value))
-      }
-
-    }
+    res
   }
 
 
@@ -407,7 +406,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
   }
 
-  def portMiner(m: Model, p: Port, c: ComponentDecl, r: Resource)(
+  def portMiner(m: Model, p: Port, r: Resource)(
     implicit reporter: AccumulatingTagReporter): Unit = {
     val ctp = stp.compMap(r.toUri)
     val pr = Resource(if (p.isIn) H.PORT_IN_TYPE else H.PORT_OUT_TYPE, r, p.id.value, Some(true), p)
@@ -421,6 +420,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
   }
 
+  //TODO: Rewrite this method
   def connectionMiner(m: Model)(
     implicit reporter: AccumulatingTagReporter): Model = {
     var parentRes = Resource(H.HEAD)
@@ -438,56 +438,84 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         st.symbol2Uri(conn.connName.value) = r.toUri
         if (!st.connectionTable.contains(r.toUri)) {
           st.connectionTable(r.toUri) = conn
-          compPortCheck(m, conn.fromComp, conn.fromPort)
-          compPortCheck(m, conn.toComp, conn.toPort)
+          if (compPortCheck(m, conn.fromComp, conn.fromPort) &&
+            compPortCheck(m, conn.toComp, conn.toPort)) {
 
-          val ntp = stp.connectionSymbolTableProducer(r.toUri)
+            val ntp = stp.connectionSymbolTableProducer(r.toUri)
 
-          val inr = Resource(H.PORT_IN_VIRTUAL_TYPE,
-            r,
-            H.INPUT_CONN_PORT_ID,
-            Some(true))
+            val inr = Resource(H.PORT_IN_VIRTUAL_TYPE,
+              r,
+              H.INPUT_CONN_PORT_ID,
+              Some(true))
 
-          val outr = Resource(H.PORT_OUT_VIRTUAL_TYPE,
-            r,
-            H.OUTPUT_CONN_PORT_ID,
-            Some(true))
+            val outr = Resource(H.PORT_OUT_VIRTUAL_TYPE,
+              r,
+              H.OUTPUT_CONN_PORT_ID,
+              Some(true))
 
-          ntp.tables.symbol2Uri(H.INPUT_CONN_PORT_ID) = inr.toUri
-          ntp.tables.symbol2Uri(H.OUTPUT_CONN_PORT_ID) = outr.toUri
-          ntp.tables.portTable += inr.toUri
-          ntp.tables.portTable += outr.toUri
+            ntp.tables.symbol2Uri(H.INPUT_CONN_PORT_ID) = inr.toUri
+            ntp.tables.symbol2Uri(H.OUTPUT_CONN_PORT_ID) = outr.toUri
+            ntp.tables.portTable += inr.toUri
+            ntp.tables.portTable += outr.toUri
 
-          conn.connFlow.foreach { flow =>
-            val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
-            ntp.tables.symbol2Uri(flow.id.value) = fr.toUri
-            if (!ntp.tables.flowTable.contains(fr.toUri)) {
-              ntp.tables.flowTable(fr.toUri) = flow
-              if (flow.fromE.nonEmpty) {
-                ntp.tables.flowPortRelation.getOrElseUpdate(
-                  ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head,
-                  msetEmpty[ResourceUri]
-                ) += fr.toUri
-                ntp.tables.portFlowRelation.getOrElseUpdate(
-                  fr.toUri, msetEmpty[ResourceUri]
-                ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head
-                flow.fromE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
+            //create virtual propagations
+            val fcompUri = findComponent(conn.fromComp)
+            val fportUri = stp.compMap(fcompUri.get).getUriFromSymbol(conn.fromPort.value)
+            val compSt = st.componentSymbolTable(fcompUri.get)
+            val errors = compSt.propagation(fportUri.get)
+            ntp.tables.propagationTable(inr.toUri) = collection.mutable.Set(errors.toList: _*)
+            ntp.tables.propagationTable(outr.toUri) = collection.mutable.Set(errors.toList: _*)
+
+            //Handle flows
+
+            conn.connFlow.foreach { flow =>
+              val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
+              ntp.tables.symbol2Uri(flow.id.value) = fr.toUri
+              if (!ntp.tables.flowTable.contains(fr.toUri)) {
+                flow.fromE.foreach(mineFault(m, _, r, st.typeTable.values.toSet))
+                flow.toE.foreach(mineFault(m, _, r, st.typeTable.values.toSet))
+
+                ntp.tables.flowTable(fr.toUri) = FlowTableData(fr.toUri,
+                  if (flow.fromE.nonEmpty) Some(inr.toUri) else None,
+                  if (flow.toE.nonEmpty) Some(outr.toUri) else None,
+                  flow.fromE.flatMap(fe => Resource.getResource(fe)).map(_.toUri).toSet,
+                  flow.toE.flatMap(fe => Resource.getResource(fe)).map(_.toUri).toSet)
+
+                if (flow.fromE.nonEmpty) {
+                  ntp.tables.flowPortRelation.getOrElseUpdate(
+                    ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head,
+                    msetEmpty[ResourceUri]
+                  ) += fr.toUri
+                  ntp.tables.portFlowRelation.getOrElseUpdate(
+                    fr.toUri, msetEmpty[ResourceUri]
+                  ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head
+
+                  flow.fromE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
+                }
+                if (flow.toE.nonEmpty) {
+                  ntp.tables.flowPortRelation.getOrElseUpdate(
+                    ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head,
+                    msetEmpty[ResourceUri]
+                  ) += fr.toUri
+                  ntp.tables.portFlowRelation.getOrElseUpdate(
+                    fr.toUri, msetEmpty[ResourceUri]
+                  ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head
+                  flow.toE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
+                }
+              } else {
+                reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
+                  flow.id,
+                  m, flow.id.value))
               }
-              if (flow.toE.nonEmpty) {
-                ntp.tables.flowPortRelation.getOrElseUpdate(
-                  ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head,
-                  msetEmpty[ResourceUri]
-                ) += fr.toUri
-                ntp.tables.portFlowRelation.getOrElseUpdate(
-                  fr.toUri, msetEmpty[ResourceUri]
-                ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head
-                flow.toE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
-              }
-            } else {
-              reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-                flow.id,
-                m, flow.id.value))
             }
+            var i = 1
+            //default flow
+            errors.foreach { e =>
+
+              buildAndAddDefaultConnectionFlows(r, e, i.toString, inr, outr)
+              i = i + 1
+            }
+
           }
 
         } else {
@@ -498,6 +526,40 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         false
     })(m)
     m
+  }
+
+  def buildAndAddDefaultConnectionFlows(r: Resource,
+                                        error: ResourceUri,
+                                        idAppender: String,
+                                        inr: Resource,
+                                        outr: Resource) = {
+    val ntp = stp.connectionSymbolTableProducer(r.toUri)
+    val dfr = Resource(H.FLOW_TYPE, r, H.VIRTUAL_CONN_FLOW_ID + idAppender, some(true))
+    ntp.tables.symbol2Uri(H.VIRTUAL_CONN_FLOW_ID) = dfr.toUri
+
+    ntp.tables.flowTable(dfr.toUri) = FlowTableData(dfr.toUri,
+      Some(inr.toUri),
+      Some(outr.toUri),
+      isetEmpty + error,
+      isetEmpty + error)
+
+    if (ntp.tables.portTable.contains(inr.toUri)) {
+      ntp.tables.flowPortRelation.getOrElseUpdate(
+        inr.toUri,
+        msetEmpty[ResourceUri]) += dfr.toUri
+
+      ntp.tables.portFlowRelation.getOrElseUpdate(
+        dfr.toUri, msetEmpty[ResourceUri]
+      ) += inr.toUri
+    }
+    if (ntp.tables.portTable.contains(outr.toUri))
+      ntp.tables.flowPortRelation.getOrElseUpdate(
+        outr.toUri,
+        msetEmpty[ResourceUri]) += dfr.toUri
+
+    ntp.tables.portFlowRelation.getOrElseUpdate(
+      dfr.toUri, msetEmpty[ResourceUri]
+    ) += outr.toUri
   }
 
   def deploymentMiner(m: Model)(
@@ -559,11 +621,36 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         Resource.getDefResource(nodeUri).get,
         H.OUTPUT_BIND_PORT_ID, Some(true), port2).toUri) = port2
     } else {
-      val pt = stp.connMap(nodeUri).tables.portTable
-      pt += Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
-        H.INPUT_BIND_PORT_ID, Some(true)).toUri
-      pt += Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get,
-        H.OUTPUT_BIND_PORT_ID, Some(true)).toUri
+      val tables = stp.connMap(nodeUri).tables
+      val pt = tables.portTable
+      val inPort = Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
+        H.INPUT_BIND_PORT_ID, Some(true))
+      val outPort = Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get,
+        H.OUTPUT_BIND_PORT_ID, Some(true))
+      pt += inPort.toUri
+      pt += outPort.toUri
+      var propagations = tables.propagationTable
+      val connInPort = stp.connMap(nodeUri).ports.filter(it =>
+        H.uri2IdString(it) == H.INPUT_CONN_PORT_ID).head
+      val connOutPort = stp.connMap(nodeUri).ports.filter(it =>
+        H.uri2IdString(it) == H.OUTPUT_CONN_PORT_ID).head
+      propagations += (outPort.toUri -> propagations(connOutPort))
+      propagations += (inPort.toUri -> propagations(connInPort))
+      var temp_i = 1
+      if (Resource.getDefResource(nodeUri).isDefined) {
+        val res = Resource.getDefResource(nodeUri).get
+        propagations(connInPort).foreach { e =>
+          buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
+            Resource.getDefResource(connInPort).get, outPort)
+          temp_i = temp_i + 1
+          buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
+            inPort, Resource.getDefResource(connOutPort).get)
+          temp_i = temp_i + 1
+          buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
+            inPort, outPort)
+          temp_i = temp_i + 1
+        }
+      }
     }
   }
 
@@ -573,22 +660,25 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
 
   def compPortCheck(m: Model, comp: Name, port: Id)(
-    implicit reporter: AccumulatingTagReporter) : Unit = {
+    implicit reporter: AccumulatingTagReporter): Boolean = {
     val fcompUri = findComponent(comp)
     if (fcompUri.isDefined) {
       Resource.useDefResolve(comp, stp.component(fcompUri.get))
       val fportUri = stp.compMap(fcompUri.get).getUriFromSymbol(port.value)
       if (fportUri.isDefined) {
         Resource.useDefResolve(port, stp.componentTable(fcompUri.get).port(fportUri.get).get)
+        true
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
           port,
           m, port.value))
+        false
       }
     } else {
       reporter.report(errorMessageGen(MISSING_COMPONENT,
         comp,
         m,comp.value.map(_.value).mkString("::")))
+      false
     }
   }
 

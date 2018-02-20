@@ -98,6 +98,7 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
       res.asJava
     }
   }
+
   private var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
   private var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
   private var edgePortsMap: IMap[Edge, (ResourceUri, ResourceUri)] = imapEmpty[Edge, (ResourceUri, ResourceUri)]
