@@ -44,8 +44,8 @@ extends TestDefProvider {
   val testDirs = Seq(
     //makePath("..", "example", "awas-lang"),
     //makePath("..", "example", "fptc"),
-    //makePath("..", "example", "Query")
-    makePath("..", "example", "bindings")
+    makePath("..", "example", "Query"),
+    makePath("..", "example", "sscate")
   )
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
