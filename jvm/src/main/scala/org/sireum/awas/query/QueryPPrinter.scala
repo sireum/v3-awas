@@ -7,7 +7,7 @@ import org.stringtemplate.v4.{ST, STGroup, STGroupFile}
 import scala.collection.JavaConverters._
 
 object QueryPPrinter {
-  private val stg: STGroup = new STGroupFile(getClass.getResource("../../aq/parser/QueryPrettyPrinter.stg"), "UTF-8", '$', '$')
+  private val stg: STGroup = new STGroupFile(getClass.getResource("QueryPrettyPrinter.stg"), "UTF-8", '$', '$')
 
   def apply(n: QueryNode): String = {
     var result = ""

@@ -73,6 +73,7 @@ object SvgGenerator {
           tr(
             td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
             td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Out ports"))),
+
         if (vertex.isFlowDefined) tr(portContent(inPorts, errors),
           flowContent(flows), portContent(outPorts, errors))
         else tr(portContent(inPorts, errors),
@@ -96,6 +97,7 @@ object SvgGenerator {
 
   private def portContent(inPorts: Seq[(String, ResourceUri, String)],
                           errors: IMap[String, Seq[String]]) =
+    if (inPorts.nonEmpty)
     td(attr("cellpadding") := 0, table(attr("border") := 0,
       attr("cellspacing") := 0, attr("cellpadding") := 0, attr("ROWS") := "*",
       for ((portid, uri, text) <- inPorts) yield
@@ -118,7 +120,7 @@ object SvgGenerator {
               else
                 td()
             )
-          )))))
+          ))))) else td()
 
 
   private def tabledata(text: String, border: Boolean) = table(attr("border") := 0,

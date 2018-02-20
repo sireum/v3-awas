@@ -283,7 +283,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
           flow,
-          m, flow.from.get.value))
+          m, flow.from.get.value, r.toUri))
       }
     }
 
@@ -301,7 +301,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
           flow,
-          m, flow.id.value))
+          m, flow.id.value, r.toUri))
       }
 
     }
@@ -342,7 +342,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         } else {
           reporter.report(errorMessageGen(MISSING_PORT_DECL,
             t._1,
-            m, t._1.value))
+            m, t._1.value, r.toUri))
         }
         t._2 match {
           case f: Fault => mineFault(m, f, r, tt)
@@ -386,13 +386,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     if (portUri.isEmpty) {
       reporter.report(errorMessageGen(MISSING_PORT_DECL,
         p,
-        m, p.id.value))
+        m, p.id.value, r.toUri))
 
     } else if (st.compTypeTable.get(r.toUri).isEmpty) {
       reporter.report(errorMessageGen(MISSING_TYPE_ASSOCIATION,
         p,
         m, ""))
-    }
+    } else {
       val tempSet = msetEmpty[ResourceUri]
       Resource.useDefResolve(p, ctp.tables.portTable(portUri.get))
       p.errorTypes.foreach {
@@ -404,6 +404,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
 
           ctp.tables.propagationTable(portUri.get) = tempSet
+      }
     }
   }
 
@@ -417,7 +418,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     } else {
       reporter.report(errorMessageGen(DUPLICATE_PORT,
         p,
-        m, p.id.value))
+        m, p.id.value, r.toUri))
     }
   }
 

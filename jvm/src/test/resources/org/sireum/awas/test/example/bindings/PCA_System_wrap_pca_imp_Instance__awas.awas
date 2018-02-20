@@ -1,0 +1,2021 @@
+types
+  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
+
+  enum PCA_Error_Model {DrugFlowError, DrugStopped, DrugRateError, ThirdPartyPress, AlarmError, FalseAlarm, MissedAlarm, StatusError, ThreadFault, InternalError, DetectedFault, POSTdetectedFault, RAMdetectedFault, ROMdetectedFault, CPUdetectedFault, HWdetectedFault, UndetectedFault, OperatorError, LogError, CorruptedLog, DeadLog, TruncatedLog}
+
+components
+  vcc
+    ports
+      out Power_Voltage
+
+  safety_core
+    ports
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+      in s_bus__BUS_IN
+      out s_bus__BUS_OUT
+
+  ui_process
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Image
+        out AudioSignal
+        out Alarm_Inactivation
+        in Remaining_Battery_Time
+        in Using_Battery_Power
+        in Prescription
+        in Clinician_Name
+        in Patient_Name
+        in Touch
+        in Alarm
+        in Warning
+        in System_Status
+        in Display_Message
+        in Sound_Type
+        out Bolus_Duration
+        out CP_Reset_Alarm
+        in Low_Battery_Warning
+        in Hard_Limit_Violated
+        in Soft_Limit_Warning
+        out Confirm_Soft_Limit_Exception
+        out Reject_Soft_Limit_Exception
+        out Stop_Button_Pressed
+        out Start_Button_Pressed
+        out Clinician_Request_Bolus
+        out Pause_Infusion
+        out Resume_Infusion
+        out Turn_Off
+        in Patient_Request_Not_Too_Soon
+        in Patient_Request_Too_Soon
+      propagations
+        Clinician_Request_Bolus = {EarlyServiceTermination, OperatorError}
+        Confirm_Soft_Limit_Exception = {OperatorError}
+        Resume_Infusion = {EarlyServiceTermination, OperatorError}
+        Alarm = {EarlyServiceTermination, ItemCommission}
+        Touch = {EarlyServiceTermination, OperatorError}
+        Image = {EarlyServiceTermination, AlarmError, ValueError}
+        Stop_Button_Pressed = {EarlyServiceTermination, OperatorError}
+        Bolus_Duration = {EarlyServiceTermination, ValueError, OperatorError}
+        Pause_Infusion = {EarlyServiceTermination, OperatorError}
+        Reject_Soft_Limit_Exception = {OperatorError}
+        AudioSignal = {EarlyServiceTermination, AlarmError, ValueError}
+        Start_Button_Pressed = {EarlyServiceTermination, OperatorError}
+        Alarm_Inactivation = {EarlyServiceTermination, OperatorError}
+        Warning = {EarlyServiceTermination, ItemCommission}
+        System_Status = {EarlyServiceTermination, ValueError}
+        Prescription = {ValueError}
+
+  flow_rate
+    ports
+      in System_Status
+      in Infusion_Flow_Rate
+      in Upstream_Flow_Rate
+      in Downstream_Flow_Rate
+      out Basal_Overinfusion
+      out Bolus_Overinfusion
+      out Square_Bolus_Overinfusion
+      out Basal_Underinfusion
+      out Bolus_Underinfusion
+      out Square_Bolus_Underinfusion
+
+  alarm_process
+    ports
+      in alrmIN
+      out alrmOUT
+      in System_Status
+      in Infusion_Flow_Rate
+      in Upstream_Flow_Rate
+      in Downstream_Flow_Rate
+      out Alarm
+      out Warning
+      out Log_Fault
+      out Stop_Pump_Completely
+      out Pump_At_KVO_Rate
+      in Over_Max_Drug_Per_Hour
+      in Hard_Limit_Violated
+      in Prime_Failure
+      in Bubble
+      in Upstream_Occlusion
+      in Downstream_Occlusion
+      in Empty_Reservoir
+      in Low_Reservoir
+      in Pump_Hot
+      in Drug_Not_In_Library
+      in Defective_Battery
+      in Low_Battery_Warning
+      in Voltage_OOR
+      in CP_Reset_Alarm
+      in Security_Fault
+
+  display
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in Image
+        out LightToEye
+        out Touch
+        in Finger_Press
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+      propagations
+        Image = {EarlyServiceTermination, AlarmError, ValueError}
+        Finger_Press = {OperatorError}
+        Touch = {EarlyServiceTermination, OperatorError}
+        LightToEye = {EarlyServiceTermination, AlarmError, ValueError}
+      flows
+        touch_fail_silent : * -> Touch{EarlyServiceTermination}
+        lte_fail_silent : * -> LightToEye{EarlyServiceTermination}
+        image_to_eye : Image{EarlyServiceTermination, AlarmError, ValueError} -> LightToEye{EarlyServiceTermination, AlarmError, ValueError}
+        finger_to_touch : Finger_Press{OperatorError} -> Touch{EarlyServiceTermination, OperatorError}
+
+  event_logger
+    with PCA_Error_Model, ErrorLibrary
+      ports
+        in Log_Event
+        out The_Event_Log
+        in Get_Event_Log
+      propagations
+        Log_Event = {ValueError, EarlyServiceTermination}
+        The_Event_Log = {LogError}
+      flows
+        died : * -> The_Event_Log{DeadLog}
+        mucked : * -> The_Event_Log{CorruptedLog}
+        trunc : * -> The_Event_Log{TruncatedLog}
+
+  wrap_pca_imp_Instance
+    ports
+      in app_signalsIN
+      out app_signalsOUT
+      in to_techIN
+      out to_techOUT
+      in to_ice__BUS_IN
+      out to_ice__BUS_OUT
+      in maintenance_jack__BUS_IN
+      out maintenance_jack__BUS_OUT
+      out Infused_Drug
+      out LightToEye
+      out Sound
+      in Button_Press
+      in Finger_Press
+
+  patient_bolus_checker
+    ports
+      in Minimum_Time_Between_Bolus
+      in Patient_Button_Request
+      out Patient_Request_Not_Too_Soon
+      out Patient_Request_Too_Soon
+
+  ui_thread
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Image
+        out AudioSignal
+        out Alarm_Inactivation
+        in Remaining_Battery_Time
+        in Using_Battery_Power
+        in Prescription
+        in Clinician_Name
+        in Patient_Name
+        in Touch
+        in Alarm
+        in Warning
+        in System_Status
+        in Display_Message
+        in Sound_Type
+        out Bolus_Duration
+        out CP_Reset_Alarm
+        in Low_Battery_Warning
+        in Hard_Limit_Violated
+        in Soft_Limit_Warning
+        out Confirm_Soft_Limit_Exception
+        out Reject_Soft_Limit_Exception
+        out Stop_Button_Pressed
+        out Start_Button_Pressed
+        out Clinician_Request_Bolus
+        out Pause_Infusion
+        out Resume_Infusion
+        out Turn_Off
+        in Patient_Request_Not_Too_Soon
+        in Patient_Request_Too_Soon
+      propagations
+        Clinician_Request_Bolus = {EarlyServiceTermination, OperatorError}
+        Confirm_Soft_Limit_Exception = {OperatorError}
+        Resume_Infusion = {EarlyServiceTermination, OperatorError}
+        Alarm = {EarlyServiceTermination, ItemCommission}
+        Touch = {EarlyServiceTermination, OperatorError}
+        Image = {EarlyServiceTermination, AlarmError, ValueError}
+        Stop_Button_Pressed = {EarlyServiceTermination, OperatorError}
+        Bolus_Duration = {EarlyServiceTermination, ValueError, OperatorError}
+        Pause_Infusion = {EarlyServiceTermination, OperatorError}
+        Reject_Soft_Limit_Exception = {OperatorError}
+        AudioSignal = {EarlyServiceTermination, AlarmError, ValueError}
+        Start_Button_Pressed = {EarlyServiceTermination, OperatorError}
+        Alarm_Inactivation = {EarlyServiceTermination, OperatorError}
+        Warning = {EarlyServiceTermination, ItemCommission}
+        System_Status = {EarlyServiceTermination, ValueError}
+        Prescription = {ValueError}
+      flows
+        ri_silent : * -> Resume_Infusion{EarlyServiceTermination}
+        ss_image : System_Status{EarlyServiceTermination, ValueError} -> Image{EarlyServiceTermination, AlarmError, ValueError}
+        touch_reject : Touch{OperatorError} -> Reject_Soft_Limit_Exception{OperatorError}
+        warning_image_ic : Warning{ItemCommission} -> Image{AlarmError}
+        touch_ri : Touch{EarlyServiceTermination, OperatorError} -> Resume_Infusion{EarlyServiceTermination, OperatorError}
+        alarm_sound_ic : Alarm{ItemCommission} -> AudioSignal{AlarmError}
+        alarm_image_io : Alarm{EarlyServiceTermination} -> Image{EarlyServiceTermination, AlarmError, ValueError}
+        stop_button_silent : * -> Stop_Button_Pressed{EarlyServiceTermination}
+        rx_image : Prescription{ValueError} -> Image{EarlyServiceTermination, AlarmError, ValueError}
+        touch_stop : Touch{EarlyServiceTermination, OperatorError} -> Stop_Button_Pressed{EarlyServiceTermination, OperatorError}
+        touch_start : Touch{EarlyServiceTermination, OperatorError} -> Start_Button_Pressed{EarlyServiceTermination, OperatorError}
+        warning_sound_ic : Warning{ItemCommission} -> AudioSignal{AlarmError}
+        ss_sound : System_Status{EarlyServiceTermination, ValueError} -> AudioSignal{EarlyServiceTermination, AlarmError, ValueError}
+        warning_sound_io : Warning{EarlyServiceTermination} -> AudioSignal{EarlyServiceTermination, AlarmError, ValueError}
+        bd_silent : * -> Bolus_Duration{EarlyServiceTermination}
+        pi_silent : * -> Pause_Infusion{EarlyServiceTermination}
+        alarm_inactivation_fail_silent : * -> Alarm_Inactivation{EarlyServiceTermination}
+        image_fail_silent : * -> Image{EarlyServiceTermination}
+        touch_crb : Touch{EarlyServiceTermination, OperatorError} -> Clinician_Request_Bolus{EarlyServiceTermination, OperatorError}
+        alarm_sound_io : Alarm{EarlyServiceTermination} -> AudioSignal{EarlyServiceTermination, AlarmError, ValueError}
+        alarm_image_ic : Alarm{ItemCommission} -> Image{AlarmError}
+        touch_pi : Touch{EarlyServiceTermination, OperatorError} -> Pause_Infusion{EarlyServiceTermination, OperatorError}
+        touch_ai : Touch{EarlyServiceTermination, OperatorError} -> Alarm_Inactivation{EarlyServiceTermination, OperatorError}
+        start_button_silent : * -> Start_Button_Pressed{EarlyServiceTermination}
+        sound_fail_silent : * -> AudioSignal{EarlyServiceTermination}
+        touch_bd : Touch{EarlyServiceTermination, OperatorError} -> Bolus_Duration{EarlyServiceTermination, ValueError, OperatorError}
+        warning_image_io : Warning{EarlyServiceTermination} -> Image{EarlyServiceTermination, AlarmError, ValueError}
+        touch_confirm : Touch{OperatorError} -> Confirm_Soft_Limit_Exception{OperatorError}
+        crb_silent : * -> Clinician_Request_Bolus{EarlyServiceTermination}
+
+  error_detect
+    ports
+      in Software_Stop_Pump
+      out Stop_Pump_Completely
+      out POST_Failure
+      out POST_Done
+      out RAM_Failure
+      out ROM_failure
+      out CPU_Failure
+      out Thread_Monitor_Failure
+      out HW_Detected_Failure
+      in s_bus__BUS_IN
+      out s_bus__BUS_OUT
+
+  security_thread
+    ports
+      out Prescription
+      in Scan_Data
+      in Authenticate_Prescription
+      out Authentication_fail
+      out Authentication_pass
+
+  max_drug_watcher
+    ports
+      in Infusion_Flow_Rate
+      in Max_Drug_Per_Hour
+      out Near_Max_Drug_Per_Hour
+      out Over_Max_Drug_Per_Hour
+
+  safety
+    ports
+      in alrmIN
+      out alrmOUT
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+      in p_bus__BUS_IN
+      out p_bus__BUS_OUT
+      in System_Status
+      in Infusion_Flow_Rate
+      in Upstream_Flow_Rate
+      in Downstream_Flow_Rate
+      out Stop_Pump_Completely
+      out Pump_At_KVO_Rate
+      out POST_Done
+      out POST_Fail
+      out HW_Detected_Failure
+      in Over_Max_Drug_Per_Hour
+      in Hard_Limit_Violated
+      in Drug_Not_In_Library
+      in Security_Fault
+      in Empty_Reservoir
+      in Low_Reservoir
+      in Defective_Battery
+      in Low_Battery_Warning
+      in Voltage_OOR
+      in Bubble
+      in Pump_Too_Hot
+      in Prime_Failure
+      in Upstream_Occlusion
+      in Downstream_Occlusion
+      in CP_Reset_Alarm
+      in Get_Fault_Log
+      out Alarm
+      out Warning
+      out The_Fault_Log
+
+  mem
+    ports
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+
+  p_bus
+
+  pump
+    ports
+      in alarmIN
+      out alarmOUT
+      in statusIN
+      out statusOUT
+      in parametersIN
+      out parametersOUT
+      in commandIN
+      out commandOUT
+      in securityIN
+      out securityOUT
+      in security_provisioningIN
+      out security_provisioningOUT
+      out out_infused_drug
+      out LightToEye
+      out Sound
+      in Patient_Button_Press
+      in in_get_fault_log
+      in in_get_event_log
+      in Finger_Press
+      out out_the_fault_log
+      out out_the_event_log
+      in in_load_drug_library
+    flows
+      Drug_Through_PCA : * -> out_infused_drug
+
+  btty
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Battery_Voltage
+        out Battery_Current
+      propagations
+        Battery_Voltage = {EarlyServiceTermination}
+        Battery_Current = {EarlyServiceTermination}
+      flows
+        no_voltage : * -> Battery_Voltage{EarlyServiceTermination}
+        no_current : * -> Battery_Current{EarlyServiceTermination}
+
+  scanner
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Scan_Data
+        in Do_Scan
+        out Scan_Done
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+      propagations
+        Scan_Data = {ServiceError}
+      flows
+        fail_blind : * -> Scan_Data{EarlyServiceTermination}
+        bad_scan : * -> Scan_Data{ValueError}
+
+  security_process
+    ports
+      out Prescription
+      in Scan_Data
+      in Authenticate_Prescription
+      out Authentication_fail
+      out Authentication_pass
+
+  drug_library
+    with PCA_Error_Model, ErrorLibrary
+      ports
+        in Load_Drug_Library
+        in Get_Drug_Record
+        out The_Drug_Record
+        out No_Drug_Found
+      propagations
+        The_Drug_Record = {EarlyServiceTermination, ValueError}
+        No_Drug_Found = {ItemOmission}
+      flows
+        no_record_returned : * -> The_Drug_Record{EarlyServiceTermination}
+        no_confirm : * -> The_Drug_Record{EarlyServiceTermination}
+
+  ice_thread
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in commandIN
+        out commandOUT
+        in parametersIN
+        out parametersOUT
+        in statusIN
+        out statusOUT
+        in Infusion_Flow_Rate
+        in Patient_Bolus_Rate
+        in Square_Bolus_Rate
+        in Basal_Rate
+        in VTBI
+        in Door_Open
+        in Alarm_Inactivation
+        in Alarm
+        in Warning
+        in CP_Bolus_Duration
+        out ICE_Stop_Pump
+        in Rx_Okay
+        in Patient_Request_Not_Too_Soon
+        in Patient_Request_Too_Soon
+        in HW_Detected_Failure
+        in Stop_Pump_Completely
+        in Pump_At_KVO_Rate
+        in CP_Clinician_Request_Bolus
+        in Halt_Infusion
+        in Begin_Infusion
+        in Near_Max_Drug_Per_Hour
+        in Over_Max_Drug_Per_Hour
+      propagations
+        ICE_Stop_Pump = {EarlyServiceTermination}
+      flows
+        isp : * -> ICE_Stop_Pump{EarlyServiceTermination}
+
+  security_subsystem
+    ports
+      in ProvisioningIN
+      out ProvisioningOUT
+      in ICE_SecurityIN
+      out ICE_SecurityOUT
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+      out Clinician_Name
+      out Patient_Name
+      out Prescription
+      in Authenticate_Clinician
+      in Authenticate_Patient
+      in Authenticate_Prescription
+      out Authentication_fail
+      out Authentication_pass
+      out Security_Fault
+      in Scan_Data
+
+  control_panel
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+        out Sound
+        out LightToEye
+        out Alarm_Inactivation
+        in Remaining_Battery_Time
+        in Using_Battery_Power
+        in Prescription
+        in Clinician_Name
+        in Patient_Name
+        out CP_Reset_Alarm
+        in Hard_Limit_Violated
+        in Soft_Limit_Warning
+        in Low_Battery_Warning
+        out Confirm_Soft_Limit_Exception
+        out Reject_Soft_Limit_Exception
+        out Stop_Button_Pressed
+        out Start_Button_Pressed
+        out Turn_Off
+        out Clinician_Request_Bolus
+        out Pause_Infusion
+        out Resume_Infusion
+        in Patient_Request_Not_Too_Soon
+        in Patient_Request_Too_Soon
+        in Finger_Press
+        in Alarm
+        in Warning
+        in System_Status
+        in Display_Message
+        in Sound_Type
+        out Bolus_Duration
+      propagations
+        Sound = {EarlyServiceTermination, AlarmError, ValueError}
+        Clinician_Request_Bolus = {EarlyServiceTermination, OperatorError}
+        Confirm_Soft_Limit_Exception = {OperatorError}
+        Resume_Infusion = {EarlyServiceTermination, OperatorError}
+        Alarm = {EarlyServiceTermination, ItemCommission}
+        Stop_Button_Pressed = {EarlyServiceTermination, OperatorError}
+        Finger_Press = {OperatorError}
+        Soft_Limit_Warning = {ItemOmission, ItemCommission}
+        Bolus_Duration = {EarlyServiceTermination, ValueError, OperatorError}
+        LightToEye = {EarlyServiceTermination, AlarmError, ValueError}
+        Pause_Infusion = {EarlyServiceTermination, OperatorError}
+        Reject_Soft_Limit_Exception = {OperatorError}
+        Hard_Limit_Violated = {ItemOmission, ItemCommission}
+        Start_Button_Pressed = {EarlyServiceTermination, OperatorError}
+        Alarm_Inactivation = {EarlyServiceTermination, OperatorError}
+        Warning = {EarlyServiceTermination, ItemCommission}
+        System_Status = {EarlyServiceTermination, ValueError}
+        Prescription = {ValueError}
+
+  upstream_mon
+    ports
+      out Drug_Outlet
+      in Drug_Intake
+      out Upstream_Flow_Rate
+      out Occlusion
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+    flows
+      Flow_ups_in : Drug_Intake -> *
+      Flow_ups_out : * -> Drug_Outlet
+      Flow_ups_path : Drug_Intake -> Drug_Outlet
+
+  maint
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in Security_ProvisioningIN
+        out Security_ProvisioningOUT
+        in to_maintenance_processorIN
+        out to_maintenance_processorOUT
+        in The_Fault_Log
+        in The_Event_Log
+        out Load_Drug_Library
+        out Get_Fault_Log
+        out Get_Event_Log
+        in Jack__BUS_IN
+        out Jack__BUS_OUT
+
+  led
+    ports
+      out Light
+      in Illuminate
+      in s_bus__BUS_IN
+      out s_bus__BUS_OUT
+
+  alarm_thr
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Alarm
+        out Warning
+        in ICE_Alarm_Signal
+        out Log_Fault
+        out ICE_Immediate
+        out ICE_Prompt
+        out ICE_Delayed
+        out ICE_Malfunction
+        in ICE_Reset_Alarm
+        out Stop_Pump_Completely
+        out Pump_At_KVO_Rate
+        in Max_Dose_Warning
+        in Hard_Limit_Violation
+        in Empty_Res
+        in Low_Res
+        in Pump_Hot
+        in Upstream_Occlusion
+        in Downstream_Occlusion
+        in Bubble
+        in Prime_Failure
+        in CP_Reset_Alarm
+        in Drug_Not_In_Library
+        in Defective_Btty
+        in Low_Battery_Warning
+        in Voltage_OOR
+        in Basal_Overinfusion
+        in Bolus_Overinfusion
+        in Square_Bolus_Overinfusion
+        in Basal_Underinfusion
+        in Bolus_Underinfusion
+        in Square_Bolus_Underinfusion
+        in Security_Fault
+      propagations
+        Stop_Pump_Completely = {EarlyServiceTermination}
+        Warning = {EarlyServiceTermination}
+        Pump_Hot = {EarlyServiceTermination}
+        Prime_Failure = {EarlyServiceTermination}
+        Alarm = {EarlyServiceTermination}
+        Log_Fault = {EarlyServiceTermination}
+        Max_Dose_Warning = {EarlyServiceTermination}
+        Low_Res = {EarlyServiceTermination}
+        Defective_Btty = {EarlyServiceTermination}
+        Pump_At_KVO_Rate = {EarlyServiceTermination}
+        Empty_Res = {EarlyServiceTermination}
+        Hard_Limit_Violation = {EarlyServiceTermination}
+        Low_Battery_Warning = {EarlyServiceTermination}
+        Drug_Not_In_Library = {EarlyServiceTermination}
+      flows
+        db_lf : Defective_Btty{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        pf_kvo : Prime_Failure{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        ph_spc : Pump_Hot{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        dl_cpw : Drug_Not_In_Library{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        db_cpw : Defective_Btty{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        kvo_fail_silent : * -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        lb_cpw : Low_Battery_Warning{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        hlv_kvo : Hard_Limit_Violation{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        log_fault_fail_silent : * -> Log_Fault{EarlyServiceTermination}
+        er_cpw : Empty_Res{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        panel_alarm_fail_silent : * -> Alarm{EarlyServiceTermination}
+        pf_spc : Prime_Failure{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        er_lf : Empty_Res{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        mdw_spc : Max_Dose_Warning{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        panel_warning_fail_silent : * -> Warning{EarlyServiceTermination}
+        er_cpa : Empty_Res{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        lb_kvo : Low_Battery_Warning{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        mdw_lf : Max_Dose_Warning{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        lb_lf : Low_Battery_Warning{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        lr_kvo : Low_Res{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        hlv_cpa : Hard_Limit_Violation{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        lr_cpw : Low_Res{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        dl_cpa : Drug_Not_In_Library{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        lr_lf : Low_Res{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        er_spc : Empty_Res{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        er_kvo : Empty_Res{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        pf_lf : Prime_Failure{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        ph_lf : Pump_Hot{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        lr_spc : Low_Res{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        db_cpa : Defective_Btty{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        mdw_cpa : Max_Dose_Warning{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        hlv_cpw : Hard_Limit_Violation{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        dl_spc : Drug_Not_In_Library{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        mdw_cpw : Max_Dose_Warning{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        pf_cpw : Prime_Failure{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+        pf_cpa : Prime_Failure{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        db_kvo : Defective_Btty{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        db_spc : Defective_Btty{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        ph_kvo : Pump_Hot{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        stop_pump_fail_silent : * -> Stop_Pump_Completely{EarlyServiceTermination}
+        hlv_lf : Hard_Limit_Violation{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        lr_cpa : Low_Res{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        lb_cpa : Low_Battery_Warning{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        mdw_kvo : Max_Dose_Warning{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        dl_kvo : Drug_Not_In_Library{EarlyServiceTermination} -> Pump_At_KVO_Rate{EarlyServiceTermination}
+        ph_cpa : Pump_Hot{EarlyServiceTermination} -> Alarm{EarlyServiceTermination}
+        hlv_spc : Hard_Limit_Violation{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        dl_lf : Drug_Not_In_Library{EarlyServiceTermination} -> Log_Fault{EarlyServiceTermination}
+        lb_spc : Low_Battery_Warning{EarlyServiceTermination} -> Stop_Pump_Completely{EarlyServiceTermination}
+        ph_cpw : Pump_Hot{EarlyServiceTermination} -> Warning{EarlyServiceTermination}
+
+  pwr
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in Battery_Voltage
+        in Battery_Current
+        in Power_Voltage
+        out Using_Battery_Power
+        out Remaining_Battery_Time
+        out Low_Battery_Warning
+        out Defective_Battery
+        out Voltage_OOR
+        in p_bus__BUS_IN
+        out p_bus__BUS_OUT
+      propagations
+        Battery_Voltage = {EarlyServiceTermination}
+        Battery_Current = {EarlyServiceTermination}
+
+  i_bus
+
+  rate_controller
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Infusion_Flow_Rate
+        in Square_Bolus_Rate
+        in Patient_Bolus_Rate
+        in Basal_Rate
+        in VTBI
+        in Door_Open
+        out System_Status
+        in Alarm
+        in Warning
+        in CP_Bolus_Duration
+        in Begin_Infusion
+        in Begin_Priming
+        in End_Priming
+        in Halt_Infusion
+        in HW_Detected_Failure
+        in Stop_Pump_Completely
+        in Pump_At_KVO_Rate
+        in Patient_Request_Not_Too_Soon
+        in Pause_Infusion
+        in Resume_Infusion
+        in CP_Clinician_Request_Bolus
+        in Near_Max_Drug_Per_Hour
+        in Over_Max_Drug_Per_Hour
+        in ICE_Stop_Pump
+      propagations
+        CP_Bolus_Duration = {ItemOmission, ItemCommission}
+        Square_Bolus_Rate = {ItemOmission, ItemCommission, ValueError}
+        Patient_Bolus_Rate = {ItemOmission, ItemCommission, ValueError}
+        Pump_At_KVO_Rate = {ItemOmission, ItemCommission}
+        Patient_Request_Not_Too_Soon = {ItemOmission, ItemCommission}
+        CP_Clinician_Request_Bolus = {ItemOmission, ItemCommission}
+        Over_Max_Drug_Per_Hour = {EarlyServiceTermination}
+        Halt_Infusion = {ItemOmission, ItemCommission}
+        Stop_Pump_Completely = {ItemOmission, ItemCommission}
+        Door_Open = {ItemOmission, ItemCommission}
+        HW_Detected_Failure = {ItemOmission, ItemCommission}
+        Resume_Infusion = {ItemOmission, ItemCommission}
+        Begin_Infusion = {EarlyServiceTermination, ItemCommission}
+        Alarm = {ItemOmission, ItemCommission, ValueError}
+        Begin_Priming = {ItemOmission, ItemCommission}
+        Infusion_Flow_Rate = {ItemOmission, ItemCommission, ValueError}
+        VTBI = {ItemOmission, ItemCommission, ValueError}
+        Warning = {ItemOmission, ItemCommission, ValueError}
+        End_Priming = {ItemOmission, ItemCommission}
+        Pause_Infusion = {ItemOmission, ItemCommission}
+        Basal_Rate = {ItemOmission, ItemCommission, ValueError}
+        Near_Max_Drug_Per_Hour = {EarlyServiceTermination}
+
+  operation
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in commandIN
+        out commandOUT
+        in parametersIN
+        out parametersOUT
+        in statusIN
+        out statusOUT
+        in securityIN
+        out securityOUT
+        in Security_ProvisioningIN
+        out Security_ProvisioningOUT
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+        out LightToEye
+        out Sound
+        out Infusion_Flow_Rate
+        in Door_Open
+        in Remaining_Battery_Time
+        in Using_Battery_Power
+        out Downstream_Flow_Rate
+        in Patient_Button_Press
+        out CP_Reset_Alarm
+        in Stop_Pump_Completely
+        in Pump_At_KVO_Rate
+        in Door_Closed
+        out Over_Max_Drug_Per_Hour
+        in HW_Detected_Failure
+        out Security_Fault
+        in Low_Battery_Warning
+        in POST_Done
+        in POST_Fail
+        in Get_Event_Log
+        out Drug_Not_In_Library
+        out Hard_Limit_Violated
+        out Prime_Failure
+        in Finger_Press
+        in Alarm
+        in Warning
+        out The_Event_Log
+        in Load_Drug_Library
+        out System_Status
+      propagations
+        Stop_Pump_Completely = {EarlyServiceTermination}
+        Alarm = {EarlyServiceTermination, ItemCommission}
+        HW_Detected_Failure = {EarlyServiceTermination}
+        Pump_At_KVO_Rate = {EarlyServiceTermination}
+        Warning = {EarlyServiceTermination, ItemCommission}
+
+  downstream_mon
+    ports
+      out Drug_Outlet
+      in Drug_Intake
+      out Downstream_Flow_Rate
+      out Occlusion
+      out Bubble
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+    flows
+      Flow_dns_in : Drug_Intake -> *
+      Flow_dns_out : * -> Drug_Outlet
+      Flow_dns_path : Drug_Intake -> Drug_Outlet
+
+  patient_button
+    ports
+      out Request_Bolus
+      in Button_Press
+
+  audible
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in AudioSignal
+        out Sound
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+      propagations
+        AudioSignal = {EarlyServiceTermination, AlarmError, ValueError}
+        Sound = {EarlyServiceTermination, AlarmError, ValueError}
+      flows
+        fail_silent : * -> Sound{EarlyServiceTermination}
+        signal_to_sound : AudioSignal{EarlyServiceTermination, AlarmError, ValueError} -> Sound{EarlyServiceTermination, AlarmError, ValueError}
+
+  s_bus
+
+  fluid
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+        in Power__BUS_IN
+        out Power__BUS_OUT
+        out Drug_Outlet
+        in Rate_To_Pump
+        out Upstream_Flow_Rate
+        out Downstream_Flow_Rate
+        out Door_Open
+        in Halt
+        out Low_Reservoir
+        out Empty_Reservoir
+        out Door_Closed
+        out Bubble
+        out Pump_Too_Hot
+        out Upstream_Occlusion
+        out Downstream_Occlusion
+      propagations
+        Halt = {EarlyServiceTermination}
+      flows
+        Flow_MP_out : * -> Drug_Outlet
+
+  operation_process
+    ports
+      in commandIN
+      out commandOUT
+      in parametersIN
+      out parametersOUT
+      in statusIN
+      out statusOUT
+      out Infusion_Flow_Rate
+      in Door_Open
+      in Alarm_Inactivation
+      in Prescription
+      in Load_Drug_Library
+      in Alarm
+      in Warning
+      out The_Event_Log
+      out System_Status
+      in Bolus_Duration
+      out Display_Message
+      out Sound_Type
+      in Patient_Button_Request
+      out Drug_Not_In_Library
+      in Stop_Pump_Completely
+      in Pump_At_KVO_Rate
+      in HW_Detected_Failure
+      out Hard_Limit_Violated
+      out Soft_Limit_Warning
+      in Get_Event_Log
+      in Pause_Infusion
+      in Resume_Infusion
+      in Clinician_Request_Bolus
+      in Confirm_Soft_Limit_Exception
+      in Reject_Soft_Limit_Exception
+      in Stop_Button_Pressed
+      in Start_Button_Pressed
+      out Over_Max_Drug_Per_Hour
+      out Patient_Request_Not_Too_Soon
+      out Patient_Request_Too_Soon
+      out Authenticate_Clinician
+      out Authenticate_Patient
+      out Authenticate_Prescription
+      in Authentication_fail
+      in Authentication_pass
+      out Do_Scan
+      in Scan_Done
+      in POST_done
+      in POST_fail
+      in Door_Closed
+      in Turn_Off
+      out Prime_Failure
+
+  mech_pump
+    ports
+      out Drug_Outlet
+      in Drug_Intake
+      in Rate
+      in Halt
+      out Pump_Too_Hot
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+    flows
+      Flow_pump_in : Drug_Intake -> *
+      Flow_pump_out : * -> Drug_Outlet
+      Flow_pump_path : Drug_Intake -> Drug_Outlet
+
+  reservoir
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Drug_Outlet
+        in Fill_Reservoir
+        out Door_Open
+        out Low_Reservoir
+        out Empty_Reservoir
+        out Door_Closed
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+      propagations
+        Drug_Outlet = {DrugFlowError}
+        Low_Reservoir = {EarlyServiceTermination}
+        Empty_Reservoir = {EarlyServiceTermination}
+        Door_Open = {EarlyServiceTermination}
+      flows
+        fail_silent_do : * -> Door_Open{EarlyServiceTermination}
+        fail_silent_er : * -> Empty_Reservoir{EarlyServiceTermination}
+        occlusion : * -> Drug_Outlet{DrugFlowError}
+        Flow_dns_out : * -> Drug_Outlet
+        fail_silent_lr : * -> Low_Reservoir{EarlyServiceTermination}
+        false_er : * -> Empty_Reservoir{EarlyServiceTermination}
+        false_lr : * -> Low_Reservoir{EarlyServiceTermination}
+        false_do : * -> Door_Open{EarlyServiceTermination}
+
+  bus_adaptor
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in command_invIN
+        out command_invOUT
+        in parameters_invIN
+        out parameters_invOUT
+        in status_invIN
+        out status_invOUT
+        in security_invIN
+        out security_invOUT
+        in alarm_invIN
+        out alarm_invOUT
+        in to_appIN
+        out to_appOUT
+        in to_ice__BUS_IN
+        out to_ice__BUS_OUT
+      propagations
+        command_inv = {ThirdPartyPress}
+      flows
+        fail_silent : command_inv{ThirdPartyPress} -> *
+
+  power
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in p_bus__BUS_IN
+        out p_bus__BUS_OUT
+        out Using_Battery_Power
+        out Remaining_Battery_Time
+        out Low_Battery_Warning
+        out Defective_Btty
+        out Voltage_OOR
+
+  prescription_checker
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        in Prescription
+        out VTBI
+        out Square_Bolus_Rate
+        out Patient_Bolus_Rate
+        out Basal_Rate
+        out Minimum_Time_Between_Bolus
+        out Max_Drug_Per_Hour
+        out Get_Drug_Record
+        in The_Drug_Record
+        in Check_Rx
+        out Rx_Okay
+        in Drug_Not_In_Library
+        in Confirm_Soft_Limit_Exception
+        in Reject_Soft_Limit_Exception
+        out Soft_Limit_Warning
+        out Hard_Limit_Violated
+      propagations
+        Get_Drug_Record = {ItemOmission, ItemCommission}
+        The_Drug_Record = {ValueError}
+        Basal_Rate = {ValueError}
+        Confirm_Soft_Limit_Exception = {ItemOmission, ItemCommission}
+        Soft_Limit_Warning = {ItemOmission, ItemCommission}
+        Prescription = {ItemOmission, ItemCommission, ValueError}
+        Reject_Soft_Limit_Exception = {ItemOmission, ItemCommission}
+        Rx_Okay = {EarlyServiceTermination, ItemCommission}
+        Max_Drug_Per_Hour = {ValueError}
+        Hard_Limit_Violated = {ItemOmission, ItemCommission}
+        Square_Bolus_Rate = {ValueError}
+        VTBI = {ItemOmission, ItemCommission, ValueError}
+      flows
+        fail_stop : * -> Rx_Okay{EarlyServiceTermination}
+
+  fault_log
+    with PCA_Error_Model, ErrorLibrary
+      ports
+        in Log_Fault
+        out The_Log
+        in Get_Log
+        in POST_Failure
+        in RAM_Failure
+        in ROM_Failure
+        in CPU_Failure
+        in Thread_Monitor_Failure
+        in Voltage_OOR
+        in i_bus__BUS_IN
+        out i_bus__BUS_OUT
+        in p_bus__BUS_IN
+        out p_bus__BUS_OUT
+        in s_bus__BUS_IN
+        out s_bus__BUS_OUT
+      propagations
+        POST_Failure = {EarlyServiceTermination}
+        The_Log = {LogError}
+        ROM_Failure = {EarlyServiceTermination}
+        RAM_Failure = {EarlyServiceTermination}
+        Voltage_OOR = {EarlyServiceTermination}
+        Log_Fault = {ValueError, EarlyServiceTermination}
+        Thread_Monitor_Failure = {EarlyServiceTermination}
+        CPU_Failure = {EarlyServiceTermination}
+      flows
+        died : * -> The_Log{DeadLog}
+        mucked : * -> The_Log{CorruptedLog}
+        trunc : * -> The_Log{TruncatedLog}
+
+  cpu
+    ports
+      in i_bus__BUS_IN
+      out i_bus__BUS_OUT
+      in p_bus__BUS_IN
+      out p_bus__BUS_OUT
+
+  operation_threads
+    ports
+      in commandIN
+      out commandOUT
+      in parametersIN
+      out parametersOUT
+      in statusIN
+      out statusOUT
+      in Alarm_Inactivation
+      out Infusion_Flow_Rate
+      in Door_Open
+      in Prescription
+      in Alarm
+      in Warning
+      in CP_Bolus_Duration
+      out System_Status
+      out Display_Message
+      out Sound_Type
+      out Get_Drug_Record
+      in The_Drug_Record
+      out Log_Event
+      in HW_Detected_Failure
+      in Stop_Pump_Completely
+      in Pump_At_KVO_Rate
+      out Near_Max_Drug_Per_Hour
+      out Hard_Limit_Violated
+      in Patient_Button_Request
+      out Patient_Request_Not_Too_Soon
+      out Patient_Request_Too_Soon
+      in Pause_Infusion
+      in Resume_Infusion
+      in CP_Clinician_Request_Bolus
+      in Stop_Button_Pressed
+      in Start_Button_Pressed
+      in Confirm_Soft_Limit_Exception
+      in Reject_Soft_Limit_Exception
+      out Soft_Limit_Warning
+      out Over_Max_Drug_Per_Hour
+      in No_Drug_Found
+      out Do_Scan
+      in Scan_Done
+      out Authenticate_Clinician
+      out Authenticate_Patient
+      out Authenticate_Prescription
+      in Authentication_fail
+      in Authentication_pass
+      in POST_done
+      in POST_fail
+      in Door_Closed
+      in Turn_Off
+      out Prime_Failure
+
+  boss
+    with ErrorLibrary, PCA_Error_Model
+      ports
+        out Display_Message
+        out Sound_Type
+        out Log_Event
+        in POST_done
+        in POST_fail
+        in Stop_Button_Pressed
+        in Start_Button_Pressed
+        out Do_Scan
+        in Scan_Done
+        out Authenticate_Clinician
+        out Authenticate_Patient
+        out Authenticate_Prescription
+        in Authentication_fail
+        in Authentication_pass
+        out Check_Rx
+        in Drug_Not_In_Library
+        in Hard_Limit_Violated
+        in Reject_Soft_Limit_Exception
+        in Confirm_Soft_Limit_Exception
+        in Rx_Okay
+        in Door_Closed
+        out Begin_Priming
+        out End_Priming
+        out Prime_Failure
+        out Begin_Infusion
+        out Halt_Infusion
+        in Turn_Off
+
+connections
+  tch : display.Touch -> ui_process.Touch
+
+  usfr : safety.Upstream_Flow_Rate -> alarm_process.Upstream_Flow_Rate
+
+  prts : operation_process.Patient_Request_Too_Soon -> control_panel.Patient_Request_Too_Soon
+
+  crx : control_panel.Confirm_Soft_Limit_Exception -> operation_process.Confirm_Soft_Limit_Exception
+
+  prf : safety.Prime_Failure -> alarm_process.Prime_Failure
+
+  crb : operation_process.Clinician_Request_Bolus -> operation_threads.CP_Clinician_Request_Bolus
+
+  scbr : prescription_checker.Basal_Rate -> ice_thread.Basal_Rate
+
+  start : control_panel.Start_Button_Pressed -> operation_process.Start_Button_Pressed
+
+  cn : control_panel.Clinician_Name -> ui_process.Clinician_Name
+
+  out1 : security_process.Authentication_fail -> security_subsystem.Authentication_fail
+
+  wa : operation_process.Warning -> operation_threads.Warning
+
+  apr : operation_threads.Authenticate_Prescription -> operation_process.Authenticate_Prescription
+
+  rbt : pwr.Remaining_Battery_Time -> power.Remaining_Battery_Time
+
+  dfr : downstream_mon.Downstream_Flow_Rate -> fluid.Downstream_Flow_Rate
+
+  bolo : flow_rate.Bolus_Overinfusion -> alarm_thr.Bolus_Overinfusion
+
+  lbw : ui_process.Low_Battery_Warning -> ui_thread.Low_Battery_Warning
+
+  bba : downstream_mon.Bubble -> fluid.Bubble
+
+  st : operation.status -> operation_process.status
+
+  stat : rate_controller.System_Status -> operation_threads.System_Status
+
+  pcrx : operation_threads.Prescription -> prescription_checker.Prescription
+
+  dba : pwr.Defective_Battery -> power.Defective_Btty
+
+  tel : operation_process.The_Event_Log -> operation.The_Event_Log
+
+  omdph : safety.Over_Max_Drug_Per_Hour -> alarm_process.Over_Max_Drug_Per_Hour
+
+  dc : fluid.Door_Closed -> operation.Door_Closed
+
+  ge : maint.Get_Event_Log -> pump.in_get_event_log
+
+  epr : boss.End_Priming -> rate_controller.End_Priming
+
+  bub : alarm_process.Bubble -> alarm_thr.Bubble
+
+  sac : operation_process.Authenticate_Clinician -> security_subsystem.Authenticate_Clinician
+
+  dos : operation_process.Do_Scan -> scanner.Do_Scan
+
+  cpra : ui_process.CP_Reset_Alarm -> control_panel.CP_Reset_Alarm
+
+  see : display.LightToEye -> control_panel.LightToEye
+
+  com : pump.command -> operation.command
+
+  dc : operation.Door_Closed -> operation_process.Door_Closed
+
+  alr : alarm_thr.Alarm -> alarm_process.Alarm
+
+  ufr : fluid.Upstream_Flow_Rate -> safety.Upstream_Flow_Rate
+
+  dos : operation_threads.Do_Scan -> operation_process.Do_Scan
+
+  ramf : error_detect.RAM_Failure -> fault_log.RAM_Failure
+
+  uoc : fluid.Upstream_Occlusion -> safety.Upstream_Occlusion
+
+  wrn : control_panel.Warning -> ui_process.Warning
+
+  crx : operation_process.Confirm_Soft_Limit_Exception -> operation_threads.Confirm_Soft_Limit_Exception
+
+  bolu : flow_rate.Bolus_Underinfusion -> alarm_thr.Bolus_Underinfusion
+
+  sta : pump.status -> operation.status
+
+  ubp : control_panel.Using_Battery_Power -> ui_process.Using_Battery_Power
+
+  ubp : operation.Using_Battery_Power -> control_panel.Using_Battery_Power
+
+  crx : ui_process.Confirm_Soft_Limit_Exception -> control_panel.Confirm_Soft_Limit_Exception
+
+  hlv : safety.Hard_Limit_Violated -> alarm_process.Hard_Limit_Violated
+
+  bu : fluid.Bubble -> safety.Bubble
+
+  lb : safety.Low_Battery_Warning -> alarm_process.Low_Battery_Warning
+
+  bbl : safety.Bubble -> alarm_process.Bubble
+
+  al : operation_process.Alarm -> operation_threads.Alarm
+
+  dri : reservoir.Drug_Outlet -> upstream_mon.Drug_Intake
+
+  do : fluid.Door_Open -> operation.Door_Open
+
+  alcp : operation.Alarm -> control_panel.Alarm
+
+  hlv : operation_threads.Hard_Limit_Violated -> operation_process.Hard_Limit_Violated
+
+  sec : pump.security -> operation.security
+
+  tdr : operation_threads.The_Drug_Record -> prescription_checker.The_Drug_Record
+
+  jabss : operation.System_Status -> safety.System_Status
+
+  pof : operation.POST_Fail -> operation_process.POST_fail
+
+  ui_status : ui_process.System_Status -> ui_thread.System_Status
+
+  icpbd : operation_threads.CP_Bolus_Duration -> ice_thread.CP_Bolus_Duration
+
+  doc : downstream_mon.Occlusion -> fluid.Downstream_Occlusion
+
+  ui_sound : ui_thread.AudioSignal -> ui_process.AudioSignal
+
+  hdf : error_detect.HW_Detected_Failure -> led.Illuminate
+
+  hdf : operation.HW_Detected_Failure -> operation_process.HW_Detected_Failure
+
+  uiwar : alarm_process.Warning -> safety.Warning
+
+  pfr : rate_controller.Infusion_Flow_Rate -> operation_threads.Infusion_Flow_Rate
+
+  spa : security_subsystem.Authentication_pass -> operation_process.Authentication_pass
+
+  ispc : operation_threads.Stop_Pump_Completely -> ice_thread.Stop_Pump_Completely
+
+  mdw : alarm_process.Over_Max_Drug_Per_Hour -> alarm_thr.Max_Dose_Warning
+
+  ton : control_panel.Sound_Type -> ui_process.Sound_Type
+
+  lte : pump.LightToEye -> wrap_pca_imp_Instance.LightToEye
+
+  msg : operation_process.Display_Message -> control_panel.Display_Message
+
+  er : fluid.Empty_Reservoir -> safety.Empty_Reservoir
+
+  hlv : alarm_process.Hard_Limit_Violated -> alarm_thr.Hard_Limit_Violation
+
+  mtbb : prescription_checker.Minimum_Time_Between_Bolus -> patient_bolus_checker.Minimum_Time_Between_Bolus
+
+  cpar : control_panel.CP_Reset_Alarm -> operation.CP_Reset_Alarm
+
+  sws : alarm_process.Stop_Pump_Completely -> error_detect.Software_Stop_Pump
+
+  srx : security_subsystem.Prescription -> operation_process.Prescription
+
+  pkr : operation_process.Pump_At_KVO_Rate -> operation_threads.Pump_At_KVO_Rate
+
+  rcprnts : patient_bolus_checker.Patient_Request_Not_Too_Soon -> rate_controller.Patient_Request_Not_Too_Soon
+
+  ihwdf : operation_threads.HW_Detected_Failure -> ice_thread.HW_Detected_Failure
+
+  pfr : operation_process.Infusion_Flow_Rate -> operation.Infusion_Flow_Rate
+
+  baso : flow_rate.Basal_Overinfusion -> alarm_thr.Basal_Overinfusion
+
+  pb : operation_process.Patient_Button_Request -> operation_threads.Patient_Button_Request
+
+  as : wrap_pca_imp_Instance.app_signals -> bus_adaptor.to_app
+
+  bap : boss.Authenticate_Patient -> operation_threads.Authenticate_Patient
+
+  gdr : operation_threads.Get_Drug_Record -> drug_library.Get_Drug_Record
+
+  rxok : prescription_checker.Rx_Okay -> boss.Rx_Okay
+
+  s_bus_to_fault_log : safety.s_bus -> fault_log.s_bus
+
+  pf : operation.Prime_Failure -> safety.Prime_Failure
+
+  crb : ui_thread.Clinician_Request_Bolus -> ui_process.Clinician_Request_Bolus
+
+  baf : operation_threads.Authentication_fail -> boss.Authentication_fail
+
+  dnil : safety.Drug_Not_In_Library -> alarm_process.Drug_Not_In_Library
+
+  tel : operation.The_Event_Log -> pump.out_the_event_log
+
+  ra_fg : alrm.Reset_Alarm -> alarm_thr.ICE_Reset_Alarm
+
+  dnil : drug_library.No_Drug_Found -> operation_process.Drug_Not_In_Library
+
+  rrx : ui_process.Reject_Soft_Limit_Exception -> control_panel.Reject_Soft_Limit_Exception
+
+  war : operation_threads.Warning -> rate_controller.Warning
+
+  resume : ui_thread.Resume_Infusion -> ui_process.Resume_Infusion
+
+  lb : alarm_process.Low_Battery_Warning -> alarm_thr.Low_Battery_Warning
+
+  pod : operation_process.POST_done -> operation_threads.POST_done
+
+  soun : operation_threads.Sound_Type -> operation_process.Sound_Type
+
+  voor : safety.Voltage_OOR -> fault_log.Voltage_OOR
+
+  rejct_rx : ui_thread.Reject_Soft_Limit_Exception -> ui_process.Reject_Soft_Limit_Exception
+
+  mdh : prescription_checker.Max_Drug_Per_Hour -> max_drug_watcher.Max_Drug_Per_Hour
+
+  dso : alarm_process.Downstream_Occlusion -> alarm_thr.Downstream_Occlusion
+
+  prnts : control_panel.Patient_Request_Not_Too_Soon -> ui_process.Patient_Request_Not_Too_Soon
+
+  al : operation.Alarm -> operation_process.Alarm
+
+  start : operation_process.Start_Button_Pressed -> operation_threads.Start_Button_Pressed
+
+  pkr : operation_threads.Pump_At_KVO_Rate -> rate_controller.Pump_At_KVO_Rate
+
+  st : pump.status -> bus_adaptor.status_inv
+
+  vor : pwr.Voltage_OOR -> power.Voltage_OOR
+
+  rbt : power.Remaining_Battery_Time -> operation.Remaining_Battery_Time
+
+  s_bus_to_led : safety.s_bus -> led.s_bus
+
+  stp : operation_threads.Stop_Pump_Completely -> rate_controller.Stop_Pump_Completely
+
+  sp : pump.security_provisioning -> operation.Security_Provisioning
+
+  ui_warn : ui_process.Warning -> ui_thread.Warning
+
+  slv : operation_threads.Soft_Limit_Warning -> operation_process.Soft_Limit_Warning
+
+  postd : error_detect.POST_Done -> safety.POST_Done
+
+  pf : boss.Prime_Failure -> operation_threads.Prime_Failure
+
+  ikvo : operation_threads.Pump_At_KVO_Rate -> ice_thread.Pump_At_KVO_Rate
+
+  btcrx : operation_threads.Confirm_Soft_Limit_Exception -> boss.Confirm_Soft_Limit_Exception
+
+  gdr : prescription_checker.Get_Drug_Record -> operation_threads.Get_Drug_Record
+
+  ui_image : ui_thread.Image -> ui_process.Image
+
+  pf : alarm_process.Prime_Failure -> alarm_thr.Prime_Failure
+
+  hlv : operation_process.Hard_Limit_Violated -> operation.Hard_Limit_Violated
+
+  ubp : ui_process.Using_Battery_Power -> ui_thread.Using_Battery_Power
+
+  kvo : alarm_process.Pump_At_KVO_Rate -> safety.Pump_At_KVO_Rate
+
+  al : pump.alarm -> bus_adaptor.alarm_inv
+
+  alm : safety.Alarm -> operation.Alarm
+
+  prnts : operation_threads.Patient_Request_Not_Too_Soon -> operation_process.Patient_Request_Not_Too_Soon
+
+  ui_slw : ui_process.Soft_Limit_Warning -> ui_thread.Soft_Limit_Warning
+
+  saf : security_subsystem.Authentication_fail -> operation_process.Authentication_fail
+
+  as_fg : alrm.Alarm_Signal -> alarm_thr.ICE_Alarm_Signal
+
+  in2 : security_process.Scan_Data -> security_thread.Scan_Data
+
+  par : operation_process.parameters -> operation_threads.parameters
+
+  pf : operation_threads.Prime_Failure -> operation_process.Prime_Failure
+
+  img : ui_process.Image -> display.Image
+
+  cpra : safety.CP_Reset_Alarm -> alarm_process.CP_Reset_Alarm
+
+  pfr : operation.Infusion_Flow_Rate -> safety.Infusion_Flow_Rate
+
+  er : safety.Empty_Reservoir -> alarm_process.Empty_Reservoir
+
+  pnm : max_drug_watcher.Near_Max_Drug_Per_Hour -> rate_controller.Near_Max_Drug_Per_Hour
+
+  bts : boss.Sound_Type -> operation_threads.Sound_Type
+
+  ufr : alarm_process.Upstream_Flow_Rate -> flow_rate.Upstream_Flow_Rate
+
+  in2 : security_subsystem.Scan_Data -> security_process.Scan_Data
+
+  hdf : operation_threads.HW_Detected_Failure -> rate_controller.HW_Detected_Failure
+
+  sbr : prescription_checker.Square_Bolus_Rate -> rate_controller.Square_Bolus_Rate
+
+  disp : operation_threads.Display_Message -> operation_process.Display_Message
+
+  id : pump.out_infused_drug -> wrap_pca_imp_Instance.Infused_Drug
+
+  scanner_to_i_bus : operation.i_bus -> scanner.i_bus
+
+  pi : operation_process.Pause_Infusion -> operation_threads.Pause_Infusion
+
+  al : pump.alarm -> safety.alrm
+
+  flp : fluid.Power -> pump.p_bus
+
+  svtbi : prescription_checker.VTBI -> ice_thread.VTBI
+
+  sts : control_panel.System_Status -> ui_process.System_Status
+
+  out3 : security_process.Prescription -> security_subsystem.Prescription
+
+  cmd : operation_process.command -> operation_threads.command
+
+  ldl : operation_process.Load_Drug_Library -> drug_library.Load_Drug_Library
+
+  pause : ui_thread.Pause_Infusion -> ui_process.Pause_Infusion
+
+  dno : downstream_mon.Occlusion -> fluid.Downstream_Occlusion
+
+  spbr : prescription_checker.Patient_Bolus_Rate -> ice_thread.Patient_Bolus_Rate
+
+  pak : safety.Pump_At_KVO_Rate -> operation.Pump_At_KVO_Rate
+
+  lbwo : power.Low_Battery_Warning -> operation.Low_Battery_Warning
+
+  safety_to_i_bus : pump.i_bus -> safety.i_bus
+
+  hlvcp : operation_process.Hard_Limit_Violated -> control_panel.Hard_Limit_Violated
+
+  off : operation_threads.Turn_Off -> boss.Turn_Off
+
+  isp : ice_thread.ICE_Stop_Pump -> rate_controller.ICE_Stop_Pump
+
+  psd : safety.POST_Done -> operation.POST_Done
+
+  psv : vcc.Power_Voltage -> pwr.Power_Voltage
+
+  stop : control_panel.Stop_Button_Pressed -> operation_process.Stop_Button_Pressed
+
+  touch : control_panel.Finger_Press -> display.Finger_Press
+
+  somax : max_drug_watcher.Over_Max_Drug_Per_Hour -> ice_thread.Over_Max_Drug_Per_Hour
+
+  cn : security_subsystem.Clinician_Name -> control_panel.Clinician_Name
+
+  prnts : patient_bolus_checker.Patient_Request_Not_Too_Soon -> operation_threads.Patient_Request_Not_Too_Soon
+
+  rat : fluid.Rate_To_Pump -> mech_pump.Rate
+
+  syst : operation_threads.System_Status -> operation_process.System_Status
+
+  sarx : operation_process.Authenticate_Prescription -> security_subsystem.Authenticate_Prescription
+
+  pod : operation.POST_Done -> operation_process.POST_done
+
+  spn : security_subsystem.Patient_Name -> control_panel.Patient_Name
+
+  baps : operation_threads.Authentication_pass -> boss.Authentication_pass
+
+  do : operation_process.Door_Open -> operation_threads.Door_Open
+
+  cmd : operation_threads.command -> ice_thread.command
+
+  postfa : error_detect.POST_Failure -> safety.POST_Fail
+
+  rx_uit : ui_process.Prescription -> ui_thread.Prescription
+
+  pof : operation_process.POST_fail -> operation_threads.POST_fail
+
+  mt : reservoir.Empty_Reservoir -> fluid.Empty_Reservoir
+
+  prm : operation_threads.parameters -> ice_thread.parameters
+
+  st : operation_process.status -> operation_threads.status
+
+  lte : operation.LightToEye -> pump.LightToEye
+
+  ai : operation_process.Alarm_Inactivation -> operation_threads.Alarm_Inactivation
+
+  hlt : fluid.Halt -> mech_pump.Halt
+
+  uialr : alarm_process.Alarm -> safety.Alarm
+
+  lte : control_panel.LightToEye -> operation.LightToEye
+
+  out3 : security_thread.Prescription -> security_process.Prescription
+
+  dor : operation_threads.Door_Open -> rate_controller.Door_Open
+
+  ri : control_panel.Resume_Infusion -> operation_process.Resume_Infusion
+
+  fp : pump.Finger_Press -> operation.Finger_Press
+
+  mdph : operation_threads.Over_Max_Drug_Per_Hour -> operation_process.Over_Max_Drug_Per_Hour
+
+  rx : security_subsystem.Prescription -> control_panel.Prescription
+
+  prnts : operation_process.Patient_Request_Not_Too_Soon -> control_panel.Patient_Request_Not_Too_Soon
+
+  db : power.Defective_Btty -> safety.Defective_Battery
+
+  pod : operation_threads.POST_done -> boss.POST_done
+
+  bi : boss.Begin_Infusion -> rate_controller.Begin_Infusion
+
+  crb : ui_process.Clinician_Request_Bolus -> control_panel.Clinician_Request_Bolus
+
+  dsfr : safety.Downstream_Flow_Rate -> alarm_process.Downstream_Flow_Rate
+
+  out2 : security_process.Authentication_pass -> security_subsystem.Authentication_pass
+
+  ldl : pump.in_load_drug_library -> operation.Load_Drug_Library
+
+  sbu : flow_rate.Square_Bolus_Underinfusion -> alarm_thr.Square_Bolus_Underinfusion
+
+  bd : operation_process.Bolus_Duration -> operation_threads.CP_Bolus_Duration
+
+  stop : operation_process.Stop_Button_Pressed -> operation_threads.Stop_Button_Pressed
+
+  fp : operation.Finger_Press -> control_panel.Finger_Press
+
+  lf : alarm_thr.Log_Fault -> alarm_process.Log_Fault
+
+  rrx : operation_process.Reject_Soft_Limit_Exception -> operation_threads.Reject_Soft_Limit_Exception
+
+  stp : operation.Stop_Pump_Completely -> operation_process.Stop_Pump_Completely
+
+  wa : operation.Warning -> operation_process.Warning
+
+  pcnd : operation_threads.No_Drug_Found -> prescription_checker.Drug_Not_In_Library
+
+  dnl : alarm_process.Drug_Not_In_Library -> alarm_thr.Drug_Not_In_Library
+
+  stb : operation_threads.Start_Button_Pressed -> boss.Start_Button_Pressed
+
+  pth : mech_pump.Pump_Too_Hot -> fluid.Pump_Too_Hot
+
+  ufr : upstream_mon.Upstream_Flow_Rate -> fluid.Upstream_Flow_Rate
+
+  uso : safety.Upstream_Occlusion -> alarm_process.Upstream_Occlusion
+
+  ldl : operation.Load_Drug_Library -> operation_process.Load_Drug_Library
+
+  alm : control_panel.Alarm -> ui_process.Alarm
+
+  rbt : control_panel.Remaining_Battery_Time -> ui_process.Remaining_Battery_Time
+
+  in1 : security_subsystem.Authenticate_Prescription -> security_process.Authenticate_Prescription
+
+  sdb : ui_thread.Bolus_Duration -> ui_process.Bolus_Duration
+
+  prb : operation_threads.Patient_Button_Request -> patient_bolus_checker.Patient_Button_Request
+
+  slv : operation_process.Soft_Limit_Warning -> control_panel.Soft_Limit_Warning
+
+  dfr : fluid.Downstream_Flow_Rate -> safety.Downstream_Flow_Rate
+
+  pom : max_drug_watcher.Over_Max_Drug_Per_Hour -> rate_controller.Over_Max_Drug_Per_Hour
+
+  power_to_p_bus : power.p_bus -> pump.p_bus
+
+  lbws : power.Low_Battery_Warning -> safety.Low_Battery_Warning
+
+  ble : boss.Log_Event -> operation_threads.Log_Event
+
+  btrrx : operation_threads.Reject_Soft_Limit_Exception -> boss.Reject_Soft_Limit_Exception
+
+  dfr : alarm_process.Downstream_Flow_Rate -> flow_rate.Downstream_Flow_Rate
+
+  drd : mech_pump.Drug_Outlet -> downstream_mon.Drug_Intake
+
+  iceal : safety.alrm -> alarm_process.alrm
+
+  ton : ui_process.Sound_Type -> ui_thread.Sound_Type
+
+  ibi : boss.Begin_Infusion -> ice_thread.Begin_Infusion
+
+  ui_inac : ui_thread.Alarm_Inactivation -> ui_process.Alarm_Inactivation
+
+  uoc : upstream_mon.Occlusion -> fluid.Upstream_Occlusion
+
+  pm : ui_process.Patient_Name -> ui_thread.Patient_Name
+
+  fluid_to_i_bus : pump.i_bus -> fluid.i_bus
+
+  crb : control_panel.Clinician_Request_Bolus -> operation_process.Clinician_Request_Bolus
+
+  conf_rx : ui_thread.Confirm_Soft_Limit_Exception -> ui_process.Confirm_Soft_Limit_Exception
+
+  icprnts : patient_bolus_checker.Patient_Request_Not_Too_Soon -> ice_thread.Patient_Request_Not_Too_Soon
+
+  lbw : operation.Low_Battery_Warning -> control_panel.Low_Battery_Warning
+
+  pb : patient_button.Request_Bolus -> operation_process.Patient_Button_Request
+
+  ihi : boss.Halt_Infusion -> ice_thread.Halt_Infusion
+
+  cn : ui_process.Clinician_Name -> ui_thread.Clinician_Name
+
+  msg : control_panel.Display_Message -> ui_process.Display_Message
+
+  tmf : error_detect.Thread_Monitor_Failure -> fault_log.Thread_Monitor_Failure
+
+  wacp : operation.Warning -> control_panel.Warning
+
+  icprts : patient_bolus_checker.Patient_Request_Too_Soon -> ice_thread.Patient_Request_Too_Soon
+
+  do : reservoir.Door_Open -> fluid.Door_Open
+
+  bar : prescription_checker.Basal_Rate -> rate_controller.Basal_Rate
+
+  upo : upstream_mon.Occlusion -> fluid.Upstream_Occlusion
+
+  secf : security_subsystem.Security_Fault -> operation.Security_Fault
+
+  snmax : max_drug_watcher.Near_Max_Drug_Per_Hour -> ice_thread.Near_Max_Drug_Per_Hour
+
+  prf : operation_process.Prime_Failure -> operation.Prime_Failure
+
+  dc : operation_process.Door_Closed -> operation_threads.Door_Closed
+
+  ai : operation_threads.Alarm_Inactivation -> ice_thread.Alarm_Inactivation
+
+  ido : operation_threads.Door_Open -> ice_thread.Door_Open
+
+  ri : operation_process.Resume_Infusion -> operation_threads.Resume_Infusion
+
+  jabss : operation_process.System_Status -> operation.System_Status
+
+  rrx : operation_threads.Reject_Soft_Limit_Exception -> prescription_checker.Reject_Soft_Limit_Exception
+
+  hlv : prescription_checker.Hard_Limit_Violated -> operation_threads.Hard_Limit_Violated
+
+  voo : alarm_process.Voltage_OOR -> alarm_thr.Voltage_OOR
+
+  pi : control_panel.Pause_Infusion -> operation_process.Pause_Infusion
+
+  hlv : operation.Hard_Limit_Violated -> safety.Hard_Limit_Violated
+
+  ph : alarm_process.Pump_Hot -> alarm_thr.Pump_Hot
+
+  display_to_i_bus : control_panel.i_bus -> display.i_bus
+
+  pcn : control_panel.Prescription -> ui_process.Prescription
+
+  p_bus_to_cpu : pump.p_bus -> cpu.p_bus
+
+  bac : boss.Authenticate_Clinician -> operation_threads.Authenticate_Clinician
+
+  omdph : operation.Over_Max_Drug_Per_Hour -> safety.Over_Max_Drug_Per_Hour
+
+  nil : operation.Drug_Not_In_Library -> safety.Drug_Not_In_Library
+
+  tfl : fault_log.The_Log -> safety.The_Fault_Log
+
+  off : ui_thread.Turn_Off -> ui_process.Turn_Off
+
+  jabss : alarm_process.System_Status -> flow_rate.System_Status
+
+  lr : fluid.Low_Reservoir -> safety.Low_Reservoir
+
+  barx : boss.Authenticate_Prescription -> operation_threads.Authenticate_Prescription
+
+  soun : operation_process.Sound_Type -> control_panel.Sound_Type
+
+  simulation_dfr : operation.Downstream_Flow_Rate -> safety.Downstream_Flow_Rate
+
+  error_detect_to_s_bus : error_detect.s_bus -> safety.s_bus
+
+  ai : ui_process.Alarm_Inactivation -> control_panel.Alarm_Inactivation
+
+  romf : error_detect.ROM_failure -> fault_log.ROM_Failure
+
+  lr : alarm_process.Low_Reservoir -> alarm_thr.Low_Res
+
+  bthlv : prescription_checker.Hard_Limit_Violated -> boss.Hard_Limit_Violated
+
+  gf : maint.Get_Fault_Log -> pump.in_get_fault_log
+
+  do : operation.Door_Open -> operation_process.Door_Open
+
+  bpm : operation.Patient_Button_Press -> patient_button.Button_Press
+
+  sop : operation_threads.Stop_Button_Pressed -> boss.Stop_Button_Pressed
+
+  bp : wrap_pca_imp_Instance.Button_Press -> pump.Patient_Button_Press
+
+  acl : operation_threads.Authenticate_Clinician -> operation_process.Authenticate_Clinician
+
+  gel : operation_process.Get_Event_Log -> event_logger.Get_Event_Log
+
+  dl : maint.Load_Drug_Library -> pump.in_load_drug_library
+
+  pin : operation_threads.Pause_Infusion -> rate_controller.Pause_Infusion
+
+  ui_ra : ui_thread.CP_Reset_Alarm -> ui_process.CP_Reset_Alarm
+
+  bd : control_panel.Bolus_Duration -> operation_process.Bolus_Duration
+
+  off : ui_process.Turn_Off -> control_panel.Turn_Off
+
+  ubp : power.Using_Battery_Power -> operation.Using_Battery_Power
+
+  tel : event_logger.The_Event_Log -> operation_process.The_Event_Log
+
+  prts : control_panel.Patient_Request_Too_Soon -> ui_process.Patient_Request_Too_Soon
+
+  fp : wrap_pca_imp_Instance.Finger_Press -> pump.Finger_Press
+
+  vtb : prescription_checker.VTBI -> rate_controller.VTBI
+
+  spco : safety.Stop_Pump_Completely -> operation.Stop_Pump_Completely
+
+  start_fl : ui_thread.Start_Button_Pressed -> ui_process.Start_Button_Pressed
+
+  msg : ui_process.Display_Message -> ui_thread.Display_Message
+
+  rat : operation.Infusion_Flow_Rate -> fluid.Rate_To_Pump
+
+  iwarn : operation_threads.Warning -> ice_thread.Warning
+
+  doc : fluid.Downstream_Occlusion -> safety.Downstream_Occlusion
+
+  bv : btty.Battery_Voltage -> pwr.Battery_Voltage
+
+  snd : pump.Sound -> wrap_pca_imp_Instance.Sound
+
+  rrx : control_panel.Reject_Soft_Limit_Exception -> operation_process.Reject_Soft_Limit_Exception
+
+  spf : ui_process.Stop_Button_Pressed -> control_panel.Stop_Button_Pressed
+
+  gel : operation.Get_Event_Log -> operation_process.Get_Event_Log
+
+  scd : operation_threads.Scan_Done -> boss.Scan_Done
+
+  pn : security_subsystem.Patient_Name -> control_panel.Patient_Name
+
+  rbt : operation.Remaining_Battery_Time -> control_panel.Remaining_Battery_Time
+
+  spc : alarm_thr.Stop_Pump_Completely -> alarm_process.Stop_Pump_Completely
+
+  bds : boss.Do_Scan -> operation_threads.Do_Scan
+
+  dru : upstream_mon.Drug_Outlet -> mech_pump.Drug_Intake
+
+  dro : downstream_mon.Drug_Outlet -> fluid.Drug_Outlet
+
+  ubp : pwr.Using_Battery_Power -> power.Using_Battery_Power
+
+  icrb : operation_threads.CP_Clinician_Request_Bolus -> ice_thread.CP_Clinician_Request_Bolus
+
+  ufre : upstream_mon.Upstream_Flow_Rate -> fluid.Upstream_Flow_Rate
+
+  bpr : boss.Begin_Priming -> rate_controller.Begin_Priming
+
+  alm : operation_threads.Alarm -> rate_controller.Alarm
+
+  spc : operation_threads.Stop_Pump_Completely -> rate_controller.Stop_Pump_Completely
+
+  lbw : control_panel.Low_Battery_Warning -> ui_process.Low_Battery_Warning
+
+  sdo : operation_process.Scan_Done -> operation_threads.Scan_Done
+
+  operation_to_i_bus : pump.i_bus -> operation.i_bus
+
+  toff : control_panel.Turn_Off -> operation_process.Turn_Off
+
+  bnd : operation_threads.No_Drug_Found -> boss.Drug_Not_In_Library
+
+  hdf : safety.HW_Detected_Failure -> operation.HW_Detected_Failure
+
+  sf : safety.Security_Fault -> alarm_process.Security_Fault
+
+  aps : operation_process.Authentication_pass -> operation_threads.Authentication_pass
+
+  ifl : rate_controller.Infusion_Flow_Rate -> max_drug_watcher.Infusion_Flow_Rate
+
+  btd : boss.Display_Message -> operation_threads.Display_Message
+
+  sf : operation.Security_Fault -> safety.Security_Fault
+
+  pfr : safety.Infusion_Flow_Rate -> alarm_process.Infusion_Flow_Rate
+
+  apa : operation_threads.Authenticate_Patient -> operation_process.Authenticate_Patient
+
+  er : alarm_process.Empty_Reservoir -> alarm_thr.Empty_Res
+
+  ma : maint.to_maintenance_processor -> wrap_pca_imp_Instance.to_tech
+
+  basu : flow_rate.Basal_Underinfusion -> alarm_thr.Basal_Underinfusion
+
+  stp : operation_process.Stop_Pump_Completely -> operation_threads.Stop_Pump_Completely
+
+  co : pump.command -> bus_adaptor.command_inv
+
+  pause : ui_process.Pause_Infusion -> control_panel.Pause_Infusion
+
+  db : safety.Defective_Battery -> alarm_process.Defective_Battery
+
+  prts : ui_process.Patient_Request_Too_Soon -> ui_thread.Patient_Request_Too_Soon
+
+  pro : operation.Security_Provisioning -> security_subsystem.Provisioning
+
+  le : operation_threads.Log_Event -> event_logger.Log_Event
+
+  cpra : alarm_process.CP_Reset_Alarm -> alarm_thr.CP_Reset_Alarm
+
+  war : safety.Warning -> operation.Warning
+
+  out2 : security_thread.Authentication_pass -> security_process.Authentication_pass
+
+  out1 : security_thread.Authentication_fail -> security_process.Authentication_fail
+
+  hi : boss.Halt_Infusion -> rate_controller.Halt_Infusion
+
+  prts : patient_bolus_checker.Patient_Request_Too_Soon -> operation_threads.Patient_Request_Too_Soon
+
+  audible_to_i_bus : control_panel.i_bus -> audible.i_bus
+
+  jabss : safety.System_Status -> alarm_process.System_Status
+
+  p_bus_to_safety : pump.p_bus -> safety.p_bus
+
+  psf : safety.POST_Fail -> operation.POST_Fail
+
+  bc : btty.Battery_Current -> pwr.Battery_Current
+
+  sdb : ui_process.Bolus_Duration -> control_panel.Bolus_Duration
+
+  p_bus_to_fault_log : safety.p_bus -> fault_log.p_bus
+
+  tdr : drug_library.The_Drug_Record -> operation_threads.The_Drug_Record
+
+  dnil : operation_process.Drug_Not_In_Library -> operation.Drug_Not_In_Library
+
+  ss_to_i_bus : operation.i_bus -> security_subsystem.i_bus
+
+  db : alarm_process.Defective_Battery -> alarm_thr.Defective_Btty
+
+  drg : fluid.Drug_Outlet -> pump.out_infused_drug
+
+  spc : error_detect.Stop_Pump_Completely -> safety.Stop_Pump_Completely
+
+  hwdf : error_detect.HW_Detected_Failure -> safety.HW_Detected_Failure
+
+  pkr : operation.Pump_At_KVO_Rate -> operation_process.Pump_At_KVO_Rate
+
+  lbw : pwr.Low_Battery_Warning -> power.Low_Battery_Warning
+
+  mem_to_i_bus : pump.i_bus -> mem.i_bus
+
+  bdr : operation_threads.CP_Bolus_Duration -> rate_controller.CP_Bolus_Duration
+
+  i_bus_to_pump : mech_pump.i_bus -> fluid.i_bus
+
+  ssbr : prescription_checker.Square_Bolus_Rate -> ice_thread.Square_Bolus_Rate
+
+  dc : reservoir.Door_Closed -> fluid.Door_Closed
+
+  pkvo : alarm_thr.Pump_At_KVO_Rate -> alarm_process.Pump_At_KVO_Rate
+
+  i_bus_to_safety_core : safety.i_bus -> safety_core.i_bus
+
+  cpuf : error_detect.CPU_Failure -> fault_log.CPU_Failure
+
+  cfrx : operation_threads.Confirm_Soft_Limit_Exception -> prescription_checker.Confirm_Soft_Limit_Exception
+
+  prnts : ui_process.Patient_Request_Not_Too_Soon -> ui_thread.Patient_Request_Not_Too_Soon
+
+  ui_alarm : ui_process.Alarm -> ui_thread.Alarm
+
+  stop_fl : ui_thread.Stop_Button_Pressed -> ui_process.Stop_Button_Pressed
+
+  toff : operation_process.Turn_Off -> operation_threads.Turn_Off
+
+  se : pump.security -> bus_adaptor.security_inv
+
+  rbt : ui_process.Remaining_Battery_Time -> ui_thread.Remaining_Battery_Time
+
+  mdw : operation_process.Over_Max_Drug_Per_Hour -> operation.Over_Max_Drug_Per_Hour
+
+  tfl : safety.The_Fault_Log -> pump.out_the_fault_log
+
+  presc : operation_process.Prescription -> operation_threads.Prescription
+
+  slv : control_panel.Soft_Limit_Warning -> ui_process.Soft_Limit_Warning
+
+  crx : boss.Check_Rx -> prescription_checker.Check_Rx
+
+  prts : operation_threads.Patient_Request_Too_Soon -> operation_process.Patient_Request_Too_Soon
+
+  rin : operation_threads.Resume_Infusion -> rate_controller.Resume_Infusion
+
+  pbr : prescription_checker.Patient_Bolus_Rate -> rate_controller.Patient_Bolus_Rate
+
+  te : pump.out_the_event_log -> maint.The_Event_Log
+
+  pm : control_panel.Patient_Name -> ui_process.Patient_Name
+
+  ui_hlv : ui_process.Hard_Limit_Violated -> ui_thread.Hard_Limit_Violated
+
+  ai : control_panel.Alarm_Inactivation -> operation_process.Alarm_Inactivation
+
+  war : alarm_thr.Warning -> alarm_process.Warning
+
+  spcf : safety.Stop_Pump_Completely -> fluid.Halt
+
+  gfl : safety.Get_Fault_Log -> fault_log.Get_Log
+
+  snd : operation.Sound -> pump.Sound
+
+  stat : operation_process.System_Status -> control_panel.System_Status
+
+  pfr : operation_threads.Infusion_Flow_Rate -> operation_process.Infusion_Flow_Rate
+
+  afl : operation_process.Authentication_fail -> operation_threads.Authentication_fail
+
+  ialrm : operation_threads.Alarm -> ice_thread.Alarm
+
+  cpu_to_i_bus : pump.i_bus -> cpu.i_bus
+
+  crb : operation_threads.CP_Clinician_Request_Bolus -> rate_controller.CP_Clinician_Request_Bolus
+
+  sta : operation_threads.status -> ice_thread.status
+
+  pc : maint.Security_Provisioning -> pump.security_provisioning
+
+  ifr : alarm_process.Infusion_Flow_Rate -> flow_rate.Infusion_Flow_Rate
+
+  gel : pump.in_get_event_log -> operation.Get_Event_Log
+
+  i_bus_to_fault_log : safety.i_bus -> fault_log.i_bus
+
+  stf : ui_process.Start_Button_Pressed -> control_panel.Start_Button_Pressed
+
+  secf : alarm_process.Security_Fault -> alarm_thr.Security_Fault
+
+  cpra : operation.CP_Reset_Alarm -> safety.CP_Reset_Alarm
+
+  uso : alarm_process.Upstream_Occlusion -> alarm_thr.Upstream_Occlusion
+
+  snd : ui_process.AudioSignal -> audible.AudioSignal
+
+  pb : pump.Patient_Button_Press -> operation.Patient_Button_Press
+
+  sd : scanner.Scan_Data -> security_subsystem.Scan_Data
+
+  postf : error_detect.POST_Failure -> fault_log.POST_Failure
+
+  low : reservoir.Low_Reservoir -> fluid.Low_Reservoir
+
+  voo : safety.Voltage_OOR -> alarm_process.Voltage_OOR
+
+  slw : prescription_checker.Soft_Limit_Warning -> operation_threads.Soft_Limit_Warning
+
+  power_to_p_bus : pwr.p_bus -> power.p_bus
+
+  hlv : control_panel.Hard_Limit_Violated -> ui_process.Hard_Limit_Violated
+
+  gfl : pump.in_get_fault_log -> safety.Get_Fault_Log
+
+  j : wrap_pca_imp_Instance.maintenance_jack -> maint.Jack
+
+  in1 : security_process.Authenticate_Prescription -> security_thread.Authenticate_Prescription
+
+  hdf : operation_process.HW_Detected_Failure -> operation_threads.HW_Detected_Failure
+
+  resume : ui_process.Resume_Infusion -> control_panel.Resume_Infusion
+
+  se : operation.security -> security_subsystem.ICE_Security
+
+  ui_touch : ui_process.Touch -> ui_thread.Touch
+
+  vo : power.Voltage_OOR -> safety.Voltage_OOR
+
+  dc : operation_threads.Door_Closed -> boss.Door_Closed
+
+  pof : operation_threads.POST_fail -> boss.POST_fail
+
+  pth : fluid.Pump_Too_Hot -> safety.Pump_Too_Hot
+
+  lr : safety.Low_Reservoir -> alarm_process.Low_Reservoir
+
+  cmd : operation.command -> operation_process.command
+
+  ndf : drug_library.No_Drug_Found -> operation_threads.No_Drug_Found
+
+  dso : safety.Downstream_Occlusion -> alarm_process.Downstream_Occlusion
+
+  sap : operation_process.Authenticate_Patient -> security_subsystem.Authenticate_Patient
+
+  hear : audible.Sound -> control_panel.Sound
+
+  sdo : scanner.Scan_Done -> operation_process.Scan_Done
+
+  scn : security_subsystem.Clinician_Name -> control_panel.Clinician_Name
+
+  lf : alarm_process.Log_Fault -> fault_log.Log_Fault
+
+  poc : max_drug_watcher.Over_Max_Drug_Per_Hour -> operation_threads.Over_Max_Drug_Per_Hour
+
+  kvo : operation_threads.Pump_At_KVO_Rate -> rate_controller.Pump_At_KVO_Rate
+
+  pth : safety.Pump_Too_Hot -> alarm_process.Pump_Hot
+
+  srxok : prescription_checker.Rx_Okay -> ice_thread.Rx_Okay
+
+  tf : pump.out_the_fault_log -> maint.The_Fault_Log
+
+  s_bus_to_safety_core : safety.s_bus -> safety_core.s_bus
+
+  sbo : flow_rate.Square_Bolus_Overinfusion -> alarm_thr.Square_Bolus_Overinfusion
+
+  cp_to_i_bus : operation.i_bus -> control_panel.i_bus
+
+  sifr : rate_controller.Infusion_Flow_Rate -> ice_thread.Infusion_Flow_Rate
+
+  snd : control_panel.Sound -> operation.Sound

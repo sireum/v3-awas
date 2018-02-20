@@ -34,7 +34,7 @@ import org.sireum.util.{ErrorTag, FileLocationInfoErrorMessage, LocationInfoErro
 object SymbolTableMessage {
 
   val DUPLICATE_TYPE =
-    "Type declaration '%s' had already been defined"
+    "Type declaration '%s' has already been defined"
 
   val DUPLICATE_STATE =
     "State '%s' already declared in the state machine"
@@ -49,13 +49,13 @@ object SymbolTableMessage {
     "Flow Name '%s' already declared"
 
   val DUPLICATE_PORT =
-    "Port '%s' already declared in this component"
+    "Port '%s' already declared in '%s' component"
 
   val DUPLICATE_COMPONENT =
-    "Component declaration '%s' had already been defined"
+    "Component declaration '%s' has already been defined"
 
   val DUPLICATE_CONNECTION =
-    "Connection declaration '%s' had already been defined"
+    "Connection declaration '%s' has already been defined"
 
   val MISSING_COMPONENT_OR_CONNECTION =
     "Component or Connection '%s' not found in the model"
@@ -67,25 +67,25 @@ object SymbolTableMessage {
     "Error '%s' declared in more than one type declaration"
 
   val MISSING_PORT_DECL =
-    "port '%s' not declared in this component"
+    "port '%s' not declared in '%s' component"
 
   val MISSING_STATE_DECL =
     "STATE '%s' not found in the associated state machine declaration"
 
   val MISSING_TYPE_ASSOCIATION =
-    "Type association missing for this component"
+    "Type association missing for '%s' component"
 
   val MISSING_COMPONENT =
-    "Component declaration '%s' not found in this model"
+    "Component declaration '%s' not found in '%s' model"
 
   val FLOW_MISSING =
-    "Error flow type '%s' not defined for this port"
+    "Error flow type '%s' not defined for '%s' port"
 
 
   def errorMessageGen(template: String,
                       node: Node,
                       model: Model,
-                      info : String)
+                      info: String*)
   : ErrorTag = {
     val KIND = "Symbol Checker"
     val message = template.format(info)

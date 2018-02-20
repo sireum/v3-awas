@@ -3,12 +3,12 @@ package org.sireum.awas.example;
 import org.sireum.awas.witness.Visualizer;
 
 public class AwasWitnessVisualizer {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         //sample arguments
         //"/workspace-v3/sireum-v3/awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.awas"
         //"awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.awas"
         //"awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.aq"
-        //"~/output/" --end with slash
+        //"~/output"
         if (args.length == 3) {
             Visualizer.main(args);
         } else {

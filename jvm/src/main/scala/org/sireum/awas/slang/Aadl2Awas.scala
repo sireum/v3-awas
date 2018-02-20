@@ -194,5 +194,12 @@ object Aadl2Awas {
     Visualizer.main(Array(awasFile, queryFile, outputFolder))
   }
 
+  def generateVisualizer(awasFile: String,
+                         queryFile: String,
+                         outputFolder: String,
+                         sireumJarLoc: String): Unit = {
+    Visualizer.main(Array(awasFile, queryFile, outputFolder, sireumJarLoc))
+  }
+
 
 }

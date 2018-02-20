@@ -1,16 +1,23 @@
 package org.sireum.awas.witness
 
-import java.io.{OutputStream, OutputStreamWriter}
+import java.io.{File, OutputStream, OutputStreamWriter}
+import java.net.URL
 import java.nio.file.{Files, Path, Paths}
+import java.util.jar.{JarEntry, JarFile}
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.fptc.FlowGraph
 import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryPPrinter, QueryStmt}
 import org.sireum.awas.symbol.SymbolTable
-import org.sireum.util.{ivectorEmpty, _}
+import org.sireum.util._
 import org.sireum.util.jvm.FileUtil
 import org.sireum.util.jvm.FileUtil._
+
+import scala.collection.JavaConverters._
+import scala.tools.nsc.JarRunner
+import scala.tools.nsc.classpath.FileUtils
+import scala.tools.nsc.io.Jar
 
 object Visualizer {
   def main(args: Array[String]): Unit = {
@@ -28,18 +35,54 @@ object Visualizer {
     val modelFile = args(0)
     val queryFile = args(1)
     val outputFolder = args(2)
+    val sireumJarLoc = if (args.length == 4) args(3) else ""
+    val resourceLoc = "/org/sireum/web"
 
+    val graphVarPath = "/min/graphVar.js"
 
-    val graphVarPath = "min/graphVar.js"
-    val web = this.getClass.getResource("/org/sireum/web")
+    val web = this.getClass.getResource(resourceLoc)
 
     if (Files.exists(Paths.get(outputFolder))) {
       FileUtil.delete(Paths.get(outputFolder))
     }
 
+    def extractFromJar(jarFile: JarFile) = {
+      jarFile.stream().iterator().asScala.foreach { je =>
+        if (je.getName.startsWith("org/sireum/web")) {
+          val in = jarFile.getInputStream(je)
+          val fileName = outputFolder + "/" + je.getName.substring(resourceLoc.length)
+          if (je.isDirectory) {
+            Files.createDirectories(Paths.get(fileName))
+          } else {
+            Files.copy(in, Paths.get(fileName))
+          }
+        }
+      }
+    }
+
+    def copyWebResources(sourceURL: URL, dstFile: File) = {
+      println("entered extracter")
+      println("input URL :" + sourceURL.toExternalForm)
+      if (sourceURL.getProtocol == "jar") {
+        //command line resource access
+        val resource = sourceURL.toString.split('!')
+        val jarPath = sourceURL.getFile
+        val jarFile = new JarFile(toFilePath(jarPath.split('!')(0)))
+        extractFromJar(jarFile)
+      } else if (sourceURL.getProtocol == "bundleresource") {
+        //eclipse plugin resource access
+        val jarFile = new JarFile(sireumJarLoc)
+        extractFromJar(jarFile)
+      } else {
+        //IDE resource access
+        walkFileTree(Paths.get(web.getPath), test, false)
+        println("Dont come here")
+      }
+    }
+
     //    val web =toFilePath(fileUri(this.getClass, "/org/sireum/web"))
     def test(isDir: Boolean, path: Path) = {
-      val basePath = Paths.get(this.getClass.getResource("/org/sireum/web").getPath)
+      val basePath = Paths.get(web.getPath)
       val tempPath = path.toAbsolutePath
       val relPath = basePath.relativize(tempPath)
 
@@ -47,12 +90,16 @@ object Visualizer {
       //relPath.toString
     }
 
-    walkFileTree(Paths.get(web.getPath), test, false)
+    println(this.getClass.getResource(resourceLoc))
+
+    copyWebResources(this.getClass.getResource(resourceLoc), new File(outputFolder))
+
+    // walkFileTree(Paths.get(web.getPath), test, false)
 
 
-    val basePath = Paths.get(this.getClass.getResource("..").getPath)
-    val relativeUri = basePath.relativize(Paths.get(modelFile))
+    val relativeUri = Paths.get(modelFile)
     var result = ""
+    println(modelFile)
 
     Builder(Some(relativeUri.toString), readFile(FileUtil.toUri(modelFile))._1) match {
       case None =>
