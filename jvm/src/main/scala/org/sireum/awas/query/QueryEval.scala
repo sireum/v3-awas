@@ -27,12 +27,13 @@ package org.sireum.awas.query
 
 import org.sireum.awas.collector.CollectorErrorHelper.{ReachAnalysisStage, _}
 import org.sireum.awas.collector.{Collector, Operator, ResultType}
+import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.awas.query.ConstraintKind.ConstraintKind
 import org.sireum.awas.reachability.ErrorReachability
-import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
+import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{ISet, _}
+import org.sireum.util.{IMap, ISet, _}
 
 object QueryEval {
   type Result = Map[String, Collector]
@@ -51,7 +52,7 @@ object ConstraintKind extends Enumeration {
 //in case of regex, we need automaton, and for simple we need collector and type
 case class ConstraintExpr(kind : ConstraintKind,
                           simple: Option[Collector],
-                          regex: Option[Any])
+                          regex: Option[Anything])
 
 final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
   val H = SymbolTableHelper
@@ -117,8 +118,62 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
           lhs.getPortErrors, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           isetEmpty[ResourceUri], isetEmpty[ResourceUri], ivectorEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
       }
+
+      case FilterID.SOURCE => {
+        filterSource(lhs)
+      }
+
+      case FilterID.SINK => {
+        filterSink(lhs)
+      }
       case _ => lhs
     }
+  }
+
+  def filterSource(c: Collector): Collector = {
+    var flows = isetEmpty[ResourceUri]
+    var portE = imapEmpty[ResourceUri, ISet[ResourceUri]]
+    c.getFlows.foreach { f =>
+      //parent of a flow should be a node
+      val node = c.getGraph.getNode(Resource.getParentUri(f).get).get
+      val flow = node.getFlows.get(f)
+      if (flow.isDefined && flow.get.fromPortUri.isEmpty && flow.get.fromFaults.isEmpty) {
+        flows = flows + f
+        val ports = node.getPortsFromFlows(f)
+        if (ports.size == 1) {
+          val port = ports.toSeq.head
+          val errors = flow.get.toFaults
+          portE += port -> errors.intersect(c.getPortErrors(port))
+        }
+      }
+    }
+    Collector(st, graph, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
+      c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
+      isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
+      ivectorEmpty[Collector], c.getErrors ++ c.getWarnings)
+  }
+
+  def filterSink(c: Collector): Collector = {
+    var flows = isetEmpty[ResourceUri]
+    var portE = imapEmpty[ResourceUri, ISet[ResourceUri]]
+    c.getFlows.foreach { f =>
+      //parent of a flow should be a node
+      val node = c.getGraph.getNode(Resource.getParentUri(f).get).get
+      val flow = node.getFlows.get(f)
+      if (flow.isDefined && flow.get.toPortUri.isEmpty && flow.get.toFaults.isEmpty) {
+        flows = flows + f
+        val ports = node.getPortsFromFlows(f)
+        if (ports.size == 1) {
+          val port = ports.toSeq.head
+          val errors = flow.get.toFaults
+          portE += port -> errors.intersect(c.getPortErrors(port))
+        }
+      }
+    }
+    Collector(st, graph, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
+      c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
+      isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
+      ivectorEmpty[Collector], c.getErrors ++ c.getWarnings)
   }
 
   def eval(rexp: ReachExpr): Collector = {
@@ -161,7 +216,7 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
   def eval(bexp: BinaryExpr): Collector = {
     val lhs: Collector = eval(bexp.lhs)
     val rhs: Collector = eval(bexp.rhs)
-    bexp.op match {
+    bexp.op.trim match {
       case "union" => lhs union rhs
       case "intersect" => lhs intersect rhs
       case "-" => lhs diff rhs

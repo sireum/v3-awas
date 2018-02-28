@@ -9,15 +9,19 @@ q2
  -------------- 
 Error: 
 
-Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2A#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 
  -------------- 
 q3
  -------------- 
 Error: 
 
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2A#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 
  -------------- 
@@ -25,6 +29,8 @@ q4
  -------------- 
 Error: 
 
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2A#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, error:$AWAS$$example/Query/abcEF.awas$Error#Low'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
@@ -32,11 +38,6 @@ Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF
  -------------- 
 q5
  -------------- 
-Warning: 
-
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#A2B'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2C'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2A'
 { port-in-virtual:$AWAS$$example/Query/abcEF.awas$A2B#in, 
 port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2A#in, 
 port-in-virtual:$AWAS$$example/Query/abcEF.awas$B2C#in, 
@@ -56,6 +57,8 @@ q6
  -------------- 
 Error: 
 
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$B2A#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
+Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abcEF.awas$A2B#out, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, error:$AWAS$$example/Query/abcEF.awas$Error#Low'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2, error:$AWAS$$example/Query/abcEF.awas$Error#High'
 Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abcEF.awas$A#aOut, error:$AWAS$$example/Query/abcEF.awas$Error#High'
@@ -105,11 +108,6 @@ port-out:$AWAS$$example/Query/abcEF.awas$B#bOut2[ error:$AWAS$$example/Query/abc
  -------------- 
 q11
  -------------- 
-Warning: 
-
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#A2B'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2C'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abcEF.awas#B2A'
 { port-in-virtual:$AWAS$$example/Query/abcEF.awas$A2B#in, 
 port-in:$AWAS$$example/Query/abcEF.awas$A#aIn, 
 port-in:$AWAS$$example/Query/abcEF.awas$B#bIn, 

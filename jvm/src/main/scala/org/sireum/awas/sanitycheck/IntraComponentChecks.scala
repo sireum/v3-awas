@@ -27,7 +27,8 @@ package org.sireum.awas.sanitycheck
 
 import org.sireum.awas.ast._
 import org.sireum.awas.symbol.SymbolTableMessage._
-import org.sireum.awas.symbol.{ComponentSymbolTable, SymbolTable}
+import org.sireum.awas.symbol.{ComponentSymbolTable, SymbolTable, SymbolTableHelper}
+import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
 object IntraComponentChecks {
@@ -56,35 +57,32 @@ object IntraComponentChecks {
     cst.flows.foreach {
        furi =>
          val flow = cst.flow(furi)
-         if(flow.from.isDefined) {
-           flowExpCheck(cst, cd, flow.from.get, flow.fromE)
+         if (flow.fromPortUri.isDefined) {
+           flowExpCheck(cst, cd, flow.fromPortUri.get, flow.fromFaults)
          }
-        if(flow.to.isDefined) {
-          flowExpCheck(cst, cd, flow.to.get, flow.toE)
+         if (flow.toPortUri.isDefined) {
+           flowExpCheck(cst, cd, flow.toPortUri.get, flow.toFaults)
         }
     }
   }
 
   def flowExpCheck(cst : ComponentSymbolTable,
                    cd : ComponentDecl,
-                   pName : Id,
-                   eNames: Seq[Fault])(
+                   pUri: ResourceUri,
+                   eNames: Set[ResourceUri])(
                     implicit reporter: AccumulatingTagReporter): Unit = {
-    val puri = cst.ports.find(_.endsWith("#" + pName.value))
-    if(puri.isDefined) {
+
       eNames.foreach {
         err =>
-          val error = cst.propagation(puri.get).find(_.endsWith(err.enum.value.last.value))
+          val error = cst.propagation(pUri).find(_ == err)
           if(error.isEmpty) {
             reporter.report(errorMessageGen(FLOW_MISSING,
               cd,
-              model, puri + " -  " + err.enum.value.last.value))
+              model, pUri + " -  " + SymbolTableHelper.uri2IdString(err)))
             //error not found
           }
       }
-    } else {
-      //port not found
-    }
+
   }
 
 //  def checkBehaviors(cst : ComponentSymbolTable, cd : ComponentDecl) = {

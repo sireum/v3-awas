@@ -183,9 +183,11 @@ object Aadl2Awas {
     new Aadl2Awas().build(aadlModel)
   }
 
-  def apply(json: String): Model = {
+  def apply(json: String): Option[Model] = {
     val aadl = org.sireum.aadl.skema.ast.JSON.toAadl(json)
-    new Aadl2Awas().build(aadl)
+    if(aadl.leftOpt.nonEmpty) {
+      Some(new Aadl2Awas().build(aadl.left))
+    } else None
   }
 
   def generateVisualizer(awasFile: String,

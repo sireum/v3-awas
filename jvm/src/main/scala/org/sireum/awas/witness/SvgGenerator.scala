@@ -6,9 +6,9 @@ import java.util
 import org.jgrapht.io._
 import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
-import org.sireum.awas.symbol.SymbolTableHelper
+import org.sireum.awas.symbol.{Resource, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{FileResourceUri, IMap, mlinkedMapEmpty}
+import org.sireum.util.{FileResourceUri, IMap, mlinkedMapEmpty, ilistEmpty}
 
 import scalatags.Text.all._
 
@@ -51,7 +51,8 @@ object SvgGenerator {
       val inPorts = vertex.inPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
       val outPorts = vertex.outPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
       val errors = vertex.ports.map(it => (it, vertex.getPropagation(it).toSeq)).toMap
-      val flows = vertex.getFlows.map(it => (it._1, PrettyPrinter.print(it._2))).toSeq
+      val flows = if (vertex.isComponent) vertex.getFlows.map(it => (it._1, it._2.toString)).toSeq else ilistEmpty
+
       val label = tag("font")(attr("POINT-SIZE") := 12, table(attr("border") := 0,
         attr("cellborder") := 1,
         attr("cellspacing") := 0,
@@ -65,7 +66,7 @@ object SvgGenerator {
               else "Connection: " + H.uri2IdString(vertex.getUri))
           )
         ),
-        if (vertex.isFlowDefined) tr(
+        if (vertex.isFlowDefined && vertex.isComponent) tr(
           td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
           td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Flows")),
           td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Out ports")))
@@ -73,8 +74,7 @@ object SvgGenerator {
           tr(
             td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
             td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Out ports"))),
-
-        if (vertex.isFlowDefined) tr(portContent(inPorts, errors),
+        if (vertex.isFlowDefined && vertex.isComponent) tr(portContent(inPorts, errors),
           flowContent(flows), portContent(outPorts, errors))
         else tr(portContent(inPorts, errors),
           portContent(outPorts, errors))
@@ -97,7 +97,7 @@ object SvgGenerator {
 
   private def portContent(inPorts: Seq[(String, ResourceUri, String)],
                           errors: IMap[String, Seq[String]]) =
-    if (inPorts.nonEmpty)
+    if(inPorts.nonEmpty)
     td(attr("cellpadding") := 0, table(attr("border") := 0,
       attr("cellspacing") := 0, attr("cellpadding") := 0, attr("ROWS") := "*",
       for ((portid, uri, text) <- inPorts) yield

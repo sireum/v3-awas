@@ -76,7 +76,7 @@ object Visualizer {
       } else {
         //IDE resource access
         walkFileTree(Paths.get(web.getPath), test, false)
-        println("Dont come here")
+        //println("Dont come here")
       }
     }
 

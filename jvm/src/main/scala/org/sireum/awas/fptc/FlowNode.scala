@@ -27,8 +27,8 @@ package org.sireum.awas.fptc
 
 
 import org.sireum.awas.ast.Node
-import org.sireum.awas.collector.{FlowErrorNextCollector, FlowCollector}
-import org.sireum.awas.symbol.SymbolTable
+import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.symbol.{FlowTableData, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
@@ -45,7 +45,12 @@ trait FlowNode extends BasicNode {
 
   def isFlowDefined: Boolean
 
-  def getFlows: IMap[ResourceUri, Node]
+  // the following methods unions component and connection
+  def getFlows: IMap[ResourceUri, FlowTableData]
+
+  def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
+
+  def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
 }
 
 trait FptcNodeUpdate {

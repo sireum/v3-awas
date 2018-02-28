@@ -29,7 +29,7 @@ import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.fptc.FlowGraph
-import org.sireum.awas.query.{QueryBuilder, QueryEval}
+import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -40,7 +40,7 @@ import org.sireum.util.jvm.FileUtil._
 final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(
     makePath("..", "example", "Query"),
-    makePath("..", "example", "bindings")
+    makePath("..", "example", "sscate")
   )
 
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
@@ -88,7 +88,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         val st = SymbolTable(m)
         val graph = FlowGraph(m, st)
-        QueryBuilder(query) match {
+        QueryParser(query) match {
           case None => ""
           case Some(q) =>
             val res = QueryEval(q, graph, st)

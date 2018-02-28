@@ -70,7 +70,7 @@ sealed trait WithExpr extends QueryNode
 final case class SimpleWith(op: String, expr: QueryExpr) extends WithExpr
 
 //final case class RegExWith()
-
+//--------------- regex---------------------
 sealed trait RegExExpr extends WithExpr
 
 final case class UnaryRegEx(op: String, expr : RegExExpr) extends RegExExpr
@@ -83,9 +83,10 @@ trait PrimaryRegEx extends RegExExpr
 
 final case class ParenRegEx(regExExpr: RegExExpr) extends PrimaryRegEx
 
-final case class Any() extends PrimaryRegEx
+final case class Anything() extends PrimaryRegEx
 
 final case class IdRegEx(rId : NodeNameError) extends PrimaryRegEx
+//--------------- regex---------------------
 
 sealed trait PrimaryExpr extends QueryExpr
 

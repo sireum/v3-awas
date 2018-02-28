@@ -257,7 +257,7 @@ class STProducer extends SymbolTable {
 
     override def flows: Iterable[ResourceUri] = tables.flowTable.keys
 
-    override def flow(flowUri: ResourceUri): Flow = tables.flowTable(flowUri)
+    override def flow(flowUri: ResourceUri): FlowTableData = tables.flowTable(flowUri)
 
     override def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri] = {
       tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
@@ -281,9 +281,16 @@ class STProducer extends SymbolTable {
 
     override def ports: Iterable[ResourceUri] = tables.portTable
 
+    override def propagation(portUri: ResourceUri): Set[ResourceUri] = {
+      if (tables.propagationTable.contains(portUri))
+        tables.propagationTable(portUri).toSet
+      else
+        isetEmpty
+    }
+
     override def flows: Iterable[ResourceUri] = tables.flowTable.keys
 
-    override def flow(flowUri: ResourceUri): CFlow = tables.flowTable(flowUri)
+    override def flow(flowUri: ResourceUri): FlowTableData = tables.flowTable(flowUri)
 
     override def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri] = {
       tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
@@ -315,7 +322,28 @@ trait ComponentSymbolTable {
 
   def flows: Iterable[ResourceUri]
 
-  def flow(flowUri: ResourceUri): Flow
+  def flow(flowUri: ResourceUri): FlowTableData
+
+  def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
+
+  def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
+
+  def getUriFromSymbol(symbol: String): Option[ResourceUri]
+}
+
+
+trait ConnectionSymbolTable {
+  def symbolTable: SymbolTable
+
+  def connection: ConnectionDecl
+
+  def ports: Iterable[ResourceUri]
+
+  def propagation(portUri: ResourceUri): Set[ResourceUri]
+
+  def flows: Iterable[ResourceUri]
+
+  def flow(flowUri: ResourceUri): FlowTableData
 
   def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
 
@@ -328,37 +356,59 @@ sealed case class ComponentTableData
 (declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portTable: MMap[ResourceUri, Port] = mmapEmpty,
  propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
- flowTable: MMap[ResourceUri, Flow] = mmapEmpty,
+ flowTable: MMap[ResourceUri, FlowTableData] = mmapEmpty,
  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
-
-trait ConnectionSymbolTable {
-  def symbolTable: SymbolTable
-
-  def connection: ConnectionDecl
-
-  def ports: Iterable[ResourceUri]
-
-  def flows: Iterable[ResourceUri]
-
-  def flow(flowUri: ResourceUri): CFlow
-
-  def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
-
-  def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
-
-  def getUriFromSymbol(symbol: String): Option[ResourceUri]
-}
 
 sealed case class ConnectionTableData
 (portTable: MSet[ResourceUri] = msetEmpty,
- flowTable: MMap[ResourceUri, CFlow] = mmapEmpty,
+ propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ flowTable: MMap[ResourceUri, FlowTableData] = mmapEmpty,
  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
+
+sealed case class FlowTableData
+(flowUri: ResourceUri,
+ fromPortUri: Option[ResourceUri],
+ toPortUri: Option[ResourceUri],
+ fromFaults: Set[ResourceUri],
+ toFaults: Set[ResourceUri]
+) {
+  override def toString: String = {
+    val H = SymbolTableHelper
+    var result = ""
+    if (fromPortUri.isDefined) {
+      result += H.uri2IdString(fromPortUri.get)
+    }
+    if (fromFaults.nonEmpty) {
+      result += "{"
+      result += fromFaults.map(H.uri2IdString).mkString(", ")
+      result += "}"
+    }
+
+    if (fromPortUri.isEmpty && fromFaults.isEmpty) result += "*"
+
+    result += "->"
+
+    if (toPortUri.isDefined) {
+      result += H.uri2IdString(toPortUri.get)
+    }
+    if (toFaults.nonEmpty) {
+      result += "{"
+      result += toFaults.map(H.uri2IdString).mkString(", ")
+      result += "}"
+    }
+
+    if (toPortUri.isEmpty && toFaults.isEmpty) result += "*"
+
+    result
+  }
+
+}
 
 trait TypeTable {
   def uri : ResourceUri

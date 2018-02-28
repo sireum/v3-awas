@@ -134,8 +134,8 @@ final class QueryBuilder private() {
     ParenRegEx(build(ctx.regExpr()))
   }
 
-  def build(ctx: AnyContext): Any = {
-    Any()
+  def build(ctx: AnyContext): Anything = {
+    Anything()
   }
 
   def build(ctx: FilterExprContext): FilterExpr = {
@@ -143,6 +143,7 @@ final class QueryBuilder private() {
   }
 
   def build(ctx: FilterContext): FilterID = {
+    val x = ctx.getText.toLowerCase
     ctx.getText.toLowerCase match {
       case "node" => FilterID.NODE
       case "port" => FilterID.PORT
@@ -150,6 +151,9 @@ final class QueryBuilder private() {
       case "out-port" => FilterID.OUT
       case "error" => FilterID.ERROR
       case "porterror" => FilterID.PORTERROR
+      case "flow-source" => FilterID.SOURCE
+      case "flow-sink" => FilterID.SINK
+
     }
   }
 
@@ -235,11 +239,11 @@ object QueryBuilder {
       var errors = 0
 
        def syntaxError(recognizer: Recognizer[_, _],
-                               offendingSymbol: Any,
-                               line: PosInteger,
-                               charPositionInLine: PosInteger,
-                               msg: String,
-                               e: RecognitionException): Unit = {
+                       offendingSymbol: Anything,
+                       line: PosInteger,
+                       charPositionInLine: PosInteger,
+                       msg: String,
+                       e: RecognitionException): Unit = {
         success = false
         val token = offendingSymbol.asInstanceOf[Token]
         val start = token.getStartIndex

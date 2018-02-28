@@ -21,14 +21,12 @@ public class QueryEvaluation {
             Optional<AwasGraph> graph = AwasGraphBuilder.build(args[0]);
 
             if (graph.isPresent()) {
-
-                Map<String, String> res = graph.get().queryEvaluator(FileUtil.readFile(FileUtil.toUri(args[1]))._1());
-
+                Map<String, String> res = graph.get().queryEvaluator(
+                        FileUtil.readFile(FileUtil.toUri(args[1]))._1());
                 String result = res.entrySet()
                         .stream()
                         .map(entry -> "\n" + entry.getKey() + ":\n  " + entry.getValue() + "\n")
                         .collect(Collectors.joining("\n "));
-
                 FileUtil.writeFile(FileUtil.toUri(args[2]), result);
                 System.out.println("Results in file :" + FileUtil.toUri(args[2]));
             }

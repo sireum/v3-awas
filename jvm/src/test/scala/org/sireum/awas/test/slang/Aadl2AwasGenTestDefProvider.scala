@@ -1,6 +1,6 @@
 package org.sireum.awas.test.slang
 
-import org.sireum.awas.ast.PrettyPrinter
+import org.sireum.awas.ast.{Id, Node, PrettyPrinter}
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -46,6 +46,9 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   }
 
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
-    PrettyPrinter(Aadl2Awas(model))
+    Aadl2Awas(model) match {
+      case Some(x) => PrettyPrinter(x)
+      case None => ""
+    }
   }
 }
