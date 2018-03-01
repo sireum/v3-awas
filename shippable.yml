@@ -20,6 +20,7 @@ build:
   ci:
     - rm -rf sireum-v3
     - git clone -b master --recursive https://github.com/sireum/v3.git sireum-v3
+    - git clone https://github.com/sireum/aadl-slang-schema.git sireum-v3/aadl/skema
     - cd sireum-v3
     - ln -s ../ ./awas
     - ./bin/sbt-launch.sh "project awas-jvm" test
