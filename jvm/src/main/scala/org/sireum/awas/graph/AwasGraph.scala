@@ -25,95 +25,61 @@
 
 package org.sireum.awas.graph
 
-import org.jgrapht.Graph
-import org.sireum.awas.fptc.FlowEdge
 import org.sireum.util.CSet
 
 trait AwasGraph[Node] {
   self =>
-  type Edge = FlowEdge[Node]
 
-  def graph : Graph[Node, Edge]
+  type Edge <: AwasEdge[Node]
 
-  def nodes: Iterable[Node] = {
-    import scala.collection.JavaConverters._
-    graph.vertexSet().asScala
-  }
+  def nodes: Iterable[Node]
 
-  def numofNodes : Int = graph.vertexSet().size()
+  def numOfNodes: Int
 
-  def edges : Iterable[Edge] = {
-    import scala.collection.JavaConverters._
-    graph.edgeSet().asScala
-  }
+  def edges: Iterable[Edge]
 
-  def numOfEdges : Int = graph.edgeSet().size()
+  def numOfEdges: Int
 
-  def hasNode(n : Node): Boolean = graph.containsVertex(n)
+  def hasNode(n: Node): Boolean
 
   def getNode(n : Node) : Node
 
-  def hasEdge(n1 : Node, n2: Node) : Boolean= {
-    graph.containsEdge(n1, n2)
-  }
+  def hasEdge(n1: Node, n2: Node): Boolean
 
-  def getCycles : Set[Seq[Node]] = {
-    import org.jgrapht.alg.cycle._
+  def getCycles: Set[Seq[Node]]
 
-    import scala.collection.JavaConverters._
-    new SzwarcfiterLauerSimpleCycles(graph)
-      .findSimpleCycles().asScala.toSet.map((it: java.util.List[Node]) => it.asScala)
-  }
+  def getEdge(n1: Node, n2: Node): CSet[Edge]
 
-  def getEdge(n1 : Node, n2: Node) : CSet[Edge] = {
-    import scala.collection.JavaConverters._
-    graph.getAllEdges(n1, n2).asScala
-  }
+  def getEdges(n: Node): CSet[Edge]
 
-  def getEdge(n: Node): CSet[Edge] = {
-    import scala.collection.JavaConverters._
-    graph.edgesOf(n).asScala
-  }
+  def getIncomingEdges(node: Node): CSet[Edge]
 
-  def getIncomingEdges(node : Node) : CSet[Edge] = {
-    import scala.collection.JavaConverters._
-    graph.incomingEdgesOf(node).asScala
-  }
+  def getOutgoingEdges(node: Node): CSet[Edge]
 
-  def getOutgoingEdges(node : Node) : CSet[Edge] = {
-    import scala.collection.JavaConverters._
-    graph.outgoingEdgesOf(node).asScala
-  }
+  def getSuccessorNodes(node: Node): CSet[Node]
 
-  def getSuccessorNodes(node : Node) : CSet[Node] = {
-    import scala.collection.JavaConverters._
-    graph.outgoingEdgesOf(node).asScala.map(_.target)
-  }
+  def getPredecessorNodes(node: Node): CSet[Node]
 
-  def getPredecessorNodes(node : Node) : CSet[Node] = {
-    import scala.collection.JavaConverters._
-    graph.incomingEdgesOf(node).asScala.map(_.source)
-  }
-
+  def getAllPaths(source: Node, sink: Node): Set[Set[Node]]
 }
 
 trait AwasGraphUpdate[Node] {
   self : AwasGraph[Node] =>
 
-  def addNode(n : Node) : Node = {
-    graph.addVertex(n)
-    n
-  }
+  def addNode(n: Node): Node
 
   def addEdge (from : Node, to: Node) : Edge
 }
 
-trait AwasEdge[Node] {
-  def source : Node
-  def target : Node
+trait AwasEdgeFactory[Node, E] {
+  type Edge = E
+
+  def createEdge(owner: AwasGraph[Node],
+                 source: Node, target: Node): Edge
 }
 
+trait AwasEdge[T] {
+  def source: T
 
-
-
-
+  def target: T
+}

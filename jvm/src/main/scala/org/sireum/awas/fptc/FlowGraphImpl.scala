@@ -29,10 +29,11 @@ import java.io.StringWriter
 import java.util
 
 import org.jgrapht.Graph
+import org.jgrapht.alg.shortestpath.AllDirectedPaths
 import org.jgrapht.io._
-import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector.FlowCollector
+import org.sireum.awas.graph.JGraphTAwasGraphImpl
 import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -40,15 +41,15 @@ import org.sireum.util._
 class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
   self: FlowGraph[FlowNode] =>
 
-  type FEdge = FlowEdge[FlowNode]
-  override val graph: Graph[FlowNode, FEdge] = {
-    new DefaultDirectedGraph[FlowNode, FEdge](
-      (source: FlowNode, target: FlowNode) => FlowEdgeImpl(self, source, target)
-    )
-  }
+  val ef = new FlowEdgeFactory()
+
+  val superClass = new JGraphTAwasGraphImpl[FlowNode, FlowEdge[FlowNode]](ef)
+  override type Edge = FlowEdge[FlowNode]
+  val graph: Graph[FlowNode, FlowEdge[FlowNode]] = superClass.graph
+
   val H = SymbolTableHelper
 
-  protected val attProvider = new ComponentAttributeProvider[FlowNode] {
+  private var attProvider = new ComponentAttributeProvider[FlowNode] {
     override def getComponentAttributes(component: FlowNode): util.Map[String, Attribute] = {
       import scala.collection.JavaConverters._
       val res = mlinkedMapEmpty[String, Attribute]
@@ -57,26 +58,24 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
     }
   }
 
-  protected val nIdProvider = new StringComponentNameProvider[FlowNode] {
+  private var nIdProvider = new StringComponentNameProvider[FlowNode] {
     override def getName(component: FlowNode): FileResourceUri = {
       component.getUri.split(H.ID_SEPARATOR).last
     }
   }
 
-  protected val nlabelProvide = new StringComponentNameProvider[FlowNode] {
+  private var nlabelProvide = new StringComponentNameProvider[FlowNode] {
     override def getName(vertex: FlowNode): String = {
       var result = ""
       if (vertex.getUri.startsWith(SymbolTableHelper.COMPONENT_TYPE)) {
-        result += "{In Port|" + vertex.inPorts.map {
-          ip =>
-            val pname = ip.split(H.ID_SEPARATOR).last
-            "<" + pname + ">" + pname
+        result += "{In Port|" + vertex.inPorts.map { ip =>
+          val pname = ip.split(H.ID_SEPARATOR).last
+          "<" + pname + ">" + pname
         }.mkString("|") + "} |"
         result += SymbolTableHelper.COMPONENT_TYPE + "\n" + vertex.getUri.split(H.ID_SEPARATOR).last + "|"
-        result += "{Out Port|" + vertex.outPorts.map {
-          ip =>
-            val pname = ip.split(H.ID_SEPARATOR).last
-            "<" + pname + ">" + pname
+        result += "{Out Port|" + vertex.outPorts.map { ip =>
+          val pname = ip.split(H.ID_SEPARATOR).last
+          "<" + pname + ">" + pname
         }.mkString("|") + "} "
       } else {
         result = SymbolTableHelper.CONNECTION_TYPE + "\n" + vertex.getUri.split(H.ID_SEPARATOR).last
@@ -85,52 +84,52 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
     }
   }
 
-  protected val eAttrProvider = new ComponentAttributeProvider[FEdge] {
-    override def getComponentAttributes(component: FEdge): util.Map[String, Attribute] = {
+  private var eAttrProvider = new ComponentAttributeProvider[Edge] {
+    override def getComponentAttributes(component: Edge): util.Map[String, Attribute] = {
       import scala.collection.JavaConverters._
       val res = mlinkedMapEmpty[String, Attribute]
       if (component.source.isComponent) {
-        res("tailport") = new DefaultAttribute(component.sourcePort.get.split(H.ID_SEPARATOR).last, AttributeType.STRING)
+        res("tailport") =
+          new DefaultAttribute(component.sourcePort.get.split(H.ID_SEPARATOR).last, AttributeType.STRING)
       }
       if (component.target.isComponent) {
-        res("headport") = new DefaultAttribute(component.targetPort.get.split(H.ID_SEPARATOR).last, AttributeType.STRING)
+        res("headport") =
+          new DefaultAttribute(component.targetPort.get.split(H.ID_SEPARATOR).last, AttributeType.STRING)
       }
       res.asJava
     }
   }
 
-  private var portEdgeMap: IMap[ResourceUri, ISet[FEdge]] = imapEmpty[ResourceUri, ISet[FEdge]]
+  private var portEdgeMap: IMap[ResourceUri, ISet[Edge]] = imapEmpty[ResourceUri, ISet[Edge]]
   private var portNodeMap: IMap[ResourceUri, FlowNode] = imapEmpty[ResourceUri, FlowNode]
   private var edgePortsMap: IMap[Edge, (ResourceUri, ResourceUri)] = imapEmpty[Edge, (ResourceUri, ResourceUri)]
 
   override def toDot: String = {
-    val de = new DOTExporter[FlowNode, FEdge](nIdProvider,
-      nlabelProvide, null,
-      this.attProvider, eAttrProvider)
+    val de = new DOTExporter[FlowNode, Edge](nIdProvider, nlabelProvide, null, this.attProvider, eAttrProvider)
     val sw = new StringWriter()
     de.exportGraph(graph, sw)
     sw.toString
   }
 
-  def addPortEdge(port: ResourceUri, edge: FEdge): Unit = {
-    portEdgeMap += port -> (portEdgeMap.getOrElse(port, isetEmpty[FEdge]) + edge)
+  def addPortEdge(port: ResourceUri, edge: Edge): Unit = {
+    portEdgeMap += port -> (portEdgeMap.getOrElse(port, isetEmpty[Edge]) + edge)
   }
 
-  override def addEdge(from: FlowNode, to: FlowNode): FlowEdgeImpl = {
-    val edge = FlowEdgeImpl(self, from, to)
+  override def addEdge(from: FlowNode, to: FlowNode): Edge = {
+    val edge = new FlowEdgeFactory().createEdge(self, from, to)
     graph.addEdge(from, to, edge)
     edge
   }
 
   override def addNode(n: FlowNode): FlowNode = {
-    n.ports.foreach { p => portNodeMap += (p -> n) }
+    n.ports.foreach { p =>
+      portNodeMap += (p -> n)
+    }
     graph.addVertex(n)
     n
   }
 
-  override def addEdgePortRelation(edge: FlowEdge[FlowNode],
-                                   source: ResourceUri,
-                                   target: ResourceUri): Unit = {
+  override def addEdgePortRelation(edge: FlowEdge[FlowNode], source: ResourceUri, target: ResourceUri): Unit = {
     assert(!edgePortsMap.contains(edge))
     edgePortsMap += (edge -> (source, target))
   }
@@ -146,8 +145,8 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
     }
   }
 
-  override def getEdgeForPort(port: ResourceUri): Set[FEdge] =
-    portEdgeMap.getOrElse(port, isetEmpty[FEdge])
+  override def getEdgeForPort(port: ResourceUri): Set[Edge] =
+    portEdgeMap.getOrElse(port, isetEmpty[Edge])
 
   override def getEdges(sourcePort: ResourceUri, targetPort: ResourceUri): ISet[Edge] = {
     var res = isetEmpty[Edge]
@@ -169,23 +168,24 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
         var res = isetEmpty[ResourceUri]
         var edges = isetEmpty[Edge]
 
-        getEdgeForPort(port).foreach {
-          e =>
-            e.targetPort match {
-              case Some(x) => {
-                res = res + x
-                edges = edges + e
-              }
-              case _ =>
+        getEdgeForPort(port).foreach { e =>
+          e.targetPort match {
+            case Some(x) => {
+              res = res + x
+              edges = edges + e
             }
+            case _ =>
+          }
         }
         FlowCollector(res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
       }
     } else {
-      FlowCollector(isetEmpty[ResourceUri],
+      FlowCollector(
+        isetEmpty[ResourceUri],
         isetEmpty[Edge],
         isetEmpty[ResourceUri],
-        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port))
+        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port)
+      )
     }
   }
 
@@ -211,16 +211,83 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
         node.get.flowBackward(port)
       }
     } else {
-      FlowCollector(isetEmpty[ResourceUri],
+      FlowCollector(
+        isetEmpty[ResourceUri],
         isetEmpty[Edge],
         isetEmpty[ResourceUri],
-        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port))
+        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port)
+      )
     }
+  }
+
+  override def getAllPathsNodes(source: FlowNode, sink: FlowNode): Set[Seq[FlowNode]] = {
+    import scala.collection.JavaConverters._
+    val allGraphPath = new AllDirectedPaths[FlowNode, Edge](graph)
+    val pathNodes = allGraphPath.getAllPaths(source, sink, true, null).asScala.map(_.getVertexList.asScala.toSeq)
+    pathNodes.toSet
+  }
+
+  override def getAllPathsEdges(source: FlowNode, sink: FlowNode): Set[Seq[Edge]] = {
+    import scala.collection.JavaConverters._
+    val allGraphPath = new AllDirectedPaths[FlowNode, Edge](graph)
+    val pathNodes = allGraphPath.getAllPaths(source, sink, true, null).asScala.map(_.getEdgeList.asScala.toSeq)
+    pathNodes.toSet
   }
 
   override def getPortsFromEdge(edge: Edge): Option[(ResourceUri, ResourceUri)] = {
     edgePortsMap.get(edge)
   }
+
+  override def nodes: Iterable[FlowNode] = {
+    val nds = superClass.nodes
+    nds
+  }
+
+  override def numOfNodes: Natural = superClass.numOfNodes
+
+  override def edges: Iterable[Edge] = superClass.edges.map(_.asInstanceOf[Edge])
+
+  override def numOfEdges: Natural = superClass.numOfEdges
+
+  override def hasNode(n: FlowNode): Boolean = superClass.hasNode(n)
+
+  override def hasEdge(n1: FlowNode, n2: FlowNode): Boolean = superClass.hasEdge(n1, n2)
+
+  override def getCycles: Set[Seq[FlowNode]] = superClass.getCycles
+
+  override def getEdge(n1: FlowNode, n2: FlowNode): CSet[FlowEdge[FlowNode]] =
+    superClass.getEdge(n1, n2)
+
+  override def getEdges(n: FlowNode): CSet[FlowEdge[FlowNode]] =
+    superClass.getEdges(n)
+
+  override def getIncomingEdges(node: FlowNode): CSet[FlowEdge[FlowNode]] =
+    superClass.getIncomingEdges(node)
+
+  override def getOutgoingEdges(node: FlowNode): CSet[FlowEdge[FlowNode]] =
+    superClass.getOutgoingEdges(node)
+
+  override def getSuccessorNodes(node: FlowNode): CSet[FlowNode] =
+    superClass.getSuccessorNodes(node)
+
+  override def getPredecessorNodes(node: FlowNode): CSet[FlowNode] =
+    superClass.getPredecessorNodes(node)
+
+  override def getAllPaths(source: FlowNode, sink: FlowNode): Set[Set[FlowNode]] = superClass.getAllPaths(source, sink)
+
+  override def setNodeAttProvider(nodeAtt: ComponentAttributeProvider[FlowNode]): Unit = {
+    this.attProvider = nodeAtt
+  }
+
+  override def setNodeIdProvider(nodeId: StringComponentNameProvider[FlowNode]): Unit = {
+    this.nIdProvider = nodeId
+  }
+
+  override def setNodeLabelProvider(nodeLabel: StringComponentNameProvider[FlowNode]): Unit = {
+    this.nlabelProvide = nodeLabel
+  }
+
+  override def setEdgeAttrProvider(edgeAtt: ComponentAttributeProvider[FlowEdge[FlowNode]]): Unit = {
+    this.eAttrProvider = edgeAtt
+  }
 }
-
-

@@ -1,13 +1,13 @@
 package org.sireum.awas.witness
 
-import java.io.{File, OutputStream, OutputStreamWriter}
+import java.io.File
 import java.net.URL
 import java.nio.file.{Files, Path, Paths}
-import java.util.jar.{JarEntry, JarFile}
+import java.util.jar.JarFile
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.collector.{Collector, ResultType}
-import org.sireum.awas.fptc.FlowGraph
+import org.sireum.awas.fptc.{FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryPPrinter, QueryStmt}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.util._
@@ -15,9 +15,6 @@ import org.sireum.util.jvm.FileUtil
 import org.sireum.util.jvm.FileUtil._
 
 import scala.collection.JavaConverters._
-import scala.tools.nsc.JarRunner
-import scala.tools.nsc.classpath.FileUtils
-import scala.tools.nsc.io.Jar
 
 object Visualizer {
   def main(args: Array[String]): Unit = {
@@ -107,7 +104,7 @@ object Visualizer {
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         val st = SymbolTable(m)
         val graph = FlowGraph(m, st)
-        val graphVar = "var graph = `" + SvgGenerator(graph) + "`;\n"
+        val graphVar = "var graph = `" + SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode]]) + "`;\n"
         result = result + graphVar
         QueryBuilder(readFile(FileUtil.toUri(queryFile))._1) match {
           case None =>

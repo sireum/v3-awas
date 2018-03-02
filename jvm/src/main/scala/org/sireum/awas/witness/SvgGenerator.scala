@@ -1,26 +1,22 @@
 package org.sireum.awas.witness
 
-import java.io.StringWriter
 import java.util
 
 import org.jgrapht.io._
-import org.sireum.awas.ast.PrettyPrinter
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
-import org.sireum.awas.symbol.{Resource, SymbolTableHelper}
+import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
+import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{FileResourceUri, IMap, mlinkedMapEmpty, ilistEmpty}
+import org.sireum.util.{FileResourceUri, IMap, ilistEmpty, mlinkedMapEmpty}
 
 import scalatags.Text.all._
 
 object SvgGenerator {
-  def apply(graph: FlowGraph[FlowNode]): String = {
-    val de = new DOTExporter[FlowNode, Edge](nIdProvider,
-      nlabelProvide, null,
-      attProvider, eAttrProvider)
-    val sw = new StringWriter()
-    de.exportGraph(graph.graph, sw)
-    //TODO: avoid replaces, write your own dot exporter
-    sw.toString
+  def apply(graph: FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode]): String = {
+    graph.setNodeAttProvider(attProvider)
+    graph.setNodeIdProvider(nIdProvider)
+    graph.setEdgeAttrProvider(eAttrProvider)
+    graph.setNodeLabelProvider(nlabelProvide)
+    graph.toDot.toString
       .replaceAll("label=\"<<", "label=<<")
       .replaceAll(">>\"", ">>")
       .replace("strict digraph G {", "strict digraph G { \n rankdir=TB; ")

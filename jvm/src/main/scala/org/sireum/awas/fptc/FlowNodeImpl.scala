@@ -25,15 +25,15 @@
 
 package org.sireum.awas.fptc
 
-import org.sireum.awas.ast.Node
 import org.sireum.awas.collector.CollectorErrorHelper._
-import org.sireum.awas.collector.{FlowErrorNextCollector, FlowCollector}
+import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.graph.{AwasEdgeFactory, AwasGraph}
 import org.sireum.awas.symbol._
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit reporter: AccumulatingTagReporter) extends
-  BasicNodeImpl(uri, st) with FlowNode with FptcNodeUpdate {
+final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit reporter: AccumulatingTagReporter)
+  extends BasicNodeImpl(uri, st) with FlowNode with FptcNodeUpdate {
 
   self: FlowNode =>
 
@@ -48,6 +48,7 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
   //initialized with no error
   var fptcPropagation: Map[ResourceUri, ISet[ResourceUri]] =
     ports.map(_ -> isetEmpty[ResourceUri]).toMap
+
   //adding initial state
   var fptcState: ISet[ResourceUri] = {
     if (uriType == H.COMPONENT_TYPE) {
@@ -56,8 +57,7 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
       } else {
         isetEmpty[ResourceUri]
       }
-    }
-    else isetEmpty[ResourceUri]
+    } else isetEmpty[ResourceUri]
   }
 
   override def addFptcPropagation(port: ResourceUri, error_type: ResourceUri): Unit = {
@@ -98,12 +98,9 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     }
   }
 
-
-
   override def getFptcPropagation(port: ResourceUri): Set[ResourceUri] = fptcPropagation(port)
 
-  private def getCompFlowError(tuple: (ResourceUri, ResourceUri),
-                               isForward: Boolean): FlowErrorNextCollector = {
+  private def getCompFlowError(tuple: (ResourceUri, ResourceUri), isForward: Boolean): FlowErrorNextCollector = {
     //flows are defined, but may not be complete
     //in forward we care only the path and sink
     require(isComponent && compST.isDefined, "object state is not satisfying the requirment")
@@ -130,8 +127,11 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
 
       if (!found && compST.get.port(tuple._1).isDefined) { //if flow is not defined for this port and error
         val port = compST.get.port(tuple._1).get
-        errors += errorMessageGen(INSUFFICIENT_FLOW_INFO_ERROR,
-          tuple._1 + ", " + tuple._2, ReachAnalysisStage.FlowError)
+        errors += errorMessageGen(
+          INSUFFICIENT_FLOW_INFO_ERROR,
+          tuple._1 + ", " + tuple._2,
+          ReachAnalysisStage.FlowError
+        )
         val tos = if (isForward) flowForward(tuple._1) else flowBackward(tuple._1)
         errors ++= tos.errors
         flows ++= tos.flows
@@ -147,8 +147,7 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors)
   }
 
-  private def getConnFlowError(tuple: (ResourceUri, ResourceUri),
-                               isForward: Boolean): FlowErrorNextCollector = {
+  private def getConnFlowError(tuple: (ResourceUri, ResourceUri), isForward: Boolean): FlowErrorNextCollector = {
     var result = isetEmpty[(ResourceUri, ResourceUri)]
     var flows = isetEmpty[ResourceUri]
     var errors = isetEmpty[Tag]
@@ -171,8 +170,11 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
       }
       if (!found) {
         //propagate on the conservative step
-        errors += errorMessageGen(INSUFFICIENT_FLOW_INFO_ERROR,
-          tuple._1 + ", " + tuple._2, ReachAnalysisStage.FlowError)
+        errors += errorMessageGen(
+          INSUFFICIENT_FLOW_INFO_ERROR,
+          tuple._1 + ", " + tuple._2,
+          ReachAnalysisStage.FlowError
+        )
         result ++= ports.map(op => (op, tuple._2))
       }
     } else {
@@ -182,14 +184,13 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
     FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors)
   }
 
-  private def errorFlowNext(tuple: (ResourceUri, ResourceUri),
-                            isForward: Boolean): FlowErrorNextCollector = {
+  private def errorFlowNext(tuple: (ResourceUri, ResourceUri), isForward: Boolean): FlowErrorNextCollector = {
 
-      if (isComponent && compST.isDefined) {
-        getCompFlowError(tuple, isForward)
-      } else {
-        getConnFlowError(tuple, isForward)
-      }
+    if (isComponent && compST.isDefined) {
+      getCompFlowError(tuple, isForward)
+    } else {
+      getConnFlowError(tuple, isForward)
+    }
   }
 
   override def flowForward(port: ResourceUri): FlowCollector = {
@@ -208,9 +209,7 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
       //we know, if we are performing a forward analysis,
       // and calculating intra flow(this method), then given port is input
       if (isForward) result ++= outPorts else result ++= inPorts
-      errors = errors + warningMessageGen(FLOW_INFO_MISSING,
-        uri,
-        ReachAnalysisStage.Port)
+      errors = errors + warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.Port)
 
       FlowCollector(result, edges, flows, errors)
     } else {
@@ -225,17 +224,13 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
             if (compST.get.flow(f).fromPortUri.isDefined)
               result = result + compST.get.flow(f).fromPortUri.get
           } else {
-            errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO,
-              port,
-              ReachAnalysisStage.Port)
+            errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, port, ReachAnalysisStage.Port)
           }
         }
       } else if (!isComponent && connST.isDefined && H.isPort(port)) {
         if (isForward) result ++= outPorts else result ++= inPorts
       } else {
-        errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO,
-          port,
-          ReachAnalysisStage.Port)
+        errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, port, ReachAnalysisStage.Port)
       }
       FlowCollector(result, edges, flows, errors)
     }
@@ -255,27 +250,48 @@ final case class FlowNodeImpl(uri: ResourceUri, st: SymbolTable)(implicit report
 
 }
 
-final case class FlowEdgeImpl(owner: FlowGraph[FlowNode],
-                              source: FlowNode,
-                              target: FlowNode) extends FlowEdge[FlowNode] {
-  self: FlowEdge[FlowNode] =>
-  //either source or target should be a connection
-  val conn: FlowNode = if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
-    source else target
+class FlowEdgeFactory extends AwasEdgeFactory[FlowNode, FlowEdge[FlowNode]] {
 
-  val isSourceConn : Boolean = conn == source
+  def createFlowEdge(owner: FlowGraph[FlowNode],
+                     source: FlowNode, target: FlowNode): FlowEdge[FlowNode] = {
+    FlowEdgeImpl(owner, source, target)
+  }
 
-  override def sourcePort: Option[ResourceUri] = {
-    owner.getPortsFromEdge(this) match {
-      case Some(x) => Some(x._1)
-      case None => None
+  case class FlowEdgeImpl(
+                           owner: FlowGraph[FlowNode],
+                           override val source: FlowNode,
+                           override val target: FlowNode
+                         ) extends FlowEdge[FlowNode] {
+    self: FlowEdge[FlowNode] =>
+
+    //either source or target should be a connection
+    val conn: FlowNode =
+      if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
+        source
+      else target
+
+    val isSourceConn: Boolean = conn == source
+
+    override def sourcePort: Option[ResourceUri] = {
+      owner.getPortsFromEdge(this) match {
+        case Some(x) => Some(x._1)
+        case None => None
+      }
+    }
+
+    override def targetPort: Option[ResourceUri] = {
+      owner.getPortsFromEdge(this) match {
+        case Some(x) => Some(x._2)
+        case None => None
+      }
     }
   }
 
-  override def targetPort: Option[ResourceUri] = {
-    owner.getPortsFromEdge(this) match {
-      case Some(x) => Some(x._2)
-      case None => None
-    }
+  override type Edge = FlowEdge[FlowNode]
+
+  override def createEdge(owner: AwasGraph[FlowNode],
+                          source: FlowNode, target: FlowNode)
+  : FlowEdge[FlowNode] = {
+    createFlowEdge(owner.asInstanceOf[FlowGraph[FlowNode]], source, target)
   }
 }

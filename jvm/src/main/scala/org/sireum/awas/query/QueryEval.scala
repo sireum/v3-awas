@@ -33,7 +33,7 @@ import org.sireum.awas.query.ConstraintKind.ConstraintKind
 import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{IMap, ISet, _}
+import org.sireum.util.{ISet, _}
 
 object QueryEval {
   type Result = Map[String, Collector]
@@ -413,6 +413,9 @@ final class QueryEval(graph: FlowGraph[FlowNode], st: SymbolTable) {
           case _ => Collector(st, graph)
         }
       } else {
+        val nodes: Set[FlowNode] = graph.nodes.toSet
+        val filtered = nodes.filter(_.getUri.endsWith(H.ID_SEPARATOR + n.ids(0).value))
+        val mapped = filtered.map(_.getUri).toSet
         Collector(st,
           graph, Some(ResultType.Node), Some(Operator.ID),
           graph.nodes.filter(_.getUri.endsWith(H.ID_SEPARATOR + n.ids(0).value)).map(_.getUri).toSet,

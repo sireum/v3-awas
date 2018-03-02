@@ -8,7 +8,7 @@ public class AwasWitnessVisualizer {
         //"/workspace-v3/sireum-v3/awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.awas"
         //"awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.awas"
         //"awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.aq"
-        //"~/output"
+        //"~/output/" note the ending slash
         if (args.length == 3) {
             Visualizer.main(args);
         } else {

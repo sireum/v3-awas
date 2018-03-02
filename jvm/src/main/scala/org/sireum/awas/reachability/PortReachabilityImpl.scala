@@ -25,7 +25,6 @@
 
 package org.sireum.awas.reachability
 
-import org.jgrapht.alg.shortestpath.AllDirectedPaths
 import org.sireum.awas.collector.CollectorErrorHelper.{MISSING_CRITERIA, ReachAnalysisStage, errorMessageGen}
 import org.sireum.awas.collector.{Collector, CollectorErrorHelper, FlowCollector, ResultType}
 import org.sireum.awas.fptc.FlowNode.Edge
@@ -166,7 +165,6 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
   }
 
   def reachPathWith(source: ResourceUri, target: ResourceUri, constraint: ConstraintExpr): Collector = {
-    import scala.collection.JavaConverters._
     if (isNode(source) || isNode(target)) {
       nodeReachPath(source, target, Some(constraint))
     }
@@ -174,18 +172,16 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
       val snode = graph.getNode(source)
       val tnode = graph.getNode(target)
       if (snode.isDefined && tnode.isDefined) {
-        val allGraphPath = new AllDirectedPaths[FlowNode, graph.Edge](graph.graph)
         val scc = graph.getCycles.map(_.toSet)
         val sccPorts = scc.map(getPortsFromNodes)
         var pathPorts = isetEmpty[(ISet[Edge], ISet[ResourceUri])]
         if (snode.get != tnode.get) {
-          allGraphPath.getAllPaths(snode.get, tnode.get, true, null)
-            .asScala.map(_.getEdgeList.asScala.toSet).toSet.foreach { it: ISet[Edge] =>
-            val tempPorts = it.flatMap(_.sourcePort) union it.flatMap(_.targetPort)
+          graph.getAllPathsEdges(snode.get, tnode.get).foreach { it: Seq[Edge] =>
+            val tempPorts = (it.flatMap(_.sourcePort) union it.flatMap(_.targetPort)).toSet
             val start = if (H.isInPort(source)) graph.getSuccessorPorts(source).ports else isetEmpty[ResourceUri] + source
             val end = if (H.isOutPort(target)) graph.getPredecessorPorts(target).ports else isetEmpty[ResourceUri] + target
             if (tempPorts.intersect(start).nonEmpty && tempPorts.intersect(end).nonEmpty) {
-              pathPorts = pathPorts.+((it, tempPorts))
+              pathPorts = pathPorts.+((it.toSet, tempPorts))
             }
           }
         } else {
@@ -221,25 +217,22 @@ class PortReachabilityImpl[Node](st: SymbolTable, graph: FlowGraph[FlowNode]) ex
     * @return collector with set of paths
     */
   def reachPath(source: ResourceUri, target: ResourceUri): Collector = {
-    import scala.collection.JavaConverters._
     if (isNode(source) || isNode(target)) {
       nodeReachPath(source, target, None)
     } else {
       val snode = graph.getNode(source)
       val tnode = graph.getNode(target)
       if (snode.isDefined && tnode.isDefined) {
-        val allGraphPath = new AllDirectedPaths[FlowNode, graph.Edge](graph.graph)
         val scc = graph.getCycles.map(_.toSet)
         val sccPorts = scc.map(getPortsFromNodes)
         var pathPorts = isetEmpty[(ISet[Edge], ISet[ResourceUri])]
         if (snode.get != tnode.get) {
-          allGraphPath.getAllPaths(snode.get, tnode.get, true, null)
-            .asScala.map(_.getEdgeList.asScala.toSet).toSet.foreach { it: ISet[Edge] =>
-            val tempPorts = it.flatMap(_.sourcePort) union it.flatMap(_.targetPort)
+          graph.getAllPathsEdges(snode.get, tnode.get).foreach { it: Seq[Edge] =>
+            val tempPorts = (it.flatMap(_.sourcePort) union it.flatMap(_.targetPort)).toSet
             val start = if (H.isInPort(source)) graph.getSuccessorPorts(source).ports else isetEmpty[ResourceUri] + source
             val end = if (H.isOutPort(target)) graph.getPredecessorPorts(target).ports else isetEmpty[ResourceUri] + target
             if (tempPorts.intersect(start).nonEmpty && tempPorts.intersect(end).nonEmpty) {
-              pathPorts = pathPorts.+((it, tempPorts))
+              pathPorts = pathPorts.+((it.toSet, tempPorts))
             }
           }
         } else {

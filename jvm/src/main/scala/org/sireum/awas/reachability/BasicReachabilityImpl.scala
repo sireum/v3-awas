@@ -25,7 +25,6 @@
 
 package org.sireum.awas.reachability
 
-import org.jgrapht.GraphPath
 import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector._
 import org.sireum.awas.fptc.FlowNode.Edge
@@ -123,15 +122,12 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode]) extends
     * @return a [[ISet]] of Paths, each path consists of a set of nodes
     */
   def reachPath(source: FlowNode, target: FlowNode): Collector = {
-    import org.jgrapht.alg.shortestpath._
 
-    import scala.collection.JavaConverters._
     if (source != target) {
-      val allGraphPath = new AllDirectedPaths[FlowNode, graph.Edge](graph.graph)
+
       val scc = graph.getCycles.map(_.toSet).toSet
 
-      val pathNodes = allGraphPath.getAllPaths(source, target, true, null).
-        asScala.map(_.getVertexList.asScala.toSet)
+      val pathNodes = graph.getAllPaths(source, target)
 
       val temp = pathNodes.map(it => (it, scc.filter(_.intersect(it).nonEmpty).filterNot(it2 => it.subsetOf(it2))
         .foldLeft(isetEmpty[FlowNode])((c, n) => c.union(n)).union(it))).toMap
