@@ -5,7 +5,9 @@ import org.jgrapht.alg.shortestpath.AllDirectedPaths
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.util.CSet
 
-class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]](ef: AwasEdgeFactory[Node, EdgeT]) extends AwasGraph[Node] {
+class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]]
+(ef: AwasEdgeFactory[Node, EdgeT])
+  extends AwasGraph[Node] {
   self: AwasGraph[Node] =>
   override type Edge = EdgeT
 
