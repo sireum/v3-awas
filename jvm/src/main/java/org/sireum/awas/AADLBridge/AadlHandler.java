@@ -20,4 +20,11 @@ public class AadlHandler {
                                        String output) {
         Aadl2Awas.generateVisualizer(awasFile, queryFile, output);
     }
+
+    public static void generateWitness(String awasFile,
+                                       String queryFile,
+                                       String output,
+                                       String sireumJarLoc) {
+        Aadl2Awas.generateVisualizer(awasFile, queryFile, output, sireumJarLoc);
+    }
 }
