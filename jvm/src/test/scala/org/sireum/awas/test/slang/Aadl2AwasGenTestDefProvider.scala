@@ -1,6 +1,6 @@
 package org.sireum.awas.test.slang
 
-import org.sireum.awas.ast.{Id, Node, PrettyPrinter}
+import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -11,8 +11,8 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
   val testDirs = Seq(makePath("..", "example", "aadl-json"))
 
-  val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
-  val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
+  val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "codegen")))
+  val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "codegen")))
 
   val generateExpected = true
 

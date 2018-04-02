@@ -1,6 +1,6 @@
 package org.sireum.awas.AADLBridge;
 
-import org.sireum.aadl.skema.ast.Aadl;
+import org.sireum.aadl.ir.Aadl;
 import org.sireum.awas.ast.Model;
 import org.sireum.awas.ast.PrettyPrinter;
 import org.sireum.awas.slang.Aadl2Awas;

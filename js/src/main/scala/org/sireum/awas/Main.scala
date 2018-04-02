@@ -7,12 +7,12 @@ import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
 import org.sireum.common.JSutil._
 import org.sireum.util.{imapEmpty, _}
-
-import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import scalatags.Text
 import scalatags.Text.all.{id, _}
 import scalatags.Text.tags2.nav
+
+import scala.scalajs.js
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
 @JSExportTopLevel("org.sireum.awas.Main")
 object Main {
@@ -223,8 +223,6 @@ object Main {
       //      if(tempUri.startsWith("Error")) {
       //        allLinks(i).asInstanceOf[Anchor].firstElementChild.setAttribute("fill", "#e6e6e6")
       //      }
-
-
       if (tempUri.startsWith("Edge")) {
         //        allLinks(i).asInstanceOf[Element].firstElementChild.setAttribute("stroke", "#a6a6a6")
         allLinks(i).asInstanceOf[Anchor].firstElementChild.setAttribute("opacity", ".2")

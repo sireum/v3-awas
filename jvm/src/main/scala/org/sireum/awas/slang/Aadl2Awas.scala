@@ -1,7 +1,7 @@
 package org.sireum.awas.slang
 
-import org.sireum.aadl.skema.ast
-import org.sireum.aadl.skema.ast.Emv2Clause
+import org.sireum.aadl._
+import org.sireum.aadl.ir.Emv2Clause
 import org.sireum.awas.ast._
 import org.sireum.awas.witness.Visualizer
 import org.sireum.util._
@@ -10,11 +10,11 @@ import org.sireum.util._
 final class Aadl2Awas private() {
   var typeDecls = Node.emptySeq[TypeDecl]
 
-  def build(aadl: ast.Aadl): Model = {
+  def build(aadl: ir.Aadl): Model = {
     typeDecls = typeDecls ++ aadl.errorLib.elements.map(build).toVector
     val (comps, conns) = mineComponents(aadl.components.elements)
-    val tcomp: Node.Seq[ComponentDecl] = comps.flatMap { it: ast.Component => build(it) }.toVector
-    val tconn: Node.Seq[ConnectionDecl] = conns.flatMap { it: ast.Connection => build(it) }.toVector
+    val tcomp: Node.Seq[ComponentDecl] = comps.flatMap { it: ir.Component => build(it) }.toVector
+    val tconn: Node.Seq[ConnectionDecl] = conns.flatMap { it: ir.Connection => build(it) }.toVector
 
     val r = Model(typeDecls,
       Node.emptySeq[StateMachineDecl],
@@ -25,7 +25,7 @@ final class Aadl2Awas private() {
     r
   }
 
-  def build(errorLib: ast.Emv2Library): TypeDecl = {
+  def build(errorLib: ir.Emv2Library): TypeDecl = {
     EnumDecl(buildId(errorLib.name.name.elements.last.value),
       Node.emptySeq[Name],
       errorLib.tokens.elements.map(_.value).map(buildId).toVector)
@@ -39,11 +39,11 @@ final class Aadl2Awas private() {
     Id(id)
   }
 
-  def mineComponents(comps: Seq[ast.Component])
-  : (Set[ast.Component], Set[ast.Connection]) = {
-    var components = isetEmpty[ast.Component]
-    var connections = isetEmpty[ast.Connection]
-    var workList = ilistEmpty[ast.Component]
+  def mineComponents(comps: Seq[ir.Component])
+  : (Set[ir.Component], Set[ir.Connection]) = {
+    var components = isetEmpty[ir.Component]
+    var connections = isetEmpty[ir.Connection]
+    var workList = ilistEmpty[ir.Component]
 
     workList = workList ++ comps
 
@@ -59,7 +59,7 @@ final class Aadl2Awas private() {
     (components, connections)
   }
 
-  def build(comp: ast.Component): Option[ComponentDecl] = {
+  def build(comp: ir.Component): Option[ComponentDecl] = {
     if (comp.identifier.name.nonEmpty) {
       Some(ComponentDecl(
         buildId(comp.identifier.name.elements.last.value),
@@ -73,7 +73,7 @@ final class Aadl2Awas private() {
     } else None
   }
 
-  def build(conn: ast.Connection): Option[ConnectionDecl] = {
+  def build(conn: ir.Connection): Option[ConnectionDecl] = {
     if (conn.name.name.nonEmpty) {
       val id = buildId(conn.name.name.elements.last.value)
       val srcComp = buildName(conn.src.component.name.elements.last.value)
@@ -85,7 +85,7 @@ final class Aadl2Awas private() {
     } else None
   }
 
-  def getWiths(annexs: Seq[ast.Annex]): Node.Seq[Name] = {
+  def getWiths(annexs: Seq[ir.Annex]): Node.Seq[Name] = {
     var withs = Node.emptySeq[Name]
     annexs.foreach { annex =>
       if (annex.name.value == "Emv2") {
@@ -96,22 +96,22 @@ final class Aadl2Awas private() {
     withs
   }
 
-  def build(feature: ast.Feature): Seq[Port] = {
+  def build(feature: ir.Feature): Seq[Port] = {
     var portId = feature.identifier.name.elements.last.value
-    if (feature.category == ast.FeatureCategory.BusAccess) {
+    if (feature.category == ir.FeatureCategory.BusAccess) {
       portId = portId + "__BUS_"
     }
-    if (feature.direction == ast.Direction.InOut) {
+    if (feature.direction == ir.Direction.InOut) {
       Seq(Port(isIn = true, buildId(portId + "IN"), None),
         Port(isIn = false, buildId(portId + "OUT"), None))
-    } else if (feature.direction == ast.Direction.In) {
+    } else if (feature.direction == ir.Direction.In) {
       Seq(Port(isIn = true, buildId(portId), None))
     } else {
       Seq(Port(isIn = false, buildId(portId), None))
     }
   }
 
-  def getPropagations(annex: ast.Annex): Node.Seq[Propagation] = {
+  def getPropagations(annex: ir.Annex): Node.Seq[Propagation] = {
     var prop = isetEmpty[Propagation]
     if (annex.name.value == "Emv2") {
       val clause = annex.clause.asInstanceOf[Emv2Clause]
@@ -120,7 +120,7 @@ final class Aadl2Awas private() {
     prop.toVector
   }
 
-  def getPropagation(prop: ast.Emv2Propagation): Propagation = {
+  def getPropagation(prop: ir.Emv2Propagation): Propagation = {
     val id = buildId(prop.propagationPoint.elements.last.value)
     val errors = prop.errorTokens.elements.map { et =>
       Fault(buildName(et.value))
@@ -128,7 +128,7 @@ final class Aadl2Awas private() {
     Propagation(id, errors.toVector)
   }
 
-  def getFlows(comp: ast.Component): Node.Seq[Flow] = {
+  def getFlows(comp: ir.Component): Node.Seq[Flow] = {
     var flows = isetEmpty[Flow]
     comp.flows.foreach { flow =>
       val id = buildId(flow.name.name.elements.last.value)
@@ -179,12 +179,12 @@ final class Aadl2Awas private() {
 }
 
 object Aadl2Awas {
-  def apply(aadlModel: ast.Aadl): Model = {
+  def apply(aadlModel: ir.Aadl): Model = {
     new Aadl2Awas().build(aadlModel)
   }
 
   def apply(json: String): Option[Model] = {
-    val aadl = org.sireum.aadl.skema.ast.JSON.toAadl(json)
+    val aadl = org.sireum.aadl.ir.JSON.toAadl(json)
     if(aadl.leftOpt.nonEmpty) {
       Some(new Aadl2Awas().build(aadl.left))
     } else None
