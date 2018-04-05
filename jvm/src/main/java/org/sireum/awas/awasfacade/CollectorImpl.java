@@ -1,17 +1,11 @@
 package org.sireum.awas.awasfacade;
 
-import org.sireum.awas.collector.Operator;
-import org.sireum.awas.collector.ResultType;
 import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
-import org.sireum.awas.fptc.FlowNode$;
-import org.sireum.awas.graph.AwasEdge;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.util.Tag;
 import scala.Enumeration;
-import scala.collection.JavaConverters$;
-import scala.collection.JavaConverters.*;
 
 import java.util.*;
 
@@ -41,8 +35,8 @@ public class CollectorImpl implements Collector {
     }
 
     @Override
-    public FlowGraph<FlowNode> getGraph() {
-        return collector.getGraph();
+    public Set<FlowGraph<FlowNode, FlowEdge<FlowNode>>> getGraph() {
+        return toJavaSet(collector.getGraphs());
     }
 
     @Override

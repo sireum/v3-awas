@@ -25,6 +25,7 @@
 
 package org.sireum.awas.awasfacade;
 
+import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
 import org.sireum.awas.query.Model;
@@ -37,7 +38,6 @@ import org.sireum.awas.reachability.PortReachability;
 import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTableHelper;
-import org.sireum.awas.util.AwasUtil;
 import org.sireum.awas.util.JavaConverters;
 
 import java.util.*;
@@ -48,7 +48,7 @@ import static org.sireum.awas.util.JavaConverters.*;
 
 
 public class AwasGraphImpl implements AwasGraph {
-    private FlowGraph<FlowNode> graph;
+    private FlowGraph<FlowNode, FlowEdge<FlowNode>> graph;
 
     private SymbolTable st;
 
@@ -56,7 +56,7 @@ public class AwasGraphImpl implements AwasGraph {
 
     private ErrorReachability<FlowNode> er;
 
-    public AwasGraphImpl(FlowGraph<FlowNode> graph, SymbolTable st) {
+    public AwasGraphImpl(FlowGraph<FlowNode, FlowEdge<FlowNode>> graph, SymbolTable st) {
         this.graph = graph;
         this.st = st;
         this.pr = PortReachability$.MODULE$.apply(graph, st);
@@ -138,7 +138,8 @@ public class AwasGraphImpl implements AwasGraph {
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.forwardErrorReach(
                 portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
-        return AwasUtil.toJavaMap(temp);
+        return toJavaMap(temp).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> toJavaSet(e.getValue())));
     }
 
     @Override
@@ -152,7 +153,8 @@ public class AwasGraphImpl implements AwasGraph {
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.backwardErrorReach(
                 portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
-        return AwasUtil.toJavaMap(temp);
+        return toJavaMap(temp).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> toJavaSet(e.getValue())));
     }
 
     public Map<String, String> queryEvaluator(String query) {
@@ -166,7 +168,7 @@ public class AwasGraphImpl implements AwasGraph {
     }
 
     @Override
-    public FlowGraph<FlowNode> getGraph() {
+    public FlowGraph<FlowNode, FlowEdge<FlowNode>> getGraph() {
         return graph;
     }
 

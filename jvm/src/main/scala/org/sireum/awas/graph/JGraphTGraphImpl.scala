@@ -5,11 +5,11 @@ import org.jgrapht.alg.shortestpath.AllDirectedPaths
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.util.CSet
 
-class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]]
-(ef: AwasEdgeFactory[Node, EdgeT])
-  extends AwasGraph[Node] {
-  self: AwasGraph[Node] =>
-  override type Edge = EdgeT
+class JGraphTGraphImpl[Node, Edge <: AwasEdge[Node]]
+(ef: AwasEdgeFactory[Node, Edge])
+  extends AwasGraph[Node, Edge] with AwasGraphUpdate[Node, Edge] {
+  self: AwasGraph[Node, Edge] =>
+  // override type Edge = EdgeT
 
   val graph: Graph[Node, Edge] = {
     new DefaultDirectedGraph[Node, Edge](
@@ -40,13 +40,13 @@ class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]]
     graph.containsEdge(n1, n2)
   }
 
-  def getCycles: Set[Seq[Node]] = {
-    import org.jgrapht.alg.cycle._
-
-    import scala.collection.JavaConverters._
-    new SzwarcfiterLauerSimpleCycles[Node, Edge](graph)
-      .findSimpleCycles().asScala.toSet.map((it: java.util.List[Node]) => it.asScala)
-  }
+  //  def getCycles: Set[Seq[Node]] = {
+  //    import org.jgrapht.alg.cycle._
+  //
+  //    import scala.collection.JavaConverters._
+  //    new SzwarcfiterLauerSimpleCycles[Node, Edge](graph)
+  //      .findSimpleCycles().asScala.toSet.map((it: java.util.List[Node]) => it.asScala)
+  //  }
 
   def getEdge(n1: Node, n2: Node): CSet[Edge] = {
     import scala.collection.JavaConverters._
@@ -78,7 +78,7 @@ class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]]
     graph.incomingEdgesOf(node).asScala.map(_.source)
   }
 
-  override def getAllPaths(source: Node, sink: Node):
+  def getAllPaths(source: Node, sink: Node):
   Set[Set[Node]] = {
     import scala.collection.JavaConverters._
     val allGraphPath = new AllDirectedPaths[Node, Edge](graph)
@@ -88,16 +88,26 @@ class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]]
   }
 
   override def getNode(n: Node): Node = n
+
+  override def addNode(n: Node): Node = {
+    graph.addVertex(n)
+    n
+  }
+
+  override def addEdge(from: Node, to: Node, data: Edge): Edge = {
+    graph.addEdge(from, to, data)
+    data
+  }
 }
 
-//object JGraphTAwasGraphImpl {
+//object JGraphTGraphImpl {
 //
 //}
-
-case class JGraphTAwasEdgeImpl[Node](src: Node, snk: Node) extends AwasEdge[Node] {
-  self: AwasEdge[Node] =>
-  override def source: Node = src
-
-  override def target: Node = snk
-}
+//
+//case class JGraphTAwasEdgeImpl[Node](src: Node, snk: Node) extends AwasEdge[Node] {
+//  self: AwasEdge[Node] =>
+//  override def source: Node = src
+//
+//  override def target: Node = snk
+//}
 

@@ -28,7 +28,7 @@ package org.sireum.awas.awasfacade;
 
 import org.sireum.awas.ast.Builder;
 import org.sireum.awas.ast.Model;
-import org.sireum.awas.example.ReachabilityExample;
+import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowGraph$;
 import org.sireum.awas.fptc.FlowNode;
@@ -39,13 +39,11 @@ import org.sireum.util.ConsoleTagReporter;
 import org.sireum.util.jvm.FileUtil;
 import scala.Some;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 public class AwasGraphBuilder {
 
-    public static Optional<AwasGraph> build(String path) throws Exception {
+    public static Optional<AwasGraph> build(String path) {
         Some<String> optUri = Some.apply(path);
 
         Optional<Model> modelOpt = JavaConverters.toJavaOptional(Builder.apply(optUri,
@@ -56,7 +54,7 @@ public class AwasGraphBuilder {
             SymbolTable st = SymbolTable$.MODULE$.apply(modelOpt.get(),
                     new ConsoleTagReporter());
             //build graph
-            FlowGraph<FlowNode> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
+            FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
 
             final AwasGraph ag = new AwasGraphImpl(graph, st);
             return Optional.of(ag);

@@ -7,7 +7,7 @@ import java.util.jar.JarFile
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.collector.{Collector, ResultType}
-import org.sireum.awas.fptc.{FlowGraph, FlowGraphUpdate, FlowNode}
+import org.sireum.awas.fptc._
 import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryPPrinter, QueryStmt}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.util._
@@ -104,7 +104,8 @@ object Visualizer {
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         val st = SymbolTable(m)
         val graph = FlowGraph(m, st)
-        val graphVar = "var graph = `" + SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode]]) + "`;\n"
+        val graphVar = "var graph = `" + SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowEdge[FlowNode]]
+          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]]) + "`;\n"
         result = result + graphVar
         QueryBuilder(readFile(FileUtil.toUri(queryFile))._1) match {
           case None =>

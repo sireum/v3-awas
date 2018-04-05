@@ -29,9 +29,10 @@ import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.fptc.FlowGraph
-import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryParser}
+import org.sireum.awas.query.{QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
+import org.sireum.message.Reporter
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util._
 import org.sireum.util.jvm.FileUtil._
@@ -85,10 +86,10 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     Builder(Some(relativeUri.toString), model) match {
       case None => ""
       case Some(m) =>
-        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-        val st = SymbolTable(m)
+        implicit val reporter: Reporter = new Reporter(org.sireum.ISZ())
+        val st = SymbolTable(m)(new AccumulatingTagReporter())
         val graph = FlowGraph(m, st)
-        QueryParser(query) match {
+        QueryParser(query, reporter) match {
           case None => ""
           case Some(q) =>
             val res = QueryEval(q, graph, st)

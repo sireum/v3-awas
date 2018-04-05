@@ -24,6 +24,7 @@
  */
 package org.sireum.awas.awasfacade;
 
+import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
 
@@ -50,7 +51,7 @@ public interface AwasGraph {
 
     Map<String, String> queryEvaluator(String query);
 
-    FlowGraph<FlowNode> getGraph();
+    FlowGraph<FlowNode, FlowEdge<FlowNode>> getGraph();
 
     String getDotGraph();
 }

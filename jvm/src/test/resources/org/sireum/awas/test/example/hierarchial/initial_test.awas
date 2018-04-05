@@ -1,0 +1,26 @@
+types
+  enum tokens {x, y}
+system Test
+  with tokens
+  ports
+    in A
+    out B
+  propagations
+    A = {x, y}
+    B = {x, y}
+  flows
+    a_b_prop : A{x, y} -> B{x, y}
+  sub-components {
+    Inner
+      ports
+        in inner_A
+        out inner_B
+    Inner2
+      ports
+        in inner2_A
+        out inner2_B
+  }
+  connections
+    A_innerA : A -> Inner.inner_A
+    inner_inner2 : Inner.inner_B -> Inner2.inner2_A
+    inner2B_B : Inner2.inner2_B -> B

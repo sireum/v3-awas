@@ -1,11 +1,14 @@
 package org.sireum.awas.test.slang
 
-import org.sireum.awas.ast.{Id, Node, PrettyPrinter}
+import org.sireum.awas.ast.PrettyPrinter
+import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.slang.Aadl2Awas
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
+import org.sireum.awas.witness.SvgGenerator
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.jvm.FileUtil._
-import org.sireum.util.{FileResourceUri, ISeq, Uri}
+import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq, Uri}
 
 class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
@@ -19,17 +22,16 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   val outputExtension = ".awas"
 
   override def testDefs: ISeq[TestDef] = {
-    println("test")
     val files = testDirs.flatMap { d =>
       listFiles(fileUri(this.getClass, d), ".json")
     }
-    println(files)
 
     //equals test by excluding some
-    val filesEqual = files // not excluding any
+    val filesEqual = files.filter { p =>
+      p.toLowerCase.contains("json")
+    }
 
     filesEqual.toVector.map { x =>
-      println("test 2")
       val inputFileName = filename(x)
       println(inputFileName)
       val fileWithOutExt = extensor(inputFileName).toString
@@ -47,7 +49,14 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
 
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
     Aadl2Awas(model) match {
-      case Some(x) => PrettyPrinter(x)
+      case Some(x) => {
+        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+        val st = SymbolTable(x)
+        val graph = FlowGraph(x, st)
+        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]])
+        PrettyPrinter(x)
+      }
       case None => ""
     }
   }

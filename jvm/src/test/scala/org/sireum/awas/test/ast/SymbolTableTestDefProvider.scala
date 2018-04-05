@@ -120,7 +120,7 @@ final class SymbolTableTestDefProvider(tf: TestFramework)
               }
           }
           result += "#CONNECTIONS#\n"
-          result += st.connections.toVector.sorted.mkString("\n") + "\n"
+          //          result += st.connections.toVector.sorted.mkString("\n") + "\n"
 
           Some(result)
         } else {

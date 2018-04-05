@@ -26,9 +26,9 @@
 package org.sireum.awas.sanitycheck
 
 import org.sireum.awas.ast.Model
-import org.sireum.awas.symbol.{Resource, SymbolTable}
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.util.AccumulatingTagReporter
-import org.sireum.awas.symbol.SymbolTableMessage._
+
 object InterComponentCheck {
 
   def apply(m: Model, st: SymbolTable)
@@ -39,24 +39,24 @@ object InterComponentCheck {
 
   def build(m : Model, st : SymbolTable)
            (implicit reporter: AccumulatingTagReporter): Model= {
-    st.connections.foreach {
-      conn =>
-        val sPortUri = Resource.getResource(st.connection(conn).fromPort)
-        val tPortUri = Resource.getResource(st.connection(conn).toPort)
-        val sCompUri = Resource.getResource(st.connection(conn).fromComp)
-        val tCompUri = Resource.getResource(st.connection(conn).toComp)
-        if(sPortUri.isDefined &&
-        tPortUri.isDefined &&
-        sCompUri.isDefined &&
-        tCompUri.isDefined) {
-          val sourceErrors = st.componentTable(sCompUri.get.toUri).propagation(sPortUri.get.toUri)
-          val targetErrors = st.componentTable(tCompUri.get.toUri).propagation(tPortUri.get.toUri)
-
-          if(!sourceErrors.subsetOf(targetErrors)) {
-            errorMessageGen(s"Connection's target fails to handle error ", st.connection(conn), m, {sourceErrors.diff(targetErrors).mkString(", ")})
-          }
-        }
-    }
+    //    st.connections.foreach {
+    //      conn =>
+    //        val sPortUri = Resource.getResource(st.connection(conn).fromPort)
+    //        val tPortUri = Resource.getResource(st.connection(conn).toPort)
+    //        val sCompUri = Resource.getResource(st.connection(conn).fromComp)
+    //        val tCompUri = Resource.getResource(st.connection(conn).toComp)
+    //        if(sPortUri.isDefined &&
+    //        tPortUri.isDefined &&
+    //        sCompUri.isDefined &&
+    //        tCompUri.isDefined) {
+    //          val sourceErrors = st.componentTable(sCompUri.get.toUri).propagation(sPortUri.get.toUri)
+    //          val targetErrors = st.componentTable(tCompUri.get.toUri).propagation(tPortUri.get.toUri)
+    //
+    //          if(!sourceErrors.subsetOf(targetErrors)) {
+    //            errorMessageGen(s"Connection's target fails to handle error ", st.connection(conn), m, {sourceErrors.diff(targetErrors).mkString(", ")})
+    //          }
+    //        }
+    //    }
     m
   }
 }

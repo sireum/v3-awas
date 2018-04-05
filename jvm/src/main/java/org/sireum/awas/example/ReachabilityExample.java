@@ -27,6 +27,7 @@ package org.sireum.awas.example;
 
 import org.sireum.awas.ast.Builder;
 import org.sireum.awas.ast.Model;
+import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowGraph$;
 import org.sireum.awas.fptc.FlowNode;
@@ -65,7 +66,7 @@ public class ReachabilityExample {
                 SymbolTable st = SymbolTable$.MODULE$.apply(modelOpt.get(),
                         new ConsoleTagReporter());
                 //build graph
-                FlowGraph<FlowNode> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
+                FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
                 System.out.println("Constructed Graph: ");
                 System.out.println(graph.toDot());
 

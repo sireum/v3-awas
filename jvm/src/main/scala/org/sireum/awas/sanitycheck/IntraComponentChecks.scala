@@ -26,9 +26,7 @@
 package org.sireum.awas.sanitycheck
 
 import org.sireum.awas.ast._
-import org.sireum.awas.symbol.SymbolTableMessage._
-import org.sireum.awas.symbol.{ComponentSymbolTable, SymbolTable, SymbolTableHelper}
-import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.util._
 
 object IntraComponentChecks {
@@ -38,52 +36,52 @@ object IntraComponentChecks {
   def apply(m: Model, st: SymbolTable)
            (implicit reporter: AccumulatingTagReporter): Model = {
     this.model = m
-    build(m, st)
+    //build(m, st)
     m
   }
 
-  def build(m: Model, st: SymbolTable)(
-    implicit reporter: AccumulatingTagReporter): Unit = {
-    st.components.foreach {
-      c =>
-        val cst = st.componentTable(c)
-        val cd = st.component(c)
-        checkFlows(cst, cd)
-    }
-  }
-
-  def checkFlows(cst: ComponentSymbolTable, cd: ComponentDecl)(
-    implicit reporter: AccumulatingTagReporter): Unit = {
-    cst.flows.foreach {
-       furi =>
-         val flow = cst.flow(furi)
-         if (flow.fromPortUri.isDefined) {
-           flowExpCheck(cst, cd, flow.fromPortUri.get, flow.fromFaults)
-         }
-         if (flow.toPortUri.isDefined) {
-           flowExpCheck(cst, cd, flow.toPortUri.get, flow.toFaults)
-        }
-    }
-  }
-
-  def flowExpCheck(cst : ComponentSymbolTable,
-                   cd : ComponentDecl,
-                   pUri: ResourceUri,
-                   eNames: Set[ResourceUri])(
-                    implicit reporter: AccumulatingTagReporter): Unit = {
-
-      eNames.foreach {
-        err =>
-          val error = cst.propagation(pUri).find(_ == err)
-          if(error.isEmpty) {
-            reporter.report(errorMessageGen(FLOW_MISSING,
-              cd,
-              model, pUri + " -  " + SymbolTableHelper.uri2IdString(err)))
-            //error not found
-          }
-      }
-
-  }
+  //  def build(m: Model, st: SymbolTable)(
+  //    implicit reporter: AccumulatingTagReporter): Unit = {
+  //    st.components.foreach {
+  //      c =>
+  //        val cst = st.componentTable(c)
+  //        val cd = st.component(c)
+  //        checkFlows(cst, cd)
+  //    }
+  //  }
+  //
+  //  def checkFlows(cst: ComponentSymbolTable, cd: ComponentDecl)(
+  //    implicit reporter: AccumulatingTagReporter): Unit = {
+  //    cst.flows.foreach {
+  //       furi =>
+  //         val flow = cst.flow(furi)
+  //         if (flow.fromPortUri.isDefined) {
+  //           flowExpCheck(cst, cd, flow.fromPortUri.get, flow.fromFaults)
+  //         }
+  //         if (flow.toPortUri.isDefined) {
+  //           flowExpCheck(cst, cd, flow.toPortUri.get, flow.toFaults)
+  //        }
+  //    }
+  //  }
+  //
+  //  def flowExpCheck(cst : ComponentSymbolTable,
+  //                   cd : ComponentDecl,
+  //                   pUri: ResourceUri,
+  //                   eNames: Set[ResourceUri])(
+  //                    implicit reporter: AccumulatingTagReporter): Unit = {
+  //
+  //      eNames.foreach {
+  //        err =>
+  //          val error = cst.propagation(pUri).find(_ == err)
+  //          if(error.isEmpty) {
+  //            reporter.report(errorMessageGen(FLOW_MISSING,
+  //              cd,
+  //              model, pUri + " -  " + SymbolTableHelper.uri2IdString(err)))
+  //            //error not found
+  //          }
+  //      }
+  //
+  //  }
 
 //  def checkBehaviors(cst : ComponentSymbolTable, cd : ComponentDecl) = {
 //    if(cd.behaviour.isDefined) {

@@ -1,11 +1,8 @@
 package org.sireum.awas.awasfacade;
 
-import org.sireum.awas.collector.Operator;
-import org.sireum.awas.collector.ResultType;
 import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
-import org.sireum.awas.graph.AwasEdge;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.util.Tag;
 import scala.Enumeration;
@@ -24,7 +21,7 @@ public interface Collector {
 
     SymbolTable getSymbolTable();
 
-    FlowGraph<FlowNode> getGraph();
+    Set<FlowGraph<FlowNode, FlowEdge<FlowNode>>> getGraph();
 
     Optional<Enumeration.Value> getResultType();
 

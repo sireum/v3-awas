@@ -42,9 +42,10 @@ final class Builder private() {
     val r = Model(ctx.typeDecl().map(build),
       ctx.behaviorDecl().map(build),
       ctx.constantDecl().map(build),
-      ctx.componentDecl().map(build),
-      ctx.connectionDecl().map(build),
-      ctx.deploymentDecl().map(build)
+      if (ctx.componentDecl() != null) Some(build(ctx.componentDecl())) else None
+      //      ctx.componentDecl().map(build),
+      //      ctx.connectionDecl().map(build),
+      //      ctx.deploymentDecl().map(build)
     ) at ctx
     r.nodeLocMap = this.nodeLocMap
     r.fileUriOpt = fileUriOpt
@@ -79,20 +80,23 @@ final class Builder private() {
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else {
         None
       },
+      ctx.componentDecl().map(build),
+      ctx.connectionDecl().map(build),
+      ctx.deploymentDecl().map(build),
       ctx.property().map(build)
     ) at ctx
   }
 
   def build(ctx: ConnectionDeclContext): ConnectionDecl = {
     ConnectionDecl(buildId(ctx.connName),
-      build(ctx.fromComponent),
+      if (ctx.fromComponent != null) Some(build(ctx.fromComponent)) else None,
       buildId(ctx.fromPort),
       if (ctx.connType.getText == "<->") {
         true
       } else {
         false
       },
-      build(ctx.toComponent),
+      if (ctx.toComponent != null) Some(build(ctx.toComponent)) else None,
       buildId(ctx.toPort),
       ctx.flowc().map(build),
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,

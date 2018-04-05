@@ -27,40 +27,38 @@ package org.sireum.awas.codegen
 
 import org.sireum.awas.ast._
 import org.sireum.awas.symbol.SymbolTable
-import org.sireum.util.Rewriter.TraversalMode
 import org.sireum.util._
-
-import scala.collection.immutable.ListMap
 
 object ContextInSensitiveGen {
   var varNameCounter = 0
 
   def apply(m: Model, st: SymbolTable): Model = {
     varNameCounter = 0
-    val nm = build(m, st)
-    nm
+    //val nm = build(m, st)
+    //nm
+    m
   }
 
-  def build(m: Model, st: SymbolTable): Model = {
-    rewriteComponent(m)
-  }
-
-  def rewriteComponent(oldComp: Model): Model = {
-    val newModel = org.sireum.awas.ast.Rewriter.build[Model](TraversalMode.TOP_DOWN) {
-      case c: ComponentDecl =>
-        var propMap = imapEmpty[Id, MSet[Name]]
-        if (c.behaviour.isDefined) {
-          val props = ListMap(mineBehaviorProp(c.behaviour.get).toSeq.sortBy(_._1.value): _*).map { f => Propagation(f._1, f._2) }
-          val flows = mineBehaviorFlow(c.behaviour.get)
-          ComponentDecl(c.compName,
-            c.withSM, c.ports, props.toVector,
-            flows, c.transitions, c.behaviour, c.properties)
-        } else c
-    }(oldComp)
-    newModel.nodeLocMap = oldComp.nodeLocMap
-    newModel.fileUriOpt = oldComp.fileUriOpt
-    newModel
-  }
+  //  def build(m: Model, st: SymbolTable): Model = {
+  //    rewriteComponent(m)
+  //  }
+  //
+  //  def rewriteComponent(oldComp: Model): Model = {
+  //    val newModel = org.sireum.awas.ast.Rewriter.build[Model](TraversalMode.TOP_DOWN) {
+  //      case c: ComponentDecl =>
+  //        var propMap = imapEmpty[Id, MSet[Name]]
+  //        if (c.behaviour.isDefined) {
+  //          val props = ListMap(mineBehaviorProp(c.behaviour.get).toSeq.sortBy(_._1.value): _*).map { f => Propagation(f._1, f._2) }
+  //          val flows = mineBehaviorFlow(c.behaviour.get)
+  //          ComponentDecl(c.compName,
+  //            c.withSM, c.ports, props.toVector,
+  //            flows, c.transitions, c.behaviour, c.properties)
+  //        } else c
+  //    }(oldComp)
+  //    newModel.nodeLocMap = oldComp.nodeLocMap
+  //    newModel.fileUriOpt = oldComp.fileUriOpt
+  //    newModel
+  //  }
 
   def mineBehaviorProp(behaviour: Behaviour): IMap[Id, IVector[Fault]] = {
     var res = imapEmpty[Id, MSet[Fault]]

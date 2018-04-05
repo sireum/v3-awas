@@ -6,8 +6,9 @@ import scala.scalajs.js.annotation.JSGlobalScope
 @js.native
 @JSGlobalScope
 object GraphQuery extends js.Object {
-  val graph: String = js.native
-  val queryExp: js.Dictionary[String] = js.native
-  val queryRes: js.Dictionary[js.Array[String]] = js.native
-  val queryCriteria: js.Dictionary[js.Array[String]] = js.native
+  //  val graph: String = js.native
+  //  val queryExp: js.Dictionary[String] = js.native
+  //  val queryRes: js.Dictionary[js.Array[String]] = js.native
+  //  val queryCriteria: js.Dictionary[js.Array[String]] = js.native
+  val json: String = js.native
 }

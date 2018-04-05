@@ -1,10 +1,11 @@
 package facades
 
+import org.scalajs.dom.Element
 import org.scalajs.jquery.JQuery
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
-import scala.scalajs.js.annotation.{JSGlobal, JSGlobalScope}
+import scala.scalajs.js.annotation.JSGlobal
 
 
 @js.native
@@ -17,12 +18,30 @@ class GoldenLayout(configuration: js.Dictionary[js.Any],
   def init(): Nothing = js.native
   def updateSize(width: UndefOr[Int], height: UndefOr[Int]) : Nothing = js.native
   def on(event : String, callBack: js.Function): Nothing = js.native
+
+  def getComponent(name: String): js.Function2[Container, js.Dictionary[Object], Nothing] = js.native
 }
 
 @js.native
 trait ContentItem extends js.Object {
+  var id: String = js.native
+  var element: Element = js.native
+  var contentItems: js.Array[ContentItem] = js.native
   def setSize(width : Int, height: Int) : Nothing = js.native
+
+  def setTitle(title: String): Nothing = js.native
+
+  def addChild(itemOrItemConfig: js.Dictionary[js.Any]): Nothing = js.native
+
+  def addChild(itemOrItemConfig: js.Dictionary[js.Any], index: Int): Nothing = js.native
 }
+
+//@js.native
+//class Component(container : Container, state : js.Any) extends js.Object {
+//  def getContainer : Container = {
+//    container
+//  }
+//}
 
 @js.native
 trait Container extends js.Object {

@@ -34,8 +34,11 @@ import org.sireum.util.jvm.FileUtil._
 
 final class PrettyPrinterTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-  val testDirs = Seq(makePath("..", "example", "awas-lang")
-//    ,s"../example/fptc"
+  val testDirs = Seq(
+    //makePath("..", "example", "awas-lang"),
+    makePath("..", "example", "heirarchial")
+
+    //    ,s"../example/fptc"
   )
 
   override def testDefs: ISeq[TestDef] = {
