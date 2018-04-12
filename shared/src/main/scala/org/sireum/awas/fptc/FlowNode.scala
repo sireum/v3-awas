@@ -27,7 +27,7 @@ package org.sireum.awas.fptc
 
 
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
-import org.sireum.awas.symbol.{FlowTableData, SymbolTable}
+import org.sireum.awas.symbol.{FlowTableData, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
@@ -62,6 +62,7 @@ trait FptcNodeUpdate {
 }
 
 object FlowNode {
+  val H = SymbolTableHelper
   type Edge = FlowEdge[FlowNode]
   private var nodepool = imapEmpty[ResourceUri, FlowNode]
 
@@ -79,7 +80,12 @@ object FlowNode {
     }
   }
 
-  def getNode(uri: ResourceUri): Option[FlowNode] = nodepool.get(uri)
+  def getNode(uri: ResourceUri): Option[FlowNode] = {
+    //    if(H.isFlow(uri) || H.isPort(uri)) {
+    //      Resource.getParentUri(uri).map(nodepool)
+    //    }
+    nodepool.get(uri)
+  }
 
   def newPool(): Unit = {
     nodepool = imapEmpty[ResourceUri, FlowNode]

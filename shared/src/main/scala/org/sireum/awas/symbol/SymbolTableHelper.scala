@@ -232,5 +232,15 @@ object SymbolTableHelper {
     }
   }
 
+  def getAllAncestors(uri: ResourceUri, st: SymbolTable): ISeq[ResourceUri] = {
+    var res = ivectorEmpty[ResourceUri] :+ uri
+    var curr = uri
+    while ((curr != st.system) && Resource.getParentUri(uri).isDefined) {
+      curr = Resource.getParentUri(curr).get
+      res = res :+ curr
+    }
+    res.reverse
+  }
+
 }
 

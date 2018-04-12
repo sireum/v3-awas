@@ -75,7 +75,7 @@ object Resource {
 
   }
 
-  def apply(uriType: String): Resource = build(uriType, ivectorEmpty[String] :+ "AWAS", "")
+  def apply(uriType: String): Resource = build(uriType, ivectorEmpty[String] :+ "", "AWAS")
 
   def apply(uriType: String,
             uriPath: ISeq[String],
@@ -157,7 +157,7 @@ case class ResourceBean(var _uriType: String,
 
   override def toUri : ResourceUri =  new URI(
     self.uriType,
-    self.uriPaths.foldLeft("")(_ + "$" + _),
+    if (self.uriPaths.nonEmpty) self.uriPaths.foldLeft("")(_ + "$" + _) else "",
     self.uri
   ).toASCIIString
 

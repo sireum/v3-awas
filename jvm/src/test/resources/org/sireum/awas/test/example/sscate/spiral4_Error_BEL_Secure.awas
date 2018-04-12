@@ -1,0 +1,233 @@
+types
+  enum BEL_Errors {Service, Commission, Omission, Content, UnDetected, Detected, OutOfRange, OutOfRangeUnDetected, OutOfBounds, OutOfBoundsUnDetected, High, Low, HighUnDetected, LowUnDetected, Timing, Early, Late, SoftwareBug, BadSoftwareDesign, CompromisedSoftware, CompromisedHardware, HardwareBug, BadHardwareDesign, ProductionDefect, Deterioration, CosmicRay, OperatorHWMistake, OperatorHWWrongChoice, AdversaryAccessesHardware, AdversaryAccessesSoftware, OperatorSWMistake, OperatorSWWrongChoice, SyntaxMismatch, RateMismatch, SemanticMismatch}
+
+  enum PCA_Hardware_Errors {NoService, NetworkDown, NetworkDelay, MessageCorruptionUndetect, MessageCorruption, MessageLeak, WithMitM, WithOutMitM, MessageDuplicate}
+
+  enum PCA_Errors {InCorrectDrugAdministration, FailedToAdministerDrug, TicketOutOfSpec, TicketTooLong, TicketTooShort, NoTicket, EarlyTicket, LateTicket, SpO2OutOfRange, SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2, ETCO2OutOfRange, ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2, InCorrectPulse, PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse, InCorrectRespirationRate, RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+
+components
+  CapnometerWire
+
+  EKGLead2Wire
+
+  MAP
+    with BEL_Errors, PCA_Hardware_Errors
+      ports
+        in Net_Ac__BUS_IN
+        out Net_Ac__BUS_OUT
+      propagations
+        Net_Ac = {NetworkDown, NetworkDelay}
+        bindings = {NoService}
+        Net_Ac = {Omission}
+      flows
+        Processor_Crash : * -> bindings{NoService}
+        Missing_Data_NW : Net_Ac{NetworkDown, NetworkDelay} -> bindings{Omission}
+
+  FingerClipWire
+
+  EKGLead1Wire
+
+  Authentication
+    with BEL_Errors, PCA_Hardware_Errors
+      propagations
+        connection = {NetworkDown, NetworkDelay, MessageCorruptionUndetect, MessageCorruption, MessageLeak, MessageDuplicate}
+        binding = {MessageCorruptionUndetect, NetworkDown, NetworkDelay, WithOutMitM}
+      flows
+        DetectReplay : connection{MessageDuplicate} -> *
+        Authenticate : connection{Detected} -> binding{Omission}
+        Authenticate_MitM : connection{MessageLeak} -> binding{WithOutMitM}
+        Pass : connection{MessageCorruptionUndetect, NetworkDelay, NetworkDown} -> binding{MessageCorruptionUndetect, NetworkDown, NetworkDelay, WithOutMitM}
+
+  PCA
+    with PCA_Errors
+      ports
+        in control
+        out infuse
+      propagations
+        control = {TicketTooLong, TicketTooShort, NoTicket, EarlyTicket, LateTicket}
+        infuse = {InCorrectDrugAdministration}
+      flows
+        Pump : control -> infuse
+        SpontaneousError : * -> infuse{InCorrectDrugAdministration}
+        NonDangers : control{TicketTooShort, NoTicket} -> *
+        BadCommand2Infuse : control{TicketTooLong, EarlyTicket, LateTicket} -> infuse{InCorrectDrugAdministration}
+
+  Tube
+
+  Device_Network
+    with BEL_Errors, PCA_Hardware_Errors
+      propagations
+        bindings = {Early}
+        access = {Omission}
+        bindings = {NetworkDown, NetworkDelay, MessageCorruptionUndetect, MessageCorruption, MessageLeak, MessageDuplicate}
+      flows
+        Network_Crash : * -> bindings{NetworkDown}
+        Network_Crash_Processor : * -> access{Omission}
+        Attack : * -> bindings{MessageCorruptionUndetect, MessageCorruption, MessageLeak, MessageDuplicate, NetworkDelay}
+        Dos_Attack : bindings{Early} -> bindings{NetworkDown, NetworkDelay}
+
+  Confidentiality
+    with BEL_Errors, PCA_Hardware_Errors
+      propagations
+        connection = {MessageCorruptionUndetect, NetworkDown, NetworkDelay, MessageLeak, MessageDuplicate, MessageCorruption}
+        binding = {MessageCorruptionUndetect, NetworkDown, NetworkDelay, MessageDuplicate, MessageCorruption, WithMitM}
+      flows
+        ConfidentialityProtection : connection{WithOutMitM} -> *
+        Pass : connection{MessageCorruptionUndetect, NetworkDown, NetworkDelay, MessageDuplicate, MessageCorruption} -> binding{MessageCorruptionUndetect, NetworkDown, NetworkDelay, MessageDuplicate, MessageCorruption, WithMitM}
+
+  PCA_PulseOx_impl_Instance
+
+  PulseOx
+    with PCA_Errors
+      ports
+        in Saturation
+        out SpO2
+        in HeartBeat
+        out Pulse
+      propagations
+        SpO2 = {SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+        Pulse = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+      flows
+        Read_SpO2 : Saturation -> SpO2
+        Read_Pulse : HeartBeat -> Pulse
+        SpO2Error : * -> SpO2{SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+        PulseError : * -> Pulse{PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+
+  EKG
+    with PCA_Errors
+      ports
+        in Lead1
+        in Lead2
+        in Lead3
+        out EKG
+        out HR
+      propagations
+        HR = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+      flows
+        HRLead3 : Lead3 -> HR
+        HRLead1 : Lead1 -> HR
+        HRLead2 : Lead2 -> HR
+        Lead2Read : Lead2 -> EKG
+        HRError : * -> HR{PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+        Lead3Read : Lead3 -> EKG
+        Lead1Read : Lead1 -> EKG
+
+  EKGLead3Wire
+
+  Patient
+    with PCA_Errors
+      ports
+        in Fingerclip__BUS_IN
+        out Fingerclip__BUS_OUT
+        in IV__BUS_IN
+        out IV__BUS_OUT
+        out BloodSat
+        out HeartBeat
+        out Exhale
+        in Vein
+      propagations
+        Vein = {InCorrectDrugAdministration}
+      flows
+        Absorb : Vein -> *
+        BloodSaturation : * -> BloodSat
+        Exhalation : * -> Exhale
+        Heart_Beat : * -> HeartBeat
+
+  App
+    with PCA_Errors, BEL_Errors, PCA_Hardware_Errors
+      ports
+        in SpO2
+        out Ticket
+        in Pulse_Oximeter
+        in Pulse_EKG
+        in EKG
+        in RR
+        in ETCO2
+        in Parameter_Entry
+      propagations
+        RR = {RespirationRateLow, RespirationRateHigh, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+        Ticket = {TicketTooLong, TicketTooShort, EarlyTicket, LateTicket, NoTicket}
+        Pulse_Oximeter = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+        ETCO2 = {ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2}
+        Pulse_EKG = {PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse}
+        SpO2 = {SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+        processor = {Omission}
+      flows
+        ProcessorCrash : processor{NoService} -> Ticket{NoTicket}
+        PulseHigh : Pulse_Oximeter{PulseValueHigh} -> Ticket{TicketTooLong}
+        ETCO2Low : ETCO2{ETCO2ValueLow} -> Ticket{TicketTooShort}
+        SpO2Late : SpO2{SpO2Late} -> Ticket{LateTicket}
+        PulseLate : Pulse_Oximeter{PulseLate} -> Ticket{LateTicket}
+        Check_SpO2 : SpO2 -> Ticket
+        Check_RR : RR -> Ticket
+        NoRR : RR{NoRespirationRate} -> Ticket{NoTicket}
+        EKG_Store : EKG -> *
+        RREarly : RR{RespirationRateEarly} -> Ticket{EarlyTicket}
+        NoPulse2 : Pulse_EKG{NoPulse} -> Ticket{NoTicket}
+        SpO2Early : SpO2{SpO2Early} -> Ticket{EarlyTicket}
+        NoSpO2 : SpO2{NoSpO2} -> Ticket{NoTicket}
+        ETCO2Late : ETCO2{ETCO2Late} -> Ticket{LateTicket}
+        ETCO2Early : ETCO2{ETCO2Early} -> Ticket{EarlyTicket}
+        Check_Pulse2 : Pulse_EKG -> Ticket
+        Check_Pulse : Pulse_Oximeter -> Ticket
+        RRHigh : RR{RespirationRateHigh} -> Ticket{TicketTooLong}
+        SpO2High : SpO2{SpO2ValueHigh} -> Ticket{TicketTooLong}
+        PulseLow : Pulse_Oximeter{PulseValueLow} -> Ticket{TicketTooShort}
+        SpO2Low : SpO2{SpO2ValueLow} -> Ticket{TicketTooShort}
+        PulseLate2 : Pulse_EKG{PulseLate} -> Ticket{LateTicket}
+        Check_ETCO2 : ETCO2 -> Ticket
+        PulseEarly2 : Pulse_EKG{PulseEarly} -> Ticket{EarlyTicket}
+        RRLow : RR{RespirationRateLow} -> Ticket{TicketTooShort}
+        RRLate : RR{RespirationRateLate} -> Ticket{LateTicket}
+        PulseEarly : Pulse_Oximeter{PulseEarly} -> Ticket{EarlyTicket}
+        PulseHigh2 : Pulse_EKG{PulseValueHigh} -> Ticket{TicketTooLong}
+        PulseLow2 : Pulse_EKG{PulseValueLow} -> Ticket{TicketTooShort}
+        NoPulse : Pulse_Oximeter{NoPulse} -> Ticket{NoTicket}
+        ETCO2High : ETCO2{ETCO2ValueHigh} -> Ticket{TicketTooLong}
+        NoETCO2 : ETCO2{NoETCO2} -> Ticket{NoTicket}
+
+  Capnometer
+    with PCA_Errors
+      ports
+        out ETCO2
+        out RespiratoryRate
+        in Respiration
+      propagations
+        ETCO2 = {ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2}
+        RespiratoryRate = {RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+      flows
+        Rate_Read : Respiration -> RespiratoryRate
+        ETCO2_Read : Respiration -> ETCO2
+        ETCO2Error : * -> ETCO2{ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2}
+        RRError : * -> RespiratoryRate{RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+
+connections
+  Cap_Read : Patient.Exhale -> Capnometer.Respiration
+
+  EKG_2 : Patient.HeartBeat -> EKG.Lead2
+
+  Pulse_PulseOx : Patient.HeartBeat -> PulseOx.HeartBeat
+
+  Pulse_Report_PulseOx : PulseOx.Pulse -> App.Pulse_Oximeter
+
+  Blood_Sat : Patient.BloodSat -> PulseOx.Saturation
+
+  EKG_1 : Patient.HeartBeat -> EKG.Lead1
+
+  ETCO2_Report : Capnometer.ETCO2 -> App.ETCO2
+
+  Issue_Ticket : App.Ticket -> PCA.control
+
+  Pulse_Report_EKG : EKG.HR -> App.Pulse_EKG
+
+  Report_SpO2 : PulseOx.SpO2 -> App.SpO2
+
+  RR_Report : Capnometer.RespiratoryRate -> App.RR
+
+  Infuse_Drug : PCA.infuse -> Patient.Vein
+
+  Platform_Network : MAP.Net_Ac -> PCA_PulseOx_impl_Instance.Device_Network
+
+  EKG_3 : Patient.HeartBeat -> EKG.Lead3
+
+  EKG_Report : EKG.EKG -> App.EKG

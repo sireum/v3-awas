@@ -280,7 +280,7 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
   }
 
   def reach(criterion: Collector, isForward: Boolean): Collector = {
-    val er = ErrorReachability(graph, st)
+    val er = ErrorReachability(criterion.getGraphs.head, st)
     if (criterion.hasErrors) {
       criterion
     } else {

@@ -1,0 +1,2 @@
+q1 = reach forward Root_two_references_Instance.Sub1
+q2 = reach forward Root_two_references_Instance.Sub1.sub_proc1

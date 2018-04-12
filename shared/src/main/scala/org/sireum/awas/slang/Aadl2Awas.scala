@@ -65,45 +65,65 @@ final class Aadl2Awas private() {
         None,
         None,
         comp.subComponents.elements.map(build).flatten.toVector,
-        comp.connections.elements.flatMap(build).toVector,
+        comp.connections.elements.flatMap(n => build(n, comp.identifier.name.map(_.value).elements)).toVector,
         ivectorEmpty[DeploymentDecl],
         Node.emptySeq[Property]))
     } else None
   }
 
-  def build(conn: ir.Connection): Seq[ConnectionDecl] = {
+  def build(conn: ir.Connection, compName: Seq[String]): Seq[ConnectionDecl] = {
     if (conn.name.name.nonEmpty) {
       val id = conn.name.name.elements.last.value
-      val srcComp = buildName(conn.src.component.name.elements.last.value)
+      val srcComp = if (conn.src.component.name.map(_.value).elements == compName) {
+        None
+      } else {
+        Some(buildName(conn.src.component.name.elements.last.value))
+      }
       val srcPort = conn.src.feature.name.elements.last.value
-      val sinkComp = buildName(conn.dst.component.name.elements.last.value)
+      val sinkComp = if (conn.dst.component.name.map(_.value).elements == compName) {
+        None
+      } else {
+        Some(buildName(conn.dst.component.name.elements.last.value))
+      }
       val sinkPort = conn.dst.feature.name.elements.last.value
       if (conn.isBiDirectional) {
         ilistEmpty :+ ConnectionDecl(buildId(id + "_FORWARD"),
-          Some(srcComp),
-          if (conn.src.direction.get == ir.Direction.InOut) buildId(srcPort + "_OUT") else buildId(srcPort),
+          srcComp,
+          if (conn.src.direction.get == ir.Direction.InOut) {
+            if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
+          } else buildId(srcPort),
           false,
-          Some(sinkComp),
-          if (conn.dst.direction.get == ir.Direction.InOut) buildId(sinkPort + "_IN") else buildId(sinkPort),
+          sinkComp,
+          if (conn.dst.direction.get == ir.Direction.InOut) {
+            if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
+          } else buildId(sinkPort),
           Node.emptySeq[CFlow],
           None,
           Node.emptySeq[Property]) :+
           ConnectionDecl(buildId(id + "_BACKWARD"),
-            Some(sinkComp),
-            if (conn.dst.direction.get == ir.Direction.InOut) buildId(sinkPort + "_OUT") else buildId(sinkPort),
+            sinkComp,
+            if (conn.dst.direction.get == ir.Direction.InOut) {
+              if (sinkComp.isEmpty) buildId(sinkPort + "_IN") else buildId(sinkPort + "_OUT")
+            } else buildId(sinkPort),
             false,
-            Some(srcComp),
-            if (conn.src.direction.get == ir.Direction.InOut) buildId(srcPort + "_IN") else buildId(srcPort),
+            srcComp,
+            if (conn.src.direction.get == ir.Direction.InOut) {
+              if (srcComp.isEmpty) buildId(srcPort + "_OUT") else buildId(srcPort + "_IN")
+            } else buildId(srcPort),
             Node.emptySeq[CFlow],
             None,
             Node.emptySeq[Property])
       } else {
         ilistEmpty :+ ConnectionDecl(buildId(id),
-          Some(srcComp),
-          if (conn.src.direction.get == ir.Direction.InOut) buildId(srcPort + "_OUT") else buildId(srcPort),
+          srcComp,
+          if (conn.src.direction.get == ir.Direction.InOut) {
+            if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
+          } else buildId(srcPort),
           false,
-          Some(sinkComp),
-          if (conn.dst.direction.get == ir.Direction.InOut) buildId(sinkPort + "_IN") else buildId(sinkPort),
+          sinkComp,
+          if (conn.dst.direction.get == ir.Direction.InOut) {
+            if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
+          } else buildId(sinkPort),
           Node.emptySeq[CFlow],
           None,
           Node.emptySeq[Property])

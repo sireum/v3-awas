@@ -64,8 +64,9 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 
   override def getSuccessorNodes(node: Node): CSet[Node] = {
     if (graph.nodes.get(node).nonEmpty) {
-      graph.outgoingEdges.get(graph.nodes.get(node).get).map(
-        _.elements.elements.map(t => graph.nodesInverse(t.dest))).get.toSet
+      val t = graph.outgoingEdges.get(graph.nodes.get(node).get).map(
+        _.elements.elements.map(t => graph.nodesInverse(t.dest)))
+      if (t.nonEmpty) t.get.toSet else isetEmpty[Node]
     } else {
       isetEmpty[Node]
     }
@@ -73,13 +74,13 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 
   override def getPredecessorNodes(node: Node): CSet[Node] = {
     if (graph.nodes.get(node).nonEmpty) {
-      graph.incomingEdges.get(graph.nodes.get(node).get).map(
-        _.elements.elements.map(t => graph.nodesInverse(t.source))).get.toSet
+      val t = graph.incomingEdges.get(graph.nodes.get(node).get).map(
+        _.elements.elements.map(t => graph.nodesInverse(t.source)))
+      if (t.nonEmpty) t.get.toSet else isetEmpty[Node]
     } else {
       isetEmpty[Node]
     }
   }
-
 
   override def addNode(n: Node): Node = {
     graph = graph * n

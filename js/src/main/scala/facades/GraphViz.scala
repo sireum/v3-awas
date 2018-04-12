@@ -7,4 +7,6 @@ import scala.scalajs.js.annotation.JSGlobalScope
 @JSGlobalScope
 object GraphViz extends js.Object {
   def Viz(src: String): String = js.native
+
+  def Viz(src: String, options: js.Dictionary[Any]): String = js.native
 }
