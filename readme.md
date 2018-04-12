@@ -12,6 +12,6 @@ Follow [Sireum IVE installation](http://logika.sireum.org/doc/01-getting-started
 Using git to clone the following repository
 ```bash
 git clone --recursive -b master git@github.com:sireum/v3.git sireum-v3
-git clone git@github.com:sireum/aadl-slang-schema.git sireum-v3/aadl/skema
+git clone git@github.com:sireum/air.git sireum-v3/aadl/ir
 git clone git@github.com:sireum/v3-awas.git sireum-v3/awas
 ```

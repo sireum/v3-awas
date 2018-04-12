@@ -7,4 +7,4 @@ root_cause_HS1 = (reach backward Patient.Vein{PCA_Errors.InCorrectDrugAdministra
 causal_path_H1_HS1 = reach from activate.out{PCA_Errors.CmdLate, PCA_Errors.MissingCmd}
                            to Patient.Vein{PCA_Errors.InCorrectDrugAdministration}
 risk_control_RC01_A = (reach forward activate.out{PCA_Errors.CmdLate, PCA_Errors.MissingCmd})
-risk_control_RC01_B = (reach forward activate.out{PCA_Errors.CmdLate, PCA_Errors.MissingCmd}) :flow-sink
+risk_control_RC01_B = (reach forward activate.out{PCA_Errors.CmdLate, PCA_Errors.MissingCmd}):flow-sink
