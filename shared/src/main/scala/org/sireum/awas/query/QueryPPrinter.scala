@@ -48,7 +48,7 @@ object QueryPPrinter {
   }
 
   def pathExpr(sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
-    st"""reach paths from $sExp to $tExp${if (wExp.nonEmpty) wExp.get else st""""""}"""
+    st"""reach paths from $sExp to $tExp${if (wExp.nonEmpty) wExp.get else ""}"""
   }
 
   def simpleWith(op: String, exp: ST): ST = {
@@ -80,7 +80,7 @@ object QueryPPrinter {
   }
 
   def nnError(nn: ST, errorSet: org.sireum.ISZ[ST]): ST = {
-    st"""$nn${(errorSet, ", ")}"""
+    st"""$nn${if (errorSet.nonEmpty) st"""{${(errorSet, ", ")}}""".render else ""}"""
   }
 
   def nSet(ns: org.sireum.ISZ[ST]): ST = {
@@ -127,6 +127,7 @@ final class QueryPPrinter() {
       case ns: NodeSet => print(ns)
       case ne: NodeEmpty => print(ne)
       case qres: QueryName => print(qres)
+      case nn: NodeName => print(nn)
     }
   }
 

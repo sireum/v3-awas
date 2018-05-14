@@ -83,7 +83,8 @@ object SvgGenerator {
                 if (vertex.isFlowDefined) colspan := 3 else colspan := 2, // attr("bgcolor") := "#eeccff",
                 attr("cellpadding") := 5,
                 attr("href") := "templink",
-                attr("target") := "Node+" + vertex.getUri,
+                attr("title") := "node",
+                attr("target") := vertex.getUri,
                 if (vertex.getSubGraph.isDefined) {
                   table(
                     attr("border") := 0,
@@ -135,7 +136,8 @@ object SvgGenerator {
                 colspan := 1, // attr("bgcolor") := "#eeccff",
                 attr("cellpadding") := 5,
                 attr("href") := "templink",
-                attr("target") := "Node+" + vertex.getUri,
+                attr("title") := "node",
+                attr("target") := vertex.getUri,
                 b(
                   if (H.isInPort(vertex.getUri)) "In port : " + H.uri2IdString(vertex.getUri)
                   else "Out port : " + H.uri2IdString(vertex.getUri)
@@ -170,6 +172,7 @@ object SvgGenerator {
                     td(
                       attr("border") := 0,
                       attr("href") := "templink",
+                      attr("title") := "flow",
                       attr("target") := uri,
                       attr("cellpadding") := 0,
                       id := "badlink",
@@ -205,6 +208,7 @@ object SvgGenerator {
                       td(
                         attr("port") := portid,
                         attr("href") := "templink",
+                        attr("title") := "port",
                         attr("border") := 0,
                         if (errors(uri).size > 1) colspan := errors(uri).size else colspan := 1,
                         //if(errors(uri).isEmpty) attr("border") := 1 else attr("border") := 0, attr("sides") := "B",
@@ -222,6 +226,7 @@ object SvgGenerator {
                             td(
                               attr("target") := "Error" + ":" + uri + ':' + error,
                               attr("href") := "templink",
+                              attr("title") := "error",
                               attr("cellpadding") := 2, //id := "badlink", attr("border") := 1, attr("sides") := "B",
                               attr("cellspacing") := 0,
                               tag("font")(
@@ -266,6 +271,7 @@ object SvgGenerator {
     res = res :+ "tailport" + "=" + "\"" + component.sourcePort.get.split('$').last + "\""
     res = res :+ "headport" + "=" + "\"" + component.targetPort.get.split('$').last + "\""
     res = res :+ "edgehref" + "=" + "templink"
+    res = res :+ "title" + "=" + "edgetype"
     res = res :+ "target" + "=" + "\"" + "Edge+" + component.sourcePort.get + ":" + component.targetPort.get + "\""
     res = res :+ "arrowsize" + "=" + ".7"
     res = res :+ "weight" + "=" + "1"

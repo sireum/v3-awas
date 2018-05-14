@@ -79,7 +79,7 @@ public class ReachabilityExample {
                 }
 
                 // step 2: Construct the reachability object
-                PortReachability<FlowNode> pr = PortReachability$.MODULE$.apply(graph, st);
+                PortReachability<FlowNode> pr = PortReachability$.MODULE$.apply(st);
 
                 // step 3: invoke the right method based on the direction
                 if (criterion != null) {

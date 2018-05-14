@@ -103,7 +103,9 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
             stack.push(current)
 
             val nexts = if (isFirst) getSuccessorNodes(current) else getPredecessorNodes(current)
-            nexts.foreach(n => if (!discoveryMap(n)._1) stack.push(n))
+            nexts.foreach(n => if (!discoveryMap(n)._1) {
+              stack.push(n)
+            })
 
           } else if (discoveryMap(current)._2 && isFirst) {
             result = result.+:(current)
@@ -116,7 +118,7 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
 
       nodes.foreach { n =>
         if (!discoveryMap(n)._1)
-          orderedNodes = orderedNodes ++ dfs(n, true)
+          orderedNodes = dfs(n, true) ++ orderedNodes
       }
       resetDiscoveryMap()
       orderedNodes.foreach { n =>
@@ -144,7 +146,7 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
     var marked = isetEmpty[Node]
     var removed = imapEmpty[Node, Set[Node]]
     var position = imapEmpty[Node, Integer]
-    var reach = imapEmpty[Node, Boolean]
+    var reach = nodes.map(n => (n, false)).toMap
 
 
     def cycle(v: Node, tq: Integer): Boolean = {
@@ -174,16 +176,19 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
             val it = stack.reverseIterator
             var current = stack.last
 
-            while (it.hasNext) {
+            breakable {
+              while (it.hasNext) {
               current = it.next()
               if (wV == current) break
-
+              }
             }
             cycle = cycle + wV
-            while (it.hasNext) {
+            breakable {
+              while (it.hasNext) {
               current = it.next()
               cycle = cycle + current
-              if (current == wV) break
+                if (current == v) break
+              }
             }
             loops = loops :+ cycle
           } else {
@@ -191,7 +196,7 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
           }
         }
       }
-      stack.pop()
+      stack = stack.pop()._2
       if (foundCycle) {
         unmark(v)
       }

@@ -40,13 +40,13 @@ class JGraphTGraphImpl[Node, Edge <: AwasEdge[Node]]
     graph.containsEdge(n1, n2)
   }
 
-  //  def getCycles: Set[Seq[Node]] = {
-  //    import org.jgrapht.alg.cycle._
+  //    def getCycles: Set[Seq[Node]] = {
+  //      import org.jgrapht.alg.cycle._
   //
-  //    import scala.collection.JavaConverters._
-  //    new SzwarcfiterLauerSimpleCycles[Node, Edge](graph)
-  //      .findSimpleCycles().asScala.toSet.map((it: java.util.List[Node]) => it.asScala)
-  //  }
+  //      import scala.collection.JavaConverters._
+  //      new SzwarcfiterLauerSimpleCycles[Node, Edge](graph)
+  //        .findSimpleCycles().asScala.toSet.map((it: java.util.List[Node]) => it.asScala)
+  //    }
 
   def getEdge(n1: Node, n2: Node): CSet[Edge] = {
     import scala.collection.JavaConverters._

@@ -172,7 +172,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
     var flows = isetEmpty[ResourceUri]
     var errors = isetEmpty[Tag]
 
-    var res = collector.FlowCollector(this.getOwner, result, edges, flows, errors)
+    var res = collector.FlowCollector(isetEmpty + this.getOwner, result, edges, flows, errors)
 
     if (!isFlowDefined) {
       //we know, if we are performing a forward analysis,
@@ -180,7 +180,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
       if (isForward) result ++= outPorts else result ++= inPorts
       errors = errors + warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.Port)
 
-      collector.FlowCollector(this.getOwner, result, edges, flows, errors)
+      collector.FlowCollector(isetEmpty + this.getOwner, result, edges, flows, errors)
     } else {
       getResourceType match {
         case NodeType.COMPONENT => {
@@ -228,7 +228,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
         }
         case NodeType.PORT =>
       }
-      collector.FlowCollector(this.getOwner, result, edges, flows, errors)
+      collector.FlowCollector(isetEmpty + this.getOwner, result, edges, flows, errors)
     }
   }
 
@@ -283,7 +283,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
       result = result ++ outPorts.flatMap(it => getPropagation(it).map(e => (it, e))).toSet
       errors += warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.FlowError)
     }
-    collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors)
+    collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors, isetEmpty + getOwner)
   }
 
   private def getConnFlowError(tuple: (ResourceUri, ResourceUri), isForward: Boolean): FlowErrorNextCollector = {
@@ -324,7 +324,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
       errors += warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.FlowError)
       result ++= ports.map(op => (op, tuple._2))
     }
-    collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors)
+    collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors, isetEmpty + getOwner)
   }
 
   private def errorFlowNext(tuple: (ResourceUri, ResourceUri), isForward: Boolean): FlowErrorNextCollector = {
@@ -333,7 +333,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
       case NodeType.CONNECTION => getConnFlowError(tuple, isForward)
       case NodeType.PORT => {
         assert(false, "Intra flow should not be invoked on port node")
-        collector.FlowErrorNextCollector(isetEmpty[(ResourceUri, ResourceUri)], isetEmpty, isetEmpty, isetEmpty)
+        collector.FlowErrorNextCollector(isetEmpty[(ResourceUri, ResourceUri)], isetEmpty, isetEmpty, isetEmpty, isetEmpty)
       }
     }
   }

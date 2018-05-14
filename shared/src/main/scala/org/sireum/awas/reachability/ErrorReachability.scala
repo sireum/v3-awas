@@ -25,7 +25,7 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
 }
 
 object ErrorReachability {
-  def apply(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable): ErrorReachability[FlowNode] = {
-    new ErrorReachabilityImpl[FlowNode](st, graph)
+  def apply(st: SymbolTable): ErrorReachability[FlowNode] = {
+    new ErrorReachabilityImpl[FlowNode](st)
   }
 }

@@ -403,7 +403,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   def mineFault(m: Model, f: Fault, r: Resource, tt: ISet[TypeTable])(
     implicit reporter: AccumulatingTagReporter): Unit = {
     val fif = f.enum.value.map(_.value).mkString("/")
-    val elem = tt.flatMap(x => x.enumElements.find(_.endsWith(fif)))
+    val elem = tt.flatMap(x => x.getUriFromSymbol(fif))
+    //    val elem = tt.flatMap(x => x.enumElements.find(_.endsWith(fif)))
     if (elem.nonEmpty) {
       if (elem.size > 1) {
         reporter.report(errorMessageGen(TYPE_RESOLUTION_FAILURE,

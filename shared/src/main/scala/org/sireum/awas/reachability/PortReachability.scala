@@ -61,7 +61,7 @@ trait PortReachability[Node] extends BasicReachability[Node]{
 }
 
 object PortReachability {
-  def apply(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable): PortReachability[FlowNode] = {
-    new PortReachabilityImpl[FlowNode](st, graph)
+  def apply(st: SymbolTable): PortReachability[FlowNode] = {
+    new PortReachabilityImpl[FlowNode](st)
   }
 }

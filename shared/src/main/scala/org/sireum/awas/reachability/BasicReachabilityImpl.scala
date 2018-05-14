@@ -35,7 +35,7 @@ import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
-class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge[FlowNode]])
+class BasicReachabilityImpl(st: SymbolTable)
   extends BasicReachability[FlowNode] {
   type Graph = FlowGraph[FlowNode, FlowEdge[FlowNode]]
   val H = SymbolTableHelper
@@ -60,6 +60,50 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge
     reach(isetEmpty[FlowNode] + criterion, isForward = true)
   }
 
+  private def nextNode(node: FlowNode): (ISet[FlowNode], ISet[Edge], ISet[Graph]) = {
+    var resNodes = isetEmpty[FlowNode]
+    var resEdge = isetEmpty[Edge]
+    var resGraph = isetEmpty[Graph]
+    val curGraph = node.getOwner
+    if (node.getResourceType == NodeType.PORT &&
+      H.isOutPort(node.getUri) &&
+      FlowNode.getNode(curGraph.getUri).isDefined) {
+      val parNode = FlowNode.getNode(curGraph.getUri).get
+      val edges = parNode.getOwner.getOutgoingEdges(parNode).filter(e =>
+        e.sourcePort.isDefined && e.sourcePort.get == node.getUri)
+      resEdge = resEdge ++ edges
+      resNodes = resNodes ++ edges.map(_.target)
+      resGraph += parNode.getOwner
+    } else {
+      resNodes = resNodes ++ curGraph.getSuccessorNodes(node)
+      resEdge = resEdge ++ curGraph.getOutgoingEdges(node)
+      resGraph += curGraph
+    }
+    (resNodes, resEdge, resGraph)
+  }
+
+  private def previousNode(node: FlowNode): (ISet[FlowNode], ISet[Edge], ISet[Graph]) = {
+    var resNodes = isetEmpty[FlowNode]
+    var resEdge = isetEmpty[Edge]
+    var resGraph = isetEmpty[Graph]
+    val curGraph = node.getOwner
+    if (node.getResourceType == NodeType.PORT &&
+      H.isInPort(node.getUri) &&
+      FlowNode.getNode(curGraph.getUri).isDefined) {
+      val parNode = FlowNode.getNode(curGraph.getUri).get
+      val edges = parNode.getOwner.getIncomingEdges(parNode).filter(e =>
+        e.targetPort.isDefined && e.targetPort.get == node.getUri)
+      resEdge = resEdge ++ edges
+      resNodes = resNodes ++ edges.map(_.source)
+      resGraph += parNode.getOwner
+    } else {
+      resNodes = resNodes ++ curGraph.getPredecessorNodes(node)
+      resEdge = resEdge ++ curGraph.getIncomingEdges(node)
+      resGraph += curGraph
+    }
+    (resNodes, resEdge, resGraph)
+  }
+
   /**
     * Returns the transitive closure of the given node in the specified direction
     *
@@ -67,71 +111,34 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge
     * @param isForward direction to compute closure
     * @return Set of reachable nodes
     */
-  private def reach(criteria: ISet[FlowNode], isForward: Boolean): Collector = {
+  private def reach(criteria: ISet[FlowNode], isForward: Boolean)
+  : Collector = {
     var result = isetEmpty[FlowNode]
-    var workList = ilistEmpty[FlowNode]
+    var workList = ilistEmpty[FlowNode] ++ criteria
     var resEdges = isetEmpty[Edge]
     var resError = isetEmpty[Tag]
-    val graphNodes = criteria.map(n => (n.getOwner, n)).groupBy(_._1).mapValues(_.map(_._2))
-    if (graphNodes.size > 1) {
-      graphNodes.map { ent =>
-        new BasicReachabilityImpl(st, ent._1).reach(ent._2, isForward)
-      }.fold(Collector.buildEmpty(st))((x, y) => x.union(y))
-    } else {
-      criteria.foreach { c =>
-        if (graph.hasNode(c)) {
-          workList = workList :+ c
-        } else {
-          resError += errorMessageGen(MISSING_CRITERIA,
-            c.getUri,
-            ReachAnalysisStage.Node)
-        }
-      }
-      while (workList.nonEmpty) {
-        val current = workList.head
-        if (!result.contains(current)) {
-          val next = if (isForward) graph.getSuccessorNodes(current)
-          else graph.getPredecessorNodes(current)
-          workList = workList ++ next //++ next.flatMap(getAllSubNode)
-          val sgraphs = getAllSubNode(current)
-          result += current
-          result = result ++ sgraphs.flatMap(_.nodes)
-          resEdges ++= next.flatMap(it => if (isForward) graph.getEdge(current, it)
-          else graph.getEdge(it, current))
-          resEdges ++= sgraphs.flatMap(_.edges)
-        }
-        workList = workList.tail
-      }
+    var resGraph = isetEmpty[Graph]
 
-      val portNodes = if (isForward) {
-        result.filter(_.getResourceType == NodeType.PORT).filter(it => H.isOutPort(it.getUri))
-      } else result.filter(_.getResourceType == NodeType.PORT).filter(it => H.isInPort(it.getUri))
-      val parenNodes = if (portNodes.nonEmpty && FlowNode.getNode(graph.getUri).isDefined) {
-        portNodes.flatMap(x => FlowNode.getNode(graph.getUri).get.getOwner.getEdgeForPort(x.getUri)).
-          map(it => if (isForward) it.target else it.source)
-      } else {
-        isetEmpty[FlowNode]
+    while (workList.nonEmpty) {
+      val curr = workList.head
+      if (curr.getSubGraph.isDefined) {
+        val allSubGraphs = getAllSubNode(curr)
+        result = result ++ allSubGraphs.flatMap(_.nodes)
+        resEdges = resEdges ++ allSubGraphs.flatMap(_.edges)
+        resGraph = resGraph ++ allSubGraphs
       }
-
-      if (parenNodes.nonEmpty) {
-        if (isForward) {
-          resEdges ++= parenNodes.flatMap(pn => FlowNode.getNode(graph.getUri).get.getOwner.getEdge(
-            FlowNode.getNode(graph.getUri).get, pn))
-        } else {
-          resEdges ++= parenNodes.flatMap(pn => FlowNode.getNode(graph.getUri).get.getOwner.getEdge(
-            pn, FlowNode.getNode(graph.getUri).get))
-        }
-        collector.Collector(st, isetEmpty + graph, result + FlowNode.getNode(graph.getUri).get,
-          resEdges, isForward, criteria.map(_.getUri), resError).union(
-          new BasicReachabilityImpl(st, FlowNode.getNode(graph.getUri).get.getOwner)
-            .reach(parenNodes, isForward))
-      } else {
-        collector.Collector(st, isetEmpty + graph, result, resEdges, isForward,
-          criteria.map(_.getUri), resError)
-      }
+      val (n, e, g) = if (isForward) nextNode(curr) else previousNode(curr)
+      result += curr
+      resEdges = resEdges ++ e
+      resGraph = resGraph ++ g
+      n.foreach(nn => if (!result.contains(nn)) {
+        workList = workList :+ nn
+      })
+      workList = workList.tail
     }
+    collector.Collector(st, resGraph, result, resEdges, isForward,
+      criteria.map(_.getUri), resError)
   }
-
 
   private def getAllSubNode(given: FlowNode): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
     var result = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
@@ -172,7 +179,7 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge
   private def getAncestors(node: FlowNode): Seq[FlowGraph[FlowNode, Edge]] = {
     val systemuri = st.system
     var result = ilistEmpty[FlowGraph[FlowNode, Edge]]
-    result.push(node.getOwner)
+    result = result.push(node.getOwner)
     while (result.head.getUri != systemuri) {
       assert(FlowNode.getNode(result.head.getUri).isDefined)
       result = result.push(FlowNode.getNode(result.head.getUri).get.getOwner)
@@ -180,17 +187,21 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge
     result
   }
 
-  private def findRelaventGraphs(src: Seq[FlowGraph[FlowNode, Edge]],
-                                 dst: Seq[FlowGraph[FlowNode, Edge]]) = {
-    val minSize = if (src.size < dst.size) src.size else dst.size
+  protected def findRelaventGraphs(source: FlowNode,
+                                   target: FlowNode)
+  : ISet[Graph] = {
+    val srcAn = getAncestors(source)
+    val dstAn = getAncestors(target)
+
+    val minSize = if (srcAn.size < dstAn.size) srcAn.size else dstAn.size
     var common = ilistEmpty[FlowGraph[FlowNode, Edge]]
-    for (i <- 0 to minSize) {
-      if (src(i) == dst(i)) {
-        common = common :+ src(i)
+    for (i <- 0 until minSize) {
+      if (srcAn(i) == dstAn(i)) {
+        common = common :+ srcAn(i)
       }
     }
     common = common.dropRight(1)
-    src.toSet ++ dst.toSet -- common.toSet
+    srcAn.toSet ++ dstAn.toSet -- common.toSet
   }
 
   case class NodeReachPath(graphs: ISet[Graph],
@@ -198,9 +209,7 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge
                            edges: ISeq[Edge])
 
   def simpleReachPath(source: FlowNode, target: FlowNode): Collector = {
-    val srcAn = getAncestors(source)
-    val dstAn = getAncestors(target)
-    val relavent = findRelaventGraphs(srcAn, dstAn)
+    val relavent = findRelaventGraphs(source, target)
 
     var paths = ilistEmpty[NodeReachPath]
     var result = ilistEmpty[NodeReachPath]
@@ -302,16 +311,18 @@ class BasicReachabilityImpl(st: SymbolTable, graph: FlowGraph[FlowNode, FlowEdge
         scc.flatMap(c =>
           if ((c intersect x.getNodes).nonEmpty) c else isetEmpty[FlowNode]))).toMap
 
-      val complexPaths: ISeq[Collector] = pathCycleMap.map { it =>
-        collector.Collector(st,
-          graphs = it._1.getGraphs,
-          nodes = it._1.getNodes union it._2,
-          ports = isetEmpty[ResourceUri],
-          resType = ResultType.Node,
-          edges = it._1.getEdges union getEdgesInPath(it._2),
-          flows = isetEmpty[ResourceUri],
-          criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri,
-          error = isetEmpty[Tag])
+      val complexPaths: ISeq[Collector] = pathCycleMap.flatMap { it =>
+        if (it._2.nonEmpty) {
+          Some(collector.Collector(st,
+            graphs = it._1.getGraphs,
+            nodes = it._1.getNodes union it._2,
+            ports = isetEmpty[ResourceUri],
+            resType = ResultType.Node,
+            edges = it._1.getEdges union getEdgesInPath(it._2),
+            flows = isetEmpty[ResourceUri],
+            criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri,
+            error = isetEmpty[Tag]))
+        } else None
       }.toVector
 
       Collector(st,

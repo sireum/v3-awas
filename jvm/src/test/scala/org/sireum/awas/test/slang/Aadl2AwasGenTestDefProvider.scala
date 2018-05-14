@@ -50,11 +50,11 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
     Aadl2Awas(model) match {
       case Some(x) => {
-        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-        val st = SymbolTable(x)
-        val graph = FlowGraph(x, st)
-        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
-          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]])
+        //        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+        //        val st = SymbolTable(x)
+        //        val graph = FlowGraph(x, st)
+        //        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+        //          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
         PrettyPrinter(x)
       }
       case None => ""

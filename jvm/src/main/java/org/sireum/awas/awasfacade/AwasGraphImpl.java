@@ -59,8 +59,8 @@ public class AwasGraphImpl implements AwasGraph {
     public AwasGraphImpl(FlowGraph<FlowNode, FlowEdge<FlowNode>> graph, SymbolTable st) {
         this.graph = graph;
         this.st = st;
-        this.pr = PortReachability$.MODULE$.apply(graph, st);
-        this.er = ErrorReachability$.MODULE$.apply(graph, st);
+        this.pr = PortReachability$.MODULE$.apply(st);
+        this.er = ErrorReachability$.MODULE$.apply(st);
     }
 
     /**
@@ -162,7 +162,7 @@ public class AwasGraphImpl implements AwasGraph {
                 QueryBuilder.apply$default$2(),
                 QueryBuilder.apply$default$3()));
 
-        return queryModel.map(model -> toJavaMap(QueryEval.apply(model, graph, st)).entrySet()
+        return queryModel.map(model -> toJavaMap(QueryEval.apply(model, st)).entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()))).orElseGet(HashMap::new);
     }

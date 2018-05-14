@@ -104,7 +104,7 @@ final case class NodeEmpty() extends PrimaryExpr
 
 final case class QueryName(id: Id) extends PrimaryExpr
 
-final case class NodeName(ids: QueryNode.Seq[Id])
+final case class NodeName(ids: QueryNode.Seq[Id]) extends PrimaryExpr
 
 object FilterID extends Enumeration {
   type FilterID = Value

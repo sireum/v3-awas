@@ -1,0 +1,3 @@
+//q1 = reach forward FlightSystem_tier1_Instance.satelliteSignal{GPSErrorLibrary.NoSignal}
+q2 = reach paths from FlightSystem_tier1_Instance.pilotInput{AFGErrorLibrary.NoPilotInput} to FlightSystem_tier1_Instance.FlightControl.guidanceCommands{AFGErrorLibrary.NoService}
+//q3 = reach paths from FlightSystem_tier1_Instance.FSpowersupply to FlightSystem_tier1_Instance.ObservableFailure

@@ -9,21 +9,21 @@ import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{IMap, ISeq, ISet, Tag, _}
 
 //In future, even graph and symboltable may become maps where each graph points to a Collector
-class CollectorImpl(symbolTable: SymbolTable,
-                    graphs: ISet[FlowGraph[FlowNode, Edge]] = isetEmpty[FlowGraph[FlowNode, FlowEdge[FlowNode]]],
-                    resType: Option[ResultType] = None,
-                    var resEdges: ISet[FlowEdge[FlowNode]] = isetEmpty[Edge],
-                    operator: Option[Operator] = None,
-                    var criteria: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    var resNodes: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    var resPorts: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    var resPortError: IMap[ResourceUri, ISet[ResourceUri]] = imapEmpty[ResourceUri, ISet[ResourceUri]],
-                    var resFlows: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    var resMode: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    var resBehav: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    var resEvents: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                    resPaths: ISeq[Collector] = ivectorEmpty[Collector],
-                    var error: ISet[Tag] = isetEmpty[Tag]
+case class CollectorImpl(symbolTable: SymbolTable,
+                         graphs: ISet[FlowGraph[FlowNode, Edge]] = isetEmpty[FlowGraph[FlowNode, FlowEdge[FlowNode]]],
+                         resType: Option[ResultType] = None,
+                         var resEdges: ISet[FlowEdge[FlowNode]] = isetEmpty[Edge],
+                         operator: Option[Operator] = None,
+                         var criteria: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         var resNodes: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         var resPorts: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         var resPortError: IMap[ResourceUri, ISet[ResourceUri]] = imapEmpty[ResourceUri, ISet[ResourceUri]],
+                         var resFlows: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         var resMode: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         var resBehav: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         var resEvents: ISet[ResourceUri] = isetEmpty[ResourceUri],
+                         resPaths: ISeq[Collector] = ivectorEmpty[Collector],
+                         var error: ISet[Tag] = isetEmpty[Tag]
                         ) extends Collector with Serializable {
 
 
@@ -363,20 +363,45 @@ class CollectorImpl(symbolTable: SymbolTable,
 
 }
 
-case class FlowCollector(graph: FlowGraph[FlowNode, Edge],
+case class FlowCollector(graph: ISet[FlowGraph[FlowNode, Edge]],
                          ports: ISet[ResourceUri],
                          //  isInterNodeEdge : Boolean,
                          edges: ISet[Edge],
                          flows: ISet[ResourceUri],
-                         errors: ISet[Tag])
+                         errors: ISet[Tag]) {
+  def union(fc: FlowCollector): FlowCollector = {
+    FlowCollector(graph ++ fc.graph,
+      ports ++ fc.ports,
+      edges ++ fc.edges,
+      flows ++ fc.flows,
+      errors ++ fc.errors)
+  }
+}
 
 case class FlowErrorNextCollector(tuples: ISet[(ResourceUri, ResourceUri)],
                                   edges: ISet[Edge],
                                   flows: ISet[ResourceUri],
-                                  errors: ISet[Tag])
+                                  errors: ISet[Tag],
+                                  graph: ISet[FlowGraph[FlowNode, Edge]]) {
+  def union(fenc: FlowErrorNextCollector): FlowErrorNextCollector = {
+    FlowErrorNextCollector(tuples ++ fenc.tuples,
+      edges ++ fenc.edges,
+      flows ++ fenc.flows,
+      errors ++ fenc.errors,
+      graph ++ fenc.graph
+    )
+  }
+}
 
 case class FlowErrorPathCollector(path: ISeq[(ResourceUri, ResourceUri)],
                                   edges: ISet[Edge],
                                   flows: ISet[ResourceUri],
-                                  errors: ISet[Tag])
+                                  errors: ISet[Tag],
+                                  graphs: ISet[FlowGraph[FlowNode, Edge]]) {
+  def union(fepc: FlowErrorPathCollector): FlowErrorPathCollector = {
+    FlowErrorPathCollector((path.toSet ++ fepc.path.toSet).toVector, edges ++ fepc.edges,
+      flows ++ fepc.flows, errors ++ fepc.errors, graphs ++ fepc.graphs)
+  }
+}
+
 

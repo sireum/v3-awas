@@ -27,7 +27,7 @@ package org.sireum.awas.fptc
 
 import org.sireum.ST
 import org.sireum.awas.ast.Model
-import org.sireum.awas.collector.FlowCollector
+import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{ComponentTable, SymbolTable, SymbolTableHelper}
@@ -47,6 +47,10 @@ trait FlowGraph[Node, Edge <: AwasEdge[Node]] extends AwasGraph[Node, Edge] {
   def getSuccessorPorts(port: ResourceUri): FlowCollector
 
   def getPredecessorPorts(port: ResourceUri): FlowCollector
+
+  def getSuccessorError(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector
+
+  def getPredecessorError(tuple: (ResourceUri, ResourceUri)): FlowErrorNextCollector
 
   def getNode(port: ResourceUri): Option[Node]
 

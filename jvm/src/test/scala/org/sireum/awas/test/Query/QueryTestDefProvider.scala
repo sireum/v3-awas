@@ -55,7 +55,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("three_references.awas")
+      p.toLowerCase.contains("instance.awas")
     }
 
     filesEqual.toVector.map { x =>
@@ -92,7 +92,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
         QueryParser(query, reporter) match {
           case None => ""
           case Some(q) =>
-            val res = QueryEval(q, graph, st)
+            val res = QueryEval(q, st)
             var result = ""
             res.foreach { r =>
               result += r._1

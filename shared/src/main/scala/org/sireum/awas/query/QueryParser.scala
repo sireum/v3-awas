@@ -78,8 +78,8 @@ class QueryParser(val input : ParserInput) extends Parser {
     capture(atomic("in-port"))~WS ~> ((x: String) =>FilterID.IN) |
     capture(atomic("out-port"))~WS ~> ((x: String) =>FilterID.OUT) |
     capture(atomic("error"))~WS ~> ((x: String) =>FilterID.ERROR) |
-    capture(atomic("flow-source"))~WS ~> ((x: String) =>FilterID.SOURCE) |
-    capture(atomic("flow-sink"))~WS ~> ((x: String) =>FilterID.SINK)
+      capture(atomic("source")) ~ WS ~> ((x: String) => FilterID.SOURCE) |
+      capture(atomic("sink")) ~ WS ~> ((x: String) => FilterID.SINK)
   }
 
   def pexpr : Rule1[PrimaryExpr] = rule {

@@ -44,9 +44,14 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 
   override def getIncomingEdges(node: Node): CSet[Edge] = {
     if (graph.nodes.get(node).nonEmpty) {
-      graph.incomingEdges.get(graph.nodes.get(node).get).map { x =>
+      val inEdges = graph.incomingEdges.get(graph.nodes.get(node).get).map { x =>
         x.elements.elements.flatMap(t => getEdgeData(t.toEdge(graph.nodes.keys)))
-      }.get.toSet
+      }
+      if (inEdges.nonEmpty) {
+        inEdges.get.toSet
+      } else {
+        isetEmpty[Edge]
+      }
     } else {
       isetEmpty[Edge]
     }
@@ -54,9 +59,14 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 
   override def getOutgoingEdges(node: Node): CSet[Edge] = {
     if (graph.nodes.get(node).nonEmpty) {
-      graph.outgoingEdges.get(graph.nodes.get(node).get).map { x =>
+      val outEdges = graph.outgoingEdges.get(graph.nodes.get(node).get).map { x =>
         x.elements.elements.flatMap(t => getEdgeData(t.toEdge(graph.nodes.keys)))
-      }.get.toSet
+      }
+      if (outEdges.nonEmpty) {
+        outEdges.get.toSet
+      } else {
+        isetEmpty[Edge]
+      }
     } else {
       isetEmpty[Edge]
     }

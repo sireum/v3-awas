@@ -27,12 +27,13 @@ package org.sireum.awas.fptc
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
-import org.sireum.awas.collector.FlowCollector
+import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.graph._
 import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-import org.sireum.{$Slang, ISZ, ST, $internal}
+import org.sireum.{$Slang, $internal, ISZ, ST}
 
 class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
   extends FlowGraph[FlowNode, FlowEdge[FlowNode]] with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]] {
@@ -133,10 +134,62 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     res
   }
 
+  override def getSuccessorError(tuple: (ResourceUri, ResourceUri))
+  : FlowErrorNextCollector = {
+    val node = getNode(tuple._1)
+    if (node.isDefined) {
+      if (H.isInPort(tuple._1) && node.get.getResourceType != NodeType.PORT) {
+        node.get.errorForward(tuple)
+      } else {
+        var result = ilistEmpty[(ResourceUri, ResourceUri)]
+        var edges = isetEmpty[Edge]
+        getEdgeForPort(tuple._1).foreach { e =>
+          if (e.targetPort.isDefined) {
+            edges += e
+            result = result :+ (e.targetPort.get, tuple._2)
+          }
+        }
+        collector.FlowErrorNextCollector(result.toSet,
+          edges, isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty + this)
+      }
+    } else {
+      FlowErrorNextCollector(isetEmpty, isetEmpty, isetEmpty,
+        isetEmpty + errorMessageGen(MISSING_NODE, tuple._1, ReachAnalysisStage.Port),
+        isetEmpty + this)
+    }
+  }
+
+  override def getPredecessorError(tuple: (ResourceUri, ResourceUri))
+  : FlowErrorNextCollector = {
+    val node = getNode(tuple._1)
+    if (node.isDefined) {
+      if (H.isOutPort(tuple._1) && node.get.getResourceType != NodeType.PORT) {
+        node.get.errorBackward(tuple)
+      } else {
+        var result = ilistEmpty[(ResourceUri, ResourceUri)]
+        var edges = isetEmpty[Edge]
+        getEdgeForPort(tuple._1).foreach { e =>
+          if (e.sourcePort.isDefined) {
+            edges += e
+            result = result :+ (e.sourcePort.get, tuple._2)
+          }
+        }
+        collector.FlowErrorNextCollector(result.toSet,
+          edges, isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty + this)
+      }
+    } else {
+      FlowErrorNextCollector(isetEmpty, isetEmpty, isetEmpty,
+        isetEmpty + errorMessageGen(MISSING_NODE, tuple._1, ReachAnalysisStage.Port),
+        isetEmpty + this)
+    }
+  }
+
   override def getSuccessorPorts(port: ResourceUri): FlowCollector = {
     val node = getNode(port)
     if (node.isDefined) {
-      if (port.startsWith(H.PORT_IN_TYPE)) {
+      if (port.startsWith(H.PORT_IN_TYPE) &&
+        (FlowNode.getNode(port).isEmpty ||
+          !nodes.toSet.contains(FlowNode.getNode(port).get))) {
         node.get.flowForward(port)
       } else {
         //outport: use edge to get the successor
@@ -152,10 +205,10 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
             case _ =>
           }
         }
-        collector.FlowCollector(this, res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
+        collector.FlowCollector(isetEmpty + this, res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
       }
     } else {
-      collector.FlowCollector(this,
+      collector.FlowCollector(isetEmpty + this,
         isetEmpty[ResourceUri],
         isetEmpty[EdgeT],
         isetEmpty[ResourceUri],
@@ -166,7 +219,9 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
 
   def getNode(uri: ResourceUri): Option[FlowNode] = {
     if (uri.startsWith(H.COMPONENT_TYPE) ||
-      uri.startsWith(H.CONNECTION_TYPE)) {
+      uri.startsWith(H.CONNECTION_TYPE) ||
+      (FlowNode.getNode(uri).isDefined &&
+        nodes.toSet.contains(FlowNode.getNode(uri).get))) {
       FlowNode.getNode(uri)
     } else {
       portNodeMap.get(uri)
@@ -180,7 +235,9 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     val node = getNode(port)
     if (node.isDefined) {
 
-      if (port.startsWith(H.PORT_IN_TYPE)) {
+      if (port.startsWith(H.PORT_IN_TYPE) ||
+        (FlowNode.getNode(port).isDefined &&
+          nodes.toSet.contains(FlowNode.getNode(port).get))) {
         var res = isetEmpty[ResourceUri]
         var edges = isetEmpty[EdgeT]
         getEdgeForPort(port).foreach { e =>
@@ -192,13 +249,13 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
             case _ =>
           }
         }
-        collector.FlowCollector(this, res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
+        collector.FlowCollector(isetEmpty + this, res, edges, isetEmpty[ResourceUri], isetEmpty[Tag])
       } else {
         //outport: use edge to get the successor
         node.get.flowBackward(port)
       }
     } else {
-      collector.FlowCollector(this,
+      collector.FlowCollector(isetEmpty + this,
         isetEmpty[ResourceUri],
         isetEmpty[EdgeT],
         isetEmpty[ResourceUri],

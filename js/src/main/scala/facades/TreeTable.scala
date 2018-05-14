@@ -9,7 +9,8 @@ import scala.scalajs.js.annotation.JSName
 
 @js.native
 trait TreeTable extends JQuery {
-  def treetable(options: js.Dictionary[js.Any] = js.native): this.type = js.native
+  def treetable(options: js.Dictionary[js.Any] = js.native,
+                force: Boolean = js.native): this.type = js.native
 
   val Node: TreeNode = js.native
 }

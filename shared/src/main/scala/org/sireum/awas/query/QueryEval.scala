@@ -37,10 +37,15 @@ import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{ISet, _}
 
 object QueryEval {
-  type Result = Map[String, Collector]
+  type Result = ILinkedMap[String, Collector]
 
-  def apply(m: Model, graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable): Result = {
-    new QueryEval(graph, st).eval(m)
+  def apply(m: Model, st: SymbolTable): Result = {
+    new QueryEval(st).eval(m)
+  }
+
+  def apply(qs: QueryStmt, env: ILinkedMap[String, Collector],
+            st: SymbolTable): Result = {
+    new QueryEval(st).eval(qs, env)
   }
 }
 
@@ -55,7 +60,7 @@ case class ConstraintExpr(kind : ConstraintKind,
                           simple: Option[Collector],
                           regex: Option[Anything])
 
-final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable) {
+final class QueryEval(st: SymbolTable) {
   type Graph = FlowGraph[FlowNode, FlowNode.Edge]
 
   val H = SymbolTableHelper
@@ -77,6 +82,12 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
     result
   }
 
+  def eval(queryStmt: QueryStmt, env: ILinkedMap[String, Collector]): QueryEval.Result = {
+    result = env
+    result = result + (queryStmt.qName.value -> eval(queryStmt.qExpr))
+    result
+  }
+
   def eval(qexp: QueryExpr): Collector = {
     qexp match {
       case binary: BinaryExpr => eval(binary)
@@ -85,8 +96,6 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
       case reach: ReachExpr => eval(reach)
     }
   }
-
-
 
   def eval(fexp: FilterExpr): Collector = {
     val lhs: Collector = eval(fexp.lhs)
@@ -232,7 +241,7 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
   }
 
   def pathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
-    val er = ErrorReachability(graph, st)
+    val er = ErrorReachability(st)
     val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
       if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
     } else if (source.getResultType.isDefined) {
@@ -280,7 +289,7 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
   }
 
   def reach(criterion: Collector, isForward: Boolean): Collector = {
-    val er = ErrorReachability(criterion.getGraphs.head, st)
+    val er = ErrorReachability(st)
     if (criterion.hasErrors) {
       criterion
     } else {
@@ -342,6 +351,8 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
       case NodeEmpty() => Collector(st)
 
       case QueryName(id) => result.getOrElse(id.value, Collector(st))
+
+      case nn: NodeName => eval(nn, ivectorEmpty[ISeq[Id]])
     }
   }
 
@@ -369,8 +380,9 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
     val nId = n.ids.map(_.value)
     val uri = H.findUri(nId, st)
     if (uri.isDefined) {
-      if (uri.get.startsWith(H.COMPONENT_TYPE) ||
-        uri.get.startsWith(H.CONNECTION_TYPE)) {
+      if ((uri.get.startsWith(H.COMPONENT_TYPE) ||
+        uri.get.startsWith(H.CONNECTION_TYPE)) &&
+        FlowNode.getNode(uri.get).isDefined) {
         assert(FlowNode.getNode(uri.get).isDefined)
         collector.Collector(st,
           isetEmpty + FlowNode.getNode(uri.get).get.getOwner,
@@ -379,10 +391,16 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
           isetEmpty[ResourceUri] + uri.get, isetEmpty[ResourceUri],
           imapEmpty[ResourceUri, ISet[ResourceUri]])
       } else if (H.isPort(uri.get)) {
+        var gra = isetEmpty[Graph]
+        if (FlowNode.getNode(uri.get).isDefined) {
+          gra += FlowNode.getNode(uri.get).get.getOwner
+        }
         val nodeUri = Resource.getParentUri(uri.get).get
-        val gra = FlowNode.getNode(nodeUri).get.getOwner
+        if (FlowNode.getNode(nodeUri).isDefined) {
+          gra += FlowNode.getNode(nodeUri).get.getOwner
+        }
         collector.Collector(st,
-          isetEmpty + gra,
+          isetEmpty ++ gra,
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] + uri.get,
@@ -397,12 +415,15 @@ final class QueryEval(graph: FlowGraph[FlowNode, FlowNode.Edge], st: SymbolTable
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] ++ FlowNode.getNode(nodeUri).get.getPortsFromFlows(uri.get),
           imapEmpty[ResourceUri, ISet[ResourceUri]])
       } else {
-        Collector(st)
-          }
+        Collector(st, isetEmpty,
+          isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA,
+            QueryPPrinter(n), ReachAnalysisStage.Query))
+      }
 
     } else {
-      Collector(st, isetEmpty + graph,
-        isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA, n.toString, ReachAnalysisStage.Query))
+      Collector(st, isetEmpty,
+        isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA,
+          n.toString, ReachAnalysisStage.Query))
     }
   }
 }

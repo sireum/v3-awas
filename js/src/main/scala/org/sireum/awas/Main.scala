@@ -1,32 +1,43 @@
 package org.sireum.awas
 
 import facades._
-import org.scalajs.dom.html.{Anchor, Div, Input}
-import org.scalajs.dom.raw.Node
+import org.scalajs.dom
+import org.scalajs.dom.html.{Anchor, Div, Input, Table}
+import org.scalajs.dom.raw.{HTMLElement, Node}
+import org.scalajs.dom.svg.G
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
+import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
-import org.sireum.awas.reachability.BasicReachabilityImpl
+import org.sireum.awas.reachability.{BasicReachabilityImpl, ErrorReachabilityImpl, PortReachabilityImpl}
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.awas.witness.SvgGenerator
 import org.sireum.common.JSutil._
+import org.sireum.message.Message
+import org.sireum.ops.ISZOps
 import org.sireum.util.{imapEmpty, _}
 import scalatags.Text
 import scalatags.Text.all.{id, _}
 import scalatags.Text.tags2.nav
+import org.scalajs.dom.ext._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
+import scala.scalajs.js.timers.SetTimeoutHandle
 
 
 @JSExportTopLevel("org.sireum.awas.Main")
 object Main {
   val H = SymbolTableHelper
-  var uriNodeMap: IMap[String, ISet[Node]] = imapEmpty[String, ISet[Node]]
-  var selections: ISet[String] = isetEmpty[String]
+  var uriNodeMap: IMap[String, ISet[SvgNode]] = imapEmpty[String, ISet[SvgNode]]
+  var graphNodeMap: IMap[String, ISet[SvgNode]] = imapEmpty[String, ISet[SvgNode]]
+  var selections: IMap[String, Boolean] = imapEmpty[String, Boolean]
+  var clickCounter = 0
+  var timer: Option[SetTimeoutHandle] = None
   var gl: Option[GoldenLayout] = None
+  var qI: Option[QueryInter] = None
 
   def getInitLayout(title: String, inGraph: String): js.Dictionary[scalajs.js.Any] = js.Dictionary(
     ("settings", js.Dictionary(("showPopoutIcon", false),
@@ -42,7 +53,7 @@ object Main {
                 ("type", "component"),
                 ("componentName", "system"),
                 ("id", inGraph),
-                ("componentState", js.Dictionary[scalajs.js.Any](("graph", inGraph))),
+                ("componentState", js.Dictionary[scalajs.js.Any](("graph", inGraph), ("isTD", true))),
                 ("isClosable", false)
               )
             )
@@ -57,7 +68,15 @@ object Main {
     ("type", "component"),
     ("componentName", "system"),
     ("id", graph),
-    ("componentState", js.Dictionary(("graph", graph)))
+    ("componentState", js.Dictionary(("graph", graph), ("isTD", true)))
+  )
+
+  def cliConfig(): js.Dictionary[scalajs.js.Any] = js.Dictionary(
+    ("title", "Awas Query"),
+    ("type", "component"),
+    ("componentName", "cli"),
+    ("id", "cli"),
+    ("componentState", js.Dictionary(("name", "awascli")))
   )
 
 
@@ -78,13 +97,14 @@ object Main {
   }
 
   def graph2Svg(graph: FlowGraph[FlowNode, FlowNode.Edge], isLR: Boolean): Node = {
-    val svgString = GraphViz.Viz(SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
-      with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], isLR), js.Dictionary(("images", js.Array(
+    val dotGraph = SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+      with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], isLR)
+    val svgString = GraphViz.Viz(dotGraph, js.Dictionary(("images", js.Array(
       js.Dictionary(("path", "min/images/sub-graph-icon.png"), ("width", "45px"), ("height", "25px"))
     ))))
     val result = templateContent(raw(svgString)).querySelectorAll("svg")(0)
-    processSvg(result.asInstanceOf[Element])
-
+    val nodes = processSvg(result.asInstanceOf[Element])
+    graphNodeMap += (graph.getUri -> nodes)
     result
   }
 
@@ -103,8 +123,8 @@ object Main {
                   li(a(href := "#", onclick := "openGraphTab(\"" + ancestors(paths.indexOf(path)) + "\")", path))
                 }
               )))), div(cls := "level-right", div(cls := "level-item",
-          div(cls := "control", label(cls := "radio", input(`type` := "radio", name := "TBLR", id := "td", " Top-Down ")),
-            label(cls := "radio", input(`type` := "radio", name := "TBLR", id := "lr", " Left-Right ")))
+          div(cls := "control", label(cls := "radio", input(`type` := "radio", name := uri, id := "td", " Top-Down ")),
+            label(cls := "radio", input(`type` := "radio", name := uri, id := "lr", " Left-Right ")))
         ))))
       //)//)
     } else div()
@@ -176,24 +196,29 @@ object Main {
               $[Input](breadCrumbs, ".td").checked = true
 
               $[Input](breadCrumbs, ".td").onclick = (_: MouseEvent) => {
-                //                if($[Input](breadCrumbs, ".td").checked == false) {
-                $[Input](breadCrumbs, ".td").checked = true
-                container.getElement().children("svg").first().replaceWith(
-                  graph2Svg(graphs(uri), false))
-                SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-                //                }
+                if (componentState.get("isTD").isDefined &&
+                  !componentState.get("isTD").get.asInstanceOf[Boolean]) {
+                  //                  $[Input](breadCrumbs, ".td").checked = true
+                  container.getElement().children("svg").first().replaceWith(
+                    graph2Svg(graphs(uri), false))
+                  SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+                  componentState.update("isTD", true)
+                }
               }
               $[Input](breadCrumbs, ".lr").onclick = (_: MouseEvent) => {
-                //                if($[Input](breadCrumbs, ".lr").checked == false) {
-                $[Input](breadCrumbs, ".lr").checked = true
-                container.getElement().children("svg").first().replaceWith(
-                  graph2Svg(graphs(uri), true))
-                SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-                //                }
+                if (componentState.get("isTD").isDefined &&
+                  componentState.get("isTD").get.asInstanceOf[Boolean]) {
+                  //                  $[Input](breadCrumbs, ".lr").checked = true
+                  container.getElement().children("svg").first().replaceWith(
+                    graph2Svg(graphs(uri), true))
+                  SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+                  componentState.update("isTD", false)
+                }
               }
             }
           }
           }: js.Function)
+
 
           gl.get.init()
 
@@ -204,30 +229,45 @@ object Main {
 
           computeHeight(gl.get)
 
-          val qButton = mainDiv.querySelectorAll("#query-button")
+          val queryButton = mainDiv.querySelector("#query-button")
           val clearButton = mainDiv.querySelector("#clear-button")
           val forwardButton = mainDiv.querySelector("#forward-button")
           val backwardButton = mainDiv.querySelector("#backward-button")
-          forwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            forwardButtonAction(selections, st)
-          }
-
-          backwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            backwardButtonAction(selections, st)
+          queryButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+            openQueryCli(st)
           }
 
           clearButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            clearAll(selections)
+            clearAll(selections.keySet)
           }
 
-          for (i <- 0 until qButton.length) {
-            qButton.item(i).firstChild.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-              //println("clicked")
-              val anch = qButton.item(i).childNodes.item(1).asInstanceOf[Anchor]
-              //clear(res)
-              //              res = highlight(anch.getAttribute("id"))
-            }
+          forwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+            forwardButtonAction(selections.keySet, st)
           }
+
+          backwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+            backwardButtonAction(selections.keySet, st)
+          }
+
+          val burger = mainDiv.querySelector(".burger")
+          burger.addEventListener("click", { (_: MouseEvent) => {
+            val target = burger.asInstanceOf[AWASHTMLElement].dataset("target")
+            val targetElem = mainDiv.querySelector("#" + target)
+            burger.classList.toggle("is-active")
+            targetElem.classList.toggle("is-active")
+            computeHeight(gl.get)
+          }
+          }: js.Function1[MouseEvent, _])
+
+
+          //          for (i <- 0 until qButton.length) {
+          //            qButton.item(i).firstChild.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+          //              //println("clicked")
+          //              val anch = qButton.item(i).childNodes.item(1).asInstanceOf[Anchor]
+          //              //clear(res)
+          //              //              res = highlight(anch.getAttribute("id"))
+          //            }
+          //          }
           //$[Button](mainDiv, "#clear-button").onclick = (_: MouseEvent) => clear(res)
         }
       }
@@ -253,89 +293,70 @@ object Main {
     gl.updateSize(scalajs.js.undefined, scalajs.js.undefined)
   }
 
-//  def computeHeight(): Unit = {
-//    val totalHeight = window.innerHeight
-//    val headHeight = $[Div]("#header").clientHeight
-//    val footHeight = $[Div]("#footer").clientHeight
-//    val bodyHeight = totalHeight - (headHeight + footHeight + 23)
-//    val graphHeight = (bodyHeight / 2) - 75
-//    val queryHeight = bodyHeight / 2
-//    val graph = $[Div]("#graph-view")
-//    graph.style.height = s"${graphHeight}px"
-//    val query = $[Div]("#query-box")
-//    query.style.height = s"${queryHeight}px"
-//  }
-
-  //  def clear(res: IMap[Node, String]): Unit = {
-  //    res.foreach { it =>
-  //      if (it._2.startsWith("Edge")) {
-  //        it._1.asInstanceOf[Element].firstElementChild.setAttribute("stroke", "#000000")
-  //        it._1.asInstanceOf[Element].firstElementChild.setAttribute("opacity", ".2")
-  //        if (it._1.asInstanceOf[Anchor].childElementCount >= 2) {
-  //          it._1.asInstanceOf[Anchor].children(1).setAttribute("stroke", "#000000")
-  //          it._1.asInstanceOf[Anchor].children(1).setAttribute("fill", "#000000")
-  //          it._1.asInstanceOf[Anchor].children(1).setAttribute("opacity", ".2")
-  //        }
-  //
-  //      } else if (it._2.startsWith("component") || it._2.startsWith("connection")) {
-  //        it._1.asInstanceOf[Element].firstElementChild.setAttribute("fill", "#eeccff")
-  //        //      } else if(it._2.startsWith("Error")) {
-  //        //        it._1.asInstanceOf[Element].firstElementChild.setAttribute("fill", "#e6e6e6")
-  //      } else {
-  //        it._1.asInstanceOf[Element].firstElementChild.setAttribute("fill", "#ffffff")
-  //      }
-  //    }
-  //  }
 
   def cellClicked(tempUri: String): Boolean = {
-    if (selections.contains(tempUri)) {
-      clear(tempUri)
+    clickCounter = clickCounter + 1
+    if (clickCounter == 1) {
+      timer = Some(scalajs.js.timers.setTimeout(200) {
+        if (selections.keySet.contains(tempUri)) {
+          clear(tempUri)
+        } else {
+          highlight(imapEmpty + (tempUri -> true))
+        }
+        clickCounter = 0
+      })
     } else {
-      highlight(isetEmpty[String] + tempUri, true)
-
+      if (timer.isDefined) {
+        scalajs.js.timers.clearTimeout(timer.get)
+        //do dbl click
+        if (tempUri.startsWith(H.COMPONENT_TYPE) &&
+          FlowNode.getNode(tempUri).isDefined &&
+          FlowNode.getNode(tempUri).get.getSubGraph.isDefined) {
+          val subGraphUri = FlowNode.getNode(tempUri).get.getSubGraph.get.getUri
+          openGraphTab(subGraphUri)
+        }
+        clickCounter = 0
+      }
     }
     false
   }
 
-  def processSvg(svg: Element): Unit = {
+
+  def processSvg(svg: Element): ISet[SvgNode] = {
     svg.setAttribute("id", "awasgraph")
     svg.setAttribute("height", "100%")
     svg.setAttribute("width", "100%")
     jQuery(svg).removeAttr("xmlns")
     jQuery(svg).find("title").each((e: Element) => e.parentNode.removeChild(e))
-
-    val allLinks = svg.querySelectorAll("[*|href='templink']")
-    for (i <- 0 until allLinks.length) {
-      var tempUri = allLinks.item(i).asInstanceOf[Anchor].getAttribute("target")
-      uriNodeMap = uriNodeMap + (tempUri ->
-        uriNodeMap.getOrElse(tempUri, isetEmpty[Node]).+(allLinks.item(i)))
-
-      allLinks.item(i).asInstanceOf[Anchor].onclick = (_: MouseEvent) => cellClicked(tempUri)
-      val resUri = tempUri.split("[+]").last
-      if (resUri.startsWith(H.COMPONENT_TYPE) &&
-        FlowNode.getNode(resUri).isDefined &&
-        FlowNode.getNode(resUri).get.getSubGraph.isDefined) {
-        val subGraphUri = FlowNode.getNode(resUri).get.getSubGraph.get.getUri
-        allLinks.item(i).asInstanceOf[Anchor].ondblclick = (_: MouseEvent) => openGraphTab(subGraphUri)
-        allLinks(i).asInstanceOf[Anchor].setAttribute("xlink:title", "Click to select \n Double click to open sub-graph")
-        allLinks(i).asInstanceOf[Anchor].firstElementChild.setAttribute("fill", "#eeccff")
-      } else {
-        if (tempUri.startsWith("Node+")) {
-          allLinks(i).asInstanceOf[Anchor].setAttribute("xlink:title", "Click to select")
-          allLinks(i).asInstanceOf[Anchor].firstElementChild.setAttribute("fill", "#eeccff")
-        } else if (tempUri.startsWith("Edge")) {
-          //        allLinks(i).asInstanceOf[Element].firstElementChild.setAttribute("stroke", "#a6a6a6")
-          allLinks(i).asInstanceOf[Anchor].firstElementChild.setAttribute("opacity", ".2")
-          if (allLinks(i).asInstanceOf[Element].childElementCount >= 2) {
-            //          allLinks(i).asInstanceOf[Element].children(1).setAttribute("fill","#a6a6a6")
-            //          allLinks(i).asInstanceOf[Element].children(1).setAttribute("stroke", "#a6a6a6")
-            allLinks(i).asInstanceOf[Element].children(1).setAttribute("opacity", ".2")
-          }
-        } else {
-          allLinks(i).asInstanceOf[Anchor].setAttribute("xlink:title", "Click to select")
-        }
-      }
+    val allLinks = org.scalajs.dom.ext.PimpedNodeList(
+      svg.querySelectorAll("[*|href='templink']"))
+    val svgNodes = allLinks.map(n => new SvgNodeImpl(n.asInstanceOf[Anchor]))
+    val allUri = svgNodes.map(_.getUri).toSet
+    svgNodes.foreach { node =>
+      uriNodeMap = uriNodeMap + (node.getUri ->
+        (uriNodeMap.getOrElse(node.getUri, isetEmpty[SvgNode]) + node))
     }
+
+    if ((allUri intersect selections.keySet).nonEmpty) {
+
+      highlight(selections.filter(s => allUri.contains(s._1)))
+    }
+    svgNodes.toSet
+  }
+
+
+  @JSExportTopLevel("clear")
+  def clear(uri: String): Boolean = {
+    //we dont care whether the selection is criteria or not
+    //we are just resetting them and removing from selection
+    if (uriNodeMap.keySet.contains(uri)) {
+      uriNodeMap(uri).foreach(_.reset())
+    }
+
+    if (selections.contains(uri)) {
+      selections = selections - uri
+    }
+    false
   }
 
   def clearAll(uris: ISet[String]): Boolean = {
@@ -343,175 +364,58 @@ object Main {
     false
   }
 
+  def collectorToUris(col: Collector): IMap[String, Boolean] = {
+    var res = imapEmpty[String, Boolean]
+    if (col.getResultType.isDefined) {
+      val edges = col.getEdges.map(e => "Edge+" + e.sourcePort.get + ":" + e.targetPort.get)
+      val ans = col.getResultType.get match {
+        case ResultType.Node => col.getNodes.map(_.getUri)
+        case ResultType.Port => col.getPorts ++ col.getFlows
+        case ResultType.Error => col.getPortErrors.flatMap(pe =>
+          isetEmpty + pe._1 ++ pe._2.map(e => "Error:" + pe._1 + ":" + e)) ++
+          col.getFlows
+      }
+      res = res ++ (edges ++ ans).map(s => (s, false)).toMap
+      res = res ++ col.getCriteria.map(c => (c, true)).toMap
+    }
+    res
+  }
+
   def forwardButtonAction(criteria: ISet[String], st: SymbolTable): Unit = {
     clearAll(criteria)
     if (criteria.nonEmpty) {
-      val actualCriteria = criteria.flatMap { c =>
-        if (c.startsWith("Node")) {
-          FlowNode.getNode(c.split("[+]").last)
-        } else if (H.isPort(c) || H.isFlow(c)) {
-          None
-          //          FlowNode.getNode(c)
+      val res = criteria.flatMap { c =>
+        if (c.startsWith("Error")) {
+          val pe = c.substring(6)
+          val ei = pe.indexOf(":error")
+          val port = pe.subSequence(0, ei).toString
+          val error = pe.subSequence(ei + 1, pe.size).toString
+          println(port + "  " + error)
+          Some(new ErrorReachabilityImpl(st).
+            forwardErrorReach(port, isetEmpty + error))
         } else {
-          //we dont care about edges
-          None
+          Some(new PortReachabilityImpl(st).forwardReach(c))
         }
       }
-      val basicReach = new BasicReachabilityImpl(st, actualCriteria.head.getOwner)
-      val res = basicReach.forwardReachSetNode(actualCriteria)
-      val edges = res.getEdges.map(e => "Edge+" + e.sourcePort.get + ":" + e.targetPort.get)
-      val toHighlight = res.getNodes.map("Node+" + _.getUri) ++
-        res.getNodes.map(_.getUri).filter(H.isPort) ++ edges
-      highlight(toHighlight, false)
-      highlight(criteria.filterNot(_.startsWith("Edge")), true)
-      highlight(actualCriteria.map(_.getUri), true)
+      highlight(collectorToUris(res.foldLeft(Collector(st))(_.union(_))))
     }
   }
 
   def backwardButtonAction(criteria: ISet[String], st: SymbolTable): Unit = {
     clearAll(criteria)
     if (criteria.nonEmpty) {
-      val actualCriteria = criteria.flatMap { c =>
-        if (c.startsWith("Node")) {
-          FlowNode.getNode(c.split("[+]").last)
-        } else if (H.isPort(c) || H.isFlow(c)) {
-          None
-          //          FlowNode.getNode(c)
-        } else {
-          //we dont care about edges
-          None
-        }
-      }
-      val basicReach = new BasicReachabilityImpl(st, actualCriteria.head.getOwner)
-      val res = basicReach.backwardReachSetNode(actualCriteria)
-      val edges = res.getEdges.map(e => "Edge+" + e.sourcePort.get + ":" + e.targetPort.get)
-      val toHighlight = res.getNodes.map("Node+" + _.getUri) ++
-        res.getNodes.map(_.getUri).filter(H.isPort) ++ edges
-      highlight(toHighlight, false)
-      highlight(criteria.filterNot(_.startsWith("Edge")), true)
-      highlight(actualCriteria.map(_.getUri), true)
+
+      val basicReach = new ErrorReachabilityImpl(st)
+      val res = basicReach.backwardReachSet(criteria)
+      highlight(collectorToUris(res))
     }
   }
 
-  @JSExportTopLevel("clear")
-  def clear(uri: String): Boolean = {
-    if (uriNodeMap.get(uri).isDefined) {
-      uriNodeMap(uri).map(_.asInstanceOf[Anchor]).foreach { anchor =>
-        if (uri.startsWith("Node")) {
-          val auri = uri.split("[+]").last
-          if (H.isPort(auri) && selections.contains(auri)) {
-            //            selections = selections - auri
-            //            clear(auri)
-            uriNodeMap(auri).map(_.asInstanceOf[Anchor]).foreach { an =>
-              an.firstElementChild.setAttribute("fill", "#ffffff")
-              selections = selections - auri
-            }
-          }
-          anchor.firstElementChild.setAttribute("fill", "#eeccff")
-        } else if (uri.startsWith("Edge")) {
-          anchor.firstElementChild.setAttribute("stroke", "#000000")
-          anchor.firstElementChild.setAttribute("opacity", ".2")
-          if (anchor.childElementCount >= 2) {
-            anchor.children(1).setAttribute("stroke", "#000000")
-            anchor.children(1).setAttribute("fill", "#000000")
-            anchor.children(1).setAttribute("opacity", ".2")
-          }
-        } else {
-          if (H.isPort(uri) && FlowNode.getNode(uri).isDefined) {
-            if (selections.contains("Node+" + uri)) {
-              selections = selections - "Node+" + uri
-              clear("Node+" + uri)
-            }
-          }
-          anchor.firstElementChild.setAttribute("fill", "#ffffff")
-        }
-      }
-    }
-    selections = selections - uri
-    false
-  }
-
-  def highlight(uris: ISet[String], isCriteria: Boolean): Boolean = {
-    val color = if (isCriteria) "#008080" else "#b3daff"
+  def highlight(uris: IMap[String, Boolean]): Boolean = {
     selections = selections ++ uris
-    uris.foreach { uri =>
-      val anchors = uriNodeMap.get(uri).map(_.map(_.asInstanceOf[Anchor]))
-      if (anchors.isDefined) {
-        if (uri.startsWith("Node")) {
-          anchors.get.foreach(_.firstElementChild.setAttribute("fill", color))
-          val puri = uri.split("[+]").last
-          if (H.isPort(puri) && uriNodeMap.get(puri).isDefined) {
-            uriNodeMap(puri).map(_.asInstanceOf[Anchor]).foreach(
-              _.firstElementChild.setAttribute("fill", color))
-            selections = selections + puri
-          }
-        } else if (uri.startsWith("Edge")) {
-          anchors.get.foreach(_.firstElementChild.setAttribute("stroke", "#ff0000"))
-          anchors.get.foreach(_.firstElementChild.setAttribute("opacity", ".8"))
-          anchors.get.foreach { a =>
-            if (a.childElementCount >= 2) {
-              a.children(1).setAttribute("stroke", "#ff0000")
-              a.children(1).setAttribute("fill", "#ff0000")
-              a.children(1).setAttribute("opacity", ".8")
-            }
-          }
-        } else if (uri.startsWith("Error")) {
-          if (isCriteria) {
-            anchors.get.foreach(_.firstElementChild.setAttribute("fill", color))
-          } else {
-            anchors.get.foreach(_.firstElementChild.setAttribute("fill", "#ff9999"))
-          }
-        } else {
-          anchors.get.foreach(_.firstElementChild.setAttribute("fill", color))
-          if (H.isPort(uri) &&
-            FlowNode.getNode(uri).isDefined &&
-            uriNodeMap.get("Node+" + uri).isDefined) {
-            selections = selections + ("Node+" + uri)
-            uriNodeMap("Node+" + uri).map(_.asInstanceOf[Anchor]).foreach(
-              _.firstElementChild.setAttribute("fill", color))
-          }
-        }
-      }
-    }
+    uris.foreach(u => if (uriNodeMap.keySet.contains(u._1)) uriNodeMap(u._1).foreach(_.select(u._2)))
     false
   }
-
-  //  def highlight(queryName: String): IMap[Node, String] = {
-  //    var res = imapEmpty[Node, String]
-  //    val qres = GraphQuery.queryRes.toMap.get(queryName)
-  //    val crit = GraphQuery.queryCriteria.toMap.get(queryName)
-  //    if (qres.isDefined) {
-  //      qres.get.toVector.foreach { ruri =>
-  //        if (uriNodeMap.contains(ruri)) {
-  //          if (ruri.startsWith("Edge")) {
-  //            res += uriNodeMap(ruri) -> ruri
-  //            uriNodeMap(ruri).asInstanceOf[Anchor].firstElementChild.setAttribute("stroke", "#ff0000")
-  //            uriNodeMap(ruri).asInstanceOf[Anchor].firstElementChild.setAttribute("opacity", ".8")
-  //            if (uriNodeMap(ruri).asInstanceOf[Anchor].childElementCount >= 2) {
-  //              uriNodeMap(ruri).asInstanceOf[Anchor].children(1).setAttribute("stroke", "#ff0000")
-  //              uriNodeMap(ruri).asInstanceOf[Anchor].children(1).setAttribute("fill", "#ff0000")
-  //              uriNodeMap(ruri).asInstanceOf[Anchor].children(1).setAttribute("opacity", ".8")
-  //            }
-  //          } else if (ruri.startsWith("Error")) {
-  //            res += uriNodeMap(ruri) -> ruri
-  //            uriNodeMap(ruri).asInstanceOf[Anchor].firstElementChild.setAttribute("fill", "#ff9999")
-  //          } else {
-  //            res += uriNodeMap(ruri) -> ruri
-  //            uriNodeMap(ruri).asInstanceOf[Anchor].firstElementChild.setAttribute("fill", "#b3daff")
-  //          }
-  //        }
-  //      }
-  //    }
-  //    if (crit.isDefined) {
-  //      crit.get.toVector.foreach { ruri =>
-  //        if (uriNodeMap.contains(ruri)) {
-  //          res += uriNodeMap(ruri) -> ruri
-  //          uriNodeMap(ruri).asInstanceOf[Anchor].firstElementChild.setAttribute("fill", "#008080")
-  //        }
-  //      }
-  //    }
-  //    res
-  //  }
 
   def mainPage(): Frag = {
     //    val temp: Seq[(String, String)] = GraphQuery.queryExp.toSeq
@@ -520,35 +424,32 @@ object Main {
       width := "100%",
       div(
         cls := "hero",
-        div(cls := "hero-head is-large", id := "header", nav(cls := "navbar", div(cls := "container", div(cls := "navbar-brand", //backgroundColor:="primary",
-          div(cls := "navbar-item", padding := "1%",
-            h1(cls := "title is-2", color := "white", span("Awas Witness Visualizer"))),
-          div(cls := "navbar-burger burger is-active", attr("data-target") := "nav-menu-buttons",
-            span(),
-            span(),
-            span()
+        div(cls := "hero-head is-large", id := "header", nav(cls := "navbar",
+          //div(cls := "container",
+          div(cls := "navbar-brand", //backgroundColor:="primary",
+            div(cls := "navbar-item", padding := "1%",
+              h1(cls := "title is-2",
+                color := "white", span(whiteSpace := "nowrap", "Awas Witness Visualizer"))),
+            div(cls := "navbar-burger burger", attr("data-target") := "nav-menu-buttons",
+              span(aria.hidden := "true"),
+              span(aria.hidden := "true"),
+              span(aria.hidden := "true")
           )),
-          div(cls := "navbar-menu is-active", id := "nav-menu-buttons",
+          div(cls := "navbar-menu", id := "nav-menu-buttons",
+            div(cls := "navbar-start"),
             div(cls := "navbar-end",
-              //  div(cls := "navbar-item", div(cls := "field is-grouped",
               div(cls := "navbar-item",
-                p(cls := "control", a(cls := "button is-outlined", id := "forward-button",
-                  span("Forward")
-                  //                  span(cls := "icon is-medium has-text-primary",
-                  //i(cls := "far fa-caret-square-right fa-2x", aria.hidden:="false"))
-                ))),
-              div(cls := "navbar-item",
-                p(cls := "control", a(cls := "button is-outlined", id := "backward-button",
-                  span("Backward")))),
-              div(cls := "navbar-item",
-                p(cls := "control", a(cls := "button is-outlined", id := "clear-button",
-                  span("Clear")))),
-              div(cls := "navbar-item",
-                p(cls := "control", a(cls := "button is-outlined",
+                div(cls := "field is-grouped",
+                  p(cls := "control", a(cls := "button is-outlined", id := "forward-button",
+                    span("Forward"))),
+                  p(cls := "control", a(cls := "button is-outlined", id := "backward-button",
+                    span("Backward"))),
+                  p(cls := "control", a(cls := "button is-outlined", id := "clear-button",
+                    span("Clear"))),
+                  p(cls := "control", a(cls := "button is-outlined", id := "query-button",
                   span("Awas Query"))))
-              //                  span(cls := "icon is-medium has-text-primary",
-              //                    i(cls:= "far fa-caret-square-left fa-2x", aria.hidden:="false"))))
-            )) //)))
+              ))) //)))
+          //)
         ))),
 
       //body
@@ -558,7 +459,7 @@ object Main {
           // backgroundColor := "white",
           style := "display:inherit",
           div(id := "main-container", width := "100%", height := "100%")
-        )),
+        ),
 //      div(cls := "container",
 //        div(cls := "tile is-ancestor",
 //          div(cls := "tile is-parent is-vertical",
@@ -585,54 +486,330 @@ object Main {
     )
   }
 
-  //  private def queryBox(): Frag = {
-  //    val temp: Seq[(String, String)] = GraphQuery.queryExp.toSeq
-  //    div(
-  //      id := "query-box",
-  //      cls := "box",
-  //      overflow := "auto",
-  //      nav(
-  //        cls := "level",
-  //        div(cls := "level-left", div(cls := "level-item", h2(cls := "subtitle", "Queries"))),
-  //        div(cls := "level-right", div(cls := "level-item", button(id := "clear-button", cls := "button", "Clear")))
-  //      ),
-  //      queryTableBuild(temp)
-  //    )
-  //  }
+  def updateTable(entries: ILinkedMap[String, String],
+                  results: ILinkedMap[String, Collector]): Unit = {
+    def entryToFrag(entry: (String, String)): ISeq[Node] = {
+      var res = ilistEmpty[Node]
+      res = res :+ render[Node](tr(
+        attr("data-tt-id") := "node" + entry._1,
+        attr("data-tt-parent-id") := "",
+        td(//display.`inline-table`,
+          verticalAlign := "middle",
+          padding := "0", //flexWrap.nowrap,
+          //cls := "columns",
 
-  private def queryTableBuild(temp: Seq[(String, String)]): Text.TypedTag[String] =
+          a(textAlign := "left",
+            padding := "0",
+            justifyContent := "left",
+            verticalAlign := "middle",
+            id := entry._1,
+            style := "display:inline-flex;width:90%;",
+            //            display.`table-cell`,
+            //            width.auto,
+            cls := "query-table-button button is-white",
+            span(entry._1)
+          )
+        ),
+        td(verticalAlign := "middle", span(entry._2))
+      ))
+      if (results(entry._1).getPaths.length > 0) {
+        for (i <- results(entry._1).getPaths.indices) {
+          res = res :+ render[Node](tr(
+            attr("data-tt-id") := "node" + entry._1 + ":" + i,
+            attr("data-tt-parent-id") := "node" + entry._1,
+            td(
+              verticalAlign := "middle",
+              padding := "0",
+              //flexWrap.nowrap,
+              //cls := "columns is-mobile",
+              a(
+                textAlign := "left",
+                padding := "0",
+                justifyContent := "left",
+                verticalAlign := "middle",
+                id := entry._1 + ":" + i,
+                style := "display:inline-flex;width:80%;",
+                cls := "query-table-button button is-white",
+                span(entry._1 + "(path " + (i + 1) + ")")
+              )
+            ), td(verticalAlign := "middle", span(entry._2))
+          ))
+        }
+      }
+      res
+    }
+
+    val rows = entries.flatMap(e => entryToFrag(e))
+    val table = $[Table]("#query-table")
+    val oldNodes = table.childNodes
+    while (oldNodes.length > 2) {
+      table.removeChild(oldNodes(oldNodes.length - 1))
+    }
+    rows.foreach(r => table.appendChild(r))
+    treeTableAdapter()
+    val buttons = PimpedNodeList(table.querySelectorAll(".query-table-button"))
+    buttons.foreach { b =>
+      val id = b.asInstanceOf[Anchor].getAttribute("id")
+      b.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+        if (id.contains(":")) {
+          highlight(collectorToUris(results(id.split(":").head)
+            .getPaths(id.split(":").last.toInt)))
+        } else {
+          highlight(collectorToUris(results(id)))
+        }
+      }
+    }
+  }
+
+  def treeTableAdapter(): TreeTable = {
+    //    if($[Table]("#query-table").hasAttribute("class")) {
+    //      val attrs = $[Table]("#query-table").getAttribute("class").split(" ").toSet
+    //      if(attrs.contains("treetable")) {
+    //        $[Table]("#query-table").setAttribute("class", (attrs - "treetable").mkString(" "))
+    //      }
+    //    }
+    TreeTable("#query-table").treetable(js.Dictionary.apply[js.Any](
+      ("expandable", true),
+      ("indenterTemplate", "<span style='display:run-in; vertical-align: middle; width:5%' class=\"indenter\"></span>"),
+      ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
+      ("onNodeExpand", { (x: js.Any) => {
+        val exp = x.asInstanceOf[TreeNode].expander(0)
+        val oldChild = exp.firstElementChild
+        val newChild = templateContent(
+          raw("<i class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
+        exp.appendChild(newChild)
+        exp.removeChild(oldChild)
+      }
+      }: js.ThisFunction),
+      ("onNodeCollapse", { (x: js.Any) => {
+        val exp = x.asInstanceOf[TreeNode].expander(0)
+        val oldChild = exp.firstElementChild
+        val newChild = templateContent(
+          raw("<i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
+        exp.appendChild(newChild)
+        exp.removeChild(oldChild)
+      }
+      }: js.ThisFunction)
+    ), true)
+  }
+
+  def openCliTab(st: SymbolTable): Boolean = {
+    if (gl.isDefined) {
+      if (qI.isEmpty) {
+        qI = Some(new QueryInter(st))
+      }
+      //gl.get.root.contentItems(0).addChild(cliConfig())
+      Terminal("#term1").terminal({ (cmd: String, term: Terminal) => {
+        val res = qI.get.evalCmd(cmd)
+        if (res._2.messages.isEmpty) {
+          if (res._1.last._2.hasErrors) {
+            term.echo("Errors :" + res._1.last._2.getErrors.map(x =>
+              x.asInstanceOf[MessageTag].message).mkString("\n"))
+          } else {
+            term.echo("Computed: " + res._1.last._1)
+            clearAll(selections.keySet)
+            highlight(collectorToUris(res._1.last._2))
+            term.echo("Results found in graph(s): {" +
+              res._1.last._2.getGraphs.map(_.getUri).map(_.split("\\$\\$AWAS").last).mkString(", ") + "}")
+            updateTable(qI.get.getQueries, qI.get.getResults)
+
+          }
+        } else {
+          term.echo("Parse Error :" + ISZOps(res._2.messages).
+            foldLeft[String]((r: String, m: Message) => m.text.value + "\n" + r, ""))
+        }
+      }
+      }: js.Function2[String, Terminal, Unit], js.Dictionary(
+        "greetings" -> "Awas Query Command Line Interface",
+        "name" -> "AwasCli",
+        "prompt" -> "> ",
+        "scrollOnEcho" -> true,
+        "onAfterRedraw" -> ({ (t: Terminal) => {
+          t.find("textarea").blur().focus()
+        }
+        }: js.ThisFunction0[Terminal, Unit])
+      )).resize()
+      val x = $[Div](".terminal-output")
+      x.setAttribute("overflow", "auto")
+    }
+    false
+  }
+
+  private def openQueryCli(st: SymbolTable): Boolean = {
+    var queryLayout: Option[GoldenLayout] = None
+    if (gl.isDefined) {
+      if (gl.get.root.getItemsById("cli").nonEmpty) {
+        val ci = gl.get.root.getItemsById("cli").head
+        val stacks = gl.get.root.getItemsByType("stack")
+        val si = stacks.find(si => si.contentItems.contains(ci))
+        if (si.isDefined) si.get.setActiveContentItem(ci)
+      } else {
+        gl.get.registerComponent("cli", { (container: Container,
+                                           componentState: js.Dictionary[scalajs.js.Any]) => {
+          val termDom = //style := "display:block;width:100%;height:100%",
+            div(id := "QueryCli", style := "display:block;width:100%;height:100%").render
+          container.getElement().append(termDom)
+          container.on("resize", { () => {
+            if (queryLayout.isDefined) {
+              queryLayout.get.updateSize(scalajs.js.undefined, scalajs.js.undefined)
+            }
+          }
+          }: js.Function)
+
+        }
+        }: js.Function)
+        gl.get.root.contentItems(0).addChild(cliConfig())
+        val queryCli: Div = $[Div]("#QueryCli")
+        val queryCliConfig = js.Dictionary(
+          ("settings", js.Dictionary(//("hasHeaders", false),
+            //("reorderEnabled", false),
+            ("showPopoutIcon", false),
+            ("showMaximiseIcon", false),
+            ("showCloseIcon", false))),
+          (
+            "content",
+            js.Array(
+              js.Dictionary(("type", "column"),
+                ("content",
+                  js.Array(
+                    js.Dictionary(
+                      ("title", "Table"),
+                      ("type", "component"),
+                      ("componentName", "query_table"),
+                      ("id", "qtable"),
+                      ("componentState", js.Dictionary()),
+                      ("isClosable", false)
+                    ), js.Dictionary(
+                      ("title", "CLI"),
+                      ("type", "component"),
+                      ("componentName", "query_cli"),
+                      ("id", "qcli"),
+                      ("componentState", js.Dictionary()),
+                      ("isClosable", false)
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+
+        queryLayout = Some(new GoldenLayout(queryCliConfig, jQuery(queryCli)))
+        val qBox = render[Div](queryBox())
+
+        queryLayout.get.registerComponent("query_table", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
+          container.getElement().append(qBox)
+        }
+        }: js.Function)
+        queryLayout.get.registerComponent("query_cli", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
+          container.getElement().append(span(overflow := "auto", style := "display:block;width:100%;height:100%",
+            div(id := "term1")).render)
+        }
+        }: js.Function)
+        queryLayout.get.init()
+        openCliTab(st: SymbolTable)
+
+        //treeTableAdapter()
+        val ci = gl.get.root.getItemsById("cli").head
+        ci.element.asInstanceOf[Container]
+
+
+        val inputImport = qBox.querySelector("#import-queries")
+        inputImport.asInstanceOf[Input].onchange = (_: Event) => {
+          val files = inputImport.asInstanceOf[Input].files
+          val reader = new dom.FileReader()
+          var queries = ""
+
+          reader.onload = (_: UIEvent) => {
+
+            queries = reader.result.asInstanceOf[String]
+            println(queries)
+            qI.get.evalQueryFile(queries)
+            updateTable(qI.get.getQueries, qI.get.getResults)
+          }
+          reader.readAsText(files(0))
+          reader.onerror = (_: Event) => {
+            println("Import error")
+          }
+        }
+
+        val inputExport = qBox.querySelector("#export-queries")
+        inputExport.asInstanceOf[Input].onclick = (_: MouseEvent) => {
+          println("exporter")
+          val text = qI.get.getQueries.map(q => q._1 + " = " + q._2).mkString("\n")
+          val filename = st.systemDecl.compName.value + ".aq"
+          val blob = new Blob(js.Array(text), BlobPropertyBag("text/plain;charset=utf-8"))
+          FileSaver.saveAs(blob, filename)
+        }
+      }
+    }
+    false
+  }
+
+  private def queryBox(): Frag = {
+    div(
+      id := "query-box",
+      cls := "box",
+      overflow := "auto",
+      style := "display:block;width:100%;height:100%",
+      nav(
+        cls := "level",
+        div(cls := "level-left", div(cls := "level-item", h2(cls := "subtitle", "Queries"))),
+        div(cls := "level-right",
+          div(cls := "level-item", div(cls := "file",
+            label(cls := "file-label", input(cls := "file-input", `type` := "file", id := "import-queries",
+              name := "import", span(cls := "file-cta", span(cls := "file-icon",
+                i(cls := "fas fa-upload")), span(cls := "file-label", "Import")))))),
+
+
+          //            button(id := "import-queries", cls := "button", "Import")),
+          div(cls := "level-item", div(cls := "file",
+            label(cls := "file-label", input(cls := "file-input", `type` := "button", id := "export-queries",
+              name := "import", span(cls := "file-cta", span(cls := "file-icon",
+                i(cls := "fas fa-download")), span(cls := "file-label", "Export"))))))
+
+
+
+          //            button(id := "export-queries", cls := "button", "Export"))
+        )
+      ),
+      queryTableBuild()
+    )
+  }
+
+  private def queryTableBuild(): Text.TypedTag[String] =
     table(
       id := "query-table",
       cls := "table is-striped is-narrow is-fullwidth",
       border := "0",
       borderSpacing := "0",
       col(width := "40%"),
-      thead(th(cls := "is-5", "Name"), th("Expression")),
-      SeqNode(temp.map { query =>
-        tr(
-          attr("data-tt-id") := "node" + query._1,
-          if (query._1.contains(":")) attr("data-tt-parent-id") := "node" + query._1.split(":").head
-          else attr("data-tt-parent-id") := "",
-          td(
-            verticalAlign := "middle",
-            padding := "0",
-            id := "query-button",
-            a(
-              textAlign := "left",
-              padding := "0",
-              justifyContent := "left",
-              verticalAlign := "middle",
-              id := query._1,
-              style := "display:inline-flex; width:90%; ",
-              if (temp.indexOf(query) % 2 == 1)
-                cls := "button is-light "
-              else
-                cls := "button is-white ",
-              span(query._1)
-            )
-          ),
-          td(verticalAlign := "middle", span(query._2))
-        )
-      })
+      thead(th(cls := "is-5", "Name"), th("Expression"))
+      //      SeqNode(temp.map { query =>
+      //        tr(
+      //          attr("data-tt-id") := "node" + query._1,
+      //          if (query._1.contains(":")) attr("data-tt-parent-id") := "node" + query._1.split(":").head
+      //          else attr("data-tt-parent-id") := "",
+      //          td(
+      //            verticalAlign := "middle",
+      //            padding := "0",
+      //        //    id := "query-button",
+      //            a(
+      //              textAlign := "left",
+      //              padding := "0",
+      //              justifyContent := "left",
+      //              verticalAlign := "middle",
+      //              id := query._1,
+      //              style := "display:inline-flex; width:90%; ",
+      //              if (temp.indexOf(query) % 2 == 1)
+      //                cls := "button is-light "
+      //              else
+      //                cls := "button is-white ",
+      //              span(query._1)
+      //            )
+      //          ),
+      //          td(verticalAlign := "middle", span(query._2))
+      //        )
+      //      })
     )
 }

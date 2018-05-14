@@ -105,12 +105,12 @@ object Visualizer {
         val st = SymbolTable(m)
         val graph = FlowGraph(m, st)
         val graphVar = "var graph = `" + SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowEdge[FlowNode]]
-          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]]) + "`;\n"
+          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], isLR = false) + "`;\n"
         result = result + graphVar
         QueryBuilder(readFile(FileUtil.toUri(queryFile))._1) match {
           case None =>
           case Some(q) =>
-            val qres = QueryEval(q, graph, st)
+            val qres = QueryEval(q, st)
             val queryExp = q.queryStmt.flatMap(it => qexpToJSMap(it, qres))
 
             result = result + "var queryExp = {" + queryExp.mkString(", ") + "};\n"

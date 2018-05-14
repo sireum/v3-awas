@@ -61,5 +61,7 @@ trait ContentItem extends js.Object {
 @js.native
 trait Container extends js.Object {
   def getElement(): JQuery= js.native
+
+  def on(event: String, callBack: js.Function): js.UndefOr[Nothing] = js.native
 }
 
