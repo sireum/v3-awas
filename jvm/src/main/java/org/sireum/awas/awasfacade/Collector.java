@@ -14,7 +14,6 @@ import java.util.Set;
 
 public interface Collector {
 
-
     Set<FlowNode> getNodes();
 
     Set<FlowEdge<FlowNode>> getEdges();

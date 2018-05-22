@@ -28,7 +28,7 @@ object QueryPPrinter {
   }
 
   def parenExpr(exp: ST): ST = {
-    st"""$exp"""
+    st"""($exp)"""
   }
 
   def filterExp(exp: ST, op: String): ST = {
@@ -48,11 +48,11 @@ object QueryPPrinter {
   }
 
   def pathExpr(sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
-    st"""reach paths from $sExp to $tExp${if (wExp.nonEmpty) wExp.get else ""}"""
+    st"""reach paths from $sExp to $tExp${if (wExp.nonEmpty) " " + wExp.get.render else ""}"""
   }
 
   def simpleWith(op: String, exp: ST): ST = {
-    st"""$op($exp)"""
+    st"""with $op($exp)"""
   }
 
   def unaryRegEX(op: String, exp: ST): ST = {

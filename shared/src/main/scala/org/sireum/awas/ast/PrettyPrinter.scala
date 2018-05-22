@@ -459,9 +459,9 @@ final class PrettyPrinter(sb: StringBuilder) {
   def print(ad : AliasDecl, indent: Natural) : Unit ={
     printIndent(indent)
     sb.append("alias ")
-    print(ad.name)
-    sb.append(" = ")
     print(ad.typeName)
+    sb.append(" = ")
+    print(ad.aliasName)
     println()
   }
 

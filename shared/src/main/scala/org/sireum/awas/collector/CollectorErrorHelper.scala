@@ -35,6 +35,9 @@ object CollectorErrorHelper {
   val TYPE_UNKNOWN =
     "Query criteria type unknown"
 
+  val MISSING_RESULT =
+    "Result for query '%s' not found"
+
   def errorMessageGen(template: String,
                       uri: ResourceUri,
                       Kind: ReachAnalysisStage): ErrorTag = {

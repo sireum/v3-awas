@@ -2489,7 +2489,8 @@
             "type": "Emv2Clause",
             "libraries": [
               "ErrorLibrary",
-              "GPSErrorLibrary"
+              "GPSErrorLibrary",
+              "AFGErrorLibrary"
             ],
             "propagations": [
               {
@@ -2766,6 +2767,7 @@
           "ErrorLibrary"
         ]
       },
+      "useTypes": [],
       "tokens": [
         "ServiceError",
         "ItemOmission",
@@ -2846,7 +2848,89 @@
         "MutExError",
         "Deadlock",
         "Starvation"
-      ]
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 19,
+        "entries": [
+          [
+            "InconsistentValue",
+            "AsymmetricValue"
+          ],
+          [
+            "SubtleValueCorruption",
+            "DetectableValueError"
+          ],
+          [
+            "InconsistentItemOmission",
+            "AsymmetricItemOmission"
+          ],
+          [
+            "IncorrectValue",
+            "ItemValueError"
+          ],
+          [
+            "RateError",
+            "SequenceTimingError"
+          ],
+          [
+            "InconsistentTiming",
+            "AsymmetricTiming"
+          ],
+          [
+            "TimingError",
+            "ItemTimingError"
+          ],
+          [
+            "EarlyData",
+            "HighRate"
+          ],
+          [
+            "ValueError",
+            "ItemValueError"
+          ],
+          [
+            "LateData",
+            "LowRate"
+          ],
+          [
+            "BenignValueError",
+            "DetectableValueError"
+          ],
+          [
+            "ValueCorruption",
+            "ItemValueError"
+          ],
+          [
+            "SubtleValueError",
+            "UndetectableValueError"
+          ],
+          [
+            "BadValue",
+            "ItemValueError"
+          ],
+          [
+            "SequenceError",
+            "SequenceValueError"
+          ],
+          [
+            "InconsistentOmission",
+            "AsymmetricOmission"
+          ],
+          [
+            "InconsistentServiceOmission",
+            "AsymmetricServiceOmission"
+          ],
+          [
+            "AsymmetricTransmissive",
+            "AsymmetricValue"
+          ],
+          [
+            "ServiceTimeShift",
+            "ServiceTimingError"
+          ]
+        ]
+      }
     },
     {
       "type": "Emv2Library",
@@ -2856,6 +2940,9 @@
           "GPSErrorLibrary"
         ]
       },
+      "useTypes": [
+        "ErrorLibrary"
+      ],
       "tokens": [
         "SensorFailure",
         "CPUFailure",
@@ -2865,7 +2952,12 @@
         "IncorrectData",
         "NoSignal",
         "LowSignal"
-      ]
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 0,
+        "entries": []
+      }
     },
     {
       "type": "Emv2Library",
@@ -2875,6 +2967,9 @@
           "AFGErrorLibrary"
         ]
       },
+      "useTypes": [
+        "ErrorLibrary"
+      ],
       "tokens": [
         "NoValue",
         "NoService",
@@ -2883,7 +2978,21 @@
         "ErraticPilotInput",
         "ErraticValue",
         "FlightSystemfailure"
-      ]
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 2,
+        "entries": [
+          [
+            "NoValue",
+            "ServiceOmission"
+          ],
+          [
+            "NoService",
+            "ServiceOmission"
+          ]
+        ]
+      }
     }
   ]
 }

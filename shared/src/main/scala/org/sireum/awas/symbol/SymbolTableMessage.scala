@@ -81,6 +81,9 @@ object SymbolTableMessage {
   val FLOW_MISSING =
     "Error flow type '%s' not defined for '%s' port"
 
+  val MISSING_ERROR_TYPE =
+    "Error type '%s' not defined"
+
 
   def errorMessageGen(template: String,
                       node: Node,

@@ -255,11 +255,19 @@ final case class FlowNodeImpl(uri: ResourceUri,
         val sourceE = if (isForward) flow.fromFaults else flow.toFaults
         val targetE = if (isForward) flow.toFaults else flow.fromFaults
         if ((source.isDefined && source.get == tuple._1) &&
-          sourceE.contains(tuple._2)) {
+          (sourceE.contains(tuple._2) || sourceE.intersect(st.typeAlias(tuple._2)).nonEmpty)) {
           found = true
           flows += fUri
           if (target.isDefined) {
-            result = result ++ targetE.map((target.get, _))
+            result = result ++ targetE.flatMap { te =>
+              val targetProp = getPropagation(target.get)
+              if (targetProp.contains(te)) {
+                isetEmpty[(ResourceUri, ResourceUri)] + ((target.get, te))
+              } else {
+                isetEmpty[(ResourceUri, ResourceUri)] ++
+                  st.typeAlias(te).intersect(targetProp).map((target.get, _))
+              }
+            }
           }
         }
       }
@@ -305,10 +313,21 @@ final case class FlowNodeImpl(uri: ResourceUri,
         val sourceE = if (isForward) flow.fromFaults else flow.toFaults
         val targetE = if (isForward) flow.toFaults else flow.fromFaults
         if (sourceE.nonEmpty &&
-          sourceE.contains(tuple._2)) {
+          (sourceE.contains(tuple._2) ||
+            (sourceE.intersect(st.typeAlias(tuple._2)).nonEmpty))) {
           found = true
           flows += furi
-          result = result ++ targetE.flatMap(e => if (target.isDefined) Some((target.get, e)) else None)
+          result = result ++ targetE.flatMap { e =>
+            if (target.isDefined) {
+              val tprop = getPropagation(target.get)
+              if (tprop.contains(e)) {
+                isetEmpty[(ResourceUri, ResourceUri)] + ((target.get, e))
+              } else {
+                isetEmpty[(ResourceUri, ResourceUri)] ++
+                  st.typeAlias(e).intersect(tprop).map((target.get, _))
+              }
+            } else isetEmpty[(ResourceUri, ResourceUri)]
+          }
         }
       }
       if (!found) {

@@ -2,6 +2,7 @@ package org.sireum.awas.reachability
 
 import org.sireum.awas.collector.Collector
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.query.ConstraintExpr
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -20,8 +21,11 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
   Collector
 
   def errorPathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
-                        target: IMap[ResourceUri, ISet[ResourceUri]]):
-  Collector
+                        target: IMap[ResourceUri, ISet[ResourceUri]]): Collector
+
+  def errorPathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
+                            target: IMap[ResourceUri, ISet[ResourceUri]],
+                            constraint: ConstraintExpr): Collector
 }
 
 object ErrorReachability {

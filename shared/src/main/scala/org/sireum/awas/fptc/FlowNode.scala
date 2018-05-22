@@ -26,6 +26,7 @@
 package org.sireum.awas.fptc
 
 
+import org.sireum.Graph
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.symbol.{FlowTableData, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -65,6 +66,7 @@ object FlowNode {
   val H = SymbolTableHelper
   type Edge = FlowEdge[FlowNode]
   private var nodepool = imapEmpty[ResourceUri, FlowNode]
+  private var graphs = isetEmpty[FlowGraph[FlowNode, Edge]]
 
   def createNode(uri: ResourceUri,
                  st: SymbolTable,
@@ -76,9 +78,12 @@ object FlowNode {
     } else {
       val node = new FlowNodeImpl(uri, st, graph)
       nodepool += (uri -> node)
+      graphs += graph
       node
     }
   }
+
+  def getGraphs: ISet[FlowGraph[FlowNode, Edge]] = graphs
 
   def getNode(uri: ResourceUri): Option[FlowNode] = {
     //    if(H.isFlow(uri) || H.isPort(uri)) {

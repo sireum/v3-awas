@@ -11,7 +11,9 @@ final class Aadl2Awas private() {
   var typeDecls = Node.emptySeq[TypeDecl]
 
   def build(aadl: ir.Aadl): Model = {
-    typeDecls = typeDecls ++ aadl.errorLib.elements.map(build).toVector
+    typeDecls = typeDecls ++
+      aadl.errorLib.elements.map(build).toVector ++
+      buildAlias(aadl.errorLib.elements)
 
     val r = Model(typeDecls,
       Node.emptySeq[StateMachineDecl],
@@ -24,6 +26,27 @@ final class Aadl2Awas private() {
     EnumDecl(buildId(errorLib.name.name.elements.last.value),
       Node.emptySeq[Name],
       errorLib.tokens.elements.map(_.value).map(buildId).toVector)
+  }
+
+  def buildAlias(errorLibs: Seq[ir.Emv2Library]): ISeq[TypeDecl] = {
+    def getAlisedType(errorLibs: Seq[ir.Emv2Library],
+                      possibleLibs: Seq[String],
+                      errorType: String): Name = {
+      val lib = possibleLibs.filter(p => errorLibs.exists(el =>
+        (el.name.name.elements.head.value == p) &&
+          el.tokens.elements.map(_.value).toSet.contains(errorType)))
+      Name(ivectorEmpty[Id] :+ buildId(lib.head) :+ buildId(errorType))
+    }
+
+    ivectorEmpty ++ errorLibs.flatMap(errorLib =>
+      errorLib.alias.entries.elements.map(e =>
+        AliasDecl(
+          Name(ivectorEmpty[Id] :+
+            buildId(errorLib.name.name.elements.last.value) :+
+            buildId(e._1.value)),
+          getAlisedType(errorLibs, errorLib.useTypes.elements.map(_.value) :+
+            errorLib.name.name.elements.last.value,
+            e._2.value))))
   }
 
   def buildName(name: org.sireum.String): Name = {

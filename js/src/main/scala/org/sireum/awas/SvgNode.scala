@@ -6,7 +6,8 @@ import org.scalajs.dom.svg.{G, SVG}
 import org.sireum.awas.Main.openGraphTab
 import org.sireum.awas.SvgNodeType.SvgNodeType
 import org.sireum.awas.fptc.FlowNode
-import org.sireum.awas.symbol.SymbolTableHelper
+import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
+
 import scala.scalajs.js
 
 object SvgNodeType extends Enumeration {
@@ -62,7 +63,7 @@ trait SvgNodeUpdateColors {
   def errorCriteriaColor_=(value: String): Unit
 }
 
-class SvgNodeImpl(node: Anchor) extends SvgNode with SvgNodeUpdateColors {
+class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpdateColors {
   this: SvgNode =>
   val H = SymbolTableHelper
 
@@ -154,7 +155,7 @@ class SvgNodeImpl(node: Anchor) extends SvgNode with SvgNodeUpdateColors {
 
   private def processNode(): Unit = {
     getNodeType
-    node.onclick = (_: MouseEvent) => Main.cellClicked(getUri)
+    node.onclick = (_: MouseEvent) => Main.cellClicked(getUri, st)
     //    node.addEventListener("click touchstart", {(_: MouseEvent) =>
     //      Main.cellClicked(getUri)
     //    }:js.Function1[MouseEvent, _])

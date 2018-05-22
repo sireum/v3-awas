@@ -272,8 +272,8 @@ object SvgGenerator {
     res = res :+ "headport" + "=" + "\"" + component.targetPort.get.split('$').last + "\""
     res = res :+ "edgehref" + "=" + "templink"
     res = res :+ "title" + "=" + "edgetype"
-    res = res :+ "target" + "=" + "\"" + "Edge+" + component.sourcePort.get + ":" + component.targetPort.get + "\""
-    res = res :+ "arrowsize" + "=" + ".7"
+    res = res :+ "target" + "=" + "\"" + "Edge+" + component.sourcePort.get + "+" + component.targetPort.get + "\""
+    res = res :+ "arrowsize" + "=" + "1"
     res = res :+ "weight" + "=" + "1"
     res = res :+ "penwidth" + "=" + "2"
     ISZOps(res).foldLeft[String]({ (x, y) => x + " " + y }, "")

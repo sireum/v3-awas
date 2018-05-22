@@ -6,7 +6,7 @@ import org.sireum.awas.fptc.FlowNode._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{IMap, ISeq, ISet, Tag}
+import org.sireum.util.{ILinkedSet, IMap, ISeq, ISet, Tag}
 
 trait Collector {
   def getNodes: ISet[FlowNode]
@@ -41,7 +41,7 @@ trait Collector {
 
   def hasErrors: Boolean
 
-  def getPaths: ISeq[Collector]
+  def getPaths: ILinkedSet[Collector]
 
   def union(c: Collector): Collector
 
@@ -97,7 +97,7 @@ object Collector {
 
   def apply(st: SymbolTable,
             graph: ISet[FlowGraph[FlowNode, Edge]],
-            paths: ISeq[Collector],
+            paths: ILinkedSet[Collector],
             resType: Option[ResultType]): Collector =
     buildPathWrapper(st, graph, paths, resType)
 
@@ -169,7 +169,7 @@ object Collector {
             resMode: ISet[ResourceUri],
             resBehav: ISet[ResourceUri],
             resEvents: ISet[ResourceUri],
-            paths: ISeq[Collector],
+            paths: ILinkedSet[Collector],
             error: ISet[Tag]): Collector =
     buildAll(symbolTable,
       graph,
@@ -262,7 +262,7 @@ object Collector {
 
   def buildPathWrapper(st: SymbolTable,
                        graph: ISet[FlowGraph[FlowNode, Edge]],
-                       paths: ISeq[Collector],
+                       paths: ILinkedSet[Collector],
                        resType: Option[ResultType]) =
     new CollectorImpl(symbolTable = st,
       graphs = graph,
@@ -320,7 +320,7 @@ object Collector {
                resMode: ISet[ResourceUri],
                resBehav: ISet[ResourceUri],
                resEvents: ISet[ResourceUri],
-               paths: ISeq[Collector],
+               paths: ILinkedSet[Collector],
                error: ISet[Tag]): Collector = {
     new CollectorImpl(symbolTable,
       graph,

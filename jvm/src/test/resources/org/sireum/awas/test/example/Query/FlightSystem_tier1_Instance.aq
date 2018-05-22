@@ -1,3 +1,5 @@
 //q1 = reach forward FlightSystem_tier1_Instance.satelliteSignal{GPSErrorLibrary.NoSignal}
-q2 = reach paths from FlightSystem_tier1_Instance.pilotInput{AFGErrorLibrary.NoPilotInput} to FlightSystem_tier1_Instance.FlightControl.guidanceCommands{AFGErrorLibrary.NoService}
-//q3 = reach paths from FlightSystem_tier1_Instance.FSpowersupply to FlightSystem_tier1_Instance.ObservableFailure
+//q2 = reach backward FlightSystem_tier1_Instance.ObservableFailure{ErrorLibrary.ServiceOmission}
+//q3 = reach paths from FlightSystem_tier1_Instance.pilotInput{AFGErrorLibrary.NoPilotInput} to FlightSystem_tier1_Instance.FlightControl.guidanceCommands{AFGErrorLibrary.NoService}
+//q4 = reach paths from FlightSystem_tier1_Instance.FSpowersupply to FlightSystem_tier1_Instance.ObservableFailure
+error_paths_with_some = reach paths from FlightSystem_tier1_Instance.FSpowersupply.power{ErrorLibrary.ServiceOmission} to FlightSystem_tier1_Instance.ObservableFailure{ErrorLibrary.ServiceOmission} with some(FlightSystem_tier1_Instance.power2.in{ErrorLibrary.ServiceOmission})

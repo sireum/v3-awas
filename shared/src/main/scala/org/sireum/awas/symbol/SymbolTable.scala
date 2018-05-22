@@ -49,6 +49,8 @@ trait SymbolTable {
 
   def typeTable(tdUri: ResourceUri): TypeTable
 
+  def typeAlias(typeUri: ResourceUri): ISet[ResourceUri]
+
   def stateMachines: Iterable[ResourceUri]
 
   def stateMachine(smUri: ResourceUri): StateMachineDecl
@@ -82,6 +84,7 @@ sealed case class SymbolTableData
 (declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
  typeDeclTable: MMap[ResourceUri, TypeDecl] = mmapEmpty,
  typeTable: MMap[ResourceUri, TypeTable] = mmapEmpty,
+ aliasTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  stateMachineDeclTable: MMap[ResourceUri, StateMachineDecl] = mmapEmpty,
  stateMachineTable: MMap[ResourceUri, StateMachineTable] = mmapEmpty,
  // systemUri : Option[(ResourceUri, ComponentDecl)] = None,
@@ -139,6 +142,9 @@ class STProducer(var systemUri: Option[ResourceUri] = None,
   override def typeTable(tdUri: ResourceUri): TypeTable = {
     tables.typeTable(tdUri)
   }
+
+  override def typeAlias(typeUri: ResourceUri): ISet[ResourceUri] =
+    isetEmpty ++ tables.aliasTable.getOrElse(typeUri, isetEmpty)
 
   override def componentTable(compUri: ResourceUri): ComponentTable = {
 
@@ -229,6 +235,7 @@ trait TypeTable {
 
 sealed case class TypeTableData
 (enumTable: MMap[ResourceUri, MMap[ResourceUri, Id]] = mmapEmpty,
+
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty)
 
 trait StateMachineTable {

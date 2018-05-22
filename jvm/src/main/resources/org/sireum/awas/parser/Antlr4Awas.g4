@@ -58,7 +58,7 @@ deploymentDecl
   ;
 
 typeAliasDecl
-  : 'alias' ID '=' type
+  : 'alias' name '=' name
   ;
 
 enumDecl

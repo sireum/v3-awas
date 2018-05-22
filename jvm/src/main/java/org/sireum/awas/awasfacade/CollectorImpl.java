@@ -106,6 +106,6 @@ public class CollectorImpl implements Collector {
 
     @Override
     public List<org.sireum.awas.collector.Collector> getPaths() {
-        return toJavaList(collector.getPaths());
+        return toJavaList(collector.getPaths().toSeq());
     }
 }

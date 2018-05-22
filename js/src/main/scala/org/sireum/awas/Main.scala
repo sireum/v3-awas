@@ -22,7 +22,10 @@ import scalatags.Text
 import scalatags.Text.all.{id, _}
 import scalatags.Text.tags2.nav
 import org.scalajs.dom.ext._
-
+import org.sireum.aadl.ir.Feature
+import org.sireum.awas.Main.highlight
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import scala.scalajs.js.timers.SetTimeoutHandle
@@ -96,14 +99,14 @@ object Main {
     result
   }
 
-  def graph2Svg(graph: FlowGraph[FlowNode, FlowNode.Edge], isLR: Boolean): Node = {
+  def graph2Svg(graph: FlowGraph[FlowNode, FlowNode.Edge], isLR: Boolean, st: SymbolTable): Node = {
     val dotGraph = SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
       with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], isLR)
     val svgString = GraphViz.Viz(dotGraph, js.Dictionary(("images", js.Array(
       js.Dictionary(("path", "min/images/sub-graph-icon.png"), ("width", "45px"), ("height", "25px"))
     ))))
     val result = templateContent(raw(svgString)).querySelectorAll("svg")(0)
-    val nodes = processSvg(result.asInstanceOf[Element])
+    val nodes = processSvg(result.asInstanceOf[Element], st)
     graphNodeMap += (graph.getUri -> nodes)
     result
   }
@@ -190,7 +193,7 @@ object Main {
               //val temp = componentState("graph").asInstanceOf[Node]
               //println(temp)
               val breadCrumbs = render[Div](uriToBreadCrumbs(uri, st))
-              val asvg = graph2Svg(graphs(uri), false)
+              val asvg = graph2Svg(graphs(uri), false, st)
               container.getElement().append(breadCrumbs).append(asvg)
               SvgPanZoom("svg").svgPanZoom(js.Dictionary())
               $[Input](breadCrumbs, ".td").checked = true
@@ -200,7 +203,7 @@ object Main {
                   !componentState.get("isTD").get.asInstanceOf[Boolean]) {
                   //                  $[Input](breadCrumbs, ".td").checked = true
                   container.getElement().children("svg").first().replaceWith(
-                    graph2Svg(graphs(uri), false))
+                    graph2Svg(graphs(uri), false, st))
                   SvgPanZoom("svg").svgPanZoom(js.Dictionary())
                   componentState.update("isTD", true)
                 }
@@ -210,7 +213,7 @@ object Main {
                   componentState.get("isTD").get.asInstanceOf[Boolean]) {
                   //                  $[Input](breadCrumbs, ".lr").checked = true
                   container.getElement().children("svg").first().replaceWith(
-                    graph2Svg(graphs(uri), true))
+                    graph2Svg(graphs(uri), true, st))
                   SvgPanZoom("svg").svgPanZoom(js.Dictionary())
                   componentState.update("isTD", false)
                 }
@@ -293,8 +296,31 @@ object Main {
     gl.updateSize(scalajs.js.undefined, scalajs.js.undefined)
   }
 
+  def getPortErrorFromFlow(flowUri: ResourceUri,
+                           node: FlowNode, isFrom: Boolean,
+                           st: SymbolTable): ISet[ResourceUri] = {
+    val ft = node.getFlows(flowUri)
 
-  def cellClicked(tempUri: String): Boolean = {
+    val portUri = if (isFrom) ft.fromPortUri else ft.toPortUri
+    val errors = if (isFrom) ft.fromFaults else ft.toFaults
+
+    if (portUri.isDefined && errors.nonEmpty) {
+      val prop = node.getPropagation(portUri.get)
+      errors.flatMap { ff =>
+        if (prop.contains(ff)) {
+          isetEmpty[ResourceUri] + ("Error:" + portUri.get + ":" + ff)
+        } else {
+          st.typeAlias(ff).intersect(prop).map((portUri.get, _)).map(pe => "Error:" + pe._1 + ":" + pe._2)
+        }
+      }
+    } else if (portUri.isDefined) {
+      isetEmpty + portUri.get
+    } else {
+      isetEmpty[ResourceUri]
+    }
+  }
+
+  def cellClicked(tempUri: String, st: SymbolTable): Boolean = {
     clickCounter = clickCounter + 1
     if (clickCounter == 1) {
       timer = Some(scalajs.js.timers.setTimeout(200) {
@@ -302,6 +328,23 @@ object Main {
           clear(tempUri)
         } else {
           highlight(imapEmpty + (tempUri -> true))
+          if (H.isFlow(tempUri)) {
+            val reso = Resource.getParentUri(tempUri)
+            if (reso.isDefined && FlowNode.getNode(reso.get).isDefined) {
+              val toHi = getPortErrorFromFlow(tempUri, FlowNode.getNode(reso.get).get, true, st) ++
+                getPortErrorFromFlow(tempUri, FlowNode.getNode(reso.get).get, isFrom = false, st)
+              toHi.foreach(t => highlight(imapEmpty + (t -> true)))
+            }
+          }
+
+          if (tempUri.startsWith("Edge")) {
+            val ports = tempUri.split("[+]")
+            if (ports.length == 3) {
+              highlight(imapEmpty + (ports(1) -> true) + (ports(2) -> true))
+            }
+          }
+
+
         }
         clickCounter = 0
       })
@@ -322,7 +365,7 @@ object Main {
   }
 
 
-  def processSvg(svg: Element): ISet[SvgNode] = {
+  def processSvg(svg: Element, st: SymbolTable): ISet[SvgNode] = {
     svg.setAttribute("id", "awasgraph")
     svg.setAttribute("height", "100%")
     svg.setAttribute("width", "100%")
@@ -330,7 +373,7 @@ object Main {
     jQuery(svg).find("title").each((e: Element) => e.parentNode.removeChild(e))
     val allLinks = org.scalajs.dom.ext.PimpedNodeList(
       svg.querySelectorAll("[*|href='templink']"))
-    val svgNodes = allLinks.map(n => new SvgNodeImpl(n.asInstanceOf[Anchor]))
+    val svgNodes = allLinks.map(n => new SvgNodeImpl(n.asInstanceOf[Anchor], st))
     val allUri = svgNodes.map(_.getUri).toSet
     svgNodes.foreach { node =>
       uriNodeMap = uriNodeMap + (node.getUri ->
@@ -367,7 +410,7 @@ object Main {
   def collectorToUris(col: Collector): IMap[String, Boolean] = {
     var res = imapEmpty[String, Boolean]
     if (col.getResultType.isDefined) {
-      val edges = col.getEdges.map(e => "Edge+" + e.sourcePort.get + ":" + e.targetPort.get)
+      val edges = col.getEdges.map(e => "Edge+" + e.sourcePort.get + "+" + e.targetPort.get)
       val ans = col.getResultType.get match {
         case ResultType.Node => col.getNodes.map(_.getUri)
         case ResultType.Port => col.getPorts ++ col.getFlows
@@ -390,11 +433,14 @@ object Main {
           val ei = pe.indexOf(":error")
           val port = pe.subSequence(0, ei).toString
           val error = pe.subSequence(ei + 1, pe.size).toString
-          println(port + "  " + error)
           Some(new ErrorReachabilityImpl(st).
             forwardErrorReach(port, isetEmpty + error))
         } else {
-          Some(new PortReachabilityImpl(st).forwardReach(c))
+          if (c.startsWith(H.FLOW_TYPE) || c.startsWith("Edge")) {
+            None
+          } else {
+            Some(new PortReachabilityImpl(st).forwardReach(c))
+          }
         }
       }
       highlight(collectorToUris(res.foldLeft(Collector(st))(_.union(_))))
@@ -404,11 +450,21 @@ object Main {
   def backwardButtonAction(criteria: ISet[String], st: SymbolTable): Unit = {
     clearAll(criteria)
     if (criteria.nonEmpty) {
-
-      val basicReach = new ErrorReachabilityImpl(st)
-      val res = basicReach.backwardReachSet(criteria)
-      highlight(collectorToUris(res))
+      val res = criteria.flatMap { c =>
+        if (c.startsWith("Error")) {
+          val pe = c.substring(6)
+          val ei = pe.indexOf(":error")
+          val port = pe.subSequence(0, ei).toString
+          val error = pe.subSequence(ei + 1, pe.size).toString
+          Some(new ErrorReachabilityImpl(st).
+            backwardErrorReach(port, isetEmpty + error))
+        } else {
+          Some(new PortReachabilityImpl(st).backwardReach(c))
+        }
+      }
+      highlight(collectorToUris(res.foldLeft(Collector(st))(_.union(_))))
     }
+
   }
 
   def highlight(uris: IMap[String, Boolean]): Boolean = {
@@ -503,7 +559,7 @@ object Main {
             justifyContent := "left",
             verticalAlign := "middle",
             id := entry._1,
-            style := "display:inline-flex;width:90%;",
+            style := "display:inline-flex;width:88%;",
             //            display.`table-cell`,
             //            width.auto,
             cls := "query-table-button button is-white",
@@ -512,8 +568,8 @@ object Main {
         ),
         td(verticalAlign := "middle", span(entry._2))
       ))
-      if (results(entry._1).getPaths.length > 0) {
-        for (i <- results(entry._1).getPaths.indices) {
+      if (results(entry._1).getPaths.size > 0) {
+        for (i <- results(entry._1).getPaths.toIndexedSeq.indices) {
           res = res :+ render[Node](tr(
             attr("data-tt-id") := "node" + entry._1 + ":" + i,
             attr("data-tt-parent-id") := "node" + entry._1,
@@ -553,7 +609,7 @@ object Main {
       b.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
         if (id.contains(":")) {
           highlight(collectorToUris(results(id.split(":").head)
-            .getPaths(id.split(":").last.toInt)))
+            .getPaths.toIndexedSeq(id.split(":").last.toInt)))
         } else {
           highlight(collectorToUris(results(id)))
         }
@@ -570,8 +626,8 @@ object Main {
     //    }
     TreeTable("#query-table").treetable(js.Dictionary.apply[js.Any](
       ("expandable", true),
-      ("indenterTemplate", "<span style='display:run-in; vertical-align: middle; width:5%' class=\"indenter\"></span>"),
-      ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
+      ("indenterTemplate", "<span style='display:run-in; vertical-align: middle; width:11%' class=\"indenter\"></span>"),
+      ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle; display:inline-block; width:3%;'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
       ("onNodeExpand", { (x: js.Any) => {
         val exp = x.asInstanceOf[TreeNode].expander(0)
         val oldChild = exp.firstElementChild
@@ -600,24 +656,29 @@ object Main {
       }
       //gl.get.root.contentItems(0).addChild(cliConfig())
       Terminal("#term1").terminal({ (cmd: String, term: Terminal) => {
-        val res = qI.get.evalCmd(cmd)
-        if (res._2.messages.isEmpty) {
-          if (res._1.last._2.hasErrors) {
-            term.echo("Errors :" + res._1.last._2.getErrors.map(x =>
+
+        val res = Future(qI.get.evalCmd(cmd))
+
+        res.onComplete(r =>
+          if (r.isSuccess) {
+            if (r.get._2.messages.isEmpty) {
+              if (r.get._1.last._2.hasErrors) {
+                term.echo("Errors :" + r.get._1.last._2.getErrors.map(x =>
               x.asInstanceOf[MessageTag].message).mkString("\n"))
           } else {
-            term.echo("Computed: " + res._1.last._1)
+                term.echo("Computed: " + r.get._1.last._1)
             clearAll(selections.keySet)
-            highlight(collectorToUris(res._1.last._2))
+                highlight(collectorToUris(r.get._1.last._2))
             term.echo("Results found in graph(s): {" +
-              res._1.last._2.getGraphs.map(_.getUri).map(_.split("\\$\\$AWAS").last).mkString(", ") + "}")
+              r.get._1.last._2.getGraphs.map(_.getUri).map(_.split("\\$\\$AWAS").last).mkString(", ") + "}")
             updateTable(qI.get.getQueries, qI.get.getResults)
 
           }
         } else {
-          term.echo("Parse Error :" + ISZOps(res._2.messages).
+              term.echo("Parse Error :" + ISZOps(r.get._2.messages).
             foldLeft[String]((r: String, m: Message) => m.text.value + "\n" + r, ""))
-        }
+            }
+          } else {})
       }
       }: js.Function2[String, Terminal, Unit], js.Dictionary(
         "greetings" -> "Awas Query Command Line Interface",

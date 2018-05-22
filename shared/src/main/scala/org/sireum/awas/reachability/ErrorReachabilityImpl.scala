@@ -5,6 +5,7 @@ import org.sireum.awas.collector.CollectorErrorHelper.{MISSING_CRITERIA, ReachAn
 import org.sireum.awas.collector._
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -170,19 +171,64 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
                      targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
   Collector = {
     val paths = reachPath(sourcePort, targetPort).getPaths.flatMap(it => pathErrorRefine(it, sourcePort,
-      sourceErrors, targetPort, targetErrors)).toSet
+      sourceErrors, targetPort, targetErrors, None)).toSet
     Collector(st,
       paths.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
-      paths.toVector, Some(ResultType.Error))
+      ilinkedSetEmpty ++ paths.toVector, Some(ResultType.Error))
+  }
+
+  def errorPathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
+                            target: IMap[ResourceUri, ISet[ResourceUri]],
+                            constraint: ConstraintExpr): Collector = {
+    var reformatedArgs = isetEmpty[(ResourceUri, ISet[ResourceUri], ResourceUri, ISet[ResourceUri], ConstraintExpr)]
+
+    source.foreach { s => target.foreach { t => reformatedArgs += ((s._1, s._2, t._1, t._2, constraint)) } }
+
+    val pathsConst = reformatedArgs.flatMap(e => reachPath(e._1, e._3).getPaths.flatMap(it =>
+      pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5))
+    ))
+    Collector(st,
+      pathsConst.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
+      ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
+  }
+
+  def checkPathForAllSome(path: FlowErrorPathCollector, constraint: ConstraintExpr): Boolean = {
+    constraint.kind match {
+      case ConstraintKind.All => constraint.simple.get.getPortErrors.forall(pe =>
+        pe._2.map((pe._1, _)).subsetOf(path.path.toSet))
+      case ConstraintKind.Some => constraint.simple.get.getPortErrors.flatMap(pe =>
+        pe._2.map((pe._1, _))).toSet.intersect(path.path.toSet).nonEmpty
+      case _ => true
+    }
+  }
+
+  def checkPathForNone(path: FlowErrorPathCollector, constraint: ConstraintExpr): Boolean = {
+    constraint.kind match {
+      case ConstraintKind.None => constraint.simple.get.getPortErrors.flatMap(pe =>
+        pe._2.map((pe._1, _))).toSet.intersect(path.path.toSet).isEmpty
+      case _ => true
+    }
   }
 
 
+
   //TODO: Rework this method, refactor, high cyclomatic complex
+  /**
+    * Refined a path computed only with ports into ports and errors
+    *
+    * @param path         : port path computed using portReachabilityImpl
+    * @param sourcePort   : source port
+    * @param sourceErrors : source error
+    * @param targetPort   : target port
+    * @param targetErrors : target error
+    * @return : set of paths as collectors
+    */
   private def pathErrorRefine(path: Collector,
                               sourcePort: ResourceUri,
                               sourceErrors: ISet[ResourceUri],
                               targetPort: ResourceUri,
-                              targetErrors: ISet[ResourceUri]):
+                              targetErrors: ISet[ResourceUri],
+                              constraint: Option[ConstraintExpr]):
   ISet[Collector] = {
     val snodes = getNodesFromPort(sourcePort)
     val tnodes = getNodesFromPort(targetPort)
@@ -266,13 +312,39 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     var tempPaths = isetEmpty[FlowErrorNextCollector]
 
     pathCycle.foreach { it =>
-      tempPaths = tempPaths + FlowErrorNextCollector(it._1.path.toSet,
-        it._1.edges, it._1.flows, it._1.errors, it._1.graphs)
+      if (constraint.isDefined) {
+        if (checkPathForNone(it._1, constraint.get) && checkPathForAllSome(it._1, constraint.get)) {
+          tempPaths = tempPaths + FlowErrorNextCollector(it._1.path.toSet,
+            it._1.edges, it._1.flows, it._1.errors, it._1.graphs)
+        }
+      } else {
+        tempPaths = tempPaths + FlowErrorNextCollector(it._1.path.toSet,
+          it._1.edges, it._1.flows, it._1.errors, it._1.graphs)
+      }
       if (it._2.nonEmpty) {
-        val cycles = it._1.union(it._2.foldLeft(collector.FlowErrorPathCollector(ivectorEmpty[(ResourceUri, ResourceUri)],
-          isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty))(_.union(_)))
+        if (constraint.isDefined) {
+          if (checkPathForNone(it._1, constraint.get)) {
+            val filtered = it._2.filter(checkPathForNone(_, constraint.get))
+            if (filtered.nonEmpty) {
+              val cycles = it._1.union(filtered.foldLeft(
+                collector.FlowErrorPathCollector(ivectorEmpty[(ResourceUri, ResourceUri)],
+                  isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty))(_.union(_)))
+              if (checkPathForAllSome(cycles, constraint.get)) {
+                tempPaths = tempPaths +
+                  FlowErrorNextCollector(cycles.path.toSet, cycles.edges,
+                    cycles.flows, cycles.errors, cycles.graphs)
+              }
+            }
+          }
+        } else {
 
-        tempPaths = tempPaths + FlowErrorNextCollector(cycles.path.toSet, cycles.edges, cycles.flows, cycles.errors, cycles.graphs)
+          val cycles = it._1.union(it._2.foldLeft(
+            collector.FlowErrorPathCollector(ivectorEmpty[(ResourceUri, ResourceUri)],
+              isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty))(_.union(_)))
+
+          tempPaths = tempPaths + FlowErrorNextCollector(cycles.path.toSet, cycles.edges,
+            cycles.flows, cycles.errors, cycles.graphs)
+        }
       }
     }
 

@@ -22,7 +22,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
                          var resMode: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          var resBehav: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          var resEvents: ISet[ResourceUri] = isetEmpty[ResourceUri],
-                         resPaths: ISeq[Collector] = ivectorEmpty[Collector],
+                         resPaths: ILinkedSet[Collector] = ilinkedSetEmpty[Collector],
                          var error: ISet[Tag] = isetEmpty[Tag]
                         ) extends Collector with Serializable {
 
@@ -221,7 +221,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
 
   override def hasErrors: Boolean = getErrors.nonEmpty
 
-  override def getPaths: ISeq[Collector] = resPaths
+  override def getPaths: ILinkedSet[Collector] = resPaths
 
   def union(c: Collector): Collector = {
     if (symbolTable == c.getSymbolTable) {
@@ -246,7 +246,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
         getModes union c.getModes,
         getBehavior union c.getBehavior,
         getEvents union c.getEvents,
-        getPaths union c.getPaths,
+        ilinkedSetEmpty ++ getPaths union c.getPaths,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
     } else {
       //future allow collector to collect across systems

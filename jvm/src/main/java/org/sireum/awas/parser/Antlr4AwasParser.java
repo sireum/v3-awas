@@ -3,16 +3,15 @@ package org.sireum.awas.parser;
 
 // @formatter:off
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNDeserializer;
-import org.antlr.v4.runtime.atn.ParserATNSimulator;
-import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Antlr4AwasParser extends Parser {
@@ -1043,12 +1042,12 @@ public class Antlr4AwasParser extends Parser {
     }
 
     public static class TypeAliasDeclContext extends ParserRuleContext {
-        public TerminalNode ID() {
-            return getToken(Antlr4AwasParser.ID, 0);
+        public List<NameContext> name() {
+            return getRuleContexts(NameContext.class);
         }
 
-        public TypeContext type() {
-            return getRuleContext(TypeContext.class, 0);
+        public NameContext name(int i) {
+            return getRuleContext(NameContext.class, i);
         }
 
         public TypeAliasDeclContext(ParserRuleContext parent, int invokingState) {
@@ -1070,11 +1069,11 @@ public class Antlr4AwasParser extends Parser {
                 setState(242);
                 match(T__20);
                 setState(243);
-                match(ID);
+                name();
                 setState(244);
                 match(T__21);
                 setState(245);
-                type();
+                name();
             }
         } catch (RecognitionException re) {
             _localctx.exception = re;
@@ -3781,9 +3780,9 @@ public class Antlr4AwasParser extends Parser {
                     "\2\2\2\u00eb\u00e9\3\2\2\2\u00eb\u00ec\3\2\2\2\u00ec\u00ef\3\2\2\2\u00ed" +
                     "\u00eb\3\2\2\2\u00ee\u00e7\3\2\2\2\u00ee\u00ef\3\2\2\2\u00ef\r\3\2\2\2" +
                     "\u00f0\u00f1\5B\"\2\u00f1\u00f2\7\26\2\2\u00f2\u00f3\5B\"\2\u00f3\17\3" +
-                    "\2\2\2\u00f4\u00f5\7\27\2\2\u00f5\u00f6\7;\2\2\u00f6\u00f7\7\30\2\2\u00f7" +
-                    "\u00f8\58\35\2\u00f8\21\3\2\2\2\u00f9\u00fa\7\31\2\2\u00fa\u0104\7;\2" +
-                    "\2\u00fb\u00fc\7\32\2\2\u00fc\u0101\5B\"\2\u00fd\u00fe\7\t\2\2\u00fe\u0100" +
+                    "\2\2\2\u00f4\u00f5\7\27\2\2\u00f5\u00f6\5B\"\2\u00f6\u00f7\7\30\2\2\u00f7" +
+                    "\u00f8\5B\"\2\u00f8\21\3\2\2\2\u00f9\u00fa\7\31\2\2\u00fa\u0104\7;\2\2" +
+                    "\u00fb\u00fc\7\32\2\2\u00fc\u0101\5B\"\2\u00fd\u00fe\7\t\2\2\u00fe\u0100" +
                     "\5B\"\2\u00ff\u00fd\3\2\2\2\u0100\u0103\3\2\2\2\u0101\u00ff\3\2\2\2\u0101" +
                     "\u0102\3\2\2\2\u0102\u0105\3\2\2\2\u0103\u0101\3\2\2\2\u0104\u00fb\3\2" +
                     "\2\2\u0104\u0105\3\2\2\2\u0105\u0110\3\2\2\2\u0106\u0107\7\17\2\2\u0107" +

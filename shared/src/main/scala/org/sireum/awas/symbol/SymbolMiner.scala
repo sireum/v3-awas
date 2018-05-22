@@ -94,7 +94,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
   /**
-    * Type miner : Currently mines only Enum type
+    * Type miner : Currently mines only Enum type and alias
     *
     * @param m        model
     * @param reporter to collect errors
@@ -108,8 +108,6 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         require(Resource.getResource(m).isDefined)
         parentRes = Resource.getResource(m).get
         true
-
-      case ad: AliasDecl => false
 
       case ed: EnumDecl =>
         val r = Resource(H.ENUM_TYPE, parentRes, ed.name.value, Some(true), ed)
@@ -133,6 +131,34 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
         tt.enumTable(r.toUri) = tempSet
         false
+
+      case ad: AliasDecl => {
+        def getErrorTypeUri(symbol: Name): Option[ResourceUri] = {
+          val typeUri = stp.getUriFromSymbol(symbol.value.head.value)
+          if (typeUri.isDefined && typeUri.get.startsWith(H.ENUM_TYPE)) {
+            stp.typeTable(typeUri.get).getUriFromSymbol(
+              symbol.value.last.value)
+          } else {
+            None
+          }
+        }
+
+        val typeUri = getErrorTypeUri(ad.typeName)
+        val aliasUri = getErrorTypeUri(ad.aliasName)
+
+        if (typeUri.isDefined && aliasUri.isDefined) {
+          st.aliasTable.getOrElseUpdate(typeUri.get, msetEmpty[ResourceUri]).add(aliasUri.get)
+          st.aliasTable.getOrElseUpdate(aliasUri.get, msetEmpty[ResourceUri]).add(typeUri.get)
+        } else {
+          reporter.report(errorMessageGen(
+            MISSING_ERROR_TYPE,
+            ad,
+            m, PrettyPrinter.print(ad.typeName) + " or " + PrettyPrinter.print(ad.aliasName)))
+        }
+        false
+      }
+
+      //stp.tables.aliasTable
 
       case ld: LatticeDecl => false
 

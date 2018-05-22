@@ -64,6 +64,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       assert(Resource.getParentUri(port).isDefined)
       val nodeUri = Resource.getParentUri(port).get
       if (nodeUri == st.system) {
+        //&& FlowNode.getNode(port).isDefined) {
         //if this port is a port of the system component, then there must be a port node
         isetEmpty + FlowNode.getNode(port).get.getOwner.getSuccessorPorts(port)
       } else {
@@ -90,7 +91,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       //if this is a port then there must be a parent uri
       assert(Resource.getParentUri(port).isDefined)
       val nodeUri = Resource.getParentUri(port).get
-      if (nodeUri == st.system) {
+      if (nodeUri == st.system && FlowNode.getNode(port).isDefined) {
         //if this port is a port of the system component, then there must be a port node
         isetEmpty + FlowNode.getNode(port).get.getOwner.getPredecessorPorts(port)
       } else {
@@ -471,7 +472,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         }
       )
 
-      simplePaths union Collector(st, simplePaths.getGraphs, ilistEmpty ++ complexPath.toSeq, Some(ResultType.Port))
+      simplePaths union Collector(st, simplePaths.getGraphs, ilinkedSetEmpty ++ complexPath.toSeq, Some(ResultType.Port))
     }
   }
 
@@ -531,7 +532,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
             case _ => true
           }
       )
-      Collector(st, simplePaths.getGraphs, ilistEmpty ++ filteredPaths.toSeq, Some(ResultType.Port))
+      Collector(st, simplePaths.getGraphs, ilinkedSetEmpty ++ filteredPaths.toSeq, Some(ResultType.Port))
     }
   }
 

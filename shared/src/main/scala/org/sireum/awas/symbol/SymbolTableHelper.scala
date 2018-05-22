@@ -112,7 +112,7 @@ object SymbolTableHelper {
 
   def isPort(r: ResourceUri): Boolean = {
     val t = Resource.getDefResource(r)
-    t.isDefined && isPort(t.get)
+    t.isDefined && isPort(t.get) && r.startsWith(PORT_TYPE)
   }
 
   def isInPort(r: ResourceUri): Boolean = {
@@ -167,11 +167,11 @@ object SymbolTableHelper {
       val ttUri = st.typeDecls.find(_.endsWith(ID_SEPARATOR + cmlist.head))
       //     st.typeTable(ttUri.get).enumElements.foreach(println(_))
       if (ttUri.isDefined) {
-        st.typeTable(ttUri.get).enumElements.foreach{
-          f => if(f.endsWith(cmlist.last)) {
-            return Some(f)
-          }
-        }
+        //        st.typeTable(ttUri.get).enumElements.foreach{
+        //          f => if(f.endsWith(ID_SEPARATOR +cmlist.last)) {
+        //            return Some(f)
+        //          }
+        //        }
         st.typeTable(ttUri.get).enumElements.find(_.endsWith(ID_SEPARATOR + cmlist.last))
       } else {
         None
@@ -224,8 +224,21 @@ object SymbolTableHelper {
       interUri
     } else {
       name.tail.foreach { id =>
-        if (interUri.isDefined) {
-          interUri = st.componentTable(interUri.get).getUriFromSymbol(id)
+        if (interUri.isDefined &&
+          (interUri.get.startsWith(COMPONENT_TYPE) ||
+            interUri.get.startsWith(CONNECTION_TYPE))) {
+          if (interUri.get.startsWith(COMPONENT_TYPE)) {
+            interUri = st.componentTable(interUri.get).getUriFromSymbol(id)
+          } else {
+            val parentComp = Resource.getParentUri(interUri.get)
+            if (parentComp.isDefined) {
+              interUri = st.componentTable(parentComp.get).connectionTable(interUri.get).getUriFromSymbol(id)
+            } else {
+              interUri = None
+            }
+          }
+        } else {
+          interUri = None
         }
       }
       interUri

@@ -104,31 +104,31 @@ final class QueryEval(st: SymbolTable) {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Node), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, lhs.getNodes.map(_.getUri), isetEmpty[ResourceUri],
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ivectorEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.PORT => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts,
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ivectorEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.IN => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts.filter(H.isInPort),
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ivectorEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.OUT => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts.filter(H.isOutPort),
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ivectorEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.PORTERROR => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Error), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           lhs.getPortErrors, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ivectorEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
       }
 
       case FilterID.SOURCE => {
@@ -155,14 +155,14 @@ final class QueryEval(st: SymbolTable) {
         if (ports.size == 1) {
           val port = ports.toSeq.head
           val errors = flow.get.toFaults
-          portE += port -> errors.intersect(c.getPortErrors(port))
+          portE += (port -> errors.intersect(c.getPortErrors(port)))
         }
       }
     }
     collector.Collector(st, c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
       c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
       isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-      ivectorEmpty[Collector], c.getErrors ++ c.getWarnings)
+      ilinkedSetEmpty[Collector], c.getErrors ++ c.getWarnings)
   }
 
   def filterSink(c: Collector): Collector = {
@@ -178,15 +178,15 @@ final class QueryEval(st: SymbolTable) {
         val ports = node.getPortsFromFlows(f)
         if (ports.size == 1) {
           val port = ports.toSeq.head
-          val errors = flow.get.toFaults
-          portE += port -> errors.intersect(c.getPortErrors(port))
+          val errors = flow.get.fromFaults
+          portE += (port -> errors.intersect(c.getPortErrors(port)))
         }
       }
     }
     collector.Collector(st, c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
       c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
       isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-      ivectorEmpty[Collector], c.getErrors ++ c.getWarnings)
+      ilinkedSetEmpty[Collector], c.getErrors ++ c.getWarnings)
   }
 
   def eval(rexp: ReachExpr): Collector = {
@@ -241,31 +241,45 @@ final class QueryEval(st: SymbolTable) {
   }
 
   def pathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
-    val er = ErrorReachability(st)
-    val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
-      if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
-    } else if (source.getResultType.isDefined) {
-      source.getResultType
+    if (source.hasErrors || target.hasErrors) {
+      source.union(target)
     } else {
-      target.getResultType
-    }
+      val er = ErrorReachability(st)
+      val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
+        if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
+      } else if (source.getResultType.isDefined) {
+        source.getResultType
+      } else {
+        target.getResultType
+      }
 
-    resType match {
-      case Some(ResultType.Node) => {if(constraint.isDefined) {
-        er.reachPathSet(source.getNodes.map(_.getUri),
-          target.getNodes.map(_.getUri), constraint.get)
-      } else {
-        er.reachPathSet(source.getNodes.map(_.getUri),
-        target.getNodes.map(_.getUri))
-      }}
-      case Some(ResultType.Port) => {if(constraint.isDefined) {
-        er.reachPathSet(source.getPorts, target.getPorts, constraint.get)
-      } else {
-        er.reachPathSet(source.getPorts, target.getPorts)
-      }}
-      case Some(ResultType.Error) => er.errorPathReachMap(source.getPortErrors, target.getPortErrors)
-      case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
-        errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))
+      resType match {
+        case Some(ResultType.Node) => {
+          if (constraint.isDefined) {
+            er.reachPathSet(source.getNodes.map(_.getUri),
+              target.getNodes.map(_.getUri), constraint.get)
+          } else {
+            er.reachPathSet(source.getNodes.map(_.getUri),
+              target.getNodes.map(_.getUri))
+          }
+        }
+        case Some(ResultType.Port) => {
+          if (constraint.isDefined) {
+            er.reachPathSet(source.getPorts, target.getPorts, constraint.get)
+          } else {
+            er.reachPathSet(source.getPorts, target.getPorts)
+          }
+        }
+        case Some(ResultType.Error) => {
+          if (constraint.isDefined) {
+            er.errorPathReachMapWith(source.getPortErrors, target.getPortErrors, constraint.get)
+          } else {
+            er.errorPathReachMap(source.getPortErrors, target.getPortErrors)
+          }
+        }
+        case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
+          errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))
+      }
     }
 
     //    val minSType = QueryResult.getMinType(source)
@@ -350,7 +364,9 @@ final class QueryEval(st: SymbolTable) {
 
       case NodeEmpty() => Collector(st)
 
-      case QueryName(id) => result.getOrElse(id.value, Collector(st))
+      case QueryName(id) => result.getOrElse(id.value, Collector(st, isetEmpty,
+        isetEmpty[Tag] + errorMessageGen(MISSING_RESULT,
+          id.value, ReachAnalysisStage.Query)))
 
       case nn: NodeName => eval(nn, ivectorEmpty[ISeq[Id]])
     }
@@ -414,6 +430,16 @@ final class QueryEval(st: SymbolTable) {
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] ++ FlowNode.getNode(nodeUri).get.getPortsFromFlows(uri.get),
           imapEmpty[ResourceUri, ISet[ResourceUri]])
+      } else if (uri.get.startsWith(H.COMPONENT_TYPE) && uri.get == st.system) {
+        collector.Collector(st,
+          FlowNode.getGraphs,
+          FlowNode.getGraphs.flatMap(_.nodes),
+          isetEmpty[ResourceUri],
+          ResultType.Node,
+          FlowNode.getGraphs.flatMap(_.edges),
+          isetEmpty[ResourceUri],
+          isetEmpty[ResourceUri] + uri.get,
+          isetEmpty[Tag])
       } else {
         Collector(st, isetEmpty,
           isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA,
@@ -423,7 +449,7 @@ final class QueryEval(st: SymbolTable) {
     } else {
       Collector(st, isetEmpty,
         isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA,
-          n.toString, ReachAnalysisStage.Query))
+          QueryPPrinter(n), ReachAnalysisStage.Query))
     }
   }
 }

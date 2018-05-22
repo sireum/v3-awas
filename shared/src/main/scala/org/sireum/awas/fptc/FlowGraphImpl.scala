@@ -146,7 +146,17 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
         getEdgeForPort(tuple._1).foreach { e =>
           if (e.targetPort.isDefined) {
             edges += e
-            result = result :+ (e.targetPort.get, tuple._2)
+            val targetPropagations = e.target.getPropagation(e.targetPort.get)
+            val errrorTypes = if (targetPropagations.contains(tuple._2)) {
+              isetEmpty + tuple._2
+            } else {
+              st.typeAlias(tuple._2)
+            }
+            errrorTypes.foreach(t => {
+              if (targetPropagations.contains(t)) {
+                result = result :+ (e.targetPort.get, t)
+              }
+            })
           }
         }
         collector.FlowErrorNextCollector(result.toSet,
@@ -171,7 +181,17 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
         getEdgeForPort(tuple._1).foreach { e =>
           if (e.sourcePort.isDefined) {
             edges += e
-            result = result :+ (e.sourcePort.get, tuple._2)
+            val sourcePropagation = e.source.getPropagation(e.sourcePort.get)
+            val errorTypes = if (sourcePropagation.contains(tuple._2)) {
+              isetEmpty + tuple._2
+            } else {
+              st.typeAlias(tuple._2)
+            }
+            errorTypes.foreach(t =>
+              if (sourcePropagation.contains(t)) {
+                result = result :+ (e.sourcePort.get, t)
+              }
+            )
           }
         }
         collector.FlowErrorNextCollector(result.toSet,

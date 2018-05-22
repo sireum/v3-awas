@@ -134,7 +134,7 @@ object Visualizer {
     val qexpr = QueryPPrinter(qStmt.qExpr)
     res = res :+ "\"" + qid + "\":" + "\"" + qexpr + "\""
     if (qRes(qid).getPaths.size > 1) {
-      for (i <- qRes(qid).getPaths.indices) {
+      for (i <- qRes(qid).getPaths.toIndexedSeq.indices) {
         res = res :+ "\"" + qid + ":Path " + (i + 1) + "\":" + "\"" + qexpr + "\""
       }
     }
@@ -146,8 +146,8 @@ object Visualizer {
     qRes.foreach { it =>
       res = res :+ "\"" + it._1 + "\":" + "[" + collector2String(it._2).map("\"" + _ + "\"").mkString(", ") + "]"
       if (it._2.getPaths.size > 1)
-        for (i <- it._2.getPaths.indices) {
-          res = res :+ "\"" + it._1 + ":Path " + (i + 1) + "\":" + "[" + collector2String(it._2.getPaths(i)).map("\"" + _ + "\"").mkString(", ") + "]"
+        for (i <- it._2.getPaths.toIndexedSeq.indices) {
+          res = res :+ "\"" + it._1 + ":Path " + (i + 1) + "\":" + "[" + collector2String(it._2.getPaths.toIndexedSeq(i)).map("\"" + _ + "\"").mkString(", ") + "]"
         }
     }
     res
@@ -158,8 +158,8 @@ object Visualizer {
     qRes.foreach { it =>
       res = res :+ "\"" + it._1 + "\":" + "[" + it._2.getCriteria.map("\"" + _ + "\"").mkString(", ") + "]"
       if (it._2.getPaths.size > 1)
-        for (i <- it._2.getPaths.indices) {
-          res = res :+ "\"" + it._1 + ":Path " + (i + 1) + "\":" + "[" + it._2.getPaths(i).getCriteria.map("\"" + _ + "\"").mkString(", ") + "]"
+        for (i <- it._2.getPaths.toIndexedSeq.indices) {
+          res = res :+ "\"" + it._1 + ":Path " + (i + 1) + "\":" + "[" + it._2.getPaths.toIndexedSeq(i).getCriteria.map("\"" + _ + "\"").mkString(", ") + "]"
         }
     }
     res

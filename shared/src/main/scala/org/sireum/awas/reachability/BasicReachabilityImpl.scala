@@ -286,7 +286,7 @@ class BasicReachabilityImpl(st: SymbolTable)
         error = isetEmpty[Tag]))
 
     val allGraphs = result.flatMap(_.graphs).toSet
-    collector.Collector(st, allGraphs, pathColls, Some(ResultType.Node))
+    collector.Collector(st, allGraphs, ilinkedSetEmpty ++ pathColls, Some(ResultType.Node))
   }
 
   /**
@@ -327,7 +327,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
       Collector(st,
         pathNodes.getGraphs,
-        complexPaths ++ pathNodes.getPaths,
+        ilinkedSetEmpty ++ complexPaths ++ pathNodes.getPaths,
         Some(ResultType.Node))
     } else {
       val paths = source.getOwner.getCycles
@@ -341,9 +341,9 @@ class BasicReachabilityImpl(st: SymbolTable)
             getEdgesInPath(c.toSet), isetEmpty[ResourceUri],
             isetEmpty[ResourceUri] + source.getUri + target.getUri,
             isetEmpty[Tag])
-      }.toVector
+      }.toSet
 
-      collector.Collector(st, isetEmpty + source.getOwner, paths, Some(ResultType.Node))
+      collector.Collector(st, isetEmpty + source.getOwner, ilinkedSetEmpty ++ paths, Some(ResultType.Node))
     }
   }
 
@@ -357,7 +357,7 @@ class BasicReachabilityImpl(st: SymbolTable)
       case ConstraintKind.None => pathCollector.getPaths.filter(it =>
         constraint.simple.get.getNodes.intersect(it.getNodes).isEmpty)
     }
-    Collector(st, paths.flatMap(_.getGraphs).toSet, paths.toVector, Some(ResultType.Node))
+    Collector(st, paths.flatMap(_.getGraphs).toSet, ilinkedSetEmpty ++ paths.toSet, Some(ResultType.Node))
   }
 
   def getEdgesInPath(pathNodes: ISet[FlowNode]): Set[Edge] = {
