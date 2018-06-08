@@ -48,7 +48,7 @@ public interface AwasGraph {
 
     Map<String, Set<String>> backwardErrorReachUsingNames(String port, String... errors);
 
-    Map<String, String> queryEvaluator(String query);
+    Map<String, Collector> queryEvaluator(String query);
 
     FlowGraph<FlowNode> getGraph();
 

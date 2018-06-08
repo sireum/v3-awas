@@ -104,7 +104,7 @@ object Main {
       if(document.readyState == "complete") {
         TreeTable("#query-table").treetable(js.Dictionary.apply[js.Any](
           ("expandable", true),
-          ("indenterTemplate", "<span style='display:run-in; vertical-align: middle' class=\"indenter\"></span>"),
+          ("indenterTemplate", " "),
           ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
           ("onNodeExpand", { (x: js.Any) => {
             val exp = x.asInstanceOf[TreeNode].expander(0)

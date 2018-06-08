@@ -29,7 +29,7 @@ import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.fptc.FlowGraph
-import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryParser}
+import org.sireum.awas.query.{QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -54,7 +54,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("awas")
+      p.toLowerCase.contains("one_reference.awas")
     }
 
     filesEqual.toVector.map { x =>

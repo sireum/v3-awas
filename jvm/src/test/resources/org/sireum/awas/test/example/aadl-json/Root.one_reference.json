@@ -1,0 +1,863 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "Root_one_reference_Instance"
+        ]
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+        {
+          "type": "Feature",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "root_in"
+            ]
+          },
+          "direction": {
+            "type": "Direction",
+            "value": "In"
+          },
+          "category": {
+            "type": "FeatureCategory",
+            "value": "AbstractFeature"
+          },
+          "classifier": {
+            "type": "None"
+          },
+          "properties": []
+        },
+        {
+          "type": "Feature",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "root_out"
+            ]
+          },
+          "direction": {
+            "type": "Direction",
+            "value": "Out"
+          },
+          "category": {
+            "type": "FeatureCategory",
+            "value": "AbstractFeature"
+          },
+          "classifier": {
+            "type": "None"
+          },
+          "properties": []
+        }
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "Sub1"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "System"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Connection_Translation::SubSystem.impl"
+            }
+          },
+          "features": [
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1",
+                  "sub_in"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": []
+            },
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1",
+                  "sub_out"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": []
+            },
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1",
+                  "sub_port"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": []
+            }
+          ],
+          "subComponents": [],
+          "connections": [],
+          "connectionInstances": [],
+          "properties": [],
+          "flows": [],
+          "modes": [],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [],
+                "flows": []
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "Sub2"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "System"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Connection_Translation::SubSystem.impl"
+            }
+          },
+          "features": [
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2",
+                  "sub_in"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": []
+            },
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2",
+                  "sub_out"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": []
+            },
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2",
+                  "sub_port"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": []
+            }
+          ],
+          "subComponents": [],
+          "connections": [],
+          "connectionInstances": [],
+          "properties": [],
+          "flows": [],
+          "modes": [],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [],
+                "flows": []
+              }
+            }
+          ]
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "system_to_comp_in"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "root_in"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1",
+                "sub_in"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "root_in -> Sub1",
+                "sub_in"
+              ]
+            }
+          ],
+          "properties": []
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "comp_to_comp"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1",
+                "sub_port"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_port"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "isBiDirectional": true,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1",
+                "sub_port -> Sub2",
+                "sub_port"
+              ]
+            },
+            {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_port -> Sub1",
+                "sub_port"
+              ]
+            }
+          ],
+          "properties": []
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "system_to_comp_out"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_out"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "root_out"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_out -> root_out"
+              ]
+            }
+          ],
+          "properties": []
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "root_in -> Sub1.sub_in"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "root_in"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1",
+                "sub_in"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "system_to_comp_in"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": []
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "Sub1.sub_port -> Sub2.sub_port"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1",
+                "sub_port"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_port"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "comp_to_comp"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": []
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "Sub2.sub_out -> root_out"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_out"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "root_out"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "system_to_comp_out"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": []
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Root_one_reference_Instance",
+              "Sub2.sub_port -> Sub1.sub_port"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub2",
+                "sub_port"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Root_one_reference_Instance",
+                "Sub1",
+                "sub_port"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "comp_to_comp"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": []
+        }
+      ],
+      "properties": [],
+      "flows": [],
+      "modes": [],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [],
+            "propagations": [],
+            "flows": []
+          }
+        }
+      ]
+    }
+  ],
+  "errorLib": []
+}

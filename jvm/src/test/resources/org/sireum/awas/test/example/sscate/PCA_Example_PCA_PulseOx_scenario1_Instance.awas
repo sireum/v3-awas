@@ -1,0 +1,73 @@
+types
+      enum Error {AboveRange, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricItemOmission, AsymmetricOmission, AsymmetricReplicatesError, AsymmetricServiceOmission, AsymmetricTiming, AsymmetricTransmissive, AsymmetricValue, BadValue, BelowRange, BenignValueError, BoundedOmissionInterval, BoundedValueChange, ConcurrencyError, Deadlock, DelayedService, DetectableValueError, EarlyData, EarlyDelivery, EarlyService, EarlyServiceStart, EarlyServiceTermination, HighRate, InconsistentItemOmission, InconsistentOmission, InconsistentServiceOmission, InconsistentTiming, InconsistentValue, IncorrectValue, ItemCommission, ItemOmission, ItemTimingError, ItemValueError, LateData, LateDelivery, LateServiceStart, LateServiceTermination, LowRate, MutExError, OutOfBounds, OutOfCalibration, OutOfOrder, OutOfRange, RaceCondition, RateError, RateJitter, ReadWriteRace, ReplicationError, SequenceCommission, SequenceError, SequenceOmission, SequenceTimingError, SequenceValueError, ServiceCommission, ServiceError, ServiceOmission, ServiceTimeShift, ServiceTimingError, ServiceValueError, Starvation, StuckValue, SubtleValueCorruption, SubtleValueError, SymmetricApproximateValue, SymmetricExactValue, SymmetricItemOmission, SymmetricOmission, SymmetricReplicatesError, SymmetricServiceOmission, SymmetricTiming, SymmetricValue, TimingError, TransientServiceOmission, UndetectableValueError, ValueCorruption, ValueError, WriteWriteRace, start_commission, start_omission, stop_commission, stop_omission}
+
+components
+      PCA_PulseOx_scenario1_Instance
+
+      PCA_PulseOx_scenario1_Instance__App
+        with Error
+          ports
+            out command
+            in SpO2
+          propagations
+            SpO2 = {ItemValueError, ServiceError}
+            command = {stop_commission, stop_omission, start_commission, start_omission}
+          flows
+            Check_Status : SpO2 -> command
+            stop_fault : * -> command{stop_omission}
+            mitigation1 : SpO2{ServiceError, ItemValueError} -> *
+
+      PCA_PulseOx_scenario1_Instance__PCA_Pump
+        with Error
+          ports
+            in IV__BUS_IN
+            out IV__BUS_OUT
+            in control
+            out infuse
+          propagations
+            control = {stop_commission, stop_omission, start_commission, start_omission}
+            IV = {EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+          flows
+            Pump : control -> infuse
+            missed_stop : control{stop_omission} -> IV{LateServiceTermination}
+            unexpected_stop : control{stop_commission} -> IV{EarlyServiceTermination, LateServiceTermination}
+            missing_start : control{start_omission} -> IV{LateServiceStart}
+            incorrect_start : control{start_commission} -> IV{EarlyServiceStart}
+
+      PCA_PulseOx_scenario1_Instance__Patient
+        with Error
+          ports
+            in infuse
+            in Vein__BUS_IN
+            out Vein__BUS_OUT
+            out Saturation
+            in BloodSat__BUS_IN
+            out BloodSat__BUS_OUT
+          propagations
+            Vein = {ServiceError}
+          flows
+            Absorb : Vein -> *
+            BloodSaturation : * -> BloodSat
+
+      PCA_PulseOx_scenario1_Instance__PulseOx
+        with Error
+          ports
+            out SpO2
+            in Saturation
+            in FingerClip__BUS_IN
+            out FingerClip__BUS_OUT
+          propagations
+            SpO2 = {ItemValueError, ServiceError}
+          flows
+            Read_SpO2 : Saturation -> SpO2
+            numerical_failure : * -> SpO2{ItemValueError}
+
+connections
+      CONNECTION__PCA_Pump__IV__infuse__TO__Patient__Vein__infuse : PCA_PulseOx_scenario1_Instance__PCA_Pump.infuse -> PCA_PulseOx_scenario1_Instance__Patient.infuse
+
+      CONNECTION__Patient__BloodSat__Saturation__TO__PulseOx__FingerClip__Saturation : PCA_PulseOx_scenario1_Instance__Patient.Saturation -> PCA_PulseOx_scenario1_Instance__PulseOx.Saturation
+
+      PCA_PulseOx_scenario1_Instance__activate : PCA_PulseOx_scenario1_Instance__App.command -> PCA_PulseOx_scenario1_Instance__PCA_Pump.control
+
+      PCA_PulseOx_scenario1_Instance__spo2 : PCA_PulseOx_scenario1_Instance__PulseOx.SpO2 -> PCA_PulseOx_scenario1_Instance__App.SpO2
+

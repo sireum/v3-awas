@@ -1,19 +1,14 @@
 package org.sireum.awas.awasfacade;
 
-import org.sireum.awas.collector.Operator;
-import org.sireum.awas.collector.ResultType;
 import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
-import org.sireum.awas.fptc.FlowNode$;
-import org.sireum.awas.graph.AwasEdge;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.util.Tag;
 import scala.Enumeration;
-import scala.collection.JavaConverters$;
-import scala.collection.JavaConverters.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.sireum.awas.util.JavaConverters.*;
 
@@ -111,7 +106,8 @@ public class CollectorImpl implements Collector {
     }
 
     @Override
-    public List<org.sireum.awas.collector.Collector> getPaths() {
-        return toJavaList(collector.getPaths());
+    public List<Collector> getPaths() {
+        return toJavaList(collector.getPaths()).stream().map(c ->
+                (Collector) new CollectorImpl(c)).collect(Collectors.toList());
     }
 }
