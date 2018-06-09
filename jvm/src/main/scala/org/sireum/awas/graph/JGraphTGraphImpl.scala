@@ -5,14 +5,14 @@ import org.jgrapht.alg.shortestpath.AllDirectedPaths
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.sireum.util.CSet
 
-class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]](ef: AwasEdgeFactory[Node, EdgeT]) extends AwasGraph[Node] {
+class JGraphTAwasGraphImpl[Node, EdgeT <: AwasEdge[Node]](ef: Class[EdgeT]) extends AwasGraph[Node] {
   self: AwasGraph[Node] =>
   override type Edge = EdgeT
 
   val graph: Graph[Node, Edge] = {
-    new DefaultDirectedGraph[Node, Edge](
-      (source: Node, target: Node) => ef.createEdge(self, source, target)
-    )
+    new DefaultDirectedGraph[Node, Edge](ef)
+    //(source: Node, target: Node) => ef.createEdge(self, source, target).getClass.asInstanceOf[Edge]
+    //)
   }
 
   def nodes: Iterable[Node] = {

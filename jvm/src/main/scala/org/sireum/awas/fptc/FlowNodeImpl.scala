@@ -266,7 +266,7 @@ class FlowEdgeFactory extends AwasEdgeFactory[FlowNode, FlowEdge[FlowNode]] {
 
     //either source or target should be a connection
     val conn: FlowNode =
-      if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
+      if (source != null && source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
         source
       else target
 

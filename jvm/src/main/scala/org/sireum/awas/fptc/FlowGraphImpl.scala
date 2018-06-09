@@ -42,8 +42,10 @@ class FlowGraphImpl extends FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode] {
   self: FlowGraph[FlowNode] =>
 
   val ef = new FlowEdgeFactory()
+  val e = ef.createEdge(this, null, null)
+    .getClass.asInstanceOf[Class[FlowEdge[FlowNode]]]
 
-  val superClass = new JGraphTAwasGraphImpl[FlowNode, FlowEdge[FlowNode]](ef)
+  val superClass = new JGraphTAwasGraphImpl[FlowNode, FlowEdge[FlowNode]](e)
   override type Edge = FlowEdge[FlowNode]
   val graph: Graph[FlowNode, FlowEdge[FlowNode]] = superClass.graph
 

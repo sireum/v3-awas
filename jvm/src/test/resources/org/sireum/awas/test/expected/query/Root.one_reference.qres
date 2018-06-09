@@ -1,0 +1,20 @@
+q3
+ -------------- 
+{ port-in-virtual:$AWAS$$example/Query/Root.one_reference.awas$comp_to_comp_BACKWARD#in, 
+port-in-virtual:$AWAS$$example/Query/Root.one_reference.awas$comp_to_comp_FORWARD#in, 
+port-in-virtual:$AWAS$$example/Query/Root.one_reference.awas$system_to_comp_in#in, 
+port-in-virtual:$AWAS$$example/Query/Root.one_reference.awas$system_to_comp_out#in, 
+port-in:$AWAS$$example/Query/Root.one_reference.awas$Root_one_reference_Instance_root_out#root_out, 
+port-in:$AWAS$$example/Query/Root.one_reference.awas$Sub1#sub_in, 
+port-in:$AWAS$$example/Query/Root.one_reference.awas$Sub1#sub_port_IN, 
+port-in:$AWAS$$example/Query/Root.one_reference.awas$Sub2#sub_port_IN, 
+port-out-virtual:$AWAS$$example/Query/Root.one_reference.awas$comp_to_comp_BACKWARD#out, 
+port-out-virtual:$AWAS$$example/Query/Root.one_reference.awas$comp_to_comp_FORWARD#out, 
+port-out-virtual:$AWAS$$example/Query/Root.one_reference.awas$system_to_comp_in#out, 
+port-out-virtual:$AWAS$$example/Query/Root.one_reference.awas$system_to_comp_out#out, 
+port-out:$AWAS$$example/Query/Root.one_reference.awas$Root_one_reference_Instance_root_in#root_in, 
+port-out:$AWAS$$example/Query/Root.one_reference.awas$Sub1#sub_port_OUT, 
+port-out:$AWAS$$example/Query/Root.one_reference.awas$Sub2#sub_out, 
+port-out:$AWAS$$example/Query/Root.one_reference.awas$Sub2#sub_port_OUT } 
+
+ -------------- 

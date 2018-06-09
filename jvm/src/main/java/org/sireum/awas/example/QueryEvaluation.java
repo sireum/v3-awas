@@ -22,7 +22,11 @@ public class QueryEvaluation {
 
             if (graph.isPresent()) {
                 Map<String, String> res = graph.get().queryEvaluator(
-                        FileUtil.readFile(FileUtil.toUri(args[1]))._1());
+                        FileUtil.readFile(FileUtil.toUri(args[1]))._1()).entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> entry.getValue().toString()
+                        ));
                 String result = res.entrySet()
                         .stream()
                         .map(entry -> "\n" + entry.getKey() + ":\n  " + entry.getValue() + "\n")

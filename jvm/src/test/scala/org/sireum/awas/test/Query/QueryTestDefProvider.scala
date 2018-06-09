@@ -54,7 +54,9 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("one_reference.awas")
+      p.toLowerCase.contains(".awas") && !p.toLowerCase.contains(
+        "PCA_Example_PCA_PulseOx_scenario1_Instance.awas".toLowerCase)
+
     }
 
     filesEqual.toVector.map { x =>
