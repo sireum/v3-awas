@@ -84,6 +84,9 @@ object SymbolTableMessage {
   val MISSING_ERROR_TYPE =
     "Error type '%s' not defined"
 
+  val MISSING_PORT_REF =
+    "Deployment relation can only be created using ports or connections"
+
 
   def errorMessageGen(template: String,
                       node: Node,

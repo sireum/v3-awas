@@ -360,7 +360,6 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     result
   }
 
-
   def intersectErrors(op1: IMap[ResourceUri, ISet[ResourceUri]],
                       op2: IMap[ResourceUri, ISet[ResourceUri]]):
   IMap[ResourceUri, Set[ResourceUri]] = {
@@ -372,4 +371,17 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     result
   }
 
+  override def getPredecessor(currentPort: ResourceUri,
+                              currentError: ResourceUri)
+  : IMap[ResourceUri, ISet[ResourceUri]] = {
+    previousError((currentPort, currentError)).flatMap(_.tuples)
+      .groupBy(_._1).mapValues(_.map(_._2))
+  }
+
+  override def getSuccessor(currentPort: ResourceUri,
+                            currentError: ResourceUri)
+  : IMap[ResourceUri, ISet[ResourceUri]] = {
+    nextError((currentPort, currentError)).flatMap(_.tuples)
+      .groupBy(_._1).mapValues(_.map(_._2))
+  }
 }

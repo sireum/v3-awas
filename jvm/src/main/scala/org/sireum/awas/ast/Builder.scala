@@ -105,7 +105,9 @@ final class Builder private() {
 
   def build(ctx: DeploymentDeclContext): DeploymentDecl = {
     DeploymentDecl(build(ctx.fromComponent),
-      build(ctx.toComponent)) at ctx
+      if (ctx.fromPort != null) Some(buildId(ctx.fromPort)) else None,
+      build(ctx.toComponent),
+      if (ctx.toPort != null) Some(buildId(ctx.toPort)) else None) at ctx
   }
 
   def build(ctx: TypeAliasDeclContext): AliasDecl = {

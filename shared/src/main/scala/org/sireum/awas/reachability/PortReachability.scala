@@ -30,6 +30,7 @@ import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.awas.query.ConstraintExpr
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.util.ISet
 
 
 trait PortReachability[Node] extends BasicReachability[Node]{
@@ -58,6 +59,10 @@ trait PortReachability[Node] extends BasicReachability[Node]{
   def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri]): Collector
 
   def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri], constraint: ConstraintExpr): Collector
+
+  def getSuccessor(currentPort: ResourceUri): ISet[ResourceUri]
+
+  def getPredecessor(currentPort: ResourceUri): ISet[ResourceUri]
 }
 
 object PortReachability {

@@ -345,8 +345,16 @@ final class PrettyPrinter(sb: StringBuilder) {
   def print(dep: DeploymentDecl, indent: Natural): Unit = {
     printIndent(indent)
     print(dep.fromNode)
-    sb.append(" <-> ")
+    if (dep.fromPort.isDefined) {
+      sb.append(".")
+      print(dep.fromPort.get)
+    }
+    sb.append(" -> ")
     print(dep.toNode)
+    if (dep.toPort.isDefined) {
+      sb.append(".")
+      print(dep.toPort.get)
+    }
     println()
   }
 

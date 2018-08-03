@@ -46,7 +46,8 @@ extends TestDefProvider {
     //makePath("..", "example", "fptc"),
     //    makePath("..", "example", "Query"),
     //    makePath("..", "example", "sscate"),
-    makePath("..", "example", "hierarchial")
+    //makePath("..", "example", "hierarchial"),
+    makePath("..", "example", "bindings")
   )
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
@@ -59,7 +60,7 @@ extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("awas")
+      p.toLowerCase.contains("impl3")
     }
 
     filesEqual.toVector.map { x =>

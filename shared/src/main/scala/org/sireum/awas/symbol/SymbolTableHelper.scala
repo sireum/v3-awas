@@ -51,8 +51,8 @@ object SymbolTableHelper {
   val VIRTUAL_CONN_FLOW_ID = "&default_flow"
 
   //canonical bind port ID
-  val INPUT_BIND_PORT_ID = "&bind_in"
-  val OUTPUT_BIND_PORT_ID = "&bind_out"
+  val INPUT_BIND_PORT_ID = "BIND_IN"
+  val OUTPUT_BIND_PORT_ID = "BIND_OUT"
 
   val MODEL_TYPE = "model"
 

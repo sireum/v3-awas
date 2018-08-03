@@ -28,7 +28,7 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
 
     //equals test by excluding some
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("json")
+      p.toLowerCase.contains("secure")
     }
 
     filesEqual.toVector.map { x =>
@@ -50,11 +50,11 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
     Aadl2Awas(model) match {
       case Some(x) => {
-        //        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-        //        val st = SymbolTable(x)
-        //        val graph = FlowGraph(x, st)
-        //        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
-        //          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
+        //                implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+        //                val st = SymbolTable(x)
+        //                val graph = FlowGraph(x, st)
+        //                SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+        //                  with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
         PrettyPrinter(x)
       }
       case None => ""

@@ -1,0 +1,1309 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "Communication_impl3_Instance"
+        ]
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "network"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Bus"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "bindings_example::Comm_substrate.impl2"
+            }
+          },
+          "features": [
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "In"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "network",
+                      "bindings"
+                    ],
+                    "errorTokens": [
+                      "LateData",
+                      "EarlyData"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "In"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "network",
+                      "access"
+                    ],
+                    "errorTokens": [
+                      "ItemOmission"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "network",
+                      "bindings"
+                    ],
+                    "errorTokens": [
+                      "LateData",
+                      "ItemOmission"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "network",
+                      "access"
+                    ],
+                    "errorTokens": [
+                      "ItemOmission"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "network",
+                        "qos_fail"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "network",
+                          "access"
+                        ],
+                        "errorTokens": [
+                          "ItemOmission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "network",
+                          "access"
+                        ],
+                        "errorTokens": [
+                          "ItemOmission"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "network",
+                        "qos_Npub"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "network",
+                          "bindings"
+                        ],
+                        "errorTokens": [
+                          "EarlyData"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "network",
+                          "bindings"
+                        ],
+                        "errorTokens": [
+                          "ItemOmission"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "sender"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Process"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "bindings_example::Publisher.impl2"
+            }
+          },
+          "features": [
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "sender",
+                  "pub"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+            {
+              "type": "Property",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "sender",
+                  "Deployment_Properties::Actual_Processor_Binding"
+                ]
+              },
+              "propertyValues": [
+                {
+                  "type": "ReferenceProp",
+                  "value": "hw1"
+                }
+              ]
+            }
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "In"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "sender",
+                      "processor"
+                    ],
+                    "errorTokens": [
+                      "LateData"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "sender",
+                      "pub"
+                    ],
+                    "errorTokens": [
+                      "LateData",
+                      "EarlyData"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "sender",
+                        "qos_Npub"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "sender",
+                          "pub"
+                        ],
+                        "errorTokens": [
+                          "EarlyData"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "sender",
+                        "data_gen_delay"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "sender",
+                          "processor"
+                        ],
+                        "errorTokens": [
+                          "LateData"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "sender",
+                          "pub"
+                        ],
+                        "errorTokens": [
+                          "LateData"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "receiver"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Process"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "bindings_example::Subscriber.impl2"
+            }
+          },
+          "features": [
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "receiver",
+                  "sub"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+            {
+              "type": "Property",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "receiver",
+                  "Deployment_Properties::Actual_Processor_Binding"
+                ]
+              },
+              "propertyValues": [
+                {
+                  "type": "ReferenceProp",
+                  "value": "hw2"
+                }
+              ]
+            }
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "In"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "receiver",
+                      "sub"
+                    ],
+                    "errorTokens": [
+                      "LateData",
+                      "EarlyData",
+                      "ItemOmission"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "receiver",
+                        "consume"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Sink"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "receiver",
+                          "sub"
+                        ],
+                        "errorTokens": [
+                          "LateData",
+                          "EarlyData",
+                          "ItemOmission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "None"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "hw1"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Processor"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "bindings_example::cpu1_with_NW.impl1"
+            }
+          },
+          "features": [
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "hw1",
+                  "nwInterface"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "BusAccess"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "hw1",
+                      "bindings"
+                    ],
+                    "errorTokens": [
+                      "LateData"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "hw1",
+                      "nwInterface"
+                    ],
+                    "errorTokens": [
+                      "ItemOmission"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "hw1",
+                        "overloaded"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "hw1",
+                          "bindings"
+                        ],
+                        "errorTokens": [
+                          "LateData"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "hw1",
+                        "cpuCrashed"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "hw1",
+                          "nwInterface"
+                        ],
+                        "errorTokens": [
+                          "ItemOmission"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "hw2"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Processor"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "bindings_example::cpu1_with_NW.impl1"
+            }
+          },
+          "features": [
+            {
+              "type": "Feature",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "hw2",
+                  "nwInterface"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "BusAccess"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "hw2",
+                      "bindings"
+                    ],
+                    "errorTokens": [
+                      "LateData"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "Communication_impl3_Instance",
+                      "hw2",
+                      "nwInterface"
+                    ],
+                    "errorTokens": [
+                      "ItemOmission"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "hw2",
+                        "overloaded"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "hw2",
+                          "bindings"
+                        ],
+                        "errorTokens": [
+                          "LateData"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "Communication_impl3_Instance",
+                        "hw2",
+                        "cpuCrashed"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "Communication_impl3_Instance",
+                          "hw2",
+                          "nwInterface"
+                        ],
+                        "errorTokens": [
+                          "ItemOmission"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "publish"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "sender"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "sender",
+                "pub"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "receiver"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "receiver",
+                "sub"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "sender",
+                "pub -> receiver",
+                "sub"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Communication_impl3_Instance",
+              "sender.pub -> receiver.sub"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "sender"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "sender",
+                "pub"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "receiver"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "Communication_impl3_Instance",
+                "receiver",
+                "sub"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "publish"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [],
+            "propagations": [
+            ],
+            "flows": [
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "errorLib": [
+    {
+      "type": "Emv2Library",
+      "name": {
+        "type": "Name",
+        "name": [
+          "ErrorLibrary"
+        ]
+      },
+      "useTypes": [],
+      "tokens": [
+        "ServiceError",
+        "ItemOmission",
+        "ServiceOmission",
+        "SequenceOmission",
+        "TransientServiceOmission",
+        "LateServiceStart",
+        "EarlyServiceTermination",
+        "BoundedOmissionInterval",
+        "ItemCommission",
+        "ServiceCommission",
+        "SequenceCommission",
+        "EarlyServiceStart",
+        "LateServiceTermination",
+        "ItemTimingError",
+        "EarlyDelivery",
+        "LateDelivery",
+        "SequenceTimingError",
+        "HighRate",
+        "LowRate",
+        "RateJitter",
+        "ServiceTimingError",
+        "DelayedService",
+        "EarlyService",
+        "TimingError",
+        "RateError",
+        "EarlyData",
+        "LateData",
+        "ServiceTimeShift",
+        "ItemValueError",
+        "UndetectableValueError",
+        "DetectableValueError",
+        "OutOfRange",
+        "BelowRange",
+        "AboveRange",
+        "OutOfBounds",
+        "SequenceValueError",
+        "BoundedValueChange",
+        "StuckValue",
+        "OutOfOrder",
+        "ServiceValueError",
+        "OutOfCalibration",
+        "ValueError",
+        "IncorrectValue",
+        "ValueCorruption",
+        "BadValue",
+        "SequenceError",
+        "SubtleValueError",
+        "BenignValueError",
+        "SubtleValueCorruption",
+        "ReplicationError",
+        "AsymmetricReplicatesError",
+        "AsymmetricValue",
+        "AsymmetricApproximateValue",
+        "AsymmetricExactValue",
+        "AsymmetricTiming",
+        "AsymmetricOmission",
+        "AsymmetricItemOmission",
+        "AsymmetricServiceOmission",
+        "SymmetricReplicatesError",
+        "SymmetricValue",
+        "SymmetricApproximateValue",
+        "SymmetricExactValue",
+        "SymmetricTiming",
+        "SymmetricOmission",
+        "SymmetricItemOmission",
+        "SymmetricServiceOmission",
+        "InconsistentValue",
+        "InconsistentTiming",
+        "InconsistentOmission",
+        "InconsistentItemOmission",
+        "InconsistentServiceOmission",
+        "AsymmetricTransmissive",
+        "ConcurrencyError",
+        "RaceCondition",
+        "ReadWriteRace",
+        "WriteWriteRace",
+        "MutExError",
+        "Deadlock",
+        "Starvation"
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 19,
+        "entries": [
+          [
+            "InconsistentValue",
+            "AsymmetricValue"
+          ],
+          [
+            "SubtleValueCorruption",
+            "DetectableValueError"
+          ],
+          [
+            "InconsistentItemOmission",
+            "AsymmetricItemOmission"
+          ],
+          [
+            "IncorrectValue",
+            "ItemValueError"
+          ],
+          [
+            "RateError",
+            "SequenceTimingError"
+          ],
+          [
+            "InconsistentTiming",
+            "AsymmetricTiming"
+          ],
+          [
+            "TimingError",
+            "ItemTimingError"
+          ],
+          [
+            "EarlyData",
+            "HighRate"
+          ],
+          [
+            "ValueError",
+            "ItemValueError"
+          ],
+          [
+            "LateData",
+            "LowRate"
+          ],
+          [
+            "BenignValueError",
+            "DetectableValueError"
+          ],
+          [
+            "ValueCorruption",
+            "ItemValueError"
+          ],
+          [
+            "SubtleValueError",
+            "UndetectableValueError"
+          ],
+          [
+            "BadValue",
+            "ItemValueError"
+          ],
+          [
+            "SequenceError",
+            "SequenceValueError"
+          ],
+          [
+            "InconsistentOmission",
+            "AsymmetricOmission"
+          ],
+          [
+            "InconsistentServiceOmission",
+            "AsymmetricServiceOmission"
+          ],
+          [
+            "AsymmetricTransmissive",
+            "AsymmetricValue"
+          ],
+          [
+            "ServiceTimeShift",
+            "ServiceTimingError"
+          ]
+        ]
+      }
+    }
+  ]
+}

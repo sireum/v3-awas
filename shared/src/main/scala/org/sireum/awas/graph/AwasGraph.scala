@@ -36,7 +36,7 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
 
   private var scc: Seq[Set[Node]] = ilistEmpty[Set[Node]]
 
-  private var cycles: Seq[Set[Node]] = ilistEmpty[Set[Node]]
+  private var cycles: Seq[Seq[Node]] = ilistEmpty[Seq[Node]]
 
   def nodes: Iterable[Node]
 
@@ -64,183 +64,185 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
 
   def getPredecessorNodes(node: Node): CSet[Node]
 
-  def getSCC: Seq[Set[Node]] = {
-    if (scc.isEmpty) {
-      var result = ilistEmpty[Set[Node]]
-      var discoveryMap: IMap[Node, (Boolean, Boolean)] =
-        nodes.map(n => (n, (false, false))).toMap
+  def getSCC: Seq[Set[Node]]
 
-      def resetDiscoveryMap(): Unit = {
-        discoveryMap = discoveryMap.map(x => (x._1, (false, false)))
-      }
-
-      def setDiscovered(node: Node): Unit = {
-        val x = discoveryMap(node)
-        discoveryMap = discoveryMap + (node -> (true, x._2))
-      }
-
-      def setBoth(node: Node): Unit = {
-        val x = discoveryMap(node)
-        discoveryMap = discoveryMap + (node -> (true, true))
-      }
-
-      def isAllMySuccDiscovered(node: Node): Boolean =
-        getSuccessorNodes(node).map(discoveryMap).map(_._1).fold(false)((x, y) => x & y)
-
-      def dfs(node: Node, isFirst: Boolean): List[Node] = {
-        var result = ilistEmpty[Node]
-        var stack = mstackEmpty[Node]
-        stack.push(node)
-
-        while (stack.nonEmpty) {
-          val current = stack.pop()
-          if (!discoveryMap(current)._1) {
-            setDiscovered(current)
-            if (!isFirst) {
-              result = result :+ current
-            }
-            setBoth(current)
-            stack.push(current)
-
-            val nexts = if (isFirst) getSuccessorNodes(current) else getPredecessorNodes(current)
-            nexts.foreach(n => if (!discoveryMap(n)._1) {
-              stack.push(n)
-            })
-
-          } else if (discoveryMap(current)._2 && isFirst) {
-            result = result.+:(current)
-          }
-        }
-        result
-      }
-
-      var orderedNodes = ilistEmpty[Node]
-
-      nodes.foreach { n =>
-        if (!discoveryMap(n)._1)
-          orderedNodes = dfs(n, true) ++ orderedNodes
-      }
-      resetDiscoveryMap()
-      orderedNodes.foreach { n =>
-        if (!discoveryMap(n)._1) {
-          result = result :+ dfs(n, false).toSet
-        }
-      }
-      scc = result
-      scc
-    } else {
-      scc
-    }
-  }
+  //= {
+  //    if (scc.isEmpty) {
+  //      var result = ilistEmpty[Set[Node]]
+  //      var discoveryMap: IMap[Node, (Boolean, Boolean)] =
+  //        nodes.map(n => (n, (false, false))).toMap
+  //
+  //      def resetDiscoveryMap(): Unit = {
+  //        discoveryMap = discoveryMap.map(x => (x._1, (false, false)))
+  //      }
+  //
+  //      def setDiscovered(node: Node): Unit = {
+  //        val x = discoveryMap(node)
+  //        discoveryMap = discoveryMap + (node -> (true, x._2))
+  //      }
+  //
+  //      def setBoth(node: Node): Unit = {
+  //        val x = discoveryMap(node)
+  //        discoveryMap = discoveryMap + (node -> (true, true))
+  //      }
+  //
+  //      def isAllMySuccDiscovered(node: Node): Boolean =
+  //        getSuccessorNodes(node).map(discoveryMap).map(_._1).fold(true)((x, y) => x & y)
+  //
+  //      def dfs(node: Node, isFirst: Boolean): List[Node] = {
+  //        var result = ilistEmpty[Node]
+  //        var stack = mstackEmpty[Node]
+  //        stack.push(node)
+  //
+  //        while (stack.nonEmpty) {
+  //          val current = stack.pop()
+  //          if (!discoveryMap(current)._1) {
+  //            setDiscovered(current)
+  //            if (!isFirst) {
+  //              result = result :+ current
+  //            }
+  //            setBoth(current)
+  //            stack.push(current)
+  //
+  //            val nexts = if (isFirst) getSuccessorNodes(current) else getPredecessorNodes(current)
+  //            nexts.foreach(n => if (!discoveryMap(n)._1) {
+  //              stack.push(n)
+  //            })
+  //
+  //          } else if (discoveryMap(current)._2 && isFirst) {
+  //            result = result.+:(current)
+  //          }
+  //        }
+  //        result
+  //      }
+  //
+  //      var orderedNodes = ilistEmpty[Node]
+  //
+  //      nodes.foreach { n =>
+  //        if (!discoveryMap(n)._1)
+  //          orderedNodes = dfs(n, true) ++ orderedNodes
+  //      }
+  //      resetDiscoveryMap()
+  //      orderedNodes.foreach { n =>
+  //        if (!discoveryMap(n)._1) {
+  //          result = result :+ dfs(n, false).toSet
+  //        }
+  //      }
+  //      scc = result
+  //      scc
+  //    } else {
+  //      scc
+  //    }
+  //  }
 
   /**
     * Find all simple cycles of a directed graph using the Schwarcfiter and Lauer's algorithm.
     *
     * @return set of cycles
     */
-  def getCycles: Seq[Set[Node]] = {
-    val sccs = getSCC
-    var loops = ilistEmpty[Set[Node]]
-    var bSets = imapEmpty[Node, Set[Node]]
-    var stack = ilistEmpty[Node]
-    var marked = isetEmpty[Node]
-    var removed = imapEmpty[Node, Set[Node]]
-    var position = imapEmpty[Node, Integer]
-    var reach = nodes.map(n => (n, false)).toMap
-
-
-    def cycle(v: Node, tq: Integer): Boolean = {
-      var q = tq
-      var foundCycle = false;
-      marked = marked + v
-      stack = stack.push(v)
-      val t = stack.size
-      position = position + (v -> t)
-      if (!reach(v)) {
-        q = t
-      }
-      val avRemoved = removed.getOrElse(v, isetEmpty)
-      getOutgoingEdges(v).foreach { e =>
-        val wV = e.target
-        if (!avRemoved.contains(wV)) {
-          if (!marked.contains(wV)) {
-            val gotCycle = cycle(wV, q)
-            if (gotCycle) {
-              foundCycle = true
-            } else {
-              noCycle(v, wV)
-            }
-          } else if (position(wV) <= q) {
-            foundCycle = true;
-            var cycle = isetEmpty[Node]
-            val it = stack.reverseIterator
-            var current = stack.last
-
-            breakable {
-              while (it.hasNext) {
-              current = it.next()
-              if (wV == current) break
-              }
-            }
-            cycle = cycle + wV
-            breakable {
-              while (it.hasNext) {
-              current = it.next()
-              cycle = cycle + current
-                if (current == v) break
-              }
-            }
-            loops = loops :+ cycle
-          } else {
-            noCycle(v, wV)
-          }
-        }
-      }
-      stack = stack.pop()._2
-      if (foundCycle) {
-        unmark(v)
-      }
-      reach = reach + (v -> true)
-      position = position + (v -> numOfNodes)
-      foundCycle
-    }
-
-    def unmark(x: Node): Unit = {
-      marked = marked - x
-      bSets.getOrElse(x, isetEmpty).foreach { y =>
-        removed = removed + (y -> (removed.getOrElse(y, isetEmpty) - x))
-        if (marked.contains(y)) {
-          unmark(y)
-        }
-      }
-      bSets = bSets + (x -> isetEmpty)
-    }
-
-    def noCycle(x: Node, y: Node): Unit = {
-      bSets = bSets + (y -> (bSets.getOrElse(y, isetEmpty) + x))
-      removed = removed + (x -> (removed.getOrElse(x, isetEmpty) + y))
-    }
-
-    if (cycles.isEmpty) {
-      val startNodes = sccs.map { scc =>
-        var max = -1
-        var startNode = scc.head
-        scc.foreach { node =>
-          val inDegree = getIncomingEdges(node).size
-          if (inDegree > max) {
-            max = inDegree
-            startNode = node
-          }
-        }
-        startNode
-      }
-      startNodes.foreach(cycle(_, 0))
-      cycles = loops
-      cycles
-    } else {
-      cycles
-    }
-  }
+  def getCycles: Seq[Seq[Node]] //= {
+  //    val sccs = getSCC
+  //    var loops = ilistEmpty[Seq[Node]]
+  //    var bSets = imapEmpty[Node, Set[Node]]
+  //    var stack = ilistEmpty[Node]
+  //    var marked = isetEmpty[Node]
+  //    var removed = imapEmpty[Node, Set[Node]]
+  //    var position = imapEmpty[Node, Integer]
+  //    var reach = nodes.map(n => (n, false)).toMap
+  //
+  //
+  //    def cycle(v: Node, tq: Integer): Boolean = {
+  //      var q = tq
+  //      var foundCycle = false;
+  //      marked = marked + v
+  //      stack = stack.push(v)
+  //      val t = stack.size
+  //      position = position + (v -> t)
+  //      if (!reach(v)) {
+  //        q = t
+  //      }
+  //      val avRemoved = removed.getOrElse(v, isetEmpty)
+  //      getOutgoingEdges(v).foreach { e =>
+  //        val wV = e.target
+  //        if (!avRemoved.contains(wV)) {
+  //          if (!marked.contains(wV)) {
+  //            val gotCycle = cycle(wV, q)
+  //            if (gotCycle) {
+  //              foundCycle = true
+  //            } else {
+  //              noCycle(v, wV)
+  //            }
+  //          } else if (position(wV) <= q) {
+  //            foundCycle = true;
+  //            var cycle = isetEmpty[Node]
+  //            val it = stack.reverseIterator
+  //            var current = stack.last
+  //
+  //            breakable {
+  //              while (it.hasNext) {
+  //              current = it.next()
+  //              if (wV == current) break
+  //              }
+  //            }
+  //            cycle = cycle + wV
+  //            breakable {
+  //              while (it.hasNext) {
+  //              current = it.next()
+  //              cycle = cycle + current
+  //                if (current == v) break
+  //              }
+  //            }
+  //            loops = loops :+ cycle
+  //          } else {
+  //            noCycle(v, wV)
+  //          }
+  //        }
+  //      }
+  //      stack = stack.pop()._2
+  //      if (foundCycle) {
+  //        unmark(v)
+  //      }
+  //      reach = reach + (v -> true)
+  //      position = position + (v -> numOfNodes)
+  //      foundCycle
+  //    }
+  //
+  //    def unmark(x: Node): Unit = {
+  //      marked = marked - x
+  //      bSets.getOrElse(x, isetEmpty).foreach { y =>
+  //        removed = removed + (y -> (removed.getOrElse(y, isetEmpty) - x))
+  //        if (marked.contains(y)) {
+  //          unmark(y)
+  //        }
+  //      }
+  //      bSets = bSets + (x -> isetEmpty)
+  //    }
+  //
+  //    def noCycle(x: Node, y: Node): Unit = {
+  //      bSets = bSets + (y -> (bSets.getOrElse(y, isetEmpty) + x))
+  //      removed = removed + (x -> (removed.getOrElse(x, isetEmpty) + y))
+  //    }
+  //
+  //    if (cycles.isEmpty) {
+  //      val startNodes = sccs.map { scc =>
+  //        var max = -1
+  //        var startNode = scc.head
+  //        scc.foreach { node =>
+  //          val inDegree = getIncomingEdges(node).size
+  //          if (inDegree > max) {
+  //            max = inDegree
+  //            startNode = node
+  //          }
+  //        }
+  //        startNode
+  //      }
+  //      startNodes.foreach(cycle(_, 0))
+  //      cycles = loops
+  //      cycles
+  //    } else {
+  //      cycles
+  //    }
+  //  }
 }
 
 trait AwasGraphUpdate[Node, Edge <: AwasEdge[Node]] {

@@ -30,7 +30,7 @@ import org.sireum.awas.ast.Model
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
 import org.sireum.awas.symbol.Resource._
-import org.sireum.awas.symbol.{ComponentTable, SymbolTable, SymbolTableHelper}
+import org.sireum.awas.symbol.{ComponentTable, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
@@ -168,23 +168,40 @@ object FlowGraph {
     }
 
     cst.deployments.foreach { dep =>
-      val fromNode = FlowNode.getNode(dep._1)
-      val toNode = FlowNode.getNode(dep._2)
-      if (fromNode.isDefined && toNode.isDefined) {
-        val edge1 = result.addEdge(fromNode.get, toNode.get)
-        val frompUri1 = fromNode.get.outPorts.find(_.startsWith(H.PORT_OUT_BIND_TYPE)).get
-        val topUri1 = toNode.get.inPorts.find(_.startsWith(H.PORT_IN_BIND_TYPE)).get
-        result.addPortEdge(frompUri1, edge1)
-        result.addPortEdge(topUri1, edge1)
-        result.addEdgePortRelation(edge1, frompUri1, topUri1)
+      val fromUri = dep._1
+      val toUri = dep._2
 
-        val edge2 = result.addEdge(toNode.get, fromNode.get)
-        val frompUri2 = toNode.get.outPorts.find(_.startsWith(H.PORT_OUT_BIND_TYPE)).get
-        val topUri2 = fromNode.get.inPorts.find(_.startsWith(H.PORT_IN_BIND_TYPE)).get
+      val fromPortUri = if (H.isPort(dep._1)) {
+        dep._1
+      } else {
+        //must be a connection
+        assert(H.getUriType(dep._1) == H.CONNECTION_TYPE, "Deployment uri is not port or connection")
+        cst.connectionTable(dep._1).ports.filter(_.startsWith(H.PORT_OUT_BIND_TYPE)).head
+      }
 
-        result.addPortEdge(frompUri2, edge2)
-        result.addPortEdge(topUri2, edge2)
-        result.addEdgePortRelation(edge2, frompUri2, topUri2)
+      val toPortUri = if (H.isPort(dep._2)) {
+        dep._2
+      } else {
+        assert(H.getUriType(dep._2) == H.CONNECTION_TYPE, "Deployment uri is not port or connection")
+        cst.connectionTable(dep._2).ports.filter(_.startsWith(H.PORT_IN_BIND_TYPE)).head
+      }
+
+      val fromNodeUri = Resource.getParentUri(fromPortUri)
+      val toNodeUri = Resource.getParentUri(toPortUri)
+
+
+      if (fromNodeUri.isDefined && toNodeUri.isDefined) {
+        val fromNode = FlowNode.getNode(fromNodeUri.get)
+        val toNode = FlowNode.getNode(toNodeUri.get)
+        if (fromNode.isDefined && toNode.isDefined) {
+          val edge1 = result.addEdge(fromNode.get, toNode.get)
+
+          result.addPortEdge(fromPortUri, edge1)
+          result.addPortEdge(toPortUri, edge1)
+          result.addEdgePortRelation(edge1, fromPortUri, toPortUri)
+
+
+        }
       }
     }
     result

@@ -2,6 +2,7 @@ package org.sireum.awas.example;
 
 import org.sireum.awas.awasfacade.AwasGraph;
 import org.sireum.awas.awasfacade.AwasGraphBuilder;
+import org.sireum.awas.awasfacade.Collector;
 import org.sireum.util.jvm.FileUtil;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 
 
 public class QueryEvaluation {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         //sample arguments :
         //This program accepts 3 arguments:
         //1st : Awas Model file *.awas
@@ -21,7 +22,7 @@ public class QueryEvaluation {
             Optional<AwasGraph> graph = AwasGraphBuilder.build(args[0]);
 
             if (graph.isPresent()) {
-                Map<String, String> res = graph.get().queryEvaluator(
+                Map<String, Collector> res = graph.get().queryEvaluator(
                         FileUtil.readFile(FileUtil.toUri(args[1]))._1());
                 String result = res.entrySet()
                         .stream()

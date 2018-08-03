@@ -157,14 +157,18 @@ public class AwasGraphImpl implements AwasGraph {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> toJavaSet(e.getValue())));
     }
 
-    public Map<String, String> queryEvaluator(String query) {
+    public Map<String, Collector> queryEvaluator(String query) {
         Optional<Model> queryModel = JavaConverters.toJavaOptional(QueryBuilder$.MODULE$.apply(query,
                 QueryBuilder.apply$default$2(),
                 QueryBuilder.apply$default$3()));
 
         return queryModel.map(model -> toJavaMap(QueryEval.apply(model, st)).entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()))).orElseGet(HashMap::new);
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                    org.sireum.awas.collector.Collector c = e.getValue();
+                    Collector javac = new CollectorImpl(c);
+                    return javac;
+                }))).orElseGet(HashMap::new);
     }
 
     @Override

@@ -46,5 +46,5 @@ public interface Collector {
 
     Boolean hasErrors();
 
-    List<org.sireum.awas.collector.Collector> getPaths();
+    List<Collector> getPaths();
 }

@@ -1,0 +1,1 @@
+test = reach paths from PCA_PulseOx_scenario_secure_Instance.PulseOx.SpO2{PCA_Error.MessageLeak} to PCA_PulseOx_scenario_secure_Instance.wifi.bindings_IN{PCA_Error.UnlikelyLeak}

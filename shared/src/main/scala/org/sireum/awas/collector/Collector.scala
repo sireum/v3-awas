@@ -48,6 +48,14 @@ trait Collector {
   def intersect(c: Collector): Collector
 
   def diff(c: Collector): Collector
+
+  def getNextNode(currentNode: FlowNode): ISet[FlowNode]
+
+  def getNextPort(currentPort: ResourceUri): ISet[ResourceUri]
+
+  def getNextPortError(currentPort: ResourceUri,
+                       currentError: ResourceUri):
+  IMap[ResourceUri, ISet[ResourceUri]]
 }
 
 object ResultType extends Enumeration {

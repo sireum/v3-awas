@@ -56,7 +56,7 @@ sealed case class ComponentTableData
  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  subComponentsDecl: MMap[ResourceUri, ComponentDecl] = mmapEmpty,
- subComponentsTable: MMap[ResourceUri, CompSTProducer] = mmapEmpty,
+ subComponentsTable: MMap[ResourceUri, ComponentTable] = mmapEmpty,
  types: MSet[ResourceUri] = msetEmpty,
  stateMachine: MSet[ResourceUri] = msetEmpty,
  connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,

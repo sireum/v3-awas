@@ -52,9 +52,9 @@ connectionDecl
   ;
 
 deploymentDecl
-  : fromComponent=name
-    '<->'
-    toComponent=name
+  : fromComponent=name ('.' fromPort=ID)?
+    '->'
+    toComponent=name ('.' toPort=ID)?
   ;
 
 typeAliasDecl

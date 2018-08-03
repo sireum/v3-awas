@@ -82,8 +82,8 @@ final case class ConnectionDecl(connName: Id,
                                 behaviour: Option[Behaviour],
                                 properties:Node.Seq[Property]) extends Node
 
-final case class DeploymentDecl(fromNode: Name,
-                                toNode: Name) extends Node
+final case class DeploymentDecl(fromNode: Name, fromPort: Option[Id],
+                                toNode: Name, toPort: Option[Id]) extends Node
 
 final case class Port(isIn : Boolean, id : Id, name: Option[Name]) extends Node
 

@@ -309,7 +309,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
       val pathCycleMap = pathNodes.getPaths.map(x => (x,
         scc.flatMap(c =>
-          if ((c intersect x.getNodes).nonEmpty) c else isetEmpty[FlowNode]))).toMap
+          if ((c intersect x.getNodes.toSeq).nonEmpty) c else isetEmpty[FlowNode]))).toMap
 
       val complexPaths: ISeq[Collector] = pathCycleMap.flatMap { it =>
         if (it._2.nonEmpty) {
@@ -364,4 +364,8 @@ class BasicReachabilityImpl(st: SymbolTable)
     pathNodes.flatMap(it => it.getOwner.getOutgoingEdges(it)
       .filter(it2 => pathNodes.contains(it2.target)))
   }
+
+  override def getSuccessor(current: FlowNode): ISet[FlowNode] = nextNode(current)._1
+
+  override def getPredecessor(current: FlowNode): ISet[FlowNode] = previousNode(current)._1
 }

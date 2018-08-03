@@ -26,6 +26,15 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
   def errorPathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
                             target: IMap[ResourceUri, ISet[ResourceUri]],
                             constraint: ConstraintExpr): Collector
+
+  def getPredecessor(currentPort: ResourceUri,
+                     currentError: ResourceUri)
+  : IMap[ResourceUri, ISet[ResourceUri]]
+
+
+  def getSuccessor(currentPort: ResourceUri,
+                   currentError: ResourceUri)
+  : IMap[ResourceUri, ISet[ResourceUri]]
 }
 
 object ErrorReachability {

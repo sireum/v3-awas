@@ -106,6 +106,15 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     graph = graph.addDataEdge(data, from, to)
     data
   }
+
+  override def getSCC: Seq[Set[Node]] = ???
+
+  /**
+    * Find all simple cycles of a directed graph using the Schwarcfiter and Lauer's algorithm.
+    *
+    * @return set of cycles
+    */
+  override def getCycles: Seq[Seq[Node]] = ???
 }
 
 //case class SlangGraphAwasEdgeImpl[Node](src: Node, snk: Node) extends AwasEdge[Node] {

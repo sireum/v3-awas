@@ -4,6 +4,7 @@ import org.sireum.awas.collector.Operator.Operator
 import org.sireum.awas.collector.ResultType.ResultType
 import org.sireum.awas.fptc.FlowNode._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
+import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{IMap, ISeq, ISet, Tag, _}
@@ -224,7 +225,9 @@ case class CollectorImpl(symbolTable: SymbolTable,
   override def getPaths: ILinkedSet[Collector] = resPaths
 
   def union(c: Collector): Collector = {
-    if (symbolTable == c.getSymbolTable) {
+    if (c.getGraphs.isEmpty) {
+      this
+    } else if (symbolTable == c.getSymbolTable) {
       Collector(
         symbolTable,
         graphs ++ c.getGraphs,
@@ -361,6 +364,22 @@ case class CollectorImpl(symbolTable: SymbolTable,
     result
   }
 
+  override def getNextNode(currentNode: FlowNode): ISet[FlowNode] = {
+    var res = isetEmpty[FlowNode]
+    ErrorReachability(symbolTable).getSuccessor(currentNode).intersect(getNodes)
+  }
+
+  override def getNextPort(currentPort: ResourceUri): ISet[ResourceUri] = {
+    ErrorReachability(symbolTable).getSuccessor(currentPort).intersect(getPorts)
+  }
+
+  override def getNextPortError(currentPort: ResourceUri,
+                                currentError: ResourceUri)
+  : IMap[ResourceUri, ISet[ResourceUri]] = {
+
+    intersectErrors(ErrorReachability(symbolTable).getSuccessor(currentPort, currentError),
+      getPortErrors)
+  }
 }
 
 case class FlowCollector(graph: ISet[FlowGraph[FlowNode, Edge]],

@@ -69,4 +69,8 @@ trait BasicReachability[Node] {
   def reachPath(source: Node, target: Node): Collector
 
   def reachPath(source: Node, target: Node, constraint: ConstraintExpr): Collector
+
+  def getSuccessor(current: Node): ISet[Node]
+
+  def getPredecessor(current: Node): ISet[Node]
 }

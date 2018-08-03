@@ -302,6 +302,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       comp.subComp.foreach { sc =>
         val sct = componentElemMiner(m, sc, Some(r))
         stp.tables.componentSymbolTable(sct.componentUri) = sct
+        ctp.tables.subComponentsTable(sct.componentUri) = sct
         ctp.tables.subComponentsDecl(sct.componentUri) = sct.componentDecl
         ctp.tables.symbol2Uri(sct.componentDecl.compName.value) = sct.componentUri
       }
@@ -317,6 +318,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       }
       if (isSystem) {
         stp.tables.componentSymbolTable(ctp.componentUri) = ctp
+      }
+
+      comp.deployment.foreach { depl =>
+        val dep = deploymentMiner(m, depl, ctp)
+        if (dep.isDefined) {
+          ctp.tables.deploymentDeclTable(dep.get) = depl
+        }
       }
       ctp
     } else {
@@ -336,7 +344,6 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       val from = flowCheck(m, flow, fr.toUri, r, tt, isFrom = true, ctp)
       val to = flowCheck(m, flow, fr.toUri, r, tt, isFrom = false, ctp)
       ctp.tables.flowTable(fr.toUri) = FlowTableData(fr.toUri, from._1, to._1, from._2, to._2)
-
     } else {
       reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
         flow.id,
@@ -375,7 +382,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
           flow,
-          m, flow.id.value, r.toUri))
+          m, flow.id.value.toString, r.uriPaths.mkString(".").toString))
         res = (None, isetEmpty[ResourceUri])
       }
     }
@@ -658,7 +665,22 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     val fromUri = cstp.getUriFromSymbol(deploy.fromNode.value.last.value)
     val toUri = cstp.getUriFromSymbol(deploy.toNode.value.last.value)
 
-    if (fromUri.isDefined) {
+    val fromPortUri = if (fromUri.isDefined && deploy.fromPort.isDefined) {
+      stp.tables.componentSymbolTable(fromUri.get).getUriFromSymbol(deploy.fromPort.get.value)
+    } else {
+      None
+    }
+
+    val toPortUri = if (toUri.isDefined && deploy.toPort.isDefined) {
+      stp.tables.componentSymbolTable(toUri.get).getUriFromSymbol(deploy.toPort.get.value)
+    } else {
+      None
+    }
+
+    if (fromPortUri.isDefined) {
+      Resource.useDefResolve(deploy.fromNode, cstp.subComponent(fromUri.get))
+      Resource.useDefResolve(deploy.fromPort.get, cstp.tables.subComponentsTable(fromUri.get).port(fromPortUri.get).get)
+    } else if (fromUri.isDefined) {
       Resource.useDefResolve(deploy.fromNode,
         if (fromUri.get.startsWith(H.COMPONENT_TYPE)) cstp.subComponent(fromUri.get)
         else cstp.connection(fromUri.get))
@@ -668,8 +690,11 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         m, deploy.fromNode.value.last.value))
     }
 
-    if (toUri.isDefined) {
-      Resource.useDefResolve(deploy.fromNode,
+    if (toPortUri.isDefined) {
+      Resource.useDefResolve(deploy.toNode, cstp.subComponent(toUri.get))
+      Resource.useDefResolve(deploy.toPort.get, cstp.tables.subComponentsTable(toUri.get).port(toPortUri.get).get)
+    } else if (toUri.isDefined) {
+      Resource.useDefResolve(deploy.toNode,
         if (toUri.get.startsWith(H.COMPONENT_TYPE)) cstp.subComponent(toUri.get)
         else cstp.connection(toUri.get))
     } else {
@@ -678,59 +703,103 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         m, deploy.toNode.value.last.value))
     }
 
-    if (fromUri.isDefined && toUri.isDefined) {
-      addBindPortsToNodes(fromUri.get, cstp)
-      addBindPortsToNodes(toUri.get, cstp)
-      Some((fromUri.get, toUri.get))
+    val furi = if (fromPortUri.isDefined) {
+      fromPortUri.get
     } else {
-      None
+      //only one of the two can be connection in a deployment
+      assert(toPortUri.nonEmpty, "Connection cannot be bound to a connection")
+      addBindPortsToNodes(fromUri.get, cstp, m, toPortUri.get, toUri.get)
+      fromUri.get
     }
+
+    val turi = if (toPortUri.isDefined) {
+      toPortUri.get
+    } else {
+      assert(fromPortUri.nonEmpty, "Connection cannot be bound to a connection")
+      addBindPortsToNodes(toUri.get, cstp, m, fromPortUri.get, fromUri.get)
+      toUri.get
+    }
+
+    Some((furi, turi))
+    //    if (fromUri.isDefined && toUri.isDefined) {
+    //      addBindPortsToNodes(fromUri.get, cstp)
+    //      addBindPortsToNodes(toUri.get, cstp)
+    //
+    //    } else {
+    //      None
+    //    }
     //add ports
   }
 
   def addBindPortsToNodes(nodeUri: ResourceUri,
-                          cstp: CompSTProducer): Unit = {
+                          cstp: CompSTProducer,
+                          m: Model,
+                          otherPort: ResourceUri,
+                          otherComp: ResourceUri)(
+                           implicit reporter: AccumulatingTagReporter): Unit = {
     if (nodeUri.startsWith(H.COMPONENT_TYPE)) {
-      val pt = cstp.tables.subComponentsTable(nodeUri).tables.portTable
-      val port1 = Port(isIn = true, Id(H.INPUT_BIND_PORT_ID), None)
-      pt(Resource(H.PORT_IN_BIND_TYPE,
-        Resource.getDefResource(nodeUri).get,
-        H.INPUT_BIND_PORT_ID, Some(true), port1).toUri) = port1
-      val port2 = Port(isIn = false, Id(H.OUTPUT_BIND_PORT_ID), None)
-      pt(Resource(H.PORT_OUT_BIND_TYPE,
-        Resource.getDefResource(nodeUri).get,
-        H.OUTPUT_BIND_PORT_ID, Some(true), port2).toUri) = port2
+      reporter.report(errorMessageGen(MISSING_PORT_REF,
+        st.componentSymbolTable(nodeUri).componentDecl,
+        m))
+      assert(false, "this should never be a component")
+      //      val pt = stp.tables.componentSymbolTable(nodeUri).tables.portTable
+      //      val port1 = Port(isIn = true, Id(H.INPUT_BIND_PORT_ID), None)
+      //      pt(Resource(H.PORT_IN_BIND_TYPE,
+      //        Resource.getDefResource(nodeUri).get,
+      //        H.INPUT_BIND_PORT_ID, Some(true), port1).toUri) = port1
+      //      val port2 = Port(isIn = false, Id(H.OUTPUT_BIND_PORT_ID), None)
+      //      pt(Resource(H.PORT_OUT_BIND_TYPE,
+      //        Resource.getDefResource(nodeUri).get,
+      //        H.OUTPUT_BIND_PORT_ID, Some(true), port2).toUri) = port2
     } else {
       val tables = cstp.tables.connectionSymbolTabel(nodeUri).tables
       val pt = tables.portTable
-      val inPort = Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
+      val bindInPort = Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
         H.INPUT_BIND_PORT_ID, Some(true))
-      val outPort = Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get,
+      val bindOutPort = Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get,
         H.OUTPUT_BIND_PORT_ID, Some(true))
-      pt += inPort.toUri
-      pt += outPort.toUri
+      pt += bindInPort.toUri
+      pt += bindOutPort.toUri
       var propagations = tables.propagationTable
-      val connInPort = stp.connMap(nodeUri).ports.filter(it =>
+      val connInPort = cstp.tables.connectionSymbolTabel(nodeUri).ports.filter(it =>
         H.uri2IdString(it) == H.INPUT_CONN_PORT_ID).head
-      val connOutPort = stp.connMap(nodeUri).ports.filter(it =>
+      val connOutPort = cstp.tables.connectionSymbolTabel(nodeUri).ports.filter(it =>
         H.uri2IdString(it) == H.OUTPUT_CONN_PORT_ID).head
-      propagations += (outPort.toUri -> propagations(connOutPort))
-      propagations += (inPort.toUri -> propagations(connInPort))
+      val otherTable = cstp.tables.subComponentsTable.get(otherComp)
+
+      //adding propagation and flows
+      if (H.isInPort(otherPort)) {
+        propagations += (bindOutPort.toUri -> (msetEmpty ++
+          otherTable.get.propagation(otherPort)))
+      } else {
+        propagations += (bindInPort.toUri -> (msetEmpty ++
+          otherTable.get.propagation(otherPort)))
+      }
+
       var temp_i = 1
       if (Resource.getDefResource(nodeUri).isDefined) {
         val res = Resource.getDefResource(nodeUri).get
-        propagations(connInPort).foreach { e =>
-          buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
-            Resource.getDefResource(connInPort).get, outPort,
-            cstp.tables.connectionSymbolTabel(nodeUri))
-          temp_i = temp_i + 1
-          buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
-            inPort, Resource.getDefResource(connOutPort).get,
-            cstp.tables.connectionSymbolTabel(nodeUri))
-          temp_i = temp_i + 1
-          buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
-            inPort, outPort, cstp.tables.connectionSymbolTabel(nodeUri))
-          temp_i = temp_i + 1
+        if (H.isInPort(otherPort)) {
+          propagations(connInPort).intersect(propagations(bindOutPort.toUri)).foreach { e =>
+            buildAndAddDefaultConnectionFlows(res, e, "_bind_out" + temp_i,
+              Resource.getDefResource(connInPort).get, bindOutPort,
+              cstp.tables.connectionSymbolTabel(nodeUri))
+            temp_i = temp_i + 1
+          }
+
+          propagations(connInPort).diff(propagations(bindOutPort.toUri)).foreach { e =>
+            buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
+              Resource.getDefResource(connInPort).get, Resource.getDefResource(connOutPort).get,
+              cstp.tables.connectionSymbolTabel(nodeUri))
+            temp_i = temp_i + 1
+          }
+        } else {
+          propagations(bindInPort.toUri).foreach { e =>
+            buildAndAddDefaultConnectionFlows(res, e, "_bind_in" + temp_i,
+              bindInPort, Resource.getDefResource(connOutPort).get,
+              cstp.tables.connectionSymbolTabel(nodeUri))
+            temp_i = temp_i + 1
+          }
         }
       }
     }

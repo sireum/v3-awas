@@ -1,13 +1,37 @@
 package org.sireum.awas.slang
 
 
+import org.sireum.{B, Z}
 import org.sireum.aadl._
-import org.sireum.aadl.ir.Emv2Clause
+import org.sireum.aadl.ir.Transformer.PrePost
+import org.sireum.aadl.ir.{Flow => _, Name => _, Property => _, _}
+import org.sireum.aadl.ir.EndPoint
 import org.sireum.awas.ast._
 import org.sireum.util._
 
 
 final class Aadl2Awas private() {
+  val ALLOWED_CONNECTION_BINDING = "Deployment_Properties::Allowed_Connection_Binding"
+  val ACTUAL_CONNECTION_BINDING = "Deployment_Properties::Actual_Connection_Binding"
+  val ACTUAL_PROCESSOR_BINDING = "Deployment_Properties::Actual_Processor_Binding"
+  val ALLOWED_PROCESSOR_BINDING = "Deployment_Properties::Allowed_Processor_Binding"
+  val ALLOWED_MEMORY_BINDING = "Deployment_Properties::Allowed_Memory_Binding"
+  val ACTUAL_MEMORY_BINDING = "Deployment_Properties::Actual_Memory_Binding"
+  val ACTUAL_FUNCTION_BINDING = "Deployment_Properties::Actual_Function_Binding"
+  val ALLOWED_SUBPROGRAM_CALL_BINDING = "Deployment_Properties::Allowed_Subprogram_Call_Binding"
+  val ACTUAL_SUBPROGRAM_CALL_BINDING = "Deployment_Properties::Actual_Subprogram_Call_Binding"
+
+  val PROCESSOR_IN = "processor_IN"
+  val PROCESSOR_OUT = "processor_OUT"
+  val BINDINGS_IN = "bindings_IN"
+  val BINDINGS_OUT = "bindings_OUT"
+  val CONNECTION_IN = "connection_IN"
+  val CONNECTION_OUT = "connection_OUT"
+
+  val BINDINGS = "bindings"
+  val PROCESSOR = "processor"
+  val CONNECTION = "connection"
+
   var typeDecls = Node.emptySeq[TypeDecl]
 
   def build(aadl: ir.Aadl): Model = {
@@ -79,79 +103,250 @@ final class Aadl2Awas private() {
 
   def build(comp: ir.Component): Option[ComponentDecl] = {
     if (comp.identifier.name.nonEmpty) {
+      val id = buildId(comp.identifier.name.elements.last.value)
+      val withs = getWiths(comp.annexes.elements)
+      val features = comp.features.elements.flatMap(build).toVector
+      val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
+      val flows = getFlows(comp)
+      val subcomp = comp.subComponents.elements.flatMap { sc =>
+        build(sc).map((sc.identifier, _))
+      }.toMap
+      val conns = comp.connections.elements.flatMap(n =>
+        build(n, comp.identifier.name.map(_.value).elements)).toVector
+
+      val (deplDecls, addedPorts) = mineBindingProps(comp.subComponents.elements,
+        comp.connectionInstances.elements)
+
+      val UpdatedSubComp = subcomp.map { sc =>
+        if (addedPorts.contains(sc._1)) {
+          val usc = ComponentDecl(sc._2.compName,
+            sc._2.withSM,
+            sc._2.ports ++ addedPorts(sc._1),
+            sc._2.propagations,
+            sc._2.flows,
+            sc._2.transitions,
+            sc._2.behaviour,
+            sc._2.subComp,
+            sc._2.connections,
+            sc._2.deployment,
+            sc._2.properties)
+          (sc._1, usc)
+        } else {
+          sc
+        }
+      }
+
+      val deployments = deplDecls.toVector
       Some(ComponentDecl(
-        buildId(comp.identifier.name.elements.last.value),
-        getWiths(comp.annexes.elements),
-        comp.features.elements.flatMap(build).toVector,
-        comp.annexes.elements.flatMap(getPropagations).toVector,
-        getFlows(comp),
+        id,
+        withs,
+        features,
+        propagations,
+        flows,
         None,
         None,
-        comp.subComponents.elements.map(build).flatten.toVector,
-        comp.connections.elements.flatMap(n => build(n, comp.identifier.name.map(_.value).elements)).toVector,
-        ivectorEmpty[DeploymentDecl],
+        UpdatedSubComp.values.toVector,
+        conns,
+        deployments,
         Node.emptySeq[Property]))
     } else None
   }
 
+  def mineBindingProps(subComps: Seq[ir.Component], connInst: Seq[ir.ConnectionInstance])
+  : (ISet[DeploymentDecl], IMap[ir.Name, ISet[Port]]) = {
+    var resDepl = isetEmpty[DeploymentDecl]
+    var resPorts = imapEmpty[ir.Name, ISet[Port]]
+    subComps.foreach { subComp =>
+      subComp.properties.elements.foreach { p =>
+        p.name.name.elements.last.value match {
+          case ACTUAL_CONNECTION_BINDING => {
+            resPorts += (subComp.identifier ->
+              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+                Port(true, Id(CONNECTION_IN), None)))
+            resPorts += (subComp.identifier ->
+              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+                Port(false, Id(CONNECTION_OUT), None)))
+            p.propertyValues.elements.foreach {
+              case rp: ir.ReferenceProp => {
+                if (subComps.map(_.identifier).toSet.contains(rp.value)) {
+                  resPorts += (rp.value ->
+                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                      Port(true, Id(BINDINGS_IN), None)))
+                  resPorts += (rp.value ->
+                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                      Port(false, Id(BINDINGS_OUT), None)))
+                  resDepl = resDepl + DeploymentDecl(
+                    Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(CONNECTION_OUT)), Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(BINDINGS_IN)))
+                  resDepl = resDepl + DeploymentDecl(Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(BINDINGS_OUT)), Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(CONNECTION_IN)))
+                }
+              }
+              case _ =>
+            }
+          }
+          case ACTUAL_FUNCTION_BINDING =>
+          case ACTUAL_MEMORY_BINDING =>
+          case ACTUAL_PROCESSOR_BINDING => {
+            resPorts += (subComp.identifier ->
+              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+                Port(true, Id(PROCESSOR_IN), None)))
+            resPorts += (subComp.identifier ->
+              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+                Port(false, Id(PROCESSOR_OUT), None)))
+            p.propertyValues.elements.foreach {
+              case rp: ir.ReferenceProp => {
+                if (subComps.map(_.identifier).toSet.contains(rp.value)) {
+                  resPorts += (rp.value ->
+                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                      Port(true, Id(BINDINGS_IN), None)))
+                  resPorts += (rp.value ->
+                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                      Port(false, Id(BINDINGS_OUT), None)))
+                  resDepl = resDepl + DeploymentDecl(
+                    Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(PROCESSOR_OUT)), Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(BINDINGS_IN)))
+                  resDepl = resDepl + DeploymentDecl(Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(BINDINGS_OUT)), Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(PROCESSOR_IN)))
+                }
+              }
+              case _ =>
+            }
+          }
+          case ACTUAL_SUBPROGRAM_CALL_BINDING =>
+          case ALLOWED_CONNECTION_BINDING =>
+          case ALLOWED_MEMORY_BINDING =>
+          case ALLOWED_PROCESSOR_BINDING =>
+          case ALLOWED_SUBPROGRAM_CALL_BINDING =>
+          case _ =>
+        }
+
+      }
+    }
+    connInst.foreach { ci =>
+      ci.properties.elements.foreach { p =>
+        p.name.name.elements.last.value match {
+          case ACTUAL_CONNECTION_BINDING => {
+            p.propertyValues.elements.foreach {
+              case rp: ir.ReferenceProp => {
+                if (subComps.map(_.identifier).toSet.contains(rp.value)) {
+                  resPorts += (rp.value ->
+                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                      Port(true, Id(BINDINGS_IN), None)))
+                  resPorts += (rp.value ->
+                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                      Port(false, Id(BINDINGS_OUT), None)))
+                  resDepl = resDepl + DeploymentDecl(
+                    Name(ci.connectionRefs.elements.head.name.name.elements.map(it => Id(it.value)).toVector),
+                    None, Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(BINDINGS_IN)))
+                  resDepl = resDepl + DeploymentDecl(Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(BINDINGS_OUT)),
+                    Name(ci.connectionRefs.elements.head.name.name.elements.map(it => Id(it.value)).toVector),
+                    None)
+                }
+              }
+              case _ =>
+            }
+          }
+          case _ =>
+        }
+      }
+    }
+
+    (resDepl, resPorts)
+  }
+
   def build(conn: ir.Connection, compName: Seq[String]): Seq[ConnectionDecl] = {
     if (conn.name.name.nonEmpty) {
-      val id = conn.name.name.elements.last.value
-      val srcComp = if (conn.src.component.name.map(_.value).elements == compName) {
-        None
+      if ((conn.src.size == Z(1)) && (conn.dst.size == Z(1))) {
+        buildConnection(conn.name.name.elements.last.value,
+          conn.src.elements.last,
+          conn.dst.elements.last,
+          conn.isBiDirectional,
+          compName)
+      } else if (conn.src.size == conn.dst.size) {
+        var res = ilistEmpty[ConnectionDecl]
+        for (i <- 0 until conn.src.size.get.toInt) {
+          res = res ++ buildConnection(conn.name.name.elements.last.value + "_" + conn.src(i).feature.name.elements.last,
+            conn.src(i),
+            conn.dst(i),
+            conn.isBiDirectional,
+            compName)
+        }
+        res
       } else {
-        Some(buildName(conn.src.component.name.elements.last.value))
+        assert(false, "feature groups end points must be same")
+        ilistEmpty[ConnectionDecl]
       }
-      val srcPort = conn.src.feature.name.elements.last.value
-      val sinkComp = if (conn.dst.component.name.map(_.value).elements == compName) {
-        None
-      } else {
-        Some(buildName(conn.dst.component.name.elements.last.value))
-      }
-      val sinkPort = conn.dst.feature.name.elements.last.value
-      if (conn.isBiDirectional) {
-        ilistEmpty :+ ConnectionDecl(buildId(id + "_FORWARD"),
-          srcComp,
-          if (conn.src.direction.get == ir.Direction.InOut) {
-            if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
-          } else buildId(srcPort),
-          false,
+    } else ilistEmpty[ConnectionDecl]
+  }
+
+  def buildConnection(id: String,
+                      src: EndPoint,
+                      dst: EndPoint,
+                      isBidirectional: B,
+                      compName: Seq[String]): Seq[ConnectionDecl] = {
+
+    //val id = conn.name.name.elements.last.value
+    val srcComp = if (src.component.name.map(_.value).elements == compName) {
+      None
+    } else {
+      Some(buildName(src.component.name.elements.last.value))
+    }
+    val srcPort = src.feature.name.elements.last.value
+    val sinkComp = if (dst.component.name.map(_.value).elements == compName) {
+      None
+    } else {
+      Some(buildName(dst.component.name.elements.last.value))
+    }
+    val sinkPort = dst.feature.name.elements.last.value
+    if (isBidirectional) {
+      ilistEmpty :+ ConnectionDecl(buildId(id + "_FORWARD"),
+        srcComp,
+        if (src.direction.get == ir.Direction.InOut) {
+          if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
+        } else buildId(srcPort),
+        false,
+        sinkComp,
+        if (dst.direction.get == ir.Direction.InOut) {
+          if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
+        } else buildId(sinkPort),
+        Node.emptySeq[CFlow],
+        None,
+        Node.emptySeq[Property]) :+
+        ConnectionDecl(buildId(id + "_BACKWARD"),
           sinkComp,
-          if (conn.dst.direction.get == ir.Direction.InOut) {
-            if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
+          if (dst.direction.get == ir.Direction.InOut) {
+            if (sinkComp.isEmpty) buildId(sinkPort + "_IN") else buildId(sinkPort + "_OUT")
           } else buildId(sinkPort),
-          Node.emptySeq[CFlow],
-          None,
-          Node.emptySeq[Property]) :+
-          ConnectionDecl(buildId(id + "_BACKWARD"),
-            sinkComp,
-            if (conn.dst.direction.get == ir.Direction.InOut) {
-              if (sinkComp.isEmpty) buildId(sinkPort + "_IN") else buildId(sinkPort + "_OUT")
-            } else buildId(sinkPort),
-            false,
-            srcComp,
-            if (conn.src.direction.get == ir.Direction.InOut) {
-              if (srcComp.isEmpty) buildId(srcPort + "_OUT") else buildId(srcPort + "_IN")
-            } else buildId(srcPort),
-            Node.emptySeq[CFlow],
-            None,
-            Node.emptySeq[Property])
-      } else {
-        ilistEmpty :+ ConnectionDecl(buildId(id),
-          srcComp,
-          if (conn.src.direction.get == ir.Direction.InOut) {
-            if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
-          } else buildId(srcPort),
           false,
-          sinkComp,
-          if (conn.dst.direction.get == ir.Direction.InOut) {
-            if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
-          } else buildId(sinkPort),
+          srcComp,
+          if (src.direction.get == ir.Direction.InOut) {
+            if (srcComp.isEmpty) buildId(srcPort + "_OUT") else buildId(srcPort + "_IN")
+          } else buildId(srcPort),
           Node.emptySeq[CFlow],
           None,
           Node.emptySeq[Property])
-      }
-    } else ilistEmpty[ConnectionDecl]
+    } else {
+      ilistEmpty :+ ConnectionDecl(buildId(id),
+        srcComp,
+        if (src.direction.get == ir.Direction.InOut) {
+          if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
+        } else buildId(srcPort),
+        false,
+        sinkComp,
+        if (dst.direction.get == ir.Direction.InOut) {
+          if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
+        } else buildId(sinkPort),
+        Node.emptySeq[CFlow],
+        None,
+        Node.emptySeq[Property])
+    }
   }
 
   def getWiths(annexs: Seq[ir.Annex]): Node.Seq[Name] = {
@@ -165,19 +360,42 @@ final class Aadl2Awas private() {
     withs
   }
 
-  def build(feature: ir.Feature): Seq[Port] = {
-    var portId = feature.identifier.name.elements.last.value
-    if (feature.category == ir.FeatureCategory.BusAccess) {
-      portId = portId + "__BUS_"
+  def build(featureEnd: FeatureEnd,
+            isInverse: B, portId: String): Seq[Port] = {
+    var pId = portId + featureEnd.identifier.name.elements.last.value
+    if (featureEnd.category == ir.FeatureCategory.BusAccess) {
+      pId = pId + "__BUS_"
     }
-    if (feature.direction == ir.Direction.InOut) {
-      Seq(Port(isIn = true, buildId(portId + "_IN"), None),
-        Port(isIn = false, buildId(portId + "_OUT"), None))
-    } else if (feature.direction == ir.Direction.In) {
-      Seq(Port(isIn = true, buildId(portId), None))
+    if (featureEnd.direction == ir.Direction.InOut) {
+      Seq(Port(isIn = true, buildId(pId + "_IN"), None),
+        Port(isIn = false, buildId(pId + "_OUT"), None))
+    } else if (featureEnd.direction == ir.Direction.In) {
+      Seq(Port(isIn = true, buildId(pId), None))
     } else {
-      Seq(Port(isIn = false, buildId(portId), None))
+      Seq(Port(isIn = false, buildId(pId), None))
     }
+  }
+
+  def build(featureGroup: FeatureGroup,
+            isInverse: B,
+            portId: String): Seq[Port] = {
+    var pId = portId + featureGroup.identifier.name.elements.last.value
+    featureGroup.features.elements.flatMap {
+      case fe: FeatureEnd => build(fe,
+        featureGroup.isInverse || isInverse,
+        pId + "_")
+      case fg: FeatureGroup => build(fg,
+        featureGroup.isInverse || isInverse,
+        pId + "_")
+    }
+  }
+
+  def build(feature: ir.Feature): Seq[Port] = {
+    feature match {
+      case fe: FeatureEnd => build(fe, false, "")
+      case fg: FeatureGroup => build(fg, false, "")
+    }
+
   }
 
   def getPropagations(annex: ir.Annex): Node.Seq[Propagation] = {
@@ -191,10 +409,30 @@ final class Aadl2Awas private() {
 
   def getPropagation(prop: ir.Emv2Propagation): Propagation = {
     val id = buildId(prop.propagationPoint.elements.last.value)
+    val uid = id.value match {
+      case PROCESSOR => {
+        if (prop.direction == ir.PropagationDirection.In) buildId(PROCESSOR_IN)
+        else buildId(PROCESSOR_OUT)
+      }
+      case BINDINGS => {
+        if (prop.direction == ir.PropagationDirection.In) buildId(BINDINGS_IN)
+        else buildId(BINDINGS_OUT)
+      }
+      case CONNECTION => {
+        if (prop.direction == ir.PropagationDirection.In) buildId(CONNECTION_IN)
+        else buildId(CONNECTION_OUT)
+      }
+      case _ => id
+    }
+
     val errors = prop.errorTokens.elements.map { et =>
       Fault(buildName(et.value))
     }
-    Propagation(id, errors.toVector)
+    val resProp = Propagation(uid, errors.toVector)
+    prop.propagationPoint
+    prop.direction
+
+    resProp
   }
 
   def getFlows(comp: ir.Component): Node.Seq[Flow] = {
@@ -236,6 +474,25 @@ final class Aadl2Awas private() {
     flows.toVector
   }
 
+
+  def collectComp(aadlModel: ir.Aadl): Unit = {
+    var resColl = isetEmpty[ir.Component]
+
+    val trans: ir.Transformer[Unit] =
+      new ir.Transformer[Unit](new PrePost[Unit] {
+        def string: org.sireum.String = ""
+
+        override def preComponent(ctx: Unit, o: Component):
+        Transformer.PreResult[Unit, Component] = {
+          resColl = resColl + o
+          super.preComponent(ctx, o)
+        }
+      })
+
+    trans.transformAadl((), aadlModel)
+    resColl.foreach(c => println(c.identifier.name.elements.last))
+  }
+
   //  def getQualifiedErrorToken(token : Id) : String = {
   //    typeDecls.foreach{td =>
   //      td match {
@@ -247,8 +504,12 @@ final class Aadl2Awas private() {
 
 }
 
+
 object Aadl2Awas {
+
+
   def apply(aadlModel: ir.Aadl): Model = {
+
     new Aadl2Awas().build(aadlModel)
   }
 

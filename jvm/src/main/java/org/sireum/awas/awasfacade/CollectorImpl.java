@@ -8,6 +8,7 @@ import org.sireum.util.Tag;
 import scala.Enumeration;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.sireum.awas.util.JavaConverters.*;
 
@@ -105,7 +106,9 @@ public class CollectorImpl implements Collector {
     }
 
     @Override
-    public List<org.sireum.awas.collector.Collector> getPaths() {
-        return toJavaList(collector.getPaths().toSeq());
+    public List<Collector> getPaths() {
+        return toJavaList(collector.getPaths().toSeq()).stream().map(c ->
+                (Collector) new CollectorImpl(c)).collect(Collectors.toList());
     }
+
 }
