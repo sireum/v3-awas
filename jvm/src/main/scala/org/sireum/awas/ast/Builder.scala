@@ -111,8 +111,7 @@ final class Builder private() {
   }
 
   def build(ctx: TypeAliasDeclContext): AliasDecl = {
-    AliasDecl(build(ctx.name(0)),
-      build(ctx.name(1))) at ctx
+    AliasDecl(build(ctx.name()), build(ctx.basicType())) at ctx
   }
 
   def build(ctx: EnumDeclContext): EnumDecl = {

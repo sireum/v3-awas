@@ -35,16 +35,16 @@ import org.sireum.util.jvm.FileUtil._
 final class PrettyPrinterTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
   val testDirs = Seq(
-    //makePath("..", "example", "awas-lang"),
-    makePath("..", "example", "heirarchial")
+    makePath("..", "example", "awas-lang")//,
+//    makePath("..", "example", "heirarchial")
 
     //    ,s"../example/fptc"
   )
 
   override def testDefs: ISeq[TestDef] = {
     println()
-    val files = testDirs.flatMap{d =>
-      listFiles(fileUri(this.getClass,d), "awas")}
+    val files = testDirs.flatMap{d => listFiles(fileUri(this.getClass, d), "awas")
+    }
 
     //equals test by excluding some
     val filesEqual = files.filterNot { p =>

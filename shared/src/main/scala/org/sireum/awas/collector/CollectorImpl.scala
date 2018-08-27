@@ -27,7 +27,6 @@ case class CollectorImpl(symbolTable: SymbolTable,
                          var error: ISet[Tag] = isetEmpty[Tag]
                         ) extends Collector with Serializable {
 
-
   private def hasPath: Boolean = {
     resPaths.nonEmpty
   }

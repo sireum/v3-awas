@@ -144,7 +144,10 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
 
         val typeUri = getErrorTypeUri(ad.typeName)
-        val aliasUri = getErrorTypeUri(ad.aliasName)
+        val aliasUri = getErrorTypeUri(ad.aliasName match {
+          case ntd: NamedTypeDecl => ntd.value
+          case _ => Name(Node.emptySeq)
+        })
 
         if (typeUri.isDefined && aliasUri.isDefined) {
           st.aliasTable.getOrElseUpdate(typeUri.get, msetEmpty[ResourceUri]).add(aliasUri.get)
@@ -381,8 +384,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
-          flow,
-          m, flow.id.value.toString, r.uriPaths.mkString(".").toString))
+          flow, m, flow.id.value.toString, r.uriPaths.tail.tail.mkString(".").toString)
+        )
         res = (None, isetEmpty[ResourceUri])
       }
     }

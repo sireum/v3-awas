@@ -29,11 +29,11 @@ import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector.{Collector, CollectorErrorHelper, FlowCollector, ResultType}
 import org.sireum.awas.fptc.FlowNode.Edge
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode, NodeType}
+import org.sireum.awas.fptc.{FlowGraph, FlowNode, NodeType}
 import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util._
+import org.sireum.util.{ILinkedSet, _}
 
 class PortReachabilityImpl[Node](st: SymbolTable)
   extends BasicReachabilityImpl(st) with PortReachability[FlowNode] {
@@ -254,107 +254,110 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     sources.flatMap(s => targets.map(t => simpleReachPath(s, t))).fold(Collector(st))(_.union(_))
   }
 
-  def nodePathToPortPaths(path: Collector, srcPort: ResourceUri,
-                          dstPort: ResourceUri): ISet[Collector] = {
-
-    val snode = getNodesFromPort(srcPort)
-    val tnode = getNodesFromPort(dstPort)
-
-
-    val ports = if (path.getEdges.isEmpty &&
-      path.getNodes.intersect(snode).nonEmpty &&
-      path.getNodes.intersect(tnode).nonEmpty) {
-      path.getPorts
-    } else {
-      path.getEdges.flatMap(_.sourcePort) ++
-        path.getEdges.flatMap(_.targetPort) ++
-        (if (H.isInPort(srcPort)) isetEmpty + srcPort else isetEmpty) ++
-        (if (H.isOutPort(dstPort)) isetEmpty + dstPort else isetEmpty)
-    }
-    var nodePortsMap = imapEmpty[FlowNode, ISet[ResourceUri]]
-
-    ports.foreach { p =>
-      for (elem <- getNodesFromPort(p)) {
-        nodePortsMap += (elem -> (nodePortsMap.getOrElse(elem, isetEmpty[ResourceUri]) + p))
-      }
-    }
-    assert(nodePortsMap.forall(p => p._2.size <= 2), "Simple path has more than two ports per node")
-
-    //drop path case: path dropped only when there is a flow defined
-    //for the inPort and the out port is not in it.
-    val isValidPath = nodePortsMap.forall {
-      case (n, ps) =>
-        if (ps.size == 2 && n.isFlowDefined) {
-          val inPort = ps.filter(H.isInPort).head
-          if (ps.filter(H.isOutPort).isEmpty) {
-            print("test")
-          }
-          val outPort = ps.filter(H.isOutPort).head
-          val flows = n.getFlowsFromPort(inPort).map(it => n.getFlows(it))
-          if (flows.nonEmpty && flows.exists(f => f.toPortUri.isDefined &&
-            f.toPortUri.get == outPort)) {
-            true
-          } else if (inPort == dstPort && outPort == srcPort) {
-            //no need for a flow when src and dst are reached
-            true
-          } else {
-            false
-          }
-        } else {
-          true
-        }
-    }
-    //only varying part is the flows field.
-    if (isValidPath) {
-      //starting with no flows
-      var result = isetEmpty[Collector] + Collector(
-        st,
-        path.getGraphs,
-        isetEmpty[FlowNode],
-        ports,
-        ResultType.Port,
-        path.getEdges,
-        isetEmpty[ResourceUri],
-        isetEmpty[ResourceUri] + srcPort + dstPort,
-        isetEmpty[Tag]
-      )
-
-      nodePortsMap.foreach {
-        case (n, ps) =>
-          if (n.isFlowDefined && ps.size == 2) {
-            val inPort = ps.filter(H.isInPort).head
-            val outPort = ps.filter(H.isOutPort).head
-            val flows = n
-              .getFlowsFromPort(inPort)
-              .map(it => n.getFlows(it))
-              .filter(f => f.toPortUri.isDefined && f.toPortUri.get == outPort)
-            if (flows.nonEmpty) {
-              result = result.flatMap(
-                r =>
-                  flows.map(
-                    f =>
-                      Collector(
-                        st,
-                        r.getGraphs,
-                        isetEmpty[FlowNode],
-                        r.getPorts,
-                        r.getResultType.get,
-                        r.getEdges,
-                        r.getFlows + f.flowUri,
-                        r.getCriteria,
-                        r.getErrors ++ r.getWarnings
-                      )
-                  )
-              )
-            }
-          }
-      }
-      result
-      //case 1 - flows not defined:
-    } else {
-      isetEmpty[Collector]
-    }
-  }
+//  def nodePathToPortPaths(path: Collector, srcPort: ResourceUri,
+//                          dstPort: ResourceUri): ISet[Collector] = {
+//
+//    val snode = getNodesFromPort(srcPort)
+//    val tnode = getNodesFromPort(dstPort)
+//
+//
+//    val ports = if (path.getEdges.isEmpty &&
+//      path.getNodes.intersect(snode).nonEmpty &&
+//      path.getNodes.intersect(tnode).nonEmpty) {
+//      path.getPorts
+//    } else {
+//      path.getEdges.flatMap(_.sourcePort) ++
+//        path.getEdges.flatMap(_.targetPort) ++
+//        (if (H.isInPort(srcPort)) isetEmpty + srcPort else isetEmpty) ++
+//        (if (H.isOutPort(dstPort)) isetEmpty + dstPort else isetEmpty)
+//    }
+//    var nodePortsMap = imapEmpty[FlowNode, ISet[ResourceUri]]
+//    if (ports.contains(srcPort) && ports.contains(dstPort)) {
+//      ports.foreach { p =>
+//        for (elem <- getNodesFromPort(p)) {
+//          nodePortsMap += (elem -> (nodePortsMap.getOrElse(elem, isetEmpty[ResourceUri]) + p))
+//        }
+//      }
+//      assert(nodePortsMap.forall(p => p._2.size <= 2), "Simple path has more than two ports per node")
+//
+//      //drop path case: path dropped only when there is a flow defined
+//      //for the inPort and the out port is not in it.
+//      val isValidPath = nodePortsMap.forall {
+//        case (n, ps) =>
+//          if (ps.size == 2 && n.isFlowDefined) {
+//            val inPort = ps.filter(H.isInPort).head
+//            if (ps.filter(H.isOutPort).isEmpty) {
+//              print("test")
+//            }
+//            val outPort = ps.filter(H.isOutPort).head
+//            val flows = n.getFlowsFromPort(inPort).map(it => n.getFlows(it))
+//            if (flows.nonEmpty && flows.exists(f => f.toPortUri.isDefined &&
+//              f.toPortUri.get == outPort)) {
+//              true
+//            } else if (inPort == dstPort && outPort == srcPort) {
+//              //no need for a flow when src and dst are reached
+//              true
+//            } else {
+//              false
+//            }
+//          } else {
+//            true
+//          }
+//      }
+//      //only varying part is the flows field.
+//      if (isValidPath) {
+//        //starting with no flows
+//        var result = isetEmpty[Collector] + Collector(
+//          st,
+//          path.getGraphs,
+//          isetEmpty[FlowNode],
+//          ports.toSet,
+//          ResultType.Port,
+//          path.getEdges,
+//          isetEmpty[ResourceUri],
+//          isetEmpty[ResourceUri] + srcPort + dstPort,
+//          isetEmpty[Tag]
+//        )
+//
+//        nodePortsMap.foreach {
+//          case (n, ps) =>
+//            if (n.isFlowDefined && ps.size == 2 && n.isComponent) {
+//              val inPort = ps.filter(H.isInPort).head
+//              val outPort = ps.filter(H.isOutPort).head
+//              val flows = n
+//                .getFlowsFromPort(inPort)
+//                .map(it => n.getFlows(it))
+//                .filter(f => f.toPortUri.isDefined && f.toPortUri.get == outPort)
+//              if (flows.nonEmpty) {
+//                result = result.flatMap(
+//                  r =>
+//                    flows.map(
+//                      f =>
+//                        Collector(
+//                          st,
+//                          r.getGraphs,
+//                          isetEmpty[FlowNode],
+//                          r.getPorts,
+//                          r.getResultType.get,
+//                          r.getEdges,
+//                          r.getFlows + f.flowUri,
+//                          r.getCriteria,
+//                          r.getErrors ++ r.getWarnings
+//                        )
+//                    )
+//                )
+//              }
+//            }
+//        }
+//        result
+//        //case 1 - flows not defined:
+//      } else {
+//        isetEmpty[Collector]
+//      }
+//    } else {
+//      isetEmpty[Collector]
+//    }
+//  }
 
   def cyclePortsToCollector(ports: ISet[ResourceUri], edges: ISet[Edge]): ISet[Collector] = {
     var nodePortsMap = imapEmpty[FlowNode, ISet[ResourceUri]]
@@ -399,7 +402,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
 
       nodePortsMap.foreach {
         case (n, ps) =>
-          if (n.isFlowDefined && ps.size == 2) {
+          if (n.isFlowDefined && ps.size == 2 && n.isComponent) {
             val inPort = ps.filter(H.isInPort).head
             val outPort = ps.filter(H.isOutPort).head
             val flows = n
@@ -430,26 +433,105 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       }
       result
     } else {
-      isetEmpty
+      isetEmpty[Collector]
     }
+
   }
 
-  def computeSimplePaths(source: ResourceUri, target: ResourceUri): Collector = {
+//  def computeSimplePaths(source: ResourceUri, target: ResourceUri): Collector = {
+//    assert(H.isPort(source) && H.isPort(target))
+//    val srcNodes = getNodesFromPort(source)
+//    val targetNodes = getNodesFromPort(target)
+//    val nodePaths = if (srcNodes != targetNodes) {
+//      getSimpleNodePaths(srcNodes, targetNodes)
+//    } else {
+//      reachPathSet(srcNodes.map(_.getUri), targetNodes.map(_.getUri))
+//    }
+//    val paths: ILinkedSet[Collector] = nodePaths.getPaths.flatMap(p => nodePathToPortPaths(p, source, target))
+//    Collector(st, nodePaths.getGraphs, paths, Some(ResultType.Port))
+//  }
+
+  def computeSimplePaths(source: ResourceUri, target: ResourceUri): ISet[ILinkedSet[ResourceUri]] = {
     assert(H.isPort(source) && H.isPort(target))
-    val srcNodes = getNodesFromPort(source)
-    val targetNodes = getNodesFromPort(target)
-    val nodePaths = if (srcNodes != targetNodes) {
-      getSimpleNodePaths(srcNodes, targetNodes)
-    } else {
-      reachPathSet(srcNodes.map(_.getUri), targetNodes.map(_.getUri))
-    }
-    val paths = nodePaths.getPaths.flatMap(p => nodePathToPortPaths(p, source, target))
-    Collector(st, nodePaths.getGraphs, paths, Some(ResultType.Port))
-  }
+    val simpleReach = forwardPortReach(source) intersect backwardPortReach(target)
 
-  def getEdgesFromCycle(cycle: ISet[FlowNode], g: Graph): ISet[Edge] = {
-    cycle.flatMap(n => g.getOutgoingEdges(n).filter(e => cycle.contains(e.target)))
+    val path: ILinkedSet[ResourceUri] = ilinkedSetEmpty[ResourceUri] + source
+
+    var result = isetEmpty[ILinkedSet[ResourceUri]]
+
+    var workList: IList[ILinkedSet[ResourceUri]] = ilistEmpty[ILinkedSet[ResourceUri]] :+ path
+
+    while (workList.nonEmpty) {
+      val currentPath: ILinkedSet[ResourceUri] = workList.head
+      val currPort = currentPath.last
+      if (currPort != target) {
+        val nexts = nextPorts(currPort).foldLeft(
+          FlowCollector(isetEmpty[Graph], isetEmpty[ResourceUri], isetEmpty[Edge], isetEmpty[ResourceUri],
+          isetEmpty[Tag])
+        )(_.union(_))
+
+        nexts.ports.foreach { np =>
+          if (!currentPath.contains(np) && simpleReach.getPorts.contains(np)) {
+            workList = workList :+ (currentPath + np)
+          }
+        }
+      } else {
+        result = result + currentPath
+      }
+      workList = workList.tail
+    }
+    result
+
+}
+
+def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: ResourceUri): ISet[Collector] = {
+    var res = isetEmpty[Collector]
+    paths.foreach { path =>
+      var flows = isetEmpty[ResourceUri]
+      var edges = isetEmpty[Edge]
+      for (i <- path.toList.indices) {
+        if (i != path.size - 1) {
+          val port = path.toList(i)
+          val nextPort = path.toList(i + 1)
+          val next = nextPorts(path.toList(i)).foldLeft(
+          FlowCollector(
+            isetEmpty[Graph],
+            isetEmpty[ResourceUri],
+            isetEmpty[Edge],
+            isetEmpty[ResourceUri],
+            isetEmpty[Tag]
+          )
+        )(_.union(_))
+          val cflows = getNodesFromPort(port).flatMap(_.getFlows).toMap
+          flows = flows ++ next.flows.filter(
+          f =>
+            if (cflows.keySet
+                .contains(f)) { cflows(f).toPortUri.isDefined && cflows(f).toPortUri.get == nextPort } else false
+        )
+          edges = edges ++ getNodesFromPort(port)
+          .flatMap(it => it.getOwner.getOutgoingEdges(it))
+            .filter(e => e.targetPort.isDefined && (e.targetPort.get == nextPort))
+        }
+      }
+      res = res + Collector(
+      st,
+      findRelaventGraphs(getNodesFromPort(src), getNodesFromPort(dst)),
+      isetEmpty[FlowNode],
+        path.toSet,
+        ResultType.Port,
+        edges,
+        flows,
+        isetEmpty + src + dst,
+      isetEmpty[Tag]
+    )
+    }
+
+    res
+
   }
+//  def getEdgesFromCycle(cycle: ISet[FlowNode], g: Graph): ISet[Edge] = {
+//    cycle.flatMap(n => g.getOutgoingEdges(n).filter(e => cycle.contains(e.target)))
+//  }
 
   /**
     * This method computes paths from source port to target ports
@@ -469,25 +551,18 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       val tnodes = getNodesFromPort(target)
 
       val graphs = findRelaventGraphs(snodes, tnodes)
-      val sNodePath = getSimpleNodePaths(snodes, tnodes)
+      //val sNodePath = getSimpleNodePaths(snodes, tnodes)
       val cycleNodes = graphs.map(g => (g, g.getCycles)).toMap
-      val refinedCycleNodes = cycleNodes.flatMap { gcyc =>
-        val g = gcyc._1
-        val cyc = gcyc._2.filter(c => c.intersect(sNodePath.getNodes.toSeq).nonEmpty)
-        if (cyc.nonEmpty) {
-          Some(g, cyc)
-        } else None
-      }
-      val cyclePorts = refinedCycleNodes.flatMap { gcyc =>
+
+      val cyclePorts = cycleNodes.flatMap { gcyc =>
         val g = gcyc._1
         val cycs = gcyc._2.toSet
-        cycs.map(cyc => getPortsFromNodes(cyc.toSet, g))
+        cycs.map(cyc => getPortsFromNodes(ilistEmpty ++ cyc, g))
       }
 
-
-      val simplePaths = computeSimplePaths(source, target)
+      val simplePaths = getSimplePath(computeSimplePaths(source, target), source, target)
       val pathCycles =
-        simplePaths.getPaths.map(p => (p, cyclePorts.filter(cp => (cp._2 intersect p.getPorts).nonEmpty))).toMap
+        simplePaths.map(p => (p, cyclePorts.filter(cp => (cp._2 intersect p.getPorts).nonEmpty))).toMap
 
       val filteredPathCycles = pathCycles.map(pc =>
         if (pc._2.nonEmpty) {
@@ -499,16 +574,18 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         }
       )
 
-      val complexPath = filteredPathCycles.map(
-        pc => if (pc._2.isDefined) {
+      val complexPath = filteredPathCycles
+        .map(
+          pc =>
+            if (pc._2.isDefined) {
           pc._1.union(pc._2.get)
         } else {
           pc._1
-        }
-      )
+          }
+        ).toSet
 
-      Collector(st, simplePaths.getGraphs,
-        simplePaths.getPaths ++ complexPath.toSeq,
+      Collector(st, simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+        ilinkedSetEmpty[Collector] ++ simplePaths ++ complexPath,
         Some(ResultType.Port))
     }
   }
@@ -522,19 +599,24 @@ class PortReachabilityImpl[Node](st: SymbolTable)
 
       val graphs = findRelaventGraphs(snodes, tnodes)
       val cycleNodes = graphs.map(g => (g, g.getCycles)).toMap
+
       val cyclePorts = cycleNodes.flatMap { gcyc =>
         val g = gcyc._1
         val cycs = gcyc._2.toSet
-        cycs.map(cyc => getPortsFromNodes(cyc.toSet, g))
+        cycs.map(cyc => getPortsFromNodes(ilistEmpty ++ cyc, g))
       }
-      val simplePaths = computeSimplePaths(source, target)
+      val simplePaths = getSimplePath(computeSimplePaths(source, target), source, target)
+
       val simplePathNone = constraint.kind match {
         case ConstraintKind.None => {
           val filteredPaths =
-            simplePaths.getPaths.filter(f => f.getPorts.intersect(constraint.simple.get.getPorts).nonEmpty)
-          Collector(st, simplePaths.getGraphs, filteredPaths, Some(ResultType.Port))
+            simplePaths.filter(f => f.getPorts.intersect(constraint.simple.get.getPorts).isEmpty)
+          Collector(
+            st,
+            simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+            ilinkedSetEmpty[Collector]++filteredPaths, Some(ResultType.Port))
         }
-        case _ => simplePaths
+        case _ => simplePaths.foldLeft(Collector(st))(_.union(_))
       }
 
       val pathCycles =
@@ -546,7 +628,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
                 cyclePorts.filter(
                   cp =>
                     (cp._2 intersect p.getPorts).nonEmpty && (constraint.kind match {
-                      case ConstraintKind.None => cp._2.intersect(constraint.simple.get.getPorts).nonEmpty
+                      case ConstraintKind.None => cp._2.intersect(constraint.simple.get.getPorts).isEmpty
                       case _ => true
                     })
                 )
@@ -562,7 +644,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
           None
       }
 
-      val filteredPaths = (complexPath.toSet union simplePaths.getPaths.toSet).filter(
+      val filteredPaths = (complexPath.toSet union simplePathNone.getPaths.toSet).filter(
         cp =>
           constraint.kind match {
             case ConstraintKind.All => constraint.simple.get.getPorts.forall(p => cp.getPorts.contains(p))
@@ -570,7 +652,8 @@ class PortReachabilityImpl[Node](st: SymbolTable)
             case _ => true
           }
       )
-      Collector(st, simplePaths.getGraphs, ilinkedSetEmpty ++ filteredPaths.toSeq, Some(ResultType.Port))
+      Collector(st, simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+        ilinkedSetEmpty ++ filteredPaths.toSeq, Some(ResultType.Port))
     }
   }
 
@@ -658,9 +741,26 @@ class PortReachabilityImpl[Node](st: SymbolTable)
   //    }
   //  }
 
-  private def getPortsFromNodes(nodes: ISet[FlowNode], g: Graph): (ISet[Edge], ISet[ResourceUri]) = {
-    val edges = nodes.flatMap(it => g.getOutgoingEdges(it).filter(it2 => nodes.contains(it2.target)))
-    (edges, edges.flatMap(_.sourcePort) union edges.flatMap(_.targetPort))
+  private def getPortsFromNodes(nodes: ISeq[FlowNode], g: Graph): (ISet[Edge], ISet[ResourceUri]) = {
+    var edges = isetEmpty[Edge]
+    for (i <- nodes.indices) {
+      val oe = g.getOutgoingEdges(nodes(i))
+      oe.foreach { it =>
+        if (i + 1 == nodes.size) {
+          if (it.target == nodes(0)) {
+            edges = edges + it
+          }
+        } else {
+          if (it.target == nodes(i + 1)) {
+            edges = edges + it
+          }
+        }
+      }
+    }
+
+    val p1 = edges.flatMap(_.sourcePort).toSet
+    val p2 = edges.flatMap(_.targetPort).toSet
+    (edges, p1 union p2)
   }
 
   //  def getPathFlows(ports: ISet[ResourceUri]): (ISet[ResourceUri], Boolean) = {

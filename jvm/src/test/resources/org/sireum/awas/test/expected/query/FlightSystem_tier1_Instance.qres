@@ -1,0 +1,12 @@
+error_paths_with_some
+ -------------- 
+{ port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$power2#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$FlightControl#powersupply[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$power2#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FSpowersupply#power[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FlightControl#flightSurfaceControl[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ] } 
+
+ -------------- 

@@ -1,23 +1,20 @@
 package org.sireum.awas.test.slang
 
 import org.sireum.awas.ast.PrettyPrinter
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.slang.Aadl2Awas
-import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
-import org.sireum.awas.witness.SvgGenerator
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.jvm.FileUtil._
-import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq, Uri}
+import org.sireum.util.{FileResourceUri, ISeq, Uri}
 
 class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
   val testDirs = Seq(makePath("..", "example", "aadl-json"))
 
-  val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
-  val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "query")))
+  val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "slang")))
+  val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "slang")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   val outputExtension = ".awas"
 
@@ -28,7 +25,8 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
 
     //equals test by excluding some
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("secure")
+      true
+    //      p.toLowerCase.contains("routing")
     }
 
     filesEqual.toVector.map { x =>
@@ -50,11 +48,11 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
     Aadl2Awas(model) match {
       case Some(x) => {
-        //                implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-        //                val st = SymbolTable(x)
-        //                val graph = FlowGraph(x, st)
-        //                SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
-        //                  with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
+//                        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+//                        val st = SymbolTable(x)
+//                        val graph = FlowGraph(x, st)
+//                        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+//                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
         PrettyPrinter(x)
       }
       case None => ""

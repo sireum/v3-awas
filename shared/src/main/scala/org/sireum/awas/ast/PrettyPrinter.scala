@@ -246,33 +246,39 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
 
     if (compd.subComp.nonEmpty) {
+      val sortedSubComp = compd.subComp.sortBy(_.compName.value)
+      println()
+      printIndent(localIndent + 1)
       sb.append("sub-components {")
-      compd.subComp.foreach { sc =>
+      sortedSubComp.foreach { sc =>
         println()
-        print(sc, indent + 1)
+        print(sc, localIndent + 2)
       }
+      printIndent(localIndent +1)
       sb.append("}")
       println()
     }
 
     if (compd.connections.nonEmpty) {
+      printIndent(localIndent+1)
       sb.append("connections")
       println()
-      print(compd.connections.head, indent + 1)
+      print(compd.connections.head, localIndent + 2)
       for (ct <- compd.connections.tail) {
         println()
-        print(ct, indent + 1)
+        print(ct, localIndent + 2)
       }
       println()
     }
 
     if (compd.deployment.nonEmpty) {
+      printIndent(localIndent+1)
       sb.append("deployment")
       println()
-      print(compd.deployment.head, indent + 1)
+      print(compd.deployment.head, localIndent + 2)
       for (dep <- compd.deployment.tail) {
         println()
-        print(dep, indent + 1)
+        print(dep, localIndent + 2)
       }
       println()
     }

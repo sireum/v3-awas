@@ -1,0 +1,23 @@
+temp_src
+ -------------- 
+{ port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$App#command[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$PulseOx#SpO2[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ] } 
+
+ -------------- 
+tp_paths
+ -------------- 
+{ port-in-virtual:$$AWAS$PCA_PulseOx_scenario_secure_Instance$activate#in[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-in-virtual:$$AWAS$PCA_PulseOx_scenario_secure_Instance$spo2#in[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-in:$$AWAS$PCA_PulseOx_scenario_secure_Instance$authenticate#bindings_IN[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-in:$$AWAS$PCA_PulseOx_scenario_secure_Instance$authenticate#connection_IN[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-in:$$AWAS$PCA_PulseOx_scenario_secure_Instance$encrypt#bindings_IN[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-in:$$AWAS$PCA_PulseOx_scenario_secure_Instance$wifi#bindings_IN[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out-bind:$$AWAS$PCA_PulseOx_scenario_secure_Instance$activate#BIND_OUT[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out-bind:$$AWAS$PCA_PulseOx_scenario_secure_Instance$spo2#BIND_OUT[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$App#command[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$PulseOx#SpO2[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$authenticate#connection_OUT[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$encrypt#connection_OUT[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ]
+port-out:$$AWAS$PCA_PulseOx_scenario_secure_Instance$wifi#bindings_OUT[ error:$$AWAS$example/Query/PCA_PulseOx_scenario_secure_Instance.awas$PCA_Error#UnauthorizedCommission ] } 
+
+ -------------- 

@@ -27,16 +27,15 @@ package org.sireum.awas.test
 
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
-import org.sireum.awas.test.CodeGen.ContextInSensitiveTest
 import org.sireum.awas.test.analysis.FlowGraphTest
-import org.sireum.awas.test.ast.{PrettyPrinterTest, SymbolTableTest}
+import org.sireum.awas.test.ast.PrettyPrinterTest
 
 @RunWith(classOf[Suite])
 @Suite.SuiteClasses(
   Array(
     classOf[PrettyPrinterTest],
-    classOf[SymbolTableTest],
-    classOf[ContextInSensitiveTest],
+//    classOf[SymbolTableTest],
+//    classOf[ContextInSensitiveTest],
     classOf[FlowGraphTest],
     classOf[Query.QueryTest]
   )

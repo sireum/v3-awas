@@ -58,7 +58,6 @@ public class AwasGraphBuilder {
 
             final AwasGraph ag = new AwasGraphImpl(graph, st);
             return Optional.of(ag);
-
         } else {
             return Optional.empty();
         }

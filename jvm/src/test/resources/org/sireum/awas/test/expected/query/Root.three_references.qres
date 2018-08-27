@@ -1,0 +1,13 @@
+q4
+ -------------- 
+{ component:$$AWAS$Root_three_references_Instance#Sub, 
+component:$$AWAS$Root_three_references_Instance$Sub#sub_proc, 
+component:$$AWAS$Root_three_references_Instance$Sub$sub_proc#thread1, 
+connection:$$AWAS$Root_three_references_Instance#system_to_comp_in, 
+connection:$$AWAS$Root_three_references_Instance$Sub#parent_to_child, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_BACKWARD, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_FORWARD, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_port_IN, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_IN } 
+
+ -------------- 

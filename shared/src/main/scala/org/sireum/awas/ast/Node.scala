@@ -101,7 +101,7 @@ final case class CFlow(id: Id,
 
 final case class Property(id: Id, propType: Type, value: Option[Init]) extends Node
 
-final case class AliasDecl(typeName: Name, aliasName: Name) extends TypeDecl
+final case class AliasDecl(typeName: Name, aliasName: BasicType) extends TypeDecl
 
 final case class EnumDecl(name: Id,
                           superEnums: Node.Seq[Name],

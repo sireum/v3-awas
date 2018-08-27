@@ -26,7 +26,6 @@
 package org.sireum.awas.reachability
 
 import org.sireum.awas.collector
-import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector._
 import org.sireum.awas.fptc.FlowNode._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode, NodeType}
@@ -121,19 +120,19 @@ class BasicReachabilityImpl(st: SymbolTable)
 
     while (workList.nonEmpty) {
       val curr = workList.head
-      if (curr.getSubGraph.isDefined) {
-        val allSubGraphs = getAllSubNode(curr)
-        result = result ++ allSubGraphs.flatMap(_.nodes)
-        resEdges = resEdges ++ allSubGraphs.flatMap(_.edges)
-        resGraph = resGraph ++ allSubGraphs
+      if (!result.contains(curr)) {
+        if (curr.getSubGraph.isDefined) {
+          val allSubGraphs = getAllSubNode(curr)
+          result = result ++ allSubGraphs.flatMap(_.nodes)
+          resEdges = resEdges ++ allSubGraphs.flatMap(_.edges)
+          resGraph = resGraph ++ allSubGraphs
+        }
+        val (n, e, g) = if (isForward) nextNode(curr) else previousNode(curr)
+        result += curr
+        resEdges = resEdges ++ e
+        resGraph = resGraph ++ g
+        n.foreach(nn => workList = workList :+ nn)
       }
-      val (n, e, g) = if (isForward) nextNode(curr) else previousNode(curr)
-      result += curr
-      resEdges = resEdges ++ e
-      resGraph = resGraph ++ g
-      n.foreach(nn => if (!result.contains(nn)) {
-        workList = workList :+ nn
-      })
       workList = workList.tail
     }
     collector.Collector(st, resGraph, result, resEdges, isForward,
@@ -142,9 +141,9 @@ class BasicReachabilityImpl(st: SymbolTable)
 
   private def getAllSubNode(given: FlowNode): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
     var result = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
-    var workList = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
+    var workList = ilistEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
     if (given.getSubGraph.isDefined) {
-      workList = workList + given.getSubGraph.get
+      workList = workList :+ given.getSubGraph.get
     }
 
     while (workList.nonEmpty) {

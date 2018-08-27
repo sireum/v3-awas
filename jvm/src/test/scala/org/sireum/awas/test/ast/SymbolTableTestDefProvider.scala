@@ -50,8 +50,10 @@ final class SymbolTableTestDefProvider(tf: TestFramework)
     }
     //filter files here
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("isolette_model") ||
-        p.toLowerCase.contains("state_machine.awas")
+//      p.toLowerCase.contains("isolette_model") ||
+//        p.toLowerCase.contains("state_machine.awas")
+      p.toLowerCase.contains("nothing")
+
     }
 
     filesEqual.toVector.map { x =>

@@ -1,13 +1,12 @@
 package org.sireum.awas.slang
 
 
-import org.sireum.{B, Z}
 import org.sireum.aadl._
 import org.sireum.aadl.ir.Transformer.PrePost
-import org.sireum.aadl.ir.{Flow => _, Name => _, Property => _, _}
-import org.sireum.aadl.ir.EndPoint
+import org.sireum.aadl.ir.{EndPoint, Flow => _, Name => _, Property => _, _}
 import org.sireum.awas.ast._
 import org.sireum.util._
+import org.sireum.{B, Z}
 
 
 final class Aadl2Awas private() {
@@ -31,6 +30,15 @@ final class Aadl2Awas private() {
   val BINDINGS = "bindings"
   val PROCESSOR = "processor"
   val CONNECTION = "connection"
+
+  val BUS_ACCESS = "_bus_access"
+  val BUS_ACCESS_IN = "_bus_access_IN"
+  val BUS_ACCESS_OUT = "_bus_access_OUT"
+
+  val ACCESS_PORT = "ACCESS"
+  val ACCESS_IN_PORT = "ACCESS_IN"
+  val ACCESS_OUT_PORT = "ACCESS_OUT"
+
 
   var typeDecls = Node.emptySeq[TypeDecl]
 
@@ -67,10 +75,12 @@ final class Aadl2Awas private() {
         AliasDecl(
           Name(ivectorEmpty[Id] :+
             buildId(errorLib.name.name.elements.last.value) :+
-            buildId(e._1.value)),
+              buildId(e._1.value)
+          ),
+          NamedTypeDecl(
           getAlisedType(errorLibs, errorLib.useTypes.elements.map(_.value) :+
             errorLib.name.name.elements.last.value,
-            e._2.value))))
+            e._2.value)))))
   }
 
   def buildName(name: org.sireum.String): Name = {
@@ -105,7 +115,11 @@ final class Aadl2Awas private() {
     if (comp.identifier.name.nonEmpty) {
       val id = buildId(comp.identifier.name.elements.last.value)
       val withs = getWiths(comp.annexes.elements)
-      val features = comp.features.elements.flatMap(build).toVector
+
+      val features = if (comp.category == ir.ComponentCategory.Bus) {
+        comp.features.elements.flatMap(build).toVector :+
+          Port(true, buildId(ACCESS_IN_PORT), None) :+ Port(false, buildId(ACCESS_OUT_PORT), None)
+      } else { comp.features.elements.flatMap(build).toVector}
       val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
       val flows = getFlows(comp)
       val subcomp = comp.subComponents.elements.flatMap { sc =>
@@ -116,6 +130,8 @@ final class Aadl2Awas private() {
 
       val (deplDecls, addedPorts) = mineBindingProps(comp.subComponents.elements,
         comp.connectionInstances.elements)
+
+
 
       val UpdatedSubComp = subcomp.map { sc =>
         if (addedPorts.contains(sc._1)) {
@@ -267,14 +283,17 @@ final class Aadl2Awas private() {
         buildConnection(conn.name.name.elements.last.value,
           conn.src.elements.last,
           conn.dst.elements.last,
+          conn.kind,
           conn.isBiDirectional,
           compName)
       } else if (conn.src.size == conn.dst.size) {
         var res = ilistEmpty[ConnectionDecl]
         for (i <- 0 until conn.src.size.get.toInt) {
-          res = res ++ buildConnection(conn.name.name.elements.last.value + "_" + conn.src(i).feature.name.elements.last,
+          res = res ++ buildConnection(
+            conn.name.name.elements.last.value + "_" + conn.src(i).feature.get.name.elements.last,
             conn.src(i),
             conn.dst(i),
+            conn.kind,
             conn.isBiDirectional,
             compName)
         }
@@ -288,7 +307,8 @@ final class Aadl2Awas private() {
 
   def buildConnection(id: String,
                       src: EndPoint,
-                      dst: EndPoint,
+    dst: EndPoint,
+    kind : ir.ConnectionKind.Type,
                       isBidirectional: B,
                       compName: Seq[String]): Seq[ConnectionDecl] = {
 
@@ -298,51 +318,102 @@ final class Aadl2Awas private() {
     } else {
       Some(buildName(src.component.name.elements.last.value))
     }
-    val srcPort = src.feature.name.elements.last.value
+    val srcPort = src.feature.map(_.name.elements.last.value)
     val sinkComp = if (dst.component.name.map(_.value).elements == compName) {
       None
     } else {
       Some(buildName(dst.component.name.elements.last.value))
     }
-    val sinkPort = dst.feature.name.elements.last.value
-    if (isBidirectional) {
-      ilistEmpty :+ ConnectionDecl(buildId(id + "_FORWARD"),
-        srcComp,
-        if (src.direction.get == ir.Direction.InOut) {
-          if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
-        } else buildId(srcPort),
-        false,
-        sinkComp,
-        if (dst.direction.get == ir.Direction.InOut) {
-          if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
-        } else buildId(sinkPort),
-        Node.emptySeq[CFlow],
-        None,
-        Node.emptySeq[Property]) :+
-        ConnectionDecl(buildId(id + "_BACKWARD"),
-          sinkComp,
-          if (dst.direction.get == ir.Direction.InOut) {
-            if (sinkComp.isEmpty) buildId(sinkPort + "_IN") else buildId(sinkPort + "_OUT")
-          } else buildId(sinkPort),
-          false,
-          srcComp,
-          if (src.direction.get == ir.Direction.InOut) {
-            if (srcComp.isEmpty) buildId(srcPort + "_OUT") else buildId(srcPort + "_IN")
-          } else buildId(srcPort),
-          Node.emptySeq[CFlow],
-          None,
-          Node.emptySeq[Property])
+    val sinkPort = dst.feature.map(_.name.elements.last.value)
+
+    val actualSrcPort = if (srcPort.isEmpty) {
+      "ACCESS"
     } else {
-      ilistEmpty :+ ConnectionDecl(buildId(id),
+      if (kind == ConnectionKind.Access) { srcPort.get + BUS_ACCESS } else srcPort.get
+    }
+
+    val actualSinkPort = if (sinkPort.isEmpty) {
+      "ACCESS"
+    } else {
+      if (kind == ConnectionKind.Access) { sinkPort.get + BUS_ACCESS} else sinkPort.get
+    }
+
+    if (isBidirectional) {
+      var res = ilistEmpty[ConnectionDecl]
+//      if(kind == ir.ConnectionKind.Access){
+//
+//
+//        res = res :+ ConnectionDecl(
+//          build(id + "_FORWARD"),
+//          srcComp,
+//          if()
+//        )
+//      } else {
+      if (id.startsWith("al_")) {
+        println("break")
+      }
+
+      val superComp = if (srcComp.isEmpty) srcComp else sinkComp
+      val superDir = if (srcComp.isEmpty) src.direction else dst.direction
+      val forwardDirChk = if (superComp == srcComp) ir.Direction.Out else ir.Direction.In
+      val backwardDirChk = if (superComp == srcComp) ir.Direction.In else ir.Direction.Out
+      if (!(superComp.isEmpty && superDir.nonEmpty && (superDir.get == forwardDirChk))) {
+        if (src.direction.nonEmpty && dst.direction.nonEmpty &&
+          ((src.direction.get != ir.Direction.In) ||
+          (dst.direction.get != ir.Direction.Out))) {
+
+          res = res :+ ConnectionDecl(
+            buildId(id + "_FORWARD"),
+            srcComp,
+            if (src.direction.nonEmpty && (src.direction.get == ir.Direction.InOut)) {
+              if (srcComp.isEmpty) buildId(actualSrcPort + "_IN") else buildId(actualSrcPort + "_OUT")
+            } else buildId(actualSrcPort),
+            false,
+            sinkComp,
+            if (dst.direction.nonEmpty && (dst.direction.get == ir.Direction.InOut)) {
+              if (sinkComp.isEmpty) buildId(actualSinkPort + "_OUT") else buildId(actualSinkPort + "_IN")
+            } else buildId(actualSinkPort),
+            Node.emptySeq[CFlow],
+            None,
+            Node.emptySeq[Property]
+          )
+        }
+      }
+      if (!(superComp.isEmpty && superDir.nonEmpty && (superDir.get == backwardDirChk))) {
+        if (dst.direction.nonEmpty && src.direction.nonEmpty &&
+          ((dst.direction.get != ir.Direction.In) ||
+          (src.direction.get != ir.Direction.Out))) {
+          res = res :+ ConnectionDecl(
+            buildId(id + "_BACKWARD"),
+            sinkComp,
+            if (dst.direction.nonEmpty && (dst.direction.get == ir.Direction.InOut)) {
+              if (sinkComp.isEmpty) buildId(actualSinkPort + "_IN") else buildId(actualSinkPort + "_OUT")
+            } else buildId(actualSinkPort),
+            false,
+            srcComp,
+            if (src.direction.nonEmpty && (src.direction.get == ir.Direction.InOut)) {
+              if (srcComp.isEmpty) buildId(actualSrcPort + "_OUT") else buildId(actualSrcPort + "_IN")
+            } else buildId(actualSrcPort),
+            Node.emptySeq[CFlow],
+            None,
+            Node.emptySeq[Property]
+          )
+          }
+        }
+      //}
+      res
+    } else {
+      ilistEmpty :+ ConnectionDecl(
+        buildId(id),
         srcComp,
-        if (src.direction.get == ir.Direction.InOut) {
-          if (srcComp.isEmpty) buildId(srcPort + "_IN") else buildId(srcPort + "_OUT")
-        } else buildId(srcPort),
+        if (src.direction.nonEmpty && (src.direction.get == ir.Direction.InOut)) {
+          if (srcComp.isEmpty) buildId(actualSrcPort + "_IN") else buildId(actualSrcPort + "_OUT")
+        } else buildId(actualSrcPort),
         false,
         sinkComp,
-        if (dst.direction.get == ir.Direction.InOut) {
-          if (sinkComp.isEmpty) buildId(sinkPort + "_OUT") else buildId(sinkPort + "_IN")
-        } else buildId(sinkPort),
+        if (dst.direction.nonEmpty && (dst.direction.get == ir.Direction.InOut)) {
+          if (sinkComp.isEmpty) buildId(actualSinkPort + "_OUT") else buildId(actualSinkPort + "_IN")
+        } else buildId(actualSinkPort),
         Node.emptySeq[CFlow],
         None,
         Node.emptySeq[Property])
@@ -364,7 +435,7 @@ final class Aadl2Awas private() {
             isInverse: B, portId: String): Seq[Port] = {
     var pId = portId + featureEnd.identifier.name.elements.last.value
     if (featureEnd.category == ir.FeatureCategory.BusAccess) {
-      pId = pId + "__BUS_"
+      pId = pId + BUS_ACCESS
     }
     if (featureEnd.direction == ir.Direction.InOut) {
       Seq(Port(isIn = true, buildId(pId + "_IN"), None),
@@ -439,11 +510,14 @@ final class Aadl2Awas private() {
     var flows = isetEmpty[Flow]
     comp.flows.foreach { flow =>
       val id = buildId(flow.name.name.elements.last.value)
+
       val from = if (flow.source.nonEmpty) {
-        Some(buildId(flow.source.get.value))
+
+        Some(build(flow.source.get).map(_.id).filterNot(_.value.endsWith("_OUT")).last)
       } else None
+
       val to = if (flow.sink.nonEmpty) {
-        Some(buildId(flow.sink.get.value))
+        Some(build(flow.sink.get).map(_.id).last)
       } else None
 
       flows = flows + Flow(id, from, Node.emptySeq[Fault], to, Node.emptySeq[Fault])

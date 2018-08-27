@@ -9,10 +9,11 @@ import org.sireum.util._
 class QueryInter(st: SymbolTable) {
   var result = ilinkedMapEmpty[String, Collector]
   var queries = ilinkedMapEmpty[String, String]
+  private var reporter: Reporter = new Reporter(org.sireum.ISZ())
   val qe = new QueryEval(st)
 
   def evalCmd(cmd: String): (QueryEval.Result, Reporter) = {
-    val reporter: Reporter = new Reporter(org.sireum.ISZ())
+    reporter = new Reporter(org.sireum.ISZ())
     QueryParser(cmd, reporter) match {
       case Some(m) => {
         result = qe.eval(m.queryStmt.head, result)
@@ -25,7 +26,7 @@ class QueryInter(st: SymbolTable) {
   }
 
   def evalQueryFile(queryIns: String): (QueryEval.Result, Reporter) = {
-    val reporter: Reporter = new Reporter(org.sireum.ISZ())
+    reporter = new Reporter(org.sireum.ISZ())
     QueryParser(queryIns, reporter) match {
       case Some(m) => {
         result = result ++ qe.eval(m)
@@ -44,5 +45,7 @@ class QueryInter(st: SymbolTable) {
   def getResults: ILinkedMap[String, Collector] = {
     result
   }
+
+  def getReporter: Reporter = { reporter }
 
 }

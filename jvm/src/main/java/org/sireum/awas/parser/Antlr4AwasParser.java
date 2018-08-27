@@ -3,14 +3,16 @@ package org.sireum.awas.parser;
 
 // @formatter:off
 
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
-import java.util.List;
-import java.util.Iterator;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Antlr4AwasParser extends Parser {
@@ -1076,12 +1078,12 @@ public class Antlr4AwasParser extends Parser {
     }
 
     public static class TypeAliasDeclContext extends ParserRuleContext {
-        public List<NameContext> name() {
-            return getRuleContexts(NameContext.class);
+        public NameContext name() {
+            return getRuleContext(NameContext.class, 0);
         }
 
-        public NameContext name(int i) {
-            return getRuleContext(NameContext.class, i);
+        public BasicTypeContext basicType() {
+            return getRuleContext(BasicTypeContext.class, 0);
         }
 
         public TypeAliasDeclContext(ParserRuleContext parent, int invokingState) {
@@ -1107,7 +1109,7 @@ public class Antlr4AwasParser extends Parser {
                 setState(251);
                 match(T__21);
                 setState(252);
-                name();
+                basicType();
             }
         } catch (RecognitionException re) {
             _localctx.exception = re;
@@ -3817,11 +3819,11 @@ public class Antlr4AwasParser extends Parser {
                     "\3\2\2\2\u00f3\u00f4\3\2\2\2\u00f4\u00f5\3\2\2\2\u00f5\u00f6\7\25\2\2" +
                     "\u00f6\u00f9\5B\"\2\u00f7\u00f8\7\24\2\2\u00f8\u00fa\7;\2\2\u00f9\u00f7" +
                     "\3\2\2\2\u00f9\u00fa\3\2\2\2\u00fa\17\3\2\2\2\u00fb\u00fc\7\27\2\2\u00fc" +
-                    "\u00fd\5B\"\2\u00fd\u00fe\7\30\2\2\u00fe\u00ff\5B\"\2\u00ff\21\3\2\2\2" +
-                    "\u0100\u0101\7\31\2\2\u0101\u010b\7;\2\2\u0102\u0103\7\32\2\2\u0103\u0108" +
-                    "\5B\"\2\u0104\u0105\7\t\2\2\u0105\u0107\5B\"\2\u0106\u0104\3\2\2\2\u0107" +
-                    "\u010a\3\2\2\2\u0108\u0106\3\2\2\2\u0108\u0109\3\2\2\2\u0109\u010c\3\2" +
-                    "\2\2\u010a\u0108\3\2\2\2\u010b\u0102\3\2\2\2\u010b\u010c\3\2\2\2\u010c" +
+                    "\u00fd\5B\"\2\u00fd\u00fe\7\30\2\2\u00fe\u00ff\5:\36\2\u00ff\21\3\2\2" +
+                    "\2\u0100\u0101\7\31\2\2\u0101\u010b\7;\2\2\u0102\u0103\7\32\2\2\u0103" +
+                    "\u0108\5B\"\2\u0104\u0105\7\t\2\2\u0105\u0107\5B\"\2\u0106\u0104\3\2\2" +
+                    "\2\u0107\u010a\3\2\2\2\u0108\u0106\3\2\2\2\u0108\u0109\3\2\2\2\u0109\u010c" +
+                    "\3\2\2\2\u010a\u0108\3\2\2\2\u010b\u0102\3\2\2\2\u010b\u010c\3\2\2\2\u010c" +
                     "\u0117\3\2\2\2\u010d\u010e\7\17\2\2\u010e\u0113\7;\2\2\u010f\u0110\7\t" +
                     "\2\2\u0110\u0112\7;\2\2\u0111\u010f\3\2\2\2\u0112\u0115\3\2\2\2\u0113" +
                     "\u0111\3\2\2\2\u0113\u0114\3\2\2\2\u0114\u0116\3\2\2\2\u0115\u0113\3\2" +
@@ -3965,6 +3967,6 @@ public class Antlr4AwasParser extends Parser {
         _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
         for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
             _decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
-        }
+		}
 	}
 }

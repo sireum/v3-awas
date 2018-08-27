@@ -33,7 +33,7 @@ import org.sireum.awas.graph._
 import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-import org.sireum.{$Slang, $internal, ISZ, ST}
+import org.sireum.{$Slang, ISZ, ST}
 
 class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
   extends FlowGraph[FlowNode, FlowEdge[FlowNode]] with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]] {
@@ -354,6 +354,14 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     //      case _ => superClass.getPredecessorNodes(node)
     //    }
     superClass.getPredecessorNodes(node)
+  }
+
+  def getSCC: Seq[Set[FlowNode]] = {
+    superClass.getSCC
+  }
+
+  def getCycles: Seq[Seq[FlowNode]] = {
+    superClass.getCycles
   }
 
   override def toDot: String = {

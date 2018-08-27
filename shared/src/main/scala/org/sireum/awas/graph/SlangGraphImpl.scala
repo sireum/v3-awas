@@ -1,6 +1,7 @@
 package org.sireum.awas.graph
 
 import org.sireum.Graph
+import org.sireum.ops.GraphOps
 import org.sireum.util.{CSet, isetEmpty}
 
 class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
@@ -107,14 +108,13 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     data
   }
 
-  override def getSCC: Seq[Set[Node]] = ???
-
+  override def getSCC: Seq[Set[Node]] = GraphOps(graph).getSCC.elements.map(_.elements.elements.toSet)
   /**
     * Find all simple cycles of a directed graph using the Schwarcfiter and Lauer's algorithm.
     *
     * @return set of cycles
     */
-  override def getCycles: Seq[Seq[Node]] = ???
+  override def getCycles: Seq[Seq[Node]] = GraphOps(graph).getCycles.elements.map(_.elements)
 }
 
 //case class SlangGraphAwasEdgeImpl[Node](src: Node, snk: Node) extends AwasEdge[Node] {

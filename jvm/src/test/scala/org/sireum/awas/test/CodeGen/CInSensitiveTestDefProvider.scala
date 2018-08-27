@@ -51,7 +51,7 @@ final class CInSensitiveTestDefProvider(tf: TestFramework)
     }
     //filter files here
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("fptc_base")
+      p.toLowerCase.contains("nothing")
     }
 
     filesEqual.toVector.map { x =>

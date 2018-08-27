@@ -1,1 +1,2 @@
-test = reach paths from PCA_PulseOx_scenario_secure_Instance.PulseOx.SpO2{PCA_Error.MessageLeak} to PCA_PulseOx_scenario_secure_Instance.wifi.bindings_IN{PCA_Error.UnlikelyLeak}
+temp_src = (reach backward PCA_PulseOx_scenario_secure_Instance.authenticate.connection_IN{PCA_Error.UnauthorizedCommission}):source
+tp_paths = reach paths from 'temp_src to PCA_PulseOx_scenario_secure_Instance.authenticate.connection_IN{PCA_Error.UnauthorizedCommission}

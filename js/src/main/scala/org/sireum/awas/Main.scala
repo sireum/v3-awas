@@ -2,14 +2,14 @@ package org.sireum.awas
 
 import facades._
 import org.scalajs.dom
+import org.scalajs.dom.ext._
 import org.scalajs.dom.html.{Anchor, Div, Input, Table}
-import org.scalajs.dom.raw.{HTMLElement, Node}
-import org.scalajs.dom.svg.G
+import org.scalajs.dom.raw.Node
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
-import org.sireum.awas.reachability.{BasicReachabilityImpl, ErrorReachabilityImpl, PortReachabilityImpl}
+import org.sireum.awas.reachability.{ErrorReachabilityImpl, PortReachabilityImpl}
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -21,9 +21,7 @@ import org.sireum.util.{imapEmpty, _}
 import scalatags.Text
 import scalatags.Text.all.{id, _}
 import scalatags.Text.tags2.nav
-import org.scalajs.dom.ext._
-import org.sireum.aadl.ir.Feature
-import org.sireum.awas.Main.highlight
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.scalajs.js
@@ -443,7 +441,9 @@ object Main {
           }
         }
       }
-      highlight(collectorToUris(res.foldLeft(Collector(st))(_.union(_))))
+      res.foreach(r => highlight(collectorToUris(r)))
+      // val resColl = res.foldLeft(Collector(st))(_.union(_))
+      //highlight(collectorToUris())
     }
   }
 
@@ -462,7 +462,8 @@ object Main {
           Some(new PortReachabilityImpl(st).backwardReach(c))
         }
       }
-      highlight(collectorToUris(res.foldLeft(Collector(st))(_.union(_))))
+      res.foreach(r => highlight(collectorToUris(r)))
+      //highlight(collectorToUris(res.foldLeft(Collector(st))(_.union(_))))
     }
 
   }
@@ -784,9 +785,12 @@ object Main {
           reader.onload = (_: UIEvent) => {
 
             queries = reader.result.asInstanceOf[String]
-            println(queries)
+//            println(queries)
             qI.get.evalQueryFile(queries)
             updateTable(qI.get.getQueries, qI.get.getResults)
+            if (qI.get.getReporter.messages.nonEmpty) {
+              println(qI.get.getReporter.messages.elements.mkString("\n"))
+            }
           }
           reader.readAsText(files(0))
           reader.onerror = (_: Event) => {
@@ -796,7 +800,7 @@ object Main {
 
         val inputExport = qBox.querySelector("#export-queries")
         inputExport.asInstanceOf[Input].onclick = (_: MouseEvent) => {
-          println("exporter")
+//          println("exporter")
           val text = qI.get.getQueries.map(q => q._1 + " = " + q._2).mkString("\n")
           val filename = st.systemDecl.compName.value + ".aq"
           val blob = new Blob(js.Array(text), BlobPropertyBag("text/plain;charset=utf-8"))

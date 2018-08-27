@@ -5,7 +5,7 @@ var json = `{
                   "type" : "Component",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["FlightSystem_tier1_Instance"]
+                    "name" : ["Simple_Comm_routing_table_Instance"]
                   },
                   "category" : {
                     "type" : "ComponentCategory",
@@ -15,73 +15,13 @@ var json = `{
                     "type" : "None"
                   },
                   "features" : [
-                    {
-                      "type" : "Feature",
-                      "identifier" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "satelliteSignal"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "In"
-                      },
-                      "category" : {
-                        "type" : "FeatureCategory",
-                        "value" : "AbstractFeature"
-                      },
-                      "classifier" : {
-                        "type" : "None"
-                      },
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "Feature",
-                      "identifier" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "ObservableFailure"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "Out"
-                      },
-                      "category" : {
-                        "type" : "FeatureCategory",
-                        "value" : "AbstractFeature"
-                      },
-                      "classifier" : {
-                        "type" : "None"
-                      },
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "Feature",
-                      "identifier" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "pilotInput"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "In"
-                      },
-                      "category" : {
-                        "type" : "FeatureCategory",
-                        "value" : "DataPort"
-                      },
-                      "classifier" : {
-                        "type" : "None"
-                      },
-                      "properties" : [
-                      ]
-                    }
                   ],
                   "subComponents" : [
                     {
                       "type" : "Component",
                       "identifier" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "alice"]
                       },
                       "category" : {
                         "type" : "ComponentCategory",
@@ -91,23 +31,23 @@ var json = `{
                         "type" : "Some",
                         "value" : {
                           "type" : "Classifier",
-                          "name" : "HardwareParts::PowerSupply"
+                          "name" : "Simple_Flow_Demo::Sender.impl"
                         }
                       },
                       "features" : [
                         {
-                          "type" : "Feature",
+                          "type" : "FeatureEnd",
                           "identifier" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_port"]
                           },
                           "direction" : {
                             "type" : "Direction",
-                            "value" : "Out"
+                            "value" : "InOut"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
-                            "value" : "AbstractFeature"
+                            "value" : "DataPort"
                           },
                           "classifier" : {
                             "type" : "None"
@@ -125,6 +65,80 @@ var json = `{
                       "properties" : [
                       ],
                       "flows" : [
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice", "receive_ack"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Sink"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "alice", "receive_ack", "send_port"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "None"
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_msg"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Source"
+                          },
+                          "source" : {
+                            "type" : "None"
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_msg", "send_port"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        }
                       ],
                       "modes" : [
                       ],
@@ -134,45 +148,10 @@ var json = `{
                           "name" : "Emv2",
                           "clause" : {
                             "type" : "Emv2Clause",
-                            "libraries" : ["ErrorLibrary", "GPSErrorLibrary"],
+                            "libraries" : [],
                             "propagations" : [
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"],
-                                "errorTokens" : ["ServiceOmission"]
-                              }
                             ],
                             "flows" : [
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power_es"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Source"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "None"
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"],
-                                    "errorTokens" : ["ServiceOmission"]
-                                  }
-                                }
-                              }
                             ]
                           }
                         }
@@ -182,49 +161,29 @@ var json = `{
                       "type" : "Component",
                       "identifier" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "GPS"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "bob"]
                       },
                       "category" : {
                         "type" : "ComponentCategory",
-                        "value" : "System"
+                        "value" : "Device"
                       },
                       "classifier" : {
                         "type" : "Some",
                         "value" : {
                           "type" : "Classifier",
-                          "name" : "GPSSystem::GPS"
+                          "name" : "Simple_Flow_Demo::Receiver.s1"
                         }
                       },
                       "features" : [
                         {
-                          "type" : "Feature",
+                          "type" : "FeatureEnd",
                           "identifier" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_Port"]
                           },
                           "direction" : {
                             "type" : "Direction",
-                            "value" : "In"
-                          },
-                          "category" : {
-                            "type" : "FeatureCategory",
-                            "value" : "AbstractFeature"
-                          },
-                          "classifier" : {
-                            "type" : "None"
-                          },
-                          "properties" : [
-                          ]
-                        },
-                        {
-                          "type" : "Feature",
-                          "identifier" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "GPS", "location"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                            "value" : "InOut"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
@@ -246,6 +205,80 @@ var json = `{
                       "properties" : [
                       ],
                       "flows" : [
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_msg"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Sink"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_msg", "receive_Port"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "None"
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob", "send_ack"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Source"
+                          },
+                          "source" : {
+                            "type" : "None"
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "bob", "send_ack", "receive_Port"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        }
                       ],
                       "modes" : [
                       ],
@@ -255,124 +288,10 @@ var json = `{
                           "name" : "Emv2",
                           "clause" : {
                             "type" : "Emv2Clause",
-                            "libraries" : ["ErrorLibrary", "GPSErrorLibrary"],
+                            "libraries" : [],
                             "propagations" : [
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"],
-                                "errorTokens" : ["NoSignal", "LowSignal"]
-                              },
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
-                                "errorTokens" : ["ServiceOmission", "LowPrecisionData", "IncorrectData"]
-                              }
                             ],
                             "flows" : [
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "GPS", "GPSAsErrorSource"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Source"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "None"
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
-                                    "errorTokens" : ["ServiceOmission", "LowPrecisionData", "IncorrectData"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "GPS", "SatelliteError"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"],
-                                    "errorTokens" : ["NoSignal"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
-                                    "errorTokens" : ["ServiceOmission"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "GPS", "SatelliteError1"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"],
-                                    "errorTokens" : ["LowSignal"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
-                                    "errorTokens" : ["LowPrecisionData"]
-                                  }
-                                }
-                              }
                             ]
                           }
                         }
@@ -382,89 +301,29 @@ var json = `{
                       "type" : "Component",
                       "identifier" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "mallory"]
                       },
                       "category" : {
                         "type" : "ComponentCategory",
-                        "value" : "System"
+                        "value" : "Device"
                       },
                       "classifier" : {
                         "type" : "Some",
                         "value" : {
                           "type" : "Classifier",
-                          "name" : "AutomatedFlightGuidance::AutomatedFlightGuidance"
+                          "name" : "Simple_Flow_Demo::Receiver.s1"
                         }
                       },
                       "features" : [
                         {
-                          "type" : "Feature",
+                          "type" : "FeatureEnd",
                           "identifier" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_Port"]
                           },
                           "direction" : {
                             "type" : "Direction",
-                            "value" : "In"
-                          },
-                          "category" : {
-                            "type" : "FeatureCategory",
-                            "value" : "AbstractFeature"
-                          },
-                          "classifier" : {
-                            "type" : "None"
-                          },
-                          "properties" : [
-                          ]
-                        },
-                        {
-                          "type" : "Feature",
-                          "identifier" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "In"
-                          },
-                          "category" : {
-                            "type" : "FeatureCategory",
-                            "value" : "DataPort"
-                          },
-                          "classifier" : {
-                            "type" : "None"
-                          },
-                          "properties" : [
-                          ]
-                        },
-                        {
-                          "type" : "Feature",
-                          "identifier" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "In"
-                          },
-                          "category" : {
-                            "type" : "FeatureCategory",
-                            "value" : "DataPort"
-                          },
-                          "classifier" : {
-                            "type" : "None"
-                          },
-                          "properties" : [
-                          ]
-                        },
-                        {
-                          "type" : "Feature",
-                          "identifier" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                            "value" : "InOut"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
@@ -486,6 +345,80 @@ var json = `{
                       "properties" : [
                       ],
                       "flows" : [
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_msg"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Sink"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_msg", "receive_Port"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "None"
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory", "send_ack"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Source"
+                          },
+                          "source" : {
+                            "type" : "None"
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "mallory", "send_ack", "receive_Port"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        }
                       ],
                       "modes" : [
                       ],
@@ -495,264 +428,10 @@ var json = `{
                           "name" : "Emv2",
                           "clause" : {
                             "type" : "Emv2Clause",
-                            "libraries" : ["AFGErrorLibrary", "GPSErrorLibrary", "ErrorLibrary"],
+                            "libraries" : [],
                             "propagations" : [
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"],
-                                "errorTokens" : ["ServiceOmission", "LowPrecisionData", "IncorrectData"]
-                              },
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"],
-                                "errorTokens" : ["NoPilotInput", "ErraticPilotInput"]
-                              },
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"],
-                                "errorTokens" : ["NoService"]
-                              },
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                "errorTokens" : ["NoService", "ErraticValue"]
-                              }
                             ],
                             "flows" : [
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGsource1"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Source"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "None"
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                    "errorTokens" : ["ErraticValue"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGsource"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Source"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "None"
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "GPSPath1"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Sink"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"],
-                                    "errorTokens" : ["LowPrecisionData"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "None"
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "GPSPath"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "NoPilotPath"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"],
-                                    "errorTokens" : ["NoPilotInput"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "ErraticPilotPath"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"],
-                                    "errorTokens" : ["ErraticPilotInput"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                    "errorTokens" : ["ErraticValue"]
-                                  }
-                                }
-                              },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "epPower"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
-                              }
                             ]
                           }
                         }
@@ -762,49 +441,29 @@ var json = `{
                       "type" : "Component",
                       "identifier" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "eve"]
                       },
                       "category" : {
                         "type" : "ComponentCategory",
-                        "value" : "System"
+                        "value" : "Device"
                       },
                       "classifier" : {
                         "type" : "Some",
                         "value" : {
                           "type" : "Classifier",
-                          "name" : "FlightControl::FlightControl"
+                          "name" : "Simple_Flow_Demo::transmit.impl"
                         }
                       },
                       "features" : [
                         {
-                          "type" : "Feature",
+                          "type" : "FeatureEnd",
                           "identifier" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve", "send"]
                           },
                           "direction" : {
                             "type" : "Direction",
-                            "value" : "In"
-                          },
-                          "category" : {
-                            "type" : "FeatureCategory",
-                            "value" : "AbstractFeature"
-                          },
-                          "classifier" : {
-                            "type" : "None"
-                          },
-                          "properties" : [
-                          ]
-                        },
-                        {
-                          "type" : "Feature",
-                          "identifier" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                            "value" : "Out"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
@@ -817,14 +476,14 @@ var json = `{
                           ]
                         },
                         {
-                          "type" : "Feature",
+                          "type" : "FeatureEnd",
                           "identifier" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve", "receive"]
                           },
                           "direction" : {
                             "type" : "Direction",
-                            "value" : "Out"
+                            "value" : "In"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
@@ -846,6 +505,63 @@ var json = `{
                       "properties" : [
                       ],
                       "flows" : [
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve", "propagate"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "eve", "propagate", "receive"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "In"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "eve", "propagate", "send"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "Out"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        }
                       ],
                       "modes" : [
                       ],
@@ -855,168 +571,515 @@ var json = `{
                           "name" : "Emv2",
                           "clause" : {
                             "type" : "Emv2Clause",
-                            "libraries" : ["AFGErrorLibrary"],
+                            "libraries" : [],
                             "propagations" : [
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"],
-                                "errorTokens" : ["NoService", "ErraticValue"]
-                              },
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"],
-                                "errorTokens" : ["NoService"]
-                              },
-                              {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
-                                "errorTokens" : ["NoService", "ErraticBehavior"]
-                              }
                             ],
                             "flows" : [
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "fces"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Source"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "None"
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type" : "Component",
+                      "identifier" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                      },
+                      "category" : {
+                        "type" : "ComponentCategory",
+                        "value" : "Device"
+                      },
+                      "classifier" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Classifier",
+                          "name" : "Simple_Flow_Demo::router.routing_table"
+                        }
+                      },
+                      "features" : [
+                        {
+                          "type" : "FeatureEnd",
+                          "identifier" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket1"]
+                          },
+                          "direction" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          },
+                          "category" : {
+                            "type" : "FeatureCategory",
+                            "value" : "DataPort"
+                          },
+                          "classifier" : {
+                            "type" : "None"
+                          },
+                          "properties" : [
+                          ]
+                        },
+                        {
+                          "type" : "FeatureEnd",
+                          "identifier" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket2"]
+                          },
+                          "direction" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          },
+                          "category" : {
+                            "type" : "FeatureCategory",
+                            "value" : "DataPort"
+                          },
+                          "classifier" : {
+                            "type" : "None"
+                          },
+                          "properties" : [
+                          ]
+                        },
+                        {
+                          "type" : "FeatureEnd",
+                          "identifier" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket3"]
+                          },
+                          "direction" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          },
+                          "category" : {
+                            "type" : "FeatureCategory",
+                            "value" : "DataPort"
+                          },
+                          "classifier" : {
+                            "type" : "None"
+                          },
+                          "properties" : [
+                          ]
+                        },
+                        {
+                          "type" : "FeatureEnd",
+                          "identifier" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket4"]
+                          },
+                          "direction" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          },
+                          "category" : {
+                            "type" : "FeatureCategory",
+                            "value" : "DataPort"
+                          },
+                          "classifier" : {
+                            "type" : "None"
+                          },
+                          "properties" : [
+                          ]
+                        }
+                      ],
+                      "subComponents" : [
+                      ],
+                      "connections" : [
+                      ],
+                      "connectionInstances" : [
+                      ],
+                      "properties" : [
+                      ],
+                      "flows" : [
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "alice_bob_pub"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "alice_bob_pub", "socket1"]
                               },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "fgtofcNo"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
                               },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "fgtofcErratic"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"],
-                                    "errorTokens" : ["ErraticValue"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
-                                    "errorTokens" : ["ErraticBehavior"]
-                                  }
-                                }
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
                               },
-                              {
-                                "type" : "Emv2Flow",
-                                "identifier" : {
-                                  "type" : "Name",
-                                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "epPower"]
-                                },
-                                "kind" : {
-                                  "type" : "FlowKind",
-                                  "value" : "Path"
-                                },
-                                "sourcePropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "In"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                },
-                                "sinkPropagation" : {
-                                  "type" : "Some",
-                                  "value" : {
-                                    "type" : "Emv2Propagation",
-                                    "direction" : {
-                                      "type" : "PropagationDirection",
-                                      "value" : "Out"
-                                    },
-                                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
-                                    "errorTokens" : ["NoService"]
-                                  }
-                                }
-                              }
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "alice_bob_pub", "socket2"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "bob_alice_ack"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "bob_alice_ack", "socket2"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "bob_alice_ack", "socket1"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "alice_eve_pub"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "alice_eve_pub", "socket1"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "alice_eve_pub", "socket4"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "eve_alice_ack"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "eve_alice_ack", "socket4"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "eve_alice_ack", "socket2"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "bob_eve_pub"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "bob_eve_pub", "socket2"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "bob_eve_pub", "socket4"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "eve_bob_ack"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Path"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "eve_bob_ack", "socket4"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "eve_bob_ack", "socket2"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "type" : "Flow",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "mallory_blocked"]
+                          },
+                          "kind" : {
+                            "type" : "FlowKind",
+                            "value" : "Sink"
+                          },
+                          "source" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "FeatureEnd",
+                              "identifier" : {
+                                "type" : "Name",
+                                "name" : ["Simple_Comm_routing_table_Instance", "router", "mallory_blocked", "socket3"]
+                              },
+                              "direction" : {
+                                "type" : "Direction",
+                                "value" : "InOut"
+                              },
+                              "category" : {
+                                "type" : "FeatureCategory",
+                                "value" : "DataPort"
+                              },
+                              "classifier" : {
+                                "type" : "None"
+                              },
+                              "properties" : [
+                              ]
+                            }
+                          },
+                          "sink" : {
+                            "type" : "None"
+                          }
+                        }
+                      ],
+                      "modes" : [
+                      ],
+                      "annexes" : [
+                        {
+                          "type" : "Annex",
+                          "name" : "Emv2",
+                          "clause" : {
+                            "type" : "Emv2Clause",
+                            "libraries" : [],
+                            "propagations" : [
+                            ],
+                            "flows" : [
                             ]
                           }
                         }
@@ -1028,49 +1091,53 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "satellite"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "alice_send"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "satelliteSignal"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_port"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket1"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "satelliteSignal -> GPS", "satelliteSignal"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_port -> router", "socket1"]
                         }
                       ],
                       "properties" : [
@@ -1080,49 +1147,53 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "PilottoAfg"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "bob_send"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "pilotInput"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_Port"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket2"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "pilotInput -> AutoFlightGuidance", "operatorCommand"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_Port -> router", "socket2"]
                         }
                       ],
                       "properties" : [
@@ -1132,49 +1203,53 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "power1"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "mallory_send"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_Port"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket3"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power -> AutoFlightGuidance", "powersupply"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_Port -> router", "socket3"]
                         }
                       ],
                       "properties" : [
@@ -1184,49 +1259,53 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "power2"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "eve_send"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve", "send"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "Out"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket4"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power -> FlightControl", "powersupply"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "eve", "send -> router", "socket4"]
                         }
                       ],
                       "properties" : [
@@ -1236,49 +1315,53 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "gpstoafg"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "alice_receive"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS", "location"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket1"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_port"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS", "location -> AutoFlightGuidance", "position"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket1 -> alice", "send_port"]
                         }
                       ],
                       "properties" : [
@@ -1288,49 +1371,53 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "afgtofc"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "bob_receive"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket2"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_Port"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput -> FlightControl", "guidanceCommands"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket2 -> bob", "receive_Port"]
                         }
                       ],
                       "properties" : [
@@ -1340,49 +1427,109 @@ var json = `{
                       "type" : "Connection",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "FlightControlEffect"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "mallory_receive"]
                       },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket3"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "ObservableFailure"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_Port"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
                           }
                         }
-                      },
+                      ],
                       "isBiDirectional" : false,
                       "connectionInstances" : [
                         {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl -> ObservableFailure"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket3 -> mallory", "receive_Port"]
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "Connection",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "eve_receive"]
+                      },
+                      "src" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "router", "socket4"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "InOut"
+                            }
+                          }
+                        }
+                      ],
+                      "dst" : [
+                        {
+                          "type" : "EndPoint",
+                          "component" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve"]
+                          },
+                          "feature" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve", "receive"]
+                          },
+                          "direction" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Direction",
+                              "value" : "In"
+                            }
+                          }
+                        }
+                      ],
+                      "isBiDirectional" : false,
+                      "connectionInstances" : [
+                        {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket4 -> eve", "receive"]
                         }
                       ],
                       "properties" : [
@@ -1394,23 +1541,23 @@ var json = `{
                       "type" : "ConnectionInstance",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "satelliteSignal -> GPS.satelliteSignal"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "alice.send_port -> router.socket1"]
                       },
                       "src" : {
                         "type" : "EndPoint",
                         "component" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "alice"]
                         },
                         "feature" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "satelliteSignal"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_port"]
                         },
                         "direction" : {
                           "type" : "Some",
                           "value" : {
                             "type" : "Direction",
-                            "value" : "In"
+                            "value" : "InOut"
                           }
                         }
                       },
@@ -1418,34 +1565,34 @@ var json = `{
                         "type" : "EndPoint",
                         "component" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
                         },
                         "feature" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket1"]
                         },
                         "direction" : {
                           "type" : "Some",
                           "value" : {
                             "type" : "Direction",
-                            "value" : "In"
+                            "value" : "InOut"
                           }
                         }
                       },
                       "kind" : {
                         "type" : "ConnectionKind",
-                        "value" : "Feature"
+                        "value" : "Port"
                       },
                       "connectionRefs" : [
                         {
                           "type" : "ConnectionReference",
                           "name" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "satellite"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice_send"]
                           },
                           "context" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
+                            "name" : ["Simple_Comm_routing_table_Instance"]
                           },
                           "isParent" : true
                         }
@@ -1457,23 +1604,23 @@ var json = `{
                       "type" : "ConnectionInstance",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "pilotInput -> AutoFlightGuidance.operatorCommand"]
+                        "name" : ["Simple_Comm_routing_table_Instance", "bob.receive_Port -> router.socket2"]
                       },
                       "src" : {
                         "type" : "EndPoint",
                         "component" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "bob"]
                         },
                         "feature" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "pilotInput"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_Port"]
                         },
                         "direction" : {
                           "type" : "Some",
                           "value" : {
                             "type" : "Direction",
-                            "value" : "In"
+                            "value" : "InOut"
                           }
                         }
                       },
@@ -1481,11 +1628,389 @@ var json = `{
                         "type" : "EndPoint",
                         "component" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
                         },
                         "feature" : {
                           "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"]
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket2"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "kind" : {
+                        "type" : "ConnectionKind",
+                        "value" : "Port"
+                      },
+                      "connectionRefs" : [
+                        {
+                          "type" : "ConnectionReference",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob_send"]
+                          },
+                          "context" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance"]
+                          },
+                          "isParent" : true
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "ConnectionInstance",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "mallory.receive_Port -> router.socket3"]
+                      },
+                      "src" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "mallory"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_Port"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "dst" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket3"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "kind" : {
+                        "type" : "ConnectionKind",
+                        "value" : "Port"
+                      },
+                      "connectionRefs" : [
+                        {
+                          "type" : "ConnectionReference",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory_send"]
+                          },
+                          "context" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance"]
+                          },
+                          "isParent" : true
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "ConnectionInstance",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "eve.send -> router.socket4"]
+                      },
+                      "src" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "eve"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "eve", "send"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "Out"
+                          }
+                        }
+                      },
+                      "dst" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket4"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "kind" : {
+                        "type" : "ConnectionKind",
+                        "value" : "Port"
+                      },
+                      "connectionRefs" : [
+                        {
+                          "type" : "ConnectionReference",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve_send"]
+                          },
+                          "context" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance"]
+                          },
+                          "isParent" : true
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "ConnectionInstance",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "router.socket1 -> alice.send_port"]
+                      },
+                      "src" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket1"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "dst" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "alice"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "alice", "send_port"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "kind" : {
+                        "type" : "ConnectionKind",
+                        "value" : "Port"
+                      },
+                      "connectionRefs" : [
+                        {
+                          "type" : "ConnectionReference",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "alice_receive"]
+                          },
+                          "context" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance"]
+                          },
+                          "isParent" : true
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "ConnectionInstance",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "router.socket2 -> bob.receive_Port"]
+                      },
+                      "src" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket2"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "dst" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "bob"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "bob", "receive_Port"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "kind" : {
+                        "type" : "ConnectionKind",
+                        "value" : "Port"
+                      },
+                      "connectionRefs" : [
+                        {
+                          "type" : "ConnectionReference",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "bob_receive"]
+                          },
+                          "context" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance"]
+                          },
+                          "isParent" : true
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "ConnectionInstance",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "router.socket3 -> mallory.receive_Port"]
+                      },
+                      "src" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket3"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "dst" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "mallory"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "mallory", "receive_Port"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "kind" : {
+                        "type" : "ConnectionKind",
+                        "value" : "Port"
+                      },
+                      "connectionRefs" : [
+                        {
+                          "type" : "ConnectionReference",
+                          "name" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance", "mallory_receive"]
+                          },
+                          "context" : {
+                            "type" : "Name",
+                            "name" : ["Simple_Comm_routing_table_Instance"]
+                          },
+                          "isParent" : true
+                        }
+                      ],
+                      "properties" : [
+                      ]
+                    },
+                    {
+                      "type" : "ConnectionInstance",
+                      "name" : {
+                        "type" : "Name",
+                        "name" : ["Simple_Comm_routing_table_Instance", "router.socket4 -> eve.receive"]
+                      },
+                      "src" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "router", "socket4"]
+                        },
+                        "direction" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Direction",
+                            "value" : "InOut"
+                          }
+                        }
+                      },
+                      "dst" : {
+                        "type" : "EndPoint",
+                        "component" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "eve"]
+                        },
+                        "feature" : {
+                          "type" : "Name",
+                          "name" : ["Simple_Comm_routing_table_Instance", "eve", "receive"]
                         },
                         "direction" : {
                           "type" : "Some",
@@ -1504,326 +2029,11 @@ var json = `{
                           "type" : "ConnectionReference",
                           "name" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "PilottoAfg"]
+                            "name" : ["Simple_Comm_routing_table_Instance", "eve_receive"]
                           },
                           "context" : {
                             "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
-                          },
-                          "isParent" : true
-                        }
-                      ],
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "ConnectionInstance",
-                      "name" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "FSpowersupply.power -> AutoFlightGuidance.powersupply"]
-                      },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
-                          }
-                        }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
-                          }
-                        }
-                      },
-                      "kind" : {
-                        "type" : "ConnectionKind",
-                        "value" : "Feature"
-                      },
-                      "connectionRefs" : [
-                        {
-                          "type" : "ConnectionReference",
-                          "name" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "power1"]
-                          },
-                          "context" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
-                          },
-                          "isParent" : true
-                        }
-                      ],
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "ConnectionInstance",
-                      "name" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "FSpowersupply.power -> FlightControl.powersupply"]
-                      },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
-                          }
-                        }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
-                          }
-                        }
-                      },
-                      "kind" : {
-                        "type" : "ConnectionKind",
-                        "value" : "Feature"
-                      },
-                      "connectionRefs" : [
-                        {
-                          "type" : "ConnectionReference",
-                          "name" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "power2"]
-                          },
-                          "context" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
-                          },
-                          "isParent" : true
-                        }
-                      ],
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "ConnectionInstance",
-                      "name" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "GPS.location -> AutoFlightGuidance.position"]
-                      },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "GPS", "location"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
-                          }
-                        }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
-                          }
-                        }
-                      },
-                      "kind" : {
-                        "type" : "ConnectionKind",
-                        "value" : "Port"
-                      },
-                      "connectionRefs" : [
-                        {
-                          "type" : "ConnectionReference",
-                          "name" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "gpstoafg"]
-                          },
-                          "context" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
-                          },
-                          "isParent" : true
-                        }
-                      ],
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "ConnectionInstance",
-                      "name" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands"]
-                      },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
-                          }
-                        }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "In"
-                          }
-                        }
-                      },
-                      "kind" : {
-                        "type" : "ConnectionKind",
-                        "value" : "Port"
-                      },
-                      "connectionRefs" : [
-                        {
-                          "type" : "ConnectionReference",
-                          "name" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "afgtofc"]
-                          },
-                          "context" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
-                          },
-                          "isParent" : true
-                        }
-                      ],
-                      "properties" : [
-                      ]
-                    },
-                    {
-                      "type" : "ConnectionInstance",
-                      "name" : {
-                        "type" : "Name",
-                        "name" : ["FlightSystem_tier1_Instance", "FlightControl.flightSurfaceControl -> ObservableFailure"]
-                      },
-                      "src" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
-                          }
-                        }
-                      },
-                      "dst" : {
-                        "type" : "EndPoint",
-                        "component" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance"]
-                        },
-                        "feature" : {
-                          "type" : "Name",
-                          "name" : ["FlightSystem_tier1_Instance", "ObservableFailure"]
-                        },
-                        "direction" : {
-                          "type" : "Some",
-                          "value" : {
-                            "type" : "Direction",
-                            "value" : "Out"
-                          }
-                        }
-                      },
-                      "kind" : {
-                        "type" : "ConnectionKind",
-                        "value" : "Feature"
-                      },
-                      "connectionRefs" : [
-                        {
-                          "type" : "ConnectionReference",
-                          "name" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance", "FlightControlEffect"]
-                          },
-                          "context" : {
-                            "type" : "Name",
-                            "name" : ["FlightSystem_tier1_Instance"]
+                            "name" : ["Simple_Comm_routing_table_Instance"]
                           },
                           "isParent" : true
                         }
@@ -1844,194 +2054,10 @@ var json = `{
                       "name" : "Emv2",
                       "clause" : {
                         "type" : "Emv2Clause",
-                        "libraries" : ["ErrorLibrary", "GPSErrorLibrary", "AFGErrorLibrary"],
+                        "libraries" : [],
                         "propagations" : [
-                          {
-                            "type" : "Emv2Propagation",
-                            "direction" : {
-                              "type" : "PropagationDirection",
-                              "value" : "In"
-                            },
-                            "propagationPoint" : ["FlightSystem_tier1_Instance", "satelliteSignal"],
-                            "errorTokens" : ["NoSignal", "LowSignal"]
-                          },
-                          {
-                            "type" : "Emv2Propagation",
-                            "direction" : {
-                              "type" : "PropagationDirection",
-                              "value" : "In"
-                            },
-                            "propagationPoint" : ["FlightSystem_tier1_Instance", "pilotInput"],
-                            "errorTokens" : ["NoPilotInput", "ErraticPilotInput"]
-                          },
-                          {
-                            "type" : "Emv2Propagation",
-                            "direction" : {
-                              "type" : "PropagationDirection",
-                              "value" : "Out"
-                            },
-                            "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
-                            "errorTokens" : ["ServiceOmission", "ErraticBehavior"]
-                          }
                         ],
                         "flows" : [
-                          {
-                            "type" : "Emv2Flow",
-                            "identifier" : {
-                              "type" : "Name",
-                              "name" : ["FlightSystem_tier1_Instance", "NoFlightSystem"]
-                            },
-                            "kind" : {
-                              "type" : "FlowKind",
-                              "value" : "Source"
-                            },
-                            "sourcePropagation" : {
-                              "type" : "None"
-                            },
-                            "sinkPropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
-                                "errorTokens" : ["ServiceOmission"]
-                              }
-                            }
-                          },
-                          {
-                            "type" : "Emv2Flow",
-                            "identifier" : {
-                              "type" : "Name",
-                              "name" : ["FlightSystem_tier1_Instance", "ErraticFlightSystem"]
-                            },
-                            "kind" : {
-                              "type" : "FlowKind",
-                              "value" : "Source"
-                            },
-                            "sourcePropagation" : {
-                              "type" : "None"
-                            },
-                            "sinkPropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
-                                "errorTokens" : ["ErraticBehavior"]
-                              }
-                            }
-                          },
-                          {
-                            "type" : "Emv2Flow",
-                            "identifier" : {
-                              "type" : "Name",
-                              "name" : ["FlightSystem_tier1_Instance", "ErraticPilot"]
-                            },
-                            "kind" : {
-                              "type" : "FlowKind",
-                              "value" : "Path"
-                            },
-                            "sourcePropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "pilotInput"],
-                                "errorTokens" : ["ErraticPilotInput"]
-                              }
-                            },
-                            "sinkPropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
-                                "errorTokens" : ["ErraticBehavior"]
-                              }
-                            }
-                          },
-                          {
-                            "type" : "Emv2Flow",
-                            "identifier" : {
-                              "type" : "Name",
-                              "name" : ["FlightSystem_tier1_Instance", "NoPilot"]
-                            },
-                            "kind" : {
-                              "type" : "FlowKind",
-                              "value" : "Path"
-                            },
-                            "sourcePropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "pilotInput"],
-                                "errorTokens" : ["NoPilotInput"]
-                              }
-                            },
-                            "sinkPropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
-                                "errorTokens" : ["ServiceOmission"]
-                              }
-                            }
-                          },
-                          {
-                            "type" : "Emv2Flow",
-                            "identifier" : {
-                              "type" : "Name",
-                              "name" : ["FlightSystem_tier1_Instance", "SatelliteError"]
-                            },
-                            "kind" : {
-                              "type" : "FlowKind",
-                              "value" : "Path"
-                            },
-                            "sourcePropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "In"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "satelliteSignal"],
-                                "errorTokens" : ["NoSignal"]
-                              }
-                            },
-                            "sinkPropagation" : {
-                              "type" : "Some",
-                              "value" : {
-                                "type" : "Emv2Propagation",
-                                "direction" : {
-                                  "type" : "PropagationDirection",
-                                  "value" : "Out"
-                                },
-                                "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
-                                "errorTokens" : ["ServiceOmission"]
-                              }
-                            }
-                          }
                         ]
                       }
                     }
@@ -2039,47 +2065,5 @@ var json = `{
                 }
               ],
               "errorLib" : [
-                {
-                  "type" : "Emv2Library",
-                  "name" : {
-                    "type" : "Name",
-                    "name" : ["ErrorLibrary"]
-                  },
-                  "useTypes" : [],
-                  "tokens" : ["ServiceError", "ItemOmission", "ServiceOmission", "SequenceOmission", "TransientServiceOmission", "LateServiceStart", "EarlyServiceTermination", "BoundedOmissionInterval", "ItemCommission", "ServiceCommission", "SequenceCommission", "EarlyServiceStart", "LateServiceTermination", "ItemTimingError", "EarlyDelivery", "LateDelivery", "SequenceTimingError", "HighRate", "LowRate", "RateJitter", "ServiceTimingError", "DelayedService", "EarlyService", "TimingError", "RateError", "EarlyData", "LateData", "ServiceTimeShift", "ItemValueError", "UndetectableValueError", "DetectableValueError", "OutOfRange", "BelowRange", "AboveRange", "OutOfBounds", "SequenceValueError", "BoundedValueChange", "StuckValue", "OutOfOrder", "ServiceValueError", "OutOfCalibration", "ValueError", "IncorrectValue", "ValueCorruption", "BadValue", "SequenceError", "SubtleValueError", "BenignValueError", "SubtleValueCorruption", "ReplicationError", "AsymmetricReplicatesError", "AsymmetricValue", "AsymmetricApproximateValue", "AsymmetricExactValue", "AsymmetricTiming", "AsymmetricOmission", "AsymmetricItemOmission", "AsymmetricServiceOmission", "SymmetricReplicatesError", "SymmetricValue", "SymmetricApproximateValue", "SymmetricExactValue", "SymmetricTiming", "SymmetricOmission", "SymmetricItemOmission", "SymmetricServiceOmission", "InconsistentValue", "InconsistentTiming", "InconsistentOmission", "InconsistentItemOmission", "InconsistentServiceOmission", "AsymmetricTransmissive", "ConcurrencyError", "RaceCondition", "ReadWriteRace", "WriteWriteRace", "MutExError", "Deadlock", "Starvation"],
-                  "alias" : {
-                    "type" : "HashMap",
-                    "size" : 19,
-                    "entries" : [ [ "InconsistentValue", "AsymmetricValue" ],[ "SubtleValueCorruption", "DetectableValueError" ],[ "InconsistentItemOmission", "AsymmetricItemOmission" ],[ "IncorrectValue", "ItemValueError" ],[ "RateError", "SequenceTimingError" ],[ "InconsistentTiming", "AsymmetricTiming" ],[ "TimingError", "ItemTimingError" ],[ "EarlyData", "HighRate" ],[ "ValueError", "ItemValueError" ],[ "LateData", "LowRate" ],[ "BenignValueError", "DetectableValueError" ],[ "ValueCorruption", "ItemValueError" ],[ "SubtleValueError", "UndetectableValueError" ],[ "BadValue", "ItemValueError" ],[ "SequenceError", "SequenceValueError" ],[ "InconsistentOmission", "AsymmetricOmission" ],[ "InconsistentServiceOmission", "AsymmetricServiceOmission" ],[ "AsymmetricTransmissive", "AsymmetricValue" ],[ "ServiceTimeShift", "ServiceTimingError" ] ]
-                  }
-                },
-                {
-                  "type" : "Emv2Library",
-                  "name" : {
-                    "type" : "Name",
-                    "name" : ["GPSErrorLibrary"]
-                  },
-                  "useTypes" : ["ErrorLibrary"],
-                  "tokens" : ["SensorFailure", "CPUFailure", "PowerSupplyFailure", "NetworkFailure", "LowPrecisionData", "IncorrectData", "NoSignal", "LowSignal"],
-                  "alias" : {
-                    "type" : "HashMap",
-                    "size" : 0,
-                    "entries" : [  ]
-                  }
-                },
-                {
-                  "type" : "Emv2Library",
-                  "name" : {
-                    "type" : "Name",
-                    "name" : ["AFGErrorLibrary"]
-                  },
-                  "useTypes" : ["ErrorLibrary"],
-                  "tokens" : ["NoValue", "NoService", "ErraticBehavior", "NoPilotInput", "ErraticPilotInput", "ErraticValue", "FlightSystemfailure"],
-                  "alias" : {
-                    "type" : "HashMap",
-                    "size" : 2,
-                    "entries" : [ [ "NoValue", "ServiceOmission" ],[ "NoService", "ServiceOmission" ] ]
-                  }
-                }
               ]
             }`

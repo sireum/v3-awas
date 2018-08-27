@@ -33,7 +33,7 @@ import org.sireum.util.jvm.FileUtil._
 final class Antlr4AwasParserTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
 
-  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example"
+  val testcaseDir = "../../awas/jvm/src/test/resources/org/sireum/awas/test/example/awas-lang"
 
 // TODO: nested component
 
