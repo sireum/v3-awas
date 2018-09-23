@@ -1,7 +1,8 @@
 types
   enum Error {High, Low, Erratic, Halted, Early, Late}
 
-components
+system PCAModelEF
+sub-components {
   Patient
   with Error
     ports
@@ -58,7 +59,7 @@ components
     flows
       f9 : cmd{High, Early} -> drug{High}
       f10 : cmd{Low, Late, Halted} -> *
-
+}
 connections
   p1 : Patient.fingerclip -> PulseOx.refracted_light
 

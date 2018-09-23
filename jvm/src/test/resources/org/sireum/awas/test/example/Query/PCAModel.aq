@@ -4,13 +4,13 @@
 //component reachability
 //----------------------------------------------------------------------
 
-patient_reach = reach forward Patient
-app_backreach = reach backward  App
+patient_reach = reach forward PCAModel.Patient
+app_backreach = reach backward  PCAModel.App
 
-patient_backreach = reach backward Patient
-patient_reach_2 =  reach forward Patient
+patient_backreach = reach backward PCAModel.Patient
+patient_reach_2 =  reach forward PCAModel.Patient
 //due to the loop it provides everything
-patient_to_App = reach from Patient to App
+patient_to_App = reach from PCAModel.Patient to PCAModel.App
 
 //use the tick(') to use the result of another query
 patient_to_App2 = 'patient_reach intersect 'app_backreach
@@ -19,7 +19,7 @@ patient_to_App2 = 'patient_reach intersect 'app_backreach
 //flow reachability
 //----------------------------------------------------------------------
 
-spo2_reach = reach forward PulseOx.spo2
+spo2_reach = reach forward PCAModel.PulseOx.spo2
 
 
 

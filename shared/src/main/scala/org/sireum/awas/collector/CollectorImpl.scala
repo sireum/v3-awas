@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -53,6 +51,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
                          var resBehav: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          var resEvents: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          resPaths: ILinkedSet[Collector] = ilinkedSetEmpty[Collector],
+                         containsCycle : Boolean = false,
                          var error: ISet[Tag] = isetEmpty[Tag]
                         ) extends Collector with Serializable {
 
@@ -111,7 +110,8 @@ case class CollectorImpl(symbolTable: SymbolTable,
           resPortError = resPaths.foldLeft(imapEmpty[ResourceUri, ISet[ResourceUri]])((c, n) =>
             portErrorsUnion(c, n.getPortErrors))
         }
-        graphs.flatMap(g => resPortError.keySet.flatMap(p => g.getNode(p)))
+        val y = graphs.flatMap(g => resPortError.keySet.flatMap(p => g.getNode(p)))
+        y
 //      case Some(ResultType.Flow) =>
 //        if(hasPath && resFlows.isEmpty) {
 //          resFlows = resPaths.foldLeft(isetEmpty[ResourceUri])((c , n) =>
@@ -278,6 +278,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
         getBehavior union c.getBehavior,
         getEvents union c.getEvents,
         ilinkedSetEmpty ++ getPaths union c.getPaths,
+        c.hasCycles || hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
     } else {
       //future allow collector to collect across systems
@@ -311,6 +312,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
         getBehavior diff c.getBehavior,
         getEvents diff c.getEvents,
         getPaths diff c.getPaths,
+        hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
     } else {
       //future allow collector to collect across systems
@@ -344,6 +346,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
         getBehavior intersect c.getBehavior,
         getEvents intersect c.getEvents,
         getPaths intersect c.getPaths,
+        hasCycles && c.hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
 
     } else {
@@ -408,6 +411,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
     intersectErrors(ErrorReachability(symbolTable).getSuccessor(currentPort, currentError),
       getPortErrors)
   }
+  override def hasCycles: Boolean = containsCycle
 }
 
 case class FlowCollector(graph: ISet[FlowGraph[FlowNode, Edge]],

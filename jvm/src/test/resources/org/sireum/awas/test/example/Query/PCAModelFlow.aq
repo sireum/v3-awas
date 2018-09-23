@@ -1,11 +1,11 @@
 
-spo2_reach = reach forward PulseOx.spo2
+spo2_reach = reach forward PCAModelFlow.PulseOx.spo2
 
-spo2_reachback = reach backward PulseOx.spo2
+spo2_reachback = reach backward PCAModelFlow.PulseOx.spo2
 
-spo2_pump = reach from PulseOx.spo2 to Pump.drug
+spo2_pump = reach from PCAModelFlow.PulseOx.spo2 to PCAModelFlow.Pump.drug
 
 //this will result in empty because there is no intersection between node level and port level
 //TODO: Add converters between port-level and node-level uris
-spo2_pump2 = reach from PulseOx.spo2 to Pump
+spo2_pump2 = reach from PCAModelFlow.PulseOx.spo2 to PCAModelFlow.Pump
 

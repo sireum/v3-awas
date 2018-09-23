@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,7 +23,6 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package org.sireum.awas.test.parser
@@ -35,7 +33,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import org.sireum.test.{JUnitTestFramework, TestDef}
+import org.sireum.test.{ TestDef}
+import org.sireum.test.JUnitTestFramework
 
 @RunWith(value = classOf[Parameterized])
 final class Antlr4AwasParserTest(name: String, td: TestDef) {

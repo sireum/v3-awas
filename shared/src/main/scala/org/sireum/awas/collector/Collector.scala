@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -85,6 +83,8 @@ trait Collector {
   def getNextPortError(currentPort: ResourceUri,
                        currentError: ResourceUri):
   IMap[ResourceUri, ISet[ResourceUri]]
+
+  def hasCycles : Boolean
 }
 
 object ResultType extends Enumeration {
@@ -113,12 +113,13 @@ object Collector {
             edges: ISet[FlowEdge[FlowNode]],
             flows: ISet[ResourceUri],
             criteria: ISet[ResourceUri],
+            hasCycle : Boolean,
             error: ISet[Tag]
            ): Collector =
     if (resType == ResultType.Node) {
       buildNodePath(st, graphs, nodes, edges, criteria, error)
     } else {
-      buildPortPath(st, graphs, ports, edges, flows, criteria, error)
+      buildPortPath(st, graphs, ports, edges, flows, criteria, hasCycle, error)
     }
 
 
@@ -207,6 +208,7 @@ object Collector {
             resBehav: ISet[ResourceUri],
             resEvents: ISet[ResourceUri],
             paths: ILinkedSet[Collector],
+            hasCycles : Boolean,
             error: ISet[Tag]): Collector =
     buildAll(symbolTable,
       graph,
@@ -222,6 +224,7 @@ object Collector {
       resBehav,
       resEvents,
       paths,
+      hasCycles,
       error
     )
 
@@ -285,6 +288,7 @@ object Collector {
                     edges: ISet[Edge],
                     flows: ISet[ResourceUri],
                     criteria: ISet[ResourceUri],
+                    hasCycle : Boolean,
                     error: ISet[Tag]): Collector =
     new CollectorImpl(symbolTable = st,
       graphs = graph,
@@ -295,6 +299,7 @@ object Collector {
       criteria = criteria,
       resPorts = ports,
       resFlows = flows,
+      containsCycle = hasCycle,
       error = error)
 
   def buildPathWrapper(st: SymbolTable,
@@ -358,6 +363,7 @@ object Collector {
                resBehav: ISet[ResourceUri],
                resEvents: ISet[ResourceUri],
                paths: ILinkedSet[Collector],
+               hasCycles : Boolean,
                error: ISet[Tag]): Collector = {
     new CollectorImpl(symbolTable,
       graph,
@@ -373,6 +379,7 @@ object Collector {
       resBehav,
       resEvents,
       paths,
+      hasCycles,
       error)
   }
 

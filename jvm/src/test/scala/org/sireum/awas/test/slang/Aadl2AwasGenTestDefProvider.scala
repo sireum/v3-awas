@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,12 +23,12 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package org.sireum.awas.test.slang
 
-import org.sireum.awas.ast.PrettyPrinter
+import org.sireum.awas.analysis.FaultImpactAnalysis
+import org.sireum.awas.ast.{Builder, PrettyPrinter}
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -54,8 +53,8 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
 
     //equals test by excluding some
     val filesEqual = files.filter { p =>
-      true
-    //      p.toLowerCase.contains("routing")
+    //  true
+          p.toLowerCase.contains("no")
     }
 
     filesEqual.toVector.map { x =>
@@ -75,6 +74,12 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   }
 
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
+    Builder(None, model) match {
+      case None => ""
+      case Some(m) =>
+    }
+
+
     Aadl2Awas(model) match {
       case Some(x) => {
 //                        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
@@ -82,7 +87,9 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
 //                        val graph = FlowGraph(x, st)
 //                        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
 //                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
+//        AwasSerializer(x)
         PrettyPrinter(x)
+//        FaultImpactAnalysis.generateFIAQueries(x, false) + "\n \n" + FaultImpactAnalysis.generateFIAQueries(x, true)
       }
       case None => ""
     }

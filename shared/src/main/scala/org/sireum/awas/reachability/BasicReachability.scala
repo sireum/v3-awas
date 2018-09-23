@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -72,7 +70,11 @@ trait BasicReachability[Node] {
     */
   def reachPath(source: Node, target: Node): Collector
 
+  def reachSimplePath(source: Node, target: Node) : Collector
+
   def reachPath(source: Node, target: Node, constraint: ConstraintExpr): Collector
+
+  def reachSimplePath(source: Node, target: Node, constraint: ConstraintExpr): Collector
 
   def getSuccessor(current: Node): ISet[Node]
 

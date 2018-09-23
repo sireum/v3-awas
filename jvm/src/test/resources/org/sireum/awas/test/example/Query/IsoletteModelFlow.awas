@@ -1,4 +1,5 @@
-components
+system Isolette
+sub-components {
   Thermostat
     ports
       out heater_ctrl
@@ -59,7 +60,7 @@ components
       in monitor
     flows
       n1 : monitor -> set_params
-
+}
 connections
   t1 : Thermostat.heater_ctrl -> HeatSource.on_heater
 

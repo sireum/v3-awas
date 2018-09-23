@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -170,9 +168,9 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     * This methods adds the errors in the res as side effect
     * and the successful addition is informed by the return
     *
-    * @param res
-    * @param port
-    * @param error
+    * @param res reoult map
+    * @param port port to be added into res
+    * @param error error to be added into res
     * @return
     */
   def addErrors(res: MMap[ResourceUri, MSet[ResourceUri]],
@@ -412,5 +410,50 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
   : IMap[ResourceUri, ISet[ResourceUri]] = {
     nextError((currentPort, currentError)).flatMap(_.tuples)
       .groupBy(_._1).mapValues(_.map(_._2))
+  }
+  override def errorSimplePathReach(
+    sourcePort: ResourceUri,
+    sourceErrors: ISet[ResourceUri],
+    targetPort: ResourceUri,
+    targetErrors: ISet[ResourceUri]
+  ): Collector = {
+    val paths = reachSimplePath(sourcePort, targetPort).getPaths.flatMap(it => pathErrorRefine(it, sourcePort,
+      sourceErrors, targetPort, targetErrors, None)).toSet
+    Collector(st,
+      paths.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
+      ilinkedSetEmpty ++ paths.toVector, Some(ResultType.Error))
+  }
+  override def errorSimplePathReachMap(
+    source: IMap[ResourceUri, ISet[
+      ResourceUri
+    ]],
+    target: IMap[ResourceUri, ISet[
+      ResourceUri
+    ]]
+  ): Collector = {
+
+    source.toSet.foldLeft(Collector(st))((c, n) => c union
+      target.toSet.foldLeft(Collector(st))((c2, n2) => c2 union
+        errorSimplePathReach(n._1, n._2, n2._1, n2._2)))
+  }
+  override def errorSimplePathReachMapWith(
+    source: IMap[ResourceUri, ISet[
+      ResourceUri
+    ]],
+    target: IMap[ResourceUri, ISet[
+      ResourceUri
+    ]],
+    constraint: ConstraintExpr
+  ): Collector = {
+    var reformatedArgs = isetEmpty[(ResourceUri, ISet[ResourceUri], ResourceUri, ISet[ResourceUri], ConstraintExpr)]
+
+    source.foreach { s => target.foreach { t => reformatedArgs += ((s._1, s._2, t._1, t._2, constraint)) } }
+
+    val pathsConst = reformatedArgs.flatMap(e => reachSimplePath(e._1, e._3).getPaths.flatMap(it =>
+      pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5))
+    ))
+    Collector(st,
+      pathsConst.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
+      ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 }

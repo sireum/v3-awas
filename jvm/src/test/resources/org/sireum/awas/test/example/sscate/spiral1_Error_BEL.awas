@@ -3,7 +3,8 @@
 types
   enum PCA_Errors {InCorrectDrugAdministration, FailedToAdministerDrug, TicketOutOfSpec, TicketTooLong, TicketTooShort, NoTicket, EarlyTicket, LateTicket, SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2, ETCO2OutOfRange, ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2, InCorrectPulse, PulseValueHigh, PulseValueLow, PulseEarly, PulseLate, NoPulse, InCorrectRespirationRate, RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
 
-components
+system Spiral1
+sub-components {
   PCA_Pump
     with PCA_Errors
       ports
@@ -46,8 +47,6 @@ components
         SpO2High : SpO2{SpO2ValueHigh} -> Ticket{TicketTooLong}
         SpO2Low : SpO2{SpO2ValueLow} -> Ticket{TicketTooShort}
 
-  PCA_PulseOx_impl_Instance
-
   Patient
     with PCA_Errors
       ports
@@ -58,7 +57,7 @@ components
       flows
         Absorb : Vein -> *
         BloodSaturation : * -> BloodSat
-
+}
 connections
   Blood_Sat: Patient.BloodSat -> PulseOx.Saturation
   Report_SpO2: PulseOx.SpO2 -> App.SpO2

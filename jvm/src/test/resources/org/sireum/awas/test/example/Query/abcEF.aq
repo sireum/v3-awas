@@ -1,25 +1,25 @@
-q1 = reach forward A.aIn{Error.High}
-q2 = reach backward C.cOut{Error.High}
-q3 = reach backward A.aIn{Error.Low}
+q1 = reach forward abcEF.A.aIn{Error.High}
+q2 = reach backward abcEF.C.cOut{Error.High}
+q3 = reach backward abcEF.A.aIn{Error.Low}
 q4 = 'q1 intersect 'q3
-q5 = reach forward A.aIn
+q5 = reach forward abcEF.A.aIn
 q6 = 'q4 union 'q5
 //testing path queries
-q7 = reach paths from A to C
-q8 = reach paths from A.aIn to C.cOut
-q9 = reach paths from A.aIn{Error.High} to C.cOut{Error.High} //no path exists between the source and target: expected empty
-q10 = reach paths from A.aIn{Error.High} to B.bOut2{Error.Low}
+q7 = reach paths from abcEF.A to abcEF.C
+q8 = reach paths from abcEF.A.aIn to abcEF.C.cOut
+q9 = reach paths from abcEF.A.aIn{Error.High} to abcEF.C.cOut{Error.High} //no path exists between the source and target: expected empty
+q10 = reach paths from abcEF.A.aIn{Error.High} to abcEF.B.bOut2{Error.Low}
 //testing type coercion
 q11 = 'q5 intersect 'q10
 
 //TODO: the following query is not working as expected: fine grained type coercion required
-q12 = 'q7 union (reach paths from A.aIn{Error.High} to B.bOut2{Error.Low})
+q12 = 'q7 union (reach paths from abcEF.A.aIn{Error.High} to abcEF.B.bOut2{Error.Low})
 
-nq1 = A
-nq2 = A:in-port
-nq3 = B:out-port:port-error
+nq1 = abcEF.A
+nq2 = abcEF.A:in-port
+nq3 = abcEF.B:out-port:port-error
 
-q13 = B2C:in-port
+q13 = abcEF.B2C:in-port
 
 
 /*

@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,7 +23,6 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package org.sireum.awas.query
@@ -45,6 +43,10 @@ object QueryEval {
 
   def apply(m: Model, st: SymbolTable): Result = {
     new QueryEval(st).eval(m)
+  }
+
+  def apply(st : SymbolTable, qExpr : QueryExpr) : Collector = {
+    new QueryEval(st).eval(qExpr)
   }
 
   def apply(qs: QueryStmt, env: ILinkedMap[String, Collector],
@@ -108,31 +110,31 @@ final class QueryEval(st: SymbolTable) {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Node), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, lhs.getNodes.map(_.getUri), isetEmpty[ResourceUri],
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.PORT => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts,
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.IN => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts.filter(H.isInPort),
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.OUT => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts.filter(H.isOutPort),
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.PORTERROR => {
         collector.Collector(st, lhs.getGraphs, Some(ResultType.Error), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           lhs.getPortErrors, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.getErrors ++ lhs.getWarnings)
+          isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
 
       case FilterID.SOURCE => {
@@ -166,7 +168,7 @@ final class QueryEval(st: SymbolTable) {
     collector.Collector(st, c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
       c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
       isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-      ilinkedSetEmpty[Collector], c.getErrors ++ c.getWarnings)
+      ilinkedSetEmpty[Collector], false, c.getErrors ++ c.getWarnings)
   }
 
   def filterSink(c: Collector): Collector = {
@@ -190,7 +192,7 @@ final class QueryEval(st: SymbolTable) {
     collector.Collector(st, c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
       c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
       isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
-      ilinkedSetEmpty[Collector], c.getErrors ++ c.getWarnings)
+      ilinkedSetEmpty[Collector], false, c.getErrors ++ c.getWarnings)
   }
 
   def eval(rexp: ReachExpr): Collector = {
@@ -205,14 +207,26 @@ final class QueryEval(st: SymbolTable) {
         val source = eval(pexp.source)
         val target = eval(pexp.target)
         val constrain = pexp.withExpr
-        if(constrain.isDefined) {
+        if (constrain.isDefined) {
           val cExp = eval(constrain.get)
           pathReach(source, target, Some(cExp))
         } else {
           pathReach(source, target, None)
         }
       }
-    }
+        case spexp: SimplePathExpr => {
+          val source = eval(spexp.source)
+          val target = eval(spexp.target)
+          val constrain = spexp.withExpr
+          if(constrain.isDefined) {
+            val cExp = eval(constrain.get)
+            simplePathReach(source, target, Some(cExp))
+          } else {
+            pathReach(source, target, None)
+          }
+        }
+      }
+
   }
 
   def eval(wexp: WithExpr):ConstraintExpr = {
@@ -242,6 +256,49 @@ final class QueryEval(st: SymbolTable) {
 
   def backwardReach(criterion: Collector): Collector = {
     reach(criterion, isForward = false)
+  }
+
+  def simplePathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
+    if (source.hasErrors || target.hasErrors) {
+      source.union(target)
+    } else {
+      val er = ErrorReachability(st)
+      val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
+        if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
+      } else if (source.getResultType.isDefined) {
+        source.getResultType
+      } else {
+        target.getResultType
+      }
+
+      resType match {
+        case Some(ResultType.Node) => {
+          if (constraint.isDefined) {
+            er.reachSimplePathSet(source.getNodes.map(_.getUri),
+              target.getNodes.map(_.getUri), constraint.get)
+          } else {
+            er.reachSimplePathSet(source.getNodes.map(_.getUri),
+              target.getNodes.map(_.getUri))
+          }
+        }
+        case Some(ResultType.Port) => {
+          if (constraint.isDefined) {
+            er.reachSimplePathSet(source.getPorts, target.getPorts, constraint.get)
+          } else {
+            er.reachSimplePathSet(source.getPorts, target.getPorts)
+          }
+        }
+        case Some(ResultType.Error) => {
+          if (constraint.isDefined) {
+            er.errorSimplePathReachMapWith(source.getPortErrors, target.getPortErrors, constraint.get)
+          } else {
+            er.errorSimplePathReachMap(source.getPortErrors, target.getPortErrors)
+          }
+        }
+        case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
+          errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))
+      }
+    }
   }
 
   def pathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
@@ -442,7 +499,7 @@ final class QueryEval(st: SymbolTable) {
           ResultType.Node,
           FlowNode.getGraphs.flatMap(_.edges),
           isetEmpty[ResourceUri],
-          isetEmpty[ResourceUri] + uri.get,
+          isetEmpty[ResourceUri] + uri.get, false,
           isetEmpty[Tag])
       } else {
         Collector(st, isetEmpty,

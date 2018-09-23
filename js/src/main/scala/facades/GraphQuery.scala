@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,7 +23,6 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package facades
@@ -40,4 +38,8 @@ object GraphQuery extends js.Object {
   //  val queryRes: js.Dictionary[js.Array[String]] = js.native
   //  val queryCriteria: js.Dictionary[js.Array[String]] = js.native
   val json: String = js.native
+
+  val awas: String = js.native
+
+  val queries: Any = js.native
 }

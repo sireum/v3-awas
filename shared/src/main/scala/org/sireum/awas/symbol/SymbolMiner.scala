@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -551,8 +549,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         ntp.tables.portTable += outr.toUri
 
         //create virtual propagations
-        val fcompUri = if (connDecl.fromComp.isDefined &&
-          parentCT.componentUri.split(H.ID_SEPARATOR).last != connDecl.fromComp.get.value.last.value) {
+        val fcompUri = if (connDecl.fromComp.isDefined) {
           parentCT.getUriFromSymbol(connDecl.fromComp.get.value.last.value)
         } else {
           Some(parentRes.toUri)
@@ -818,8 +815,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
                     port: Id,
                     parentCST: ComponentTable)(
                      implicit reporter: AccumulatingTagReporter): Boolean = {
-    val fcompUri = if (comp.isDefined &&
-      parentCST.componentUri.split(H.ID_SEPARATOR).last != comp.get.value.last.value) {
+    val fcompUri = if (comp.isDefined) {
       parentCST.getUriFromSymbol(comp.get.value.last.value)
     } else {
       Some(parentCST.componentUri)
@@ -839,7 +835,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       } else {
         reporter.report(errorMessageGen(MISSING_PORT_DECL,
           port,
-          m, port.value, fcomp.componentUri))
+          m, fcomp.componentDecl.compName.value+"."+port.value))
         false
       }
     } else {

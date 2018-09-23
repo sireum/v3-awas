@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,7 +23,6 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package org.sireum.awas.reachability
@@ -48,6 +46,17 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
   def errorPathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
                      targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
   Collector
+
+  def errorSimplePathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
+                     targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
+  Collector
+
+  def errorSimplePathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
+                        target: IMap[ResourceUri, ISet[ResourceUri]]): Collector
+
+  def errorSimplePathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
+                            target: IMap[ResourceUri, ISet[ResourceUri]],
+                            constraint: ConstraintExpr): Collector
 
   def errorPathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
                         target: IMap[ResourceUri, ISet[ResourceUri]]): Collector

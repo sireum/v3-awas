@@ -1,212 +1,175 @@
 {
-  "type": "Aadl",
-  "components": [
+  "type" : "Aadl",
+  "components" : [
     {
-      "type": "Component",
-      "identifier": {
-        "type": "Name",
-        "name": [
-          "FlightSystem_tier1_Instance"
-        ]
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : ["FlightSystem_tier1_Instance"]
       },
-      "category": {
-        "type": "ComponentCategory",
-        "value": "System"
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "System"
       },
-      "classifier": {
-        "type": "None"
+      "classifier" : {
+        "type" : "None"
       },
-      "features": [
+      "features" : [
         {
-          "type": "Feature",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "satelliteSignal"
-            ]
+          "type" : "FeatureEnd",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "satelliteSignal"]
           },
-          "direction": {
-            "type": "Direction",
-            "value": "In"
+          "direction" : {
+            "type" : "Direction",
+            "value" : "In"
           },
-          "category": {
-            "type": "FeatureCategory",
-            "value": "AbstractFeature"
+          "category" : {
+            "type" : "FeatureCategory",
+            "value" : "AbstractFeature"
           },
-          "classifier": {
-            "type": "None"
+          "classifier" : {
+            "type" : "None"
           },
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Feature",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "ObservableFailure"
-            ]
+          "type" : "FeatureEnd",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "ObservableFailure"]
           },
-          "direction": {
-            "type": "Direction",
-            "value": "Out"
+          "direction" : {
+            "type" : "Direction",
+            "value" : "Out"
           },
-          "category": {
-            "type": "FeatureCategory",
-            "value": "AbstractFeature"
+          "category" : {
+            "type" : "FeatureCategory",
+            "value" : "AbstractFeature"
           },
-          "classifier": {
-            "type": "None"
+          "classifier" : {
+            "type" : "None"
           },
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Feature",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "pilotInput"
-            ]
+          "type" : "FeatureEnd",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "pilotInput"]
           },
-          "direction": {
-            "type": "Direction",
-            "value": "In"
+          "direction" : {
+            "type" : "Direction",
+            "value" : "In"
           },
-          "category": {
-            "type": "FeatureCategory",
-            "value": "DataPort"
+          "category" : {
+            "type" : "FeatureCategory",
+            "value" : "DataPort"
           },
-          "classifier": {
-            "type": "None"
+          "classifier" : {
+            "type" : "None"
           },
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "subComponents": [
+      "subComponents" : [
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "FSpowersupply"
-            ]
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
           },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "Device"
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "Device"
           },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "HardwareParts::PowerSupply"
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "HardwareParts::PowerSupply"
             }
           },
-          "features": [
+          "features" : [
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "FSpowersupply",
-                  "power"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "Out"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "Out"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "AbstractFeature"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "AbstractFeature"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [
-                  "ErrorLibrary",
-                  "GPSErrorLibrary"
-                ],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : ["ErrorLibrary", "GPSErrorLibrary"],
+                "propagations" : [
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "FSpowersupply",
-                      "power"
-                    ],
-                    "errorTokens": [
-                      "ServiceOmission"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"],
+                    "errorTokens" : ["ServiceOmission"]
                   }
                 ],
-                "flows": [
+                "flows" : [
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "FSpowersupply",
-                        "power_es"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power_es"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Source"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Source"
                     },
-                    "sourcePropagation": {
-                      "type": "None"
+                    "sourcePropagation" : {
+                      "type" : "None"
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FSpowersupply",
-                          "power"
-                        ],
-                        "errorTokens": [
-                          "ServiceOmission"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"],
+                        "errorTokens" : ["ServiceOmission"]
                       }
                     }
                   }
@@ -216,270 +179,197 @@
           ]
         },
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "GPS"
-            ]
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "GPS"]
           },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "System"
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "System"
           },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "GPSSystem::GPS"
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "GPSSystem::GPS"
             }
           },
-          "features": [
+          "features" : [
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "GPS",
-                  "satelliteSignal"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "AbstractFeature"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "AbstractFeature"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "GPS",
-                  "location"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "GPS", "location"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "Out"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "Out"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [
-                  "ErrorLibrary",
-                  "GPSErrorLibrary"
-                ],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : ["ErrorLibrary", "GPSErrorLibrary"],
+                "propagations" : [
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "GPS",
-                      "satelliteSignal"
-                    ],
-                    "errorTokens": [
-                      "NoSignal",
-                      "LowSignal"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"],
+                    "errorTokens" : ["NoSignal", "LowSignal"]
                   },
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "GPS",
-                      "location"
-                    ],
-                    "errorTokens": [
-                      "ServiceOmission",
-                      "LowPrecisionData",
-                      "IncorrectData"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
+                    "errorTokens" : ["ServiceOmission", "LowPrecisionData", "IncorrectData"]
                   }
                 ],
-                "flows": [
+                "flows" : [
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "GPS",
-                        "GPSAsErrorSource"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "GPS", "GPSAsErrorSource"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Source"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Source"
                     },
-                    "sourcePropagation": {
-                      "type": "None"
+                    "sourcePropagation" : {
+                      "type" : "None"
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "GPS",
-                          "location"
-                        ],
-                        "errorTokens": [
-                          "ServiceOmission",
-                          "LowPrecisionData",
-                          "IncorrectData"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
+                        "errorTokens" : ["ServiceOmission", "LowPrecisionData", "IncorrectData"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "GPS",
-                        "SatelliteError"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "GPS", "SatelliteError"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "GPS",
-                          "satelliteSignal"
-                        ],
-                        "errorTokens": [
-                          "NoSignal"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"],
+                        "errorTokens" : ["NoSignal"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "GPS",
-                          "location"
-                        ],
-                        "errorTokens": [
-                          "ServiceOmission"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
+                        "errorTokens" : ["ServiceOmission"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "GPS",
-                        "SatelliteError1"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "GPS", "SatelliteError1"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "GPS",
-                          "satelliteSignal"
-                        ],
-                        "errorTokens": [
-                          "LowSignal"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"],
+                        "errorTokens" : ["LowSignal"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "GPS",
-                          "location"
-                        ],
-                        "errorTokens": [
-                          "LowPrecisionData"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "GPS", "location"],
+                        "errorTokens" : ["LowPrecisionData"]
                       }
                     }
                   }
@@ -489,522 +379,377 @@
           ]
         },
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "AutoFlightGuidance"
-            ]
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
           },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "System"
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "System"
           },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "AutomatedFlightGuidance::AutomatedFlightGuidance"
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "AutomatedFlightGuidance::AutomatedFlightGuidance"
             }
           },
-          "features": [
+          "features" : [
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "AutoFlightGuidance",
-                  "powersupply"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "AbstractFeature"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "AbstractFeature"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "AutoFlightGuidance",
-                  "position"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "AutoFlightGuidance",
-                  "operatorCommand"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "AutoFlightGuidance",
-                  "AFGOutput"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "Out"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "Out"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [
-                  "AFGErrorLibrary",
-                  "GPSErrorLibrary",
-                  "ErrorLibrary"
-                ],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : ["AFGErrorLibrary", "GPSErrorLibrary", "ErrorLibrary"],
+                "propagations" : [
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "AutoFlightGuidance",
-                      "position"
-                    ],
-                    "errorTokens": [
-                      "ServiceOmission",
-                      "LowPrecisionData",
-                      "IncorrectData"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"],
+                    "errorTokens" : ["ServiceOmission", "LowPrecisionData", "IncorrectData"]
                   },
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "AutoFlightGuidance",
-                      "operatorCommand"
-                    ],
-                    "errorTokens": [
-                      "NoPilotInput",
-                      "ErraticPilotInput"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"],
+                    "errorTokens" : ["NoPilotInput", "ErraticPilotInput"]
                   },
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "AutoFlightGuidance",
-                      "powersupply"
-                    ],
-                    "errorTokens": [
-                      "NoService"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"],
+                    "errorTokens" : ["NoService"]
                   },
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "AutoFlightGuidance",
-                      "AFGOutput"
-                    ],
-                    "errorTokens": [
-                      "NoService",
-                      "ErraticValue"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                    "errorTokens" : ["NoService", "ErraticValue"]
                   }
                 ],
-                "flows": [
+                "flows" : [
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "AFGsource1"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGsource1"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Source"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Source"
                     },
-                    "sourcePropagation": {
-                      "type": "None"
+                    "sourcePropagation" : {
+                      "type" : "None"
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "AFGOutput"
-                        ],
-                        "errorTokens": [
-                          "ErraticValue"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                        "errorTokens" : ["ErraticValue"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "AFGsource"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGsource"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Source"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Source"
                     },
-                    "sourcePropagation": {
-                      "type": "None"
+                    "sourcePropagation" : {
+                      "type" : "None"
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "AFGOutput"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "GPSPath1"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "GPSPath1"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Sink"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Sink"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "position"
-                        ],
-                        "errorTokens": [
-                          "LowPrecisionData"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"],
+                        "errorTokens" : ["LowPrecisionData"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "None"
+                    "sinkPropagation" : {
+                      "type" : "None"
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "GPSPath"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "GPSPath"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "position"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"],
+                        "errorTokens" : ["NoService"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "AFGOutput"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "NoPilotPath"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "NoPilotPath"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "operatorCommand"
-                        ],
-                        "errorTokens": [
-                          "NoPilotInput"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"],
+                        "errorTokens" : ["NoPilotInput"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "AFGOutput"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "ErraticPilotPath"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "ErraticPilotPath"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "operatorCommand"
-                        ],
-                        "errorTokens": [
-                          "ErraticPilotInput"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"],
+                        "errorTokens" : ["ErraticPilotInput"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "AFGOutput"
-                        ],
-                        "errorTokens": [
-                          "ErraticValue"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                        "errorTokens" : ["ErraticValue"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "AutoFlightGuidance",
-                        "epPower"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "epPower"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "powersupply"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"],
+                        "errorTokens" : ["NoService"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "AutoFlightGuidance",
-                          "AFGOutput"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   }
@@ -1014,356 +759,261 @@
           ]
         },
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "FlightControl"
-            ]
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
           },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "System"
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "System"
           },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "FlightControl::FlightControl"
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "FlightControl::FlightControl"
             }
           },
-          "features": [
+          "features" : [
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "FlightControl",
-                  "powersupply"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "AbstractFeature"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "AbstractFeature"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "FlightControl",
-                  "guidanceCommands"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "Feature",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "FlightControl",
-                  "flightSurfaceControl"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "Out"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "Out"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [
-                  "AFGErrorLibrary"
-                ],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : ["AFGErrorLibrary"],
+                "propagations" : [
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "FlightControl",
-                      "guidanceCommands"
-                    ],
-                    "errorTokens": [
-                      "NoService",
-                      "ErraticValue"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"],
+                    "errorTokens" : ["NoService", "ErraticValue"]
                   },
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "FlightControl",
-                      "powersupply"
-                    ],
-                    "errorTokens": [
-                      "NoService"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"],
+                    "errorTokens" : ["NoService"]
                   },
                   {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "FlightControl",
-                      "flightSurfaceControl"
-                    ],
-                    "errorTokens": [
-                      "NoService",
-                      "ErraticBehavior"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
+                    "errorTokens" : ["NoService", "ErraticBehavior"]
                   }
                 ],
-                "flows": [
+                "flows" : [
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "FlightControl",
-                        "fces"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "FlightControl", "fces"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Source"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Source"
                     },
-                    "sourcePropagation": {
-                      "type": "None"
+                    "sourcePropagation" : {
+                      "type" : "None"
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "flightSurfaceControl"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "FlightControl",
-                        "fgtofcNo"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "FlightControl", "fgtofcNo"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "guidanceCommands"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"],
+                        "errorTokens" : ["NoService"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "flightSurfaceControl"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "FlightControl",
-                        "fgtofcErratic"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "FlightControl", "fgtofcErratic"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "guidanceCommands"
-                        ],
-                        "errorTokens": [
-                          "ErraticValue"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"],
+                        "errorTokens" : ["ErraticValue"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "flightSurfaceControl"
-                        ],
-                        "errorTokens": [
-                          "ErraticBehavior"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
+                        "errorTokens" : ["ErraticBehavior"]
                       }
                     }
                   },
                   {
-                    "type": "Emv2Flow",
-                    "identifier": {
-                      "type": "Name",
-                      "name": [
-                        "FlightSystem_tier1_Instance",
-                        "FlightControl",
-                        "epPower"
-                      ]
+                    "type" : "Emv2Flow",
+                    "identifier" : {
+                      "type" : "Name",
+                      "name" : ["FlightSystem_tier1_Instance", "FlightControl", "epPower"]
                     },
-                    "kind": {
-                      "type": "FlowKind",
-                      "value": "Path"
+                    "kind" : {
+                      "type" : "FlowKind",
+                      "value" : "Path"
                     },
-                    "sourcePropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "In"
+                    "sourcePropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "In"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "powersupply"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"],
+                        "errorTokens" : ["NoService"]
                       }
                     },
-                    "sinkPropagation": {
-                      "type": "Some",
-                      "value": {
-                        "type": "Emv2Propagation",
-                        "direction": {
-                          "type": "PropagationDirection",
-                          "value": "Out"
+                    "sinkPropagation" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2Propagation",
+                        "direction" : {
+                          "type" : "PropagationDirection",
+                          "value" : "Out"
                         },
-                        "propagationPoint": [
-                          "FlightSystem_tier1_Instance",
-                          "FlightControl",
-                          "flightSurfaceControl"
-                        ],
-                        "errorTokens": [
-                          "NoService"
-                        ]
+                        "propagationPoint" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"],
+                        "errorTokens" : ["NoService"]
                       }
                     }
                   }
@@ -1373,1382 +1023,1152 @@
           ]
         }
       ],
-      "connections": [
+      "connections" : [
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "satellite"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "satellite"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "satelliteSignal"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS",
-                "satelliteSignal"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "satelliteSignal -> GPS",
-                "satelliteSignal"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "satelliteSignal"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "GPS"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "satelliteSignal -> GPS", "satelliteSignal"]
+            }
+          ],
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "PilottoAfg"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "PilottoAfg"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "pilotInput"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "operatorCommand"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "pilotInput -> AutoFlightGuidance",
-                "operatorCommand"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "pilotInput"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "pilotInput -> AutoFlightGuidance", "operatorCommand"]
+            }
+          ],
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "power1"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "power1"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply",
-                "power"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "powersupply"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply",
-                "power -> AutoFlightGuidance",
-                "powersupply"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power -> AutoFlightGuidance", "powersupply"]
+            }
+          ],
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "power2"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "power2"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply",
-                "power"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "powersupply"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply",
-                "power -> FlightControl",
-                "powersupply"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power -> FlightControl", "powersupply"]
+            }
+          ],
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "gpstoafg"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "gpstoafg"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS",
-                "location"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "position"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS",
-                "location -> AutoFlightGuidance",
-                "position"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "GPS"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "GPS", "location"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "GPS", "location -> AutoFlightGuidance", "position"]
+            }
+          ],
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "afgtofc"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "afgtofc"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "AFGOutput"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "guidanceCommands"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "AFGOutput -> FlightControl",
-                "guidanceCommands"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput -> FlightControl", "guidanceCommands"]
+            }
+          ],
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "FlightControlEffect"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "FlightControlEffect"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "flightSurfaceControl"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
-              }
-            }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "ObservableFailure"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
-              }
-            }
-          },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "src" : [
             {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "flightSurfaceControl -> ObservableFailure"
-              ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
+                }
+              }
             }
           ],
-          "properties": [
+          "dst" : [
+            {
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
+              },
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "ObservableFailure"]
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
+                }
+              }
+            }
+          ],
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
+          },
+          "isBiDirectional" : false,
+          "connectionInstances" : [
+            {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl -> ObservableFailure"]
+            }
+          ],
+          "properties" : [
           ]
         }
       ],
-      "connectionInstances": [
+      "connectionInstances" : [
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "satelliteSignal -> GPS.satelliteSignal"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "satelliteSignal -> GPS.satelliteSignal"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "satelliteSignal"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "satelliteSignal"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "GPS"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS",
-                "satelliteSignal"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "GPS", "satelliteSignal"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "satellite"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "satellite"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "pilotInput -> AutoFlightGuidance.operatorCommand"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "pilotInput -> AutoFlightGuidance.operatorCommand"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "pilotInput"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "pilotInput"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "operatorCommand"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "operatorCommand"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "PilottoAfg"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "PilottoAfg"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "FSpowersupply.power -> AutoFlightGuidance.powersupply"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "FSpowersupply.power -> AutoFlightGuidance.powersupply"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply",
-                "power"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "powersupply"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "powersupply"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "power1"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "power1"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "FSpowersupply.power -> FlightControl.powersupply"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "FSpowersupply.power -> FlightControl.powersupply"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FSpowersupply"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FSpowersupply",
-                "power"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FSpowersupply", "power"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "powersupply"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl", "powersupply"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "power2"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "power2"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "GPS.location -> AutoFlightGuidance.position"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "GPS.location -> AutoFlightGuidance.position"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "GPS"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "GPS",
-                "location"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "GPS", "location"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "position"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "position"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "gpstoafg"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "gpstoafg"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "AutoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "AutoFlightGuidance",
-                "AFGOutput"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "AutoFlightGuidance", "AFGOutput"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "guidanceCommands"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl", "guidanceCommands"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "afgtofc"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "afgtofc"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "FlightSystem_tier1_Instance",
-              "FlightControl.flightSurfaceControl -> ObservableFailure"
-            ]
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["FlightSystem_tier1_Instance", "FlightControl.flightSurfaceControl -> ObservableFailure"]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl"
-              ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance", "FlightControl"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "FlightControl",
-                "flightSurfaceControl"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControl", "flightSurfaceControl"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance"
-              ]
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["FlightSystem_tier1_Instance"]
             },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_tier1_Instance",
-                "ObservableFailure"
-              ]
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "ObservableFailure"]
+              }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
           },
-          "connectionRefs": [
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance",
-                  "FlightControlEffect"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance", "FlightControlEffect"]
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "FlightSystem_tier1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["FlightSystem_tier1_Instance"]
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "properties": [
+      "properties" : [
       ],
-      "flows": [
+      "flows" : [
       ],
-      "modes": [
+      "modes" : [
       ],
-      "annexes": [
+      "annexes" : [
         {
-          "type": "Annex",
-          "name": "Emv2",
-          "clause": {
-            "type": "Emv2Clause",
-            "libraries": [
-              "ErrorLibrary",
-              "GPSErrorLibrary",
-              "AFGErrorLibrary"
-            ],
-            "propagations": [
+          "type" : "Annex",
+          "name" : "Emv2",
+          "clause" : {
+            "type" : "Emv2Clause",
+            "libraries" : ["ErrorLibrary", "GPSErrorLibrary", "AFGErrorLibrary"],
+            "propagations" : [
               {
-                "type": "Emv2Propagation",
-                "direction": {
-                  "type": "PropagationDirection",
-                  "value": "In"
+                "type" : "Emv2Propagation",
+                "direction" : {
+                  "type" : "PropagationDirection",
+                  "value" : "In"
                 },
-                "propagationPoint": [
-                  "FlightSystem_tier1_Instance",
-                  "satelliteSignal"
-                ],
-                "errorTokens": [
-                  "NoSignal",
-                  "LowSignal"
-                ]
+                "propagationPoint" : ["FlightSystem_tier1_Instance", "satelliteSignal"],
+                "errorTokens" : ["NoSignal", "LowSignal"]
               },
               {
-                "type": "Emv2Propagation",
-                "direction": {
-                  "type": "PropagationDirection",
-                  "value": "In"
+                "type" : "Emv2Propagation",
+                "direction" : {
+                  "type" : "PropagationDirection",
+                  "value" : "In"
                 },
-                "propagationPoint": [
-                  "FlightSystem_tier1_Instance",
-                  "pilotInput"
-                ],
-                "errorTokens": [
-                  "NoPilotInput",
-                  "ErraticPilotInput"
-                ]
+                "propagationPoint" : ["FlightSystem_tier1_Instance", "pilotInput"],
+                "errorTokens" : ["NoPilotInput", "ErraticPilotInput"]
               },
               {
-                "type": "Emv2Propagation",
-                "direction": {
-                  "type": "PropagationDirection",
-                  "value": "Out"
+                "type" : "Emv2Propagation",
+                "direction" : {
+                  "type" : "PropagationDirection",
+                  "value" : "Out"
                 },
-                "propagationPoint": [
-                  "FlightSystem_tier1_Instance",
-                  "ObservableFailure"
-                ],
-                "errorTokens": [
-                  "ServiceOmission",
-                  "ErraticBehavior"
-                ]
+                "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
+                "errorTokens" : ["ServiceOmission", "ErraticBehavior"]
               }
             ],
-            "flows": [
+            "flows" : [
               {
-                "type": "Emv2Flow",
-                "identifier": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_tier1_Instance",
-                    "NoFlightSystem"
-                  ]
+                "type" : "Emv2Flow",
+                "identifier" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "NoFlightSystem"]
                 },
-                "kind": {
-                  "type": "FlowKind",
-                  "value": "Source"
+                "kind" : {
+                  "type" : "FlowKind",
+                  "value" : "Source"
                 },
-                "sourcePropagation": {
-                  "type": "None"
+                "sourcePropagation" : {
+                  "type" : "None"
                 },
-                "sinkPropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                "sinkPropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "ObservableFailure"
-                    ],
-                    "errorTokens": [
-                      "ServiceOmission"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
+                    "errorTokens" : ["ServiceOmission"]
                   }
                 }
               },
               {
-                "type": "Emv2Flow",
-                "identifier": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_tier1_Instance",
-                    "ErraticFlightSystem"
-                  ]
+                "type" : "Emv2Flow",
+                "identifier" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "ErraticFlightSystem"]
                 },
-                "kind": {
-                  "type": "FlowKind",
-                  "value": "Source"
+                "kind" : {
+                  "type" : "FlowKind",
+                  "value" : "Source"
                 },
-                "sourcePropagation": {
-                  "type": "None"
+                "sourcePropagation" : {
+                  "type" : "None"
                 },
-                "sinkPropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                "sinkPropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "ObservableFailure"
-                    ],
-                    "errorTokens": [
-                      "ErraticBehavior"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
+                    "errorTokens" : ["ErraticBehavior"]
                   }
                 }
               },
               {
-                "type": "Emv2Flow",
-                "identifier": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_tier1_Instance",
-                    "ErraticPilot"
-                  ]
+                "type" : "Emv2Flow",
+                "identifier" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "ErraticPilot"]
                 },
-                "kind": {
-                  "type": "FlowKind",
-                  "value": "Path"
+                "kind" : {
+                  "type" : "FlowKind",
+                  "value" : "Path"
                 },
-                "sourcePropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                "sourcePropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "pilotInput"
-                    ],
-                    "errorTokens": [
-                      "ErraticPilotInput"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "pilotInput"],
+                    "errorTokens" : ["ErraticPilotInput"]
                   }
                 },
-                "sinkPropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                "sinkPropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "ObservableFailure"
-                    ],
-                    "errorTokens": [
-                      "ErraticBehavior"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
+                    "errorTokens" : ["ErraticBehavior"]
                   }
                 }
               },
               {
-                "type": "Emv2Flow",
-                "identifier": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_tier1_Instance",
-                    "NoPilot"
-                  ]
+                "type" : "Emv2Flow",
+                "identifier" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "NoPilot"]
                 },
-                "kind": {
-                  "type": "FlowKind",
-                  "value": "Path"
+                "kind" : {
+                  "type" : "FlowKind",
+                  "value" : "Path"
                 },
-                "sourcePropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                "sourcePropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "pilotInput"
-                    ],
-                    "errorTokens": [
-                      "NoPilotInput"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "pilotInput"],
+                    "errorTokens" : ["NoPilotInput"]
                   }
                 },
-                "sinkPropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                "sinkPropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "ObservableFailure"
-                    ],
-                    "errorTokens": [
-                      "ServiceOmission"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
+                    "errorTokens" : ["ServiceOmission"]
                   }
                 }
               },
               {
-                "type": "Emv2Flow",
-                "identifier": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_tier1_Instance",
-                    "SatelliteError"
-                  ]
+                "type" : "Emv2Flow",
+                "identifier" : {
+                  "type" : "Name",
+                  "name" : ["FlightSystem_tier1_Instance", "SatelliteError"]
                 },
-                "kind": {
-                  "type": "FlowKind",
-                  "value": "Path"
+                "kind" : {
+                  "type" : "FlowKind",
+                  "value" : "Path"
                 },
-                "sourcePropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "In"
+                "sourcePropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "In"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "satelliteSignal"
-                    ],
-                    "errorTokens": [
-                      "NoSignal"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "satelliteSignal"],
+                    "errorTokens" : ["NoSignal"]
                   }
                 },
-                "sinkPropagation": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Emv2Propagation",
-                    "direction": {
-                      "type": "PropagationDirection",
-                      "value": "Out"
+                "sinkPropagation" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2Propagation",
+                    "direction" : {
+                      "type" : "PropagationDirection",
+                      "value" : "Out"
                     },
-                    "propagationPoint": [
-                      "FlightSystem_tier1_Instance",
-                      "ObservableFailure"
-                    ],
-                    "errorTokens": [
-                      "ServiceOmission"
-                    ]
+                    "propagationPoint" : ["FlightSystem_tier1_Instance", "ObservableFailure"],
+                    "errorTokens" : ["ServiceOmission"]
                   }
                 }
               }
@@ -2758,240 +2178,47 @@
       ]
     }
   ],
-  "errorLib": [
+  "errorLib" : [
     {
-      "type": "Emv2Library",
-      "name": {
-        "type": "Name",
-        "name": [
-          "ErrorLibrary"
-        ]
+      "type" : "Emv2Library",
+      "name" : {
+        "type" : "Name",
+        "name" : ["ErrorLibrary"]
       },
-      "useTypes": [],
-      "tokens": [
-        "ServiceError",
-        "ItemOmission",
-        "ServiceOmission",
-        "SequenceOmission",
-        "TransientServiceOmission",
-        "LateServiceStart",
-        "EarlyServiceTermination",
-        "BoundedOmissionInterval",
-        "ItemCommission",
-        "ServiceCommission",
-        "SequenceCommission",
-        "EarlyServiceStart",
-        "LateServiceTermination",
-        "ItemTimingError",
-        "EarlyDelivery",
-        "LateDelivery",
-        "SequenceTimingError",
-        "HighRate",
-        "LowRate",
-        "RateJitter",
-        "ServiceTimingError",
-        "DelayedService",
-        "EarlyService",
-        "TimingError",
-        "RateError",
-        "EarlyData",
-        "LateData",
-        "ServiceTimeShift",
-        "ItemValueError",
-        "UndetectableValueError",
-        "DetectableValueError",
-        "OutOfRange",
-        "BelowRange",
-        "AboveRange",
-        "OutOfBounds",
-        "SequenceValueError",
-        "BoundedValueChange",
-        "StuckValue",
-        "OutOfOrder",
-        "ServiceValueError",
-        "OutOfCalibration",
-        "ValueError",
-        "IncorrectValue",
-        "ValueCorruption",
-        "BadValue",
-        "SequenceError",
-        "SubtleValueError",
-        "BenignValueError",
-        "SubtleValueCorruption",
-        "ReplicationError",
-        "AsymmetricReplicatesError",
-        "AsymmetricValue",
-        "AsymmetricApproximateValue",
-        "AsymmetricExactValue",
-        "AsymmetricTiming",
-        "AsymmetricOmission",
-        "AsymmetricItemOmission",
-        "AsymmetricServiceOmission",
-        "SymmetricReplicatesError",
-        "SymmetricValue",
-        "SymmetricApproximateValue",
-        "SymmetricExactValue",
-        "SymmetricTiming",
-        "SymmetricOmission",
-        "SymmetricItemOmission",
-        "SymmetricServiceOmission",
-        "InconsistentValue",
-        "InconsistentTiming",
-        "InconsistentOmission",
-        "InconsistentItemOmission",
-        "InconsistentServiceOmission",
-        "AsymmetricTransmissive",
-        "ConcurrencyError",
-        "RaceCondition",
-        "ReadWriteRace",
-        "WriteWriteRace",
-        "MutExError",
-        "Deadlock",
-        "Starvation"
-      ],
-      "alias": {
-        "type": "HashMap",
-        "size": 19,
-        "entries": [
-          [
-            "InconsistentValue",
-            "AsymmetricValue"
-          ],
-          [
-            "SubtleValueCorruption",
-            "DetectableValueError"
-          ],
-          [
-            "InconsistentItemOmission",
-            "AsymmetricItemOmission"
-          ],
-          [
-            "IncorrectValue",
-            "ItemValueError"
-          ],
-          [
-            "RateError",
-            "SequenceTimingError"
-          ],
-          [
-            "InconsistentTiming",
-            "AsymmetricTiming"
-          ],
-          [
-            "TimingError",
-            "ItemTimingError"
-          ],
-          [
-            "EarlyData",
-            "HighRate"
-          ],
-          [
-            "ValueError",
-            "ItemValueError"
-          ],
-          [
-            "LateData",
-            "LowRate"
-          ],
-          [
-            "BenignValueError",
-            "DetectableValueError"
-          ],
-          [
-            "ValueCorruption",
-            "ItemValueError"
-          ],
-          [
-            "SubtleValueError",
-            "UndetectableValueError"
-          ],
-          [
-            "BadValue",
-            "ItemValueError"
-          ],
-          [
-            "SequenceError",
-            "SequenceValueError"
-          ],
-          [
-            "InconsistentOmission",
-            "AsymmetricOmission"
-          ],
-          [
-            "InconsistentServiceOmission",
-            "AsymmetricServiceOmission"
-          ],
-          [
-            "AsymmetricTransmissive",
-            "AsymmetricValue"
-          ],
-          [
-            "ServiceTimeShift",
-            "ServiceTimingError"
-          ]
-        ]
+      "useTypes" : [],
+      "tokens" : ["ServiceError", "ItemOmission", "ServiceOmission", "SequenceOmission", "TransientServiceOmission", "LateServiceStart", "EarlyServiceTermination", "BoundedOmissionInterval", "ItemCommission", "ServiceCommission", "SequenceCommission", "EarlyServiceStart", "LateServiceTermination", "ItemTimingError", "EarlyDelivery", "LateDelivery", "SequenceTimingError", "HighRate", "LowRate", "RateJitter", "ServiceTimingError", "DelayedService", "EarlyService", "TimingError", "RateError", "EarlyData", "LateData", "ServiceTimeShift", "ItemValueError", "UndetectableValueError", "DetectableValueError", "OutOfRange", "BelowRange", "AboveRange", "OutOfBounds", "SequenceValueError", "BoundedValueChange", "StuckValue", "OutOfOrder", "ServiceValueError", "OutOfCalibration", "ValueError", "IncorrectValue", "ValueCorruption", "BadValue", "SequenceError", "SubtleValueError", "BenignValueError", "SubtleValueCorruption", "ReplicationError", "AsymmetricReplicatesError", "AsymmetricValue", "AsymmetricApproximateValue", "AsymmetricExactValue", "AsymmetricTiming", "AsymmetricOmission", "AsymmetricItemOmission", "AsymmetricServiceOmission", "SymmetricReplicatesError", "SymmetricValue", "SymmetricApproximateValue", "SymmetricExactValue", "SymmetricTiming", "SymmetricOmission", "SymmetricItemOmission", "SymmetricServiceOmission", "InconsistentValue", "InconsistentTiming", "InconsistentOmission", "InconsistentItemOmission", "InconsistentServiceOmission", "AsymmetricTransmissive", "ConcurrencyError", "RaceCondition", "ReadWriteRace", "WriteWriteRace", "MutExError", "Deadlock", "Starvation"],
+      "alias" : {
+        "type" : "HashMap",
+        "size" : 19,
+        "entries" : [ [ "InconsistentValue", "AsymmetricValue" ],[ "SubtleValueCorruption", "DetectableValueError" ],[ "InconsistentItemOmission", "AsymmetricItemOmission" ],[ "IncorrectValue", "ItemValueError" ],[ "RateError", "SequenceTimingError" ],[ "InconsistentTiming", "AsymmetricTiming" ],[ "TimingError", "ItemTimingError" ],[ "EarlyData", "HighRate" ],[ "ValueError", "ItemValueError" ],[ "LateData", "LowRate" ],[ "BenignValueError", "DetectableValueError" ],[ "ValueCorruption", "ItemValueError" ],[ "SubtleValueError", "UndetectableValueError" ],[ "BadValue", "ItemValueError" ],[ "SequenceError", "SequenceValueError" ],[ "InconsistentOmission", "AsymmetricOmission" ],[ "InconsistentServiceOmission", "AsymmetricServiceOmission" ],[ "AsymmetricTransmissive", "AsymmetricValue" ],[ "ServiceTimeShift", "ServiceTimingError" ] ]
       }
     },
     {
-      "type": "Emv2Library",
-      "name": {
-        "type": "Name",
-        "name": [
-          "GPSErrorLibrary"
-        ]
+      "type" : "Emv2Library",
+      "name" : {
+        "type" : "Name",
+        "name" : ["GPSErrorLibrary"]
       },
-      "useTypes": [
-        "ErrorLibrary"
-      ],
-      "tokens": [
-        "SensorFailure",
-        "CPUFailure",
-        "PowerSupplyFailure",
-        "NetworkFailure",
-        "LowPrecisionData",
-        "IncorrectData",
-        "NoSignal",
-        "LowSignal"
-      ],
-      "alias": {
-        "type": "HashMap",
-        "size": 0,
-        "entries": []
+      "useTypes" : ["ErrorLibrary"],
+      "tokens" : ["SensorFailure", "CPUFailure", "PowerSupplyFailure", "NetworkFailure", "LowPrecisionData", "IncorrectData", "NoSignal", "LowSignal"],
+      "alias" : {
+        "type" : "HashMap",
+        "size" : 0,
+        "entries" : [  ]
       }
     },
     {
-      "type": "Emv2Library",
-      "name": {
-        "type": "Name",
-        "name": [
-          "AFGErrorLibrary"
-        ]
+      "type" : "Emv2Library",
+      "name" : {
+        "type" : "Name",
+        "name" : ["AFGErrorLibrary"]
       },
-      "useTypes": [
-        "ErrorLibrary"
-      ],
-      "tokens": [
-        "NoValue",
-        "NoService",
-        "ErraticBehavior",
-        "NoPilotInput",
-        "ErraticPilotInput",
-        "ErraticValue",
-        "FlightSystemfailure"
-      ],
-      "alias": {
-        "type": "HashMap",
-        "size": 2,
-        "entries": [
-          [
-            "NoValue",
-            "ServiceOmission"
-          ],
-          [
-            "NoService",
-            "ServiceOmission"
-          ]
-        ]
+      "useTypes" : ["ErrorLibrary"],
+      "tokens" : ["NoValue", "NoService", "ErraticBehavior", "NoPilotInput", "ErraticPilotInput", "ErraticValue", "FlightSystemfailure"],
+      "alias" : {
+        "type" : "HashMap",
+        "size" : 2,
+        "entries" : [ [ "NoValue", "ServiceOmission" ],[ "NoService", "ServiceOmission" ] ]
       }
     }
   ]

@@ -1,4 +1,6 @@
-components
+system PCAModelFlow
+
+sub-components {
   Patient
     ports
        in vein
@@ -41,7 +43,7 @@ components
       out drug
     flows
       f9 : cmd -> drug
-
+}
 connections
   p1 : Patient.fingerclip -> PulseOx.refracted_light
 

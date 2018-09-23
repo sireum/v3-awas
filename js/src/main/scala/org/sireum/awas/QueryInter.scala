@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -73,6 +71,13 @@ class QueryInter(st: SymbolTable) {
 
   def getResults: ILinkedMap[String, Collector] = {
     result
+  }
+
+  def removeQueries(qName : String) : Unit = {
+    if(queries.contains(qName) && result.contains(qName)) {
+      queries = queries - qName
+      result = result - qName
+    }
   }
 
   def getReporter: Reporter = { reporter }

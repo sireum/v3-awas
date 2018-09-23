@@ -1,4 +1,5 @@
-components
+system abc
+sub-components {
   A
     ports
       in aIn
@@ -16,6 +17,7 @@ components
     ports
       in cIn
       out cOut
+}
 
 connections
   A2B : A.aOut -> B.bIn

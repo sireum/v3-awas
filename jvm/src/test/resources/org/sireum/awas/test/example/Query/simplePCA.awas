@@ -10,7 +10,9 @@ types
 		   provided_late}
   enum hazards {overinfuse} /* Single hazard in this situation */
 
-components
+system simplePCA
+
+sub-components {
   patient
     with hazards
     ports
@@ -38,7 +40,7 @@ components
     ports
       in signal
       out spo2_val
-
+}
 connections
   read : patient.signal -> pulse_ox.signal
   spo2 : pulse_ox.spo2_val -> app.spo2_val

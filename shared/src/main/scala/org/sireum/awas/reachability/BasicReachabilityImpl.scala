@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -285,7 +283,7 @@ class BasicReachabilityImpl(st: SymbolTable)
         resType = ResultType.Node,
         edges = r.edges.toSet,
         flows = isetEmpty[ResourceUri],
-        criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri,
+        criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri, false,
         error = isetEmpty[Tag]))
 
     val allGraphs = result.flatMap(_.graphs).toSet
@@ -323,7 +321,7 @@ class BasicReachabilityImpl(st: SymbolTable)
             resType = ResultType.Node,
             edges = it._1.getEdges union getEdgesInPath(it._2),
             flows = isetEmpty[ResourceUri],
-            criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri,
+            criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri, true,
             error = isetEmpty[Tag]))
         } else None
       }.toVector
@@ -342,7 +340,7 @@ class BasicReachabilityImpl(st: SymbolTable)
             isetEmpty[ResourceUri],
             ResultType.Node,
             getEdgesInPath(c.toSet), isetEmpty[ResourceUri],
-            isetEmpty[ResourceUri] + source.getUri + target.getUri,
+            isetEmpty[ResourceUri] + source.getUri + target.getUri, true,
             isetEmpty[Tag])
       }.toSet
 
@@ -371,4 +369,27 @@ class BasicReachabilityImpl(st: SymbolTable)
   override def getSuccessor(current: FlowNode): ISet[FlowNode] = nextNode(current)._1
 
   override def getPredecessor(current: FlowNode): ISet[FlowNode] = previousNode(current)._1
+
+  override def reachSimplePath(
+    source: FlowNode,
+    target: FlowNode
+  ): Collector = {
+    simpleReachPath(source, target)
+  }
+  override def reachSimplePath(
+    source: FlowNode,
+    target: FlowNode,
+    constraint: ConstraintExpr
+  ): Collector = {
+    val pathCollector = reachSimplePath(source, target)
+    val paths = constraint.kind match {
+      case ConstraintKind.All => pathCollector.getPaths.filter(it =>
+        constraint.simple.get.getNodes.subsetOf(it.getNodes))
+      case ConstraintKind.Some => pathCollector.getPaths.filter(it =>
+        constraint.simple.get.getNodes.intersect(it.getNodes).nonEmpty)
+      case ConstraintKind.None => pathCollector.getPaths.filter(it =>
+        constraint.simple.get.getNodes.intersect(it.getNodes).isEmpty)
+    }
+    Collector(st, paths.flatMap(_.getGraphs).toSet, ilinkedSetEmpty ++ paths.toSet, Some(ResultType.Node))
+  }
 }

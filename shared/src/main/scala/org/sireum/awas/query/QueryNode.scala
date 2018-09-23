@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -66,6 +64,10 @@ final case class ChopExpr(source : QueryExpr, target: QueryExpr)
   extends ReachExpr
 
 final case class PathExpr(source : QueryExpr,
+                          target:QueryExpr,
+                          withExpr : Option[WithExpr]) extends ReachExpr
+
+final case class SimplePathExpr(source : QueryExpr,
                           target:QueryExpr,
                           withExpr : Option[WithExpr]) extends ReachExpr
 

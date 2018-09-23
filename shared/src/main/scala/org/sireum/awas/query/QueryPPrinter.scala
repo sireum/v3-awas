@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -78,6 +76,10 @@ object QueryPPrinter {
 
   def pathExpr(sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
     st"""reach paths from $sExp to $tExp${if (wExp.nonEmpty) " " + wExp.get.render else ""}"""
+  }
+
+  def simplePathExpr(sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
+    st"""reach simple paths from $sExp to $tExp${if (wExp.nonEmpty) " " + wExp.get.render else ""}"""
   }
 
   def simpleWith(op: String, exp: ST): ST = {
@@ -170,6 +172,7 @@ final class QueryPPrinter() {
       case be : BackwardExpr => print(be)
       case ce : ChopExpr => print(ce)
       case pe : PathExpr => print(pe)
+      case spe : SimplePathExpr => print(spe)
     }
   }
 
@@ -188,6 +191,11 @@ final class QueryPPrinter() {
   def print(pe : PathExpr): ST = {
     QueryPPrinter.pathExpr(print(pe.source), print(pe.target), if (pe.withExpr.isDefined)
       org.sireum.Option.some[ST](print(pe.withExpr.get)) else org.sireum.Option.none[ST]())
+  }
+
+  def print(spe : SimplePathExpr): ST = {
+    QueryPPrinter.simplePathExpr(print(spe.source), print(spe.target), if (spe.withExpr.isDefined)
+      org.sireum.Option.some[ST](print(spe.withExpr.get)) else org.sireum.Option.none[ST]())
   }
 
   def print(we : WithExpr): ST = {

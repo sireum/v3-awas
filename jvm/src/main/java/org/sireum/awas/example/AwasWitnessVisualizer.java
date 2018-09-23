@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,7 +23,6 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package org.sireum.awas.example;
@@ -39,7 +37,7 @@ public class AwasWitnessVisualizer {
         //"awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.aq"
         //"~/output/" note the ending slash
         if (args.length == 3) {
-            Visualizer.main(args);
+           // Visualizer.main(args);
         } else {
             System.out.println("AwasWitnessVisualizer Arg1 Arg2 Arg3");
             System.out.println("Arg1: file absolute path of awas model");

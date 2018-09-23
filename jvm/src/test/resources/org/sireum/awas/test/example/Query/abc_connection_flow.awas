@@ -1,6 +1,7 @@
 types
   enum Error {High, Low}
-components
+system abc_connection
+sub-components {
 
   A
   with Error
@@ -37,7 +38,7 @@ components
       cOut = {High}
     flows
       f4 : cIn{Low} -> cOut{High}
-
+}
 connections
   A2B : A.aOut -> B.bIn
     flows

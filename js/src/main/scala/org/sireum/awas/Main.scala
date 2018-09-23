@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -24,7 +23,6 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
  */
 
 package org.sireum.awas
@@ -36,10 +34,12 @@ import org.scalajs.dom.html.{Anchor, Div, Input, Table}
 import org.scalajs.dom.raw.Node
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
+import org.sireum.awas.Notification.Kind
+import org.sireum.awas.analysis.FaultImpactAnalysis
+import org.sireum.awas.ast.AwasSerializer
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.reachability.{ErrorReachabilityImpl, PortReachabilityImpl}
-import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.awas.witness.SvgGenerator
@@ -68,6 +68,7 @@ object Main {
   var timer: Option[SetTimeoutHandle] = None
   var gl: Option[GoldenLayout] = None
   var qI: Option[QueryInter] = None
+  var st: Option[SymbolTable] = None
 
   def getInitLayout(title: String, inGraph: String): js.Dictionary[scalajs.js.Any] = js.Dictionary(
     ("settings", js.Dictionary(("showPopoutIcon", false),
@@ -184,24 +185,31 @@ object Main {
 
   //def openChildGraph()
 
+
   @JSExport
   def main(): Unit = {
-    val model = Aadl2Awas.apply(GraphQuery.json)
+    //var model = Aadl2Awas.apply(GraphQuery.json)
+
+    //if(model.isEmpty) {
+    var model = AwasSerializer.unapply(GraphQuery.awas)
+    //}
+    val xx = GraphQuery.queries
+
     if (model.isDefined) {
       val reporter = new ConsoleTagReporter()
-      val st = SymbolTable(model.get)(reporter)
+      st = Some(SymbolTable(model.get)(reporter))
 
-      val systemGraph = FlowGraph(model.get, st)
+      val systemGraph = FlowGraph(model.get, st.get)
 
       //val systemSvg = graph2Svg(systemGraph)
 
-      val graphs = getAllSubGraphs(st) + (st.system -> systemGraph)
+      val graphs = getAllSubGraphs(st.get) + (st.get.system -> systemGraph)
 
       //val subsvgs = subgraphs.map(x => (x._1, graph2Svg(x._2)))
 
       val mainDiv = render[Div](mainPage())
 
-      val config = getInitLayout(st.systemDecl.compName.value, st.system)
+      val config = getInitLayout(st.get.systemDecl.compName.value, st.get.system)
 
       val mainBox: Element = mainDiv.querySelector("#main-container")
 
@@ -212,15 +220,15 @@ object Main {
       document.onreadystatechange = (_: Event) => {
         document.body.appendChild(mainDiv)
         if (document.readyState == "complete" && gl.isDefined) {
-          val systemName = st.systemDecl.compName.value
+          val systemName = st.get.systemDecl.compName.value
 
           gl.get.registerComponent("system", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
             if (componentState.get("graph").isDefined) {
               val uri = componentState.get("graph").get.asInstanceOf[ResourceUri]
               //val temp = componentState("graph").asInstanceOf[Node]
               //println(temp)
-              val breadCrumbs = render[Div](uriToBreadCrumbs(uri, st))
-              val asvg = graph2Svg(graphs(uri), false, st)
+              val breadCrumbs = render[Div](uriToBreadCrumbs(uri, st.get))
+              val asvg = graph2Svg(graphs(uri), false, st.get)
               container.getElement().append(breadCrumbs).append(asvg)
               SvgPanZoom("svg").svgPanZoom(js.Dictionary())
               $[Input](breadCrumbs, ".td").checked = true
@@ -230,7 +238,7 @@ object Main {
                   !componentState.get("isTD").get.asInstanceOf[Boolean]) {
                   //                  $[Input](breadCrumbs, ".td").checked = true
                   container.getElement().children("svg").first().replaceWith(
-                    graph2Svg(graphs(uri), false, st))
+                    graph2Svg(graphs(uri), false, st.get))
                   SvgPanZoom("svg").svgPanZoom(js.Dictionary())
                   componentState.update("isTD", true)
                 }
@@ -240,7 +248,7 @@ object Main {
                   componentState.get("isTD").get.asInstanceOf[Boolean]) {
                   //                  $[Input](breadCrumbs, ".lr").checked = true
                   container.getElement().children("svg").first().replaceWith(
-                    graph2Svg(graphs(uri), true, st))
+                    graph2Svg(graphs(uri), true, st.get))
                   SvgPanZoom("svg").svgPanZoom(js.Dictionary())
                   componentState.update("isTD", false)
                 }
@@ -264,7 +272,7 @@ object Main {
           val forwardButton = mainDiv.querySelector("#forward-button")
           val backwardButton = mainDiv.querySelector("#backward-button")
           queryButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            openQueryCli(st)
+            openQueryCli(st.get, systemGraph)
           }
 
           clearButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
@@ -272,11 +280,11 @@ object Main {
           }
 
           forwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            forwardButtonAction(selections.keySet, st)
+            forwardButtonAction(selections.keySet, st.get)
           }
 
           backwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            backwardButtonAction(selections.keySet, st)
+            backwardButtonAction(selections.keySet, st.get)
           }
 
           val burger = mainDiv.querySelector(".burger")
@@ -299,13 +307,31 @@ object Main {
           //            }
           //          }
           //$[Button](mainDiv, "#clear-button").onclick = (_: MouseEvent) => clear(res)
+
+          if(!js.isUndefined(GraphQuery.queries)) {
+
+            openQueryCli(st.get, systemGraph)
+            qI.get.evalQueryFile(GraphQuery.queries.toString)
+            updateTable(qI.get.getQueries, qI.get.getResults)
+            if (qI.get.getReporter.messages.nonEmpty) {
+              println(qI.get.getReporter.messages.elements.mkString("\n"))
+            }
+          }
         }
+
+
       }
+
+
+
       window.onresize = (_: UIEvent) => computeHeight(gl.get)
     } else {
       document.body.appendChild(render(
         p("Failed to load the model")))
     }
+
+
+
 
   }
 
@@ -579,17 +605,25 @@ object Main {
       res = res :+ render[Node](tr(
         attr("data-tt-id") := "node" + entry._1,
         attr("data-tt-parent-id") := "",
+        td(verticalAlign := "middle",
+          padding := "0",
+          div(
+            display := "flex",
+            justifyContent := "center",
+            verticalAlign := "middle",
+            style := "display:inline-flex;width:80%;",
+            label(`class`:="checkbox",input(`type`:="checkbox", `class`:="select-query", id:="select:"+entry._1)))),
         td(//display.`inline-table`,
           verticalAlign := "middle",
           padding := "0", //flexWrap.nowrap,
           //cls := "columns",
 
           a(textAlign := "left",
-            padding := "0",
+            padding := "2",
             justifyContent := "left",
             verticalAlign := "middle",
-            id := entry._1,
-            style := "display:inline-flex;width:88%;",
+            id := entry._1, style:="width:100%",
+//            style := "display:inline-flex;width:88%;",
             //            display.`table-cell`,
             //            width.auto,
             cls := "query-table-button button is-white",
@@ -598,23 +632,24 @@ object Main {
         ),
         td(verticalAlign := "middle", span(entry._2))
       ))
-      if (results(entry._1).getPaths.size > 0) {
+      if (results(entry._1).getPaths.size > 1) {
         for (i <- results(entry._1).getPaths.toIndexedSeq.indices) {
           res = res :+ render[Node](tr(
             attr("data-tt-id") := "node" + entry._1 + ":" + i,
             attr("data-tt-parent-id") := "node" + entry._1,
+            td(div(textAlign:="right")),
             td(
               verticalAlign := "middle",
-              padding := "0",
+              paddingLeft := "10",
               //flexWrap.nowrap,
               //cls := "columns is-mobile",
               a(
                 textAlign := "left",
-                padding := "0",
+                padding := "2",
                 justifyContent := "left",
                 verticalAlign := "middle",
-                id := entry._1 + ":" + i,
-                style := "display:inline-flex;width:80%;",
+                id := entry._1 + ":" + i, style:="width:100%",
+//                style := "display:inline-flex;width:80%;",
                 cls := "query-table-button button is-white",
                 span(entry._1 + "(path " + (i + 1) + ")")
               )
@@ -637,6 +672,7 @@ object Main {
     buttons.foreach { b =>
       val id = b.asInstanceOf[Anchor].getAttribute("id")
       b.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+//        b.asInstanceOf[Anchor].
         if (id.contains(":")) {
           highlight(collectorToUris(results(id.split(":").head)
             .getPaths.toIndexedSeq(id.split(":").last.toInt)))
@@ -656,7 +692,7 @@ object Main {
     //    }
     TreeTable("#query-table").treetable(js.Dictionary.apply[js.Any](
       ("expandable", true),
-      ("indenterTemplate", "<span style='display:run-in; vertical-align: middle; width:11%' class=\"indenter\"></span>"),
+      ("indenterTemplate", "<span style='display:run-in; vertical-align: middle; width:15%' class=\"indenter\"></span>"),
       ("expanderTemplate", "<a href=\"#\" style='vertical-align: middle; display:inline-block; width:3%;'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"),
       ("onNodeExpand", { (x: js.Any) => {
         val exp = x.asInstanceOf[TreeNode].expander(0)
@@ -726,9 +762,10 @@ object Main {
     false
   }
 
-  private def openQueryCli(st: SymbolTable): Boolean = {
+  private def openQueryCli(st: SymbolTable, graph : FlowGraph[FlowNode, FlowEdge[FlowNode]]): Boolean = {
     var queryLayout: Option[GoldenLayout] = None
     if (gl.isDefined) {
+      println(gl.get)
       if (gl.get.root.getItemsById("cli").nonEmpty) {
         val ci = gl.get.root.getItemsById("cli").head
         val stacks = gl.get.root.getItemsByType("stack")
@@ -788,6 +825,15 @@ object Main {
         queryLayout = Some(new GoldenLayout(queryCliConfig, jQuery(queryCli)))
         val qBox = render[Div](queryBox())
 
+        $[Input](qBox, "#select-all").onclick = (_: MouseEvent) => {
+          if($[Input](qBox, "#select-all").checked) {
+            qBox.querySelectorAll(".select-query").foreach(_.asInstanceOf[Input].checked = true)
+          } else {
+            qBox.querySelectorAll(".select-query").foreach(_.asInstanceOf[Input].checked = false)
+          }
+          println("select all clicked")
+        }
+
         queryLayout.get.registerComponent("query_table", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
           container.getElement().append(qBox)
         }
@@ -829,11 +875,40 @@ object Main {
 
         val inputExport = qBox.querySelector("#export-queries")
         inputExport.asInstanceOf[Input].onclick = (_: MouseEvent) => {
-//          println("exporter")
-          val text = qI.get.getQueries.map(q => q._1 + " = " + q._2).mkString("\n")
-          val filename = st.systemDecl.compName.value + ".aq"
-          val blob = new Blob(js.Array(text), BlobPropertyBag("text/plain;charset=utf-8"))
-          FileSaver.saveAs(blob, filename)
+          println("exporter")
+          val selectedQueries = qBox.querySelectorAll(".select-query")
+            .filter(_.asInstanceOf[Input].checked).flatMap{sq =>
+            sq.attributes.get("id")}.map(_.value.split(":").last).toSet
+          if(selectedQueries.isEmpty) {
+            Notification.notify(Kind.Error, "Select queries to export")
+          } else {
+            val text =
+              qI.get.getQueries.filter(it => selectedQueries.contains(it._1)).map(q => q._1 + " = " + q._2).mkString("\n")
+            val filename = st.systemDecl.compName.value + ".aq"
+            val blob = new Blob(js.Array(text), BlobPropertyBag("text/plain;charset=utf-8"))
+            FileSaver.saveAs(blob, filename)
+          }
+        }
+
+        val inputFia = qBox.querySelector("#gen-queries")
+        inputFia.asInstanceOf[Input].onclick = (_: MouseEvent) => {
+          qI.get.evalQueryFile(new FaultImpactAnalysis().generateFIAQueries(st, graph, true))
+          updateTable(qI.get.getQueries, qI.get.getResults)
+        }
+
+        val inputRemove = qBox.querySelector("#remove-queries")
+        inputRemove.asInstanceOf[Input].onclick = (_: MouseEvent) => {
+          val selectedQueries = qBox.querySelectorAll(".select-query").filter(_.asInstanceOf[Input].checked)
+          if(selectedQueries.isEmpty) {
+            Notification.notify(Kind.Error, "Select queries to remove")
+          } else {
+            selectedQueries.foreach { q =>
+              if (q.attributes.contains("id") && qI.isDefined) {
+                qI.get.removeQueries(q.attributes.get("id").get.value.split(":").last)
+              }
+            }
+            updateTable(qI.get.getQueries, qI.get.getResults)
+          }
         }
       }
     }
@@ -860,7 +935,17 @@ object Main {
           div(cls := "level-item", div(cls := "file",
             label(cls := "file-label", input(cls := "file-input", `type` := "button", id := "export-queries",
               name := "import", span(cls := "file-cta", span(cls := "file-icon",
-                i(cls := "fas fa-download")), span(cls := "file-label", "Export"))))))
+                i(cls := "fas fa-download")), span(cls := "file-label", "Export")))))),
+
+          div(cls := "level-item", div(cls := "file",
+            label(cls := "file-label", input(cls := "file-input", `type` := "button", id := "gen-queries",
+              name := "gen", span(cls := "file-cta", span(cls := "file-icon",
+                i(cls := "fas fa-magic")), span(cls := "file-label", "Generate FIA")))))),
+
+          div(cls := "level-item", div(cls := "file",
+            label(cls := "file-label", input(cls := "file-input", `type` := "button", id := "remove-queries",
+              name := "remove", span(cls := "file-cta", span(cls := "file-icon",
+                i(cls := "fas fa-minus-square")), span(cls := "file-label", "Remove"))))))
 
 
 
@@ -877,8 +962,10 @@ object Main {
       cls := "table is-striped is-narrow is-fullwidth",
       border := "0",
       borderSpacing := "0",
-      col(width := "40%"),
-      thead(th(cls := "is-5", "Name"), th("Expression"))
+      col(width := "5%"),
+      thead(th(div(textAlign:="center",label(`class`:="checkbox",input(`type`:="checkbox", id:="select-all")))),
+        th(cls := "is-5", "Name"),
+        th("Expression"))
       //      SeqNode(temp.map { query =>
       //        tr(
       //          attr("data-tt-id") := "node" + query._1,

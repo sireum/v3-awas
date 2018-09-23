@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -79,6 +77,7 @@ class QueryParser(val input : ParserInput) extends Parser {
     ( (atomic("forward") ~ expr) ~> (ForwardExpr)) |
     ( (atomic("backward") ~ expr ) ~> (BackwardExpr)) |
     ( (atomic("from") ~ expr ~ atomic("to") ~ expr)  ~> (ChopExpr)) |
+    ( (atomic("simple") ~ atomic("paths") ~ atomic("from") ~ expr ~ atomic("to") ~ expr ~ optional(atomic("with") ~ withExpr)) ~> (SimplePathExpr)) |
     ( (atomic("paths") ~ atomic("from") ~ expr ~ atomic("to") ~ expr ~ optional(atomic("with") ~ withExpr)) ~> (PathExpr))
   }
 
@@ -164,7 +163,7 @@ class QueryParser(val input : ParserInput) extends Parser {
   }
 
   def Keywords = rule {
-    "reach" | "backward" | "forward" | "from" | "to" | "paths" |
+    "reach" | "backward" | "forward" | "from" | "to" | "paths" | "simple" |
     "union" | "intersect" | "some" | "all" | "none" | "with" |
     "node" | "port" | "port-error" | "flow" | "flow-source" |
     "flow-sink" | "flow-path" | "port-in" | "port-out" | "error"
@@ -201,27 +200,28 @@ object QueryParser {
 
   }
 
-  def main(args: Array[String]): Unit = {
-    val input = Seq(
-      "PatientVein = Patient.Vein",
-      "Cap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse",
-      "Cap_to_Pump_paths = reach paths from Capnography.ETCO2 to PCA.infuse",
-      "none_constraint_test1 = reach paths from Capnography to PCA with none(Device_Network)",
-      "all_hazardous_situation_overdose = reach backward Patient.Vein{Error.TooMuchAnalgesic}",
-      "HS1 = reach backward administer.out{PCA_Errors.InCorrectDrugAdministration}",
-      "Cap_to_pump_hazard_2 = reach from Capnography.ETCO2{Error.ETCO2Early}\n                             to PCA.infuse{Error.TooMuchAnalgesic}",
-      "PatientVein = Patient.Vein\n\nInfusion_paths = reach backward Infuse_Drug",
-      "test = reach to Patient",
-      "\nPatientVein = Patient.Vein\n\nInfusion_paths = reach backward Infuse_Drug\n\nPulseOx_SpO2_influences_infusion = reach forward PulseOx.SpO2\n\nall_hazardous_situation_overdose = reach backward Patient.Vein{Error.TooMuchAnalgesic}\n\nCap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse\n\nCap_to_Pump_paths = reach paths from Capnography.ETCO2 to PCA.infuse\n\nCap_to_pump_hazard_1 = reach from Capnography.RespiratoryRate{Error.RespirationRateHigh}\n                             to PCA.infuse{Error.TooMuchAnalgesic}\n\nCap_to_pump_hazard_1_path = reach paths from Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly}\n                                        to PCA.infuse{Error.TooMuchAnalgesic}\n\nCap_to_pump_hazard_2 = reach from Capnography.ETCO2{Error.ETCO2Early}\n                             to PCA.infuse{Error.TooMuchAnalgesic}\n\n//PulseOx_to_pump_check =  PulseOx.SpO2{Error.NoSpO2} -> * //dont know how to handle the incomming error, when no flows are propagation defined\n\nControl_Loop = reach paths from Patient.BloodSat to Patient.Vein\n\nFlow_HeartBeat = reach forward Patient.Heart_Beat\n\nbase_case = reach paths from Capnography to PCA\n\nall_constraint_test1 = reach paths from Capnography to PCA with all({Device_Network, Application})\n\nsome_constraint_test1 = reach paths from Capnography to PCA with some({Report_SpO2, RR_Report})\n\nnone_constraint_test1 = reach paths from Capnography to PCA with none(Device_Network)\n\nbase_case_ports = reach paths from Capnography.ETCO2 to PCA.infuse\n\nnone_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with none(Device_Network)\n\nsome_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with some({Application.RR, Application.Pulse})\n\nall_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with all({RR_Report.out, Pulse_Report_EKG.out})\n\n//test_regex_test1 = reach paths from Capnography to PCA with ((Device_Network, EKG_Report)*, _*, PCA | (Application, Issue_Ticket))\n\n//test_regex_"
-    )
-
-    input.foreach { query =>
-      new QueryParser(query).modelFile.run() match {
-        case Failure(x) => println(new QueryParser(query).formatError(x.asInstanceOf[ParseError]))
-        case Success(y) => {
-          println("success :" + QueryPPrinter(y))
-        }
-      }
-    }
-  }
+//  def main(args: Array[String]): Unit = {
+//    val input = Seq(
+//      "none_constraint_test1 = reach simple paths from Capnography.ETCO2{Error.ETCO2Early} to Patient.Vein{Error.TooMuchAnalgesic}"
+////      "PatientVein = Patient.Vein",
+////      "Cap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse",
+////      "Cap_to_Pump_paths = reach paths from Capnography.ETCO2 to PCA.infuse",
+////      "none_constraint_test1 = reach paths from Capnography to PCA with none(Device_Network)",
+////      "all_hazardous_situation_overdose = reach backward Patient.Vein{Error.TooMuchAnalgesic}",
+////      "HS1 = reach backward administer.out{PCA_Errors.InCorrectDrugAdministration}",
+////      "Cap_to_pump_hazard_2 = reach from Capnography.ETCO2{Error.ETCO2Early}\n                             to PCA.infuse{Error.TooMuchAnalgesic}",
+////      "PatientVein = Patient.Vein\n\nInfusion_paths = reach backward Infuse_Drug",
+////      "test = reach to Patient",
+////      "\nPatientVein = Patient.Vein\n\nInfusion_paths = reach backward Infuse_Drug\n\nPulseOx_SpO2_influences_infusion = reach forward PulseOx.SpO2\n\nall_hazardous_situation_overdose = reach backward Patient.Vein{Error.TooMuchAnalgesic}\n\nCap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse\n\nCap_to_Pump_paths = reach paths from Capnography.ETCO2 to PCA.infuse\n\nCap_to_pump_hazard_1 = reach from Capnography.RespiratoryRate{Error.RespirationRateHigh}\n                             to PCA.infuse{Error.TooMuchAnalgesic}\n\nCap_to_pump_hazard_1_path = reach paths from Capnography.RespiratoryRate{Error.RespirationRateHigh, Error.RespirationRateEarly}\n                                        to PCA.infuse{Error.TooMuchAnalgesic}\n\nCap_to_pump_hazard_2 = reach from Capnography.ETCO2{Error.ETCO2Early}\n                             to PCA.infuse{Error.TooMuchAnalgesic}\n\n//PulseOx_to_pump_check =  PulseOx.SpO2{Error.NoSpO2} -> * //dont know how to handle the incomming error, when no flows are propagation defined\n\nControl_Loop = reach paths from Patient.BloodSat to Patient.Vein\n\nFlow_HeartBeat = reach forward Patient.Heart_Beat\n\nbase_case = reach paths from Capnography to PCA\n\nall_constraint_test1 = reach paths from Capnography to PCA with all({Device_Network, Application})\n\nsome_constraint_test1 = reach paths from Capnography to PCA with some({Report_SpO2, RR_Report})\n\nnone_constraint_test1 = reach paths from Capnography to PCA with none(Device_Network)\n\nbase_case_ports = reach paths from Capnography.ETCO2 to PCA.infuse\n\nnone_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with none(Device_Network)\n\nsome_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with some({Application.RR, Application.Pulse})\n\nall_constraint_ports = reach paths from Capnography.ETCO2 to PCA.infuse with all({RR_Report.out, Pulse_Report_EKG.out})\n\n//test_regex_test1 = reach paths from Capnography to PCA with ((Device_Network, EKG_Report)*, _*, PCA | (Application, Issue_Ticket))\n\n//test_regex_"
+//    )
+//
+//    input.foreach { query =>
+//      new QueryParser(query).modelFile.run() match {
+//        case Failure(x) => println(new QueryParser(query).formatError(x.asInstanceOf[ParseError]))
+//        case Success(y) => {
+//          println("success :" + QueryPPrinter(y))
+//        }
+//      }
+//    }
+//  }
 }

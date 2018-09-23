@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -198,10 +196,10 @@ final class Builder private() {
   }
 
   def build(ctx: TupleContext): Tuple = {
-    var result = ilinkedMapEmpty[Id, One]
+    var result = ilistEmpty[(Id, One)]
     if(ctx != null) {
       ctx.faultPort().foreach { fp =>
-        result = result + (buildId(fp.ID()) -> build(fp.one()))
+        result = result :+ ((buildId(fp.ID()), build(fp.one())))
       }
     }
     Tuple(result)

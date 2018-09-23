@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -378,9 +376,6 @@ final class Aadl2Awas private() {
 //          if()
 //        )
 //      } else {
-      if (id.startsWith("al_")) {
-        println("break")
-      }
 
       val superComp = if (srcComp.isEmpty) srcComp else sinkComp
       val superDir = if (srcComp.isEmpty) src.direction else dst.direction

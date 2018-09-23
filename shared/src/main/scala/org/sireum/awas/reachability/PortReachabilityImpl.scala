@@ -1,5 +1,4 @@
 /*
- * // #Sireum
  *
  *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
@@ -23,7 +22,6 @@
  *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  *
  */
 
@@ -205,19 +203,18 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     temp
   }
 
-  private def nodeReachPath(source: ResourceUri, target: ResourceUri, cExp: Option[ConstraintExpr]): Collector = {
-
-    def getNodeFromPUri(portUri: ResourceUri): Option[FlowNode] = {
-      if (FlowNode.getNode(portUri).isDefined) {
-        Some(FlowNode.getNode(portUri).get)
-      } else if (H.isPort(portUri) && Resource.getParentUri(portUri).isDefined &&
-        FlowNode.getNode(Resource.getParentUri(portUri).get).isDefined) {
-        Some(FlowNode.getNode(Resource.getParentUri(portUri).get).get)
-      } else {
-        None
-      }
+  private def getNodeFromPUri(portUri: ResourceUri): Option[FlowNode] = {
+    if (FlowNode.getNode(portUri).isDefined) {
+      Some(FlowNode.getNode(portUri).get)
+    } else if (H.isPort(portUri) && Resource.getParentUri(portUri).isDefined &&
+      FlowNode.getNode(Resource.getParentUri(portUri).get).isDefined) {
+      Some(FlowNode.getNode(Resource.getParentUri(portUri).get).get)
+    } else {
+      None
     }
+  }
 
+  private def nodeReachPath(source: ResourceUri, target: ResourceUri, cExp: Option[ConstraintExpr]): Collector = {
     val snode = getNodeFromPUri(source)
     val tnode = getNodeFromPUri(target)
     if (snode.isDefined && tnode.isDefined) {
@@ -400,7 +397,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         ResultType.Port,
         edges,
         isetEmpty[ResourceUri],
-        isetEmpty[ResourceUri],
+        isetEmpty[ResourceUri], hasCycle = true,
         isetEmpty[Tag]
       )
 
@@ -427,7 +424,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
                         r.getResultType.get,
                         r.getEdges,
                         r.getFlows + f.flowUri,
-                        r.getCriteria,
+                        r.getCriteria, hasCycle = true,
                         r.getErrors ++ r.getWarnings
                       )
                   )
@@ -521,11 +518,11 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       st,
       findRelaventGraphs(getNodesFromPort(src), getNodesFromPort(dst)),
       isetEmpty[FlowNode],
-        path.toSet,
+        path,
         ResultType.Port,
         edges,
         flows,
-        isetEmpty + src + dst,
+        isetEmpty + src + dst, hasCycle = false,
       isetEmpty[Tag]
     )
     }
@@ -612,14 +609,13 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       val simplePaths = getSimplePath(computeSimplePaths(source, target), source, target)
 
       val simplePathNone = constraint.kind match {
-        case ConstraintKind.None => {
+        case ConstraintKind.None =>
           val filteredPaths =
             simplePaths.filter(f => f.getPorts.intersect(constraint.simple.get.getPorts).isEmpty)
           Collector(
             st,
             simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
             ilinkedSetEmpty[Collector]++filteredPaths, Some(ResultType.Port))
-        }
         case _ => simplePaths.foldLeft(Collector(st))(_.union(_))
       }
 
@@ -648,7 +644,7 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
           None
       }
 
-      val filteredPaths = (complexPath.toSet union simplePathNone.getPaths.toSet).filter(
+      val filteredPaths = (complexPath.toSet union simplePathNone.getPaths).filter(
         cp =>
           constraint.kind match {
             case ConstraintKind.All => constraint.simple.get.getPorts.forall(p => cp.getPorts.contains(p))
@@ -751,7 +747,7 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       val oe = g.getOutgoingEdges(nodes(i))
       oe.foreach { it =>
         if (i + 1 == nodes.size) {
-          if (it.target == nodes(0)) {
+          if (it.target == nodes.head) {
             edges = edges + it
           }
         } else {
@@ -762,8 +758,10 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       }
     }
 
-    val p1 = edges.flatMap(_.sourcePort).toSet
-    val p2 = edges.flatMap(_.targetPort).toSet
+    val p1 = edges.flatMap(_.sourcePort)
+    val p2 = {
+      edges.flatMap(_.targetPort).toSet
+    }
     (edges, p1 union p2)
   }
 
@@ -842,5 +840,59 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
 
   override def getPredecessor(currentPort: ResourceUri): ISet[ResourceUri] = {
     previousPorts(currentPort).flatMap(_.ports)
+  }
+  override def reachSimplePath(
+    source: ResourceUri,
+    target: ResourceUri
+  ): Collector = {
+    if (!H.isPort(source) || !H.isPort(target)) {
+      val snode = getNodeFromPUri(source)
+      val tnode = getNodeFromPUri(target)
+      if (snode.isDefined && tnode.isDefined) {
+        reachSimplePath(snode.get, tnode.get)
+      } else {
+        collector.Collector(
+          st,
+          isetEmpty[FlowGraph[FlowNode, Edge]],
+          isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, source, ReachAnalysisStage.Node) +
+            errorMessageGen(CollectorErrorHelper.MISSING_NODE, target, ReachAnalysisStage.Node)
+        )
+      }
+    } else {
+      val simplePaths = getSimplePath(computeSimplePaths(source, target), source, target)
+      Collector(st, simplePaths.flatMap(_.getGraphs),
+        ilinkedSetEmpty[Collector] ++ simplePaths,
+        Some(ResultType.Port))
+    }
+  }
+  override def reachSimplePathSet(
+    source: Set[ResourceUri],
+    target: Set[ResourceUri]
+  ): Collector = {
+    val temp = source.foldLeft(Collector(st))(
+      (c, n) =>
+        c union
+          target.foldLeft(Collector(st))((c2, n2) => c2 union reachSimplePath(n, n2))
+    )
+    temp
+  }
+
+  override def reachSimplePathSet(
+    source: Set[ResourceUri],
+    target: Set[ResourceUri],
+    constraint: ConstraintExpr
+  ): Collector = {
+    val paths = reachSimplePathSet(source, target).getPaths
+    val filteredPaths = constraint.kind match {
+       case ConstraintKind.All => paths.filter(it =>
+       constraint.simple.get.getPorts.subsetOf(it.getPorts))
+       case ConstraintKind.Some => paths.filter(it =>
+         constraint.simple.get.getPorts.intersect(it.getPorts).nonEmpty)
+       case ConstraintKind.None => paths.filter(it =>
+       constraint.simple.get.getPorts.intersect(it.getPorts).isEmpty)
+    }
+    Collector(st, filteredPaths.flatMap(_.getGraphs),
+      ilinkedSetEmpty[Collector] ++ filteredPaths,
+      Some(ResultType.Port))
   }
 }
