@@ -115,7 +115,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       if (H.isPort(p)) {
         worklist = worklist :+ p
       } else {
-        resError += errorMessageGen(MISSING_CRITERIA, p, ReachAnalysisStage.Port)
+        resError += errorMessageGen(MISSING_CRITERIA, H.uri2CanonicalName(p), ReachAnalysisStage.Port)
       }
     }
 
@@ -227,8 +227,10 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       collector.Collector(
         st,
         isetEmpty[FlowGraph[FlowNode, Edge]],
-        isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, source, ReachAnalysisStage.Node) +
-          errorMessageGen(CollectorErrorHelper.MISSING_NODE, target, ReachAnalysisStage.Node)
+        isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, H.uri2CanonicalName(source),
+          ReachAnalysisStage.Node
+        ) +
+          errorMessageGen(CollectorErrorHelper.MISSING_NODE, H.uri2CanonicalName(target), ReachAnalysisStage.Node)
       )
     }
   }
@@ -854,8 +856,12 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
         collector.Collector(
           st,
           isetEmpty[FlowGraph[FlowNode, Edge]],
-          isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, source, ReachAnalysisStage.Node) +
-            errorMessageGen(CollectorErrorHelper.MISSING_NODE, target, ReachAnalysisStage.Node)
+          isetEmpty[Tag] + errorMessageGen(
+            CollectorErrorHelper.MISSING_NODE,
+            H.uri2CanonicalName(source),
+            ReachAnalysisStage.Node
+          ) +
+            errorMessageGen(CollectorErrorHelper.MISSING_NODE, H.uri2CanonicalName(target), ReachAnalysisStage.Node)
         )
       }
     } else {

@@ -40,9 +40,11 @@ trait Terminal extends JQuery {
 
   def clear(): Nothing = js.native
 
-  def echo(in: String): Nothing = js.native
+  def echo(in: String): Terminal = js.native
 
   def echo(in: String, options: js.Dictionary[Any]): Nothing = js.native
+
+  def error(in: String): Nothing = js.native
 
   def scroll_to_bottom(): Nothing = js.native
 

@@ -88,8 +88,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     if (port.startsWith(H.PORT_TYPE)) {
       workList = workList ++ errors.map((port, _))
     } else {
-      resError += errorMessageGen(MISSING_CRITERIA,
-        port, ReachAnalysisStage.Port)
+      resError += errorMessageGen(MISSING_CRITERIA, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
     }
       while (workList.nonEmpty) {
         val current = workList.head
@@ -278,7 +277,8 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     while (paths.nonEmpty) {
       val current = paths.head
       paths = paths - current
-      if (current.path.last._1 == targetPort) {
+      if (current.path.last._1 == targetPort &&
+        targetErrors.contains(current.path.last._2)) {
         resPaths = resPaths + current
       } else {
         val tNext = nextError(current.path.last)

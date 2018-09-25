@@ -257,5 +257,14 @@ object SymbolTableHelper {
     res.reverse
   }
 
+  def uri2CanonicalName(uri: ResourceUri): String = {
+    val resource = Resource.getDefResource(uri)
+    if (resource.isDefined) {
+      resource.get.toFullyQualifiedName
+    } else {
+      ""
+    }
+  }
+
 }
 

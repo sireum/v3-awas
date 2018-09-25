@@ -1,0 +1,117 @@
+q1
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
+
+ -------------- 
+q2
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
+
+ -------------- 
+q3
+ -------------- 
+{ component:$$AWAS$abc#C } 
+
+ -------------- 
+q5
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A } 
+
+ -------------- 
+q6
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
+
+ -------------- 
+q7
+ -------------- 
+Warning: 
+
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$abc$A2B#in, 
+port-in-virtual:$$AWAS$abc$B2A#in, 
+port-in-virtual:$$AWAS$abc$B2C#in, 
+port-in:$$AWAS$abc$A#aIn, 
+port-in:$$AWAS$abc$B#bIn, 
+port-in:$$AWAS$abc$C#cIn, 
+port-out-virtual:$$AWAS$abc$A2B#out, 
+port-out-virtual:$$AWAS$abc$B2A#out, 
+port-out-virtual:$$AWAS$abc$B2C#out, 
+port-out:$$AWAS$abc$A#aOut, 
+port-out:$$AWAS$abc$B#bOut, 
+port-out:$$AWAS$abc$B#bOut2, 
+port-out:$$AWAS$abc$C#cOut } 
+
+ -------------- 
+q8
+ -------------- 
+Warning: 
+
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$abc$A2B#in, 
+port-in-virtual:$$AWAS$abc$B2A#in, 
+port-in-virtual:$$AWAS$abc$B2C#in, 
+port-in:$$AWAS$abc$A#aIn, 
+port-in:$$AWAS$abc$B#bIn, 
+port-in:$$AWAS$abc$C#cIn, 
+port-out-virtual:$$AWAS$abc$A2B#out, 
+port-out-virtual:$$AWAS$abc$B2A#out, 
+port-out-virtual:$$AWAS$abc$B2C#out, 
+port-out:$$AWAS$abc$A#aOut, 
+port-out:$$AWAS$abc$B#bOut, 
+port-out:$$AWAS$abc$B#bOut2, 
+port-out:$$AWAS$abc$C#cOut } 
+
+ -------------- 
+q9
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A } 
+
+ -------------- 
+q10
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
+
+ -------------- 
+q11
+ -------------- 
+{ component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#B2C } 
+
+ -------------- 
+q12
+ -------------- 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
+
+ -------------- 

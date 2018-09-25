@@ -1,1 +1,1 @@
-reach simple paths from PCA_PulseOx_scenario1_Instance.App.command{PCA_Error.stop_commission} to PCA_PulseOx_scenario1_Instance.Patient.Vein_infuse{PCA_Error.LateServiceTermination}
+x = reach simple paths from PCA_PulseOx_scenario1_Instance.App.command{PCA_Error.stop_commission} to PCA_PulseOx_scenario1_Instance.Patient.Vein_infuse{PCA_Error.LateServiceTermination}

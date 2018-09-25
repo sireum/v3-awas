@@ -170,7 +170,14 @@ case class ResourceBean(var _uriType: String,
   def uri: ResourceUri = {
     _uri
   }
-
+  
+  override def toFullyQualifiedName: String = {
+    if (this._uriPaths.size > 3) {
+      (this._uriPaths.drop(3) :+ _uri).mkString(".")
+    } else {
+      ""
+    }
+  }
 }
 
 
@@ -192,4 +199,6 @@ trait Resource {
           isDef: Boolean)
 
   def toUri : ResourceUri
+
+  def toFullyQualifiedName: String
 }

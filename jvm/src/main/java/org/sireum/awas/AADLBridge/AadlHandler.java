@@ -29,6 +29,7 @@ package org.sireum.awas.AADLBridge;
 
 import org.sireum.None;
 import org.sireum.aadl.ir.Aadl;
+import org.sireum.awas.analysis.FaultImpactAnalysis;
 import org.sireum.awas.ast.AwasSerializer$;
 import org.sireum.awas.ast.Builder$;
 import org.sireum.awas.ast.Model;
@@ -60,12 +61,12 @@ public class AadlHandler {
 
     public static void generateWitness(File awasFile,
                                        String output) throws Exception {
-        generateWitness(awasFile, output, "");
+        generateWitness(awasFile, output, null);
     }
 
     public static void generateWitness(File awasFile,
                                        String output,
-                                       String queryFile) throws Exception {
+                                       File queryFile) throws Exception {
         Optional<Model> modelOpt = JavaConverters.toJavaOptional(Builder$.MODULE$.apply(Option.empty(),
                 new String(Files.readAllBytes(awasFile.toPath())),
                 Builder$.MODULE$.apply$default$3(),
@@ -77,15 +78,15 @@ public class AadlHandler {
 
     public static void generateWitness(Model awasModel,
                                        String output,
-                                       String queryFile) throws IOException {
+                                       File queryFile) throws IOException {
+        String queries = (queryFile != null) ? new String(Files.readAllBytes(queryFile.toPath())) : "";
         generateWitness(AwasSerializer.serialize(awasModel),
-                output,
-                queryFile);
+                output, queries);
     }
 
     public static void generateWitness(Model awasModel,
                                        String output) throws IOException {
-        generateWitness(awasModel, output, "");
+        generateWitness(awasModel, output, null);
     }
 
 
@@ -101,5 +102,9 @@ public class AadlHandler {
     public static void generateWitness(String awasJson,
                                        String outputPath) throws IOException {
         generateWitness(awasJson, outputPath, "");
+    }
+
+    public static String generateFIA(Model awasModel) {
+        return new FaultImpactAnalysis().computeFIA(awasModel);
     }
 }

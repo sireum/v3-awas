@@ -146,7 +146,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
         var result = ilistEmpty[(ResourceUri, ResourceUri)]
         var edges = isetEmpty[Edge]
         getEdgeForPort(tuple._1).foreach { e =>
-          if (e.targetPort.isDefined) {
+          if (e.targetPort.isDefined && e.sourcePort.isDefined && e.sourcePort.get == tuple._1) {
             edges += e
             val targetPropagations = e.target.getPropagation(e.targetPort.get)
             val errrorTypes = if (targetPropagations.contains(tuple._2)) {
@@ -181,7 +181,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
         var result = ilistEmpty[(ResourceUri, ResourceUri)]
         var edges = isetEmpty[Edge]
         getEdgeForPort(tuple._1).foreach { e =>
-          if (e.sourcePort.isDefined) {
+          if (e.sourcePort.isDefined && e.targetPort.isDefined && e.targetPort.get == tuple._1) {
             edges += e
             val sourcePropagation = e.source.getPropagation(e.sourcePort.get)
             val errorTypes = if (sourcePropagation.contains(tuple._2)) {
@@ -201,7 +201,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
       }
     } else {
       FlowErrorNextCollector(isetEmpty, isetEmpty, isetEmpty,
-        isetEmpty + errorMessageGen(MISSING_NODE, tuple._1, ReachAnalysisStage.Port),
+        isetEmpty + errorMessageGen(MISSING_NODE, H.uri2CanonicalName(tuple._1), ReachAnalysisStage.Port),
         isetEmpty + this)
     }
   }
@@ -234,7 +234,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
         isetEmpty[ResourceUri],
         isetEmpty[EdgeT],
         isetEmpty[ResourceUri],
-        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port)
+        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
       )
     }
   }
@@ -281,7 +281,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
         isetEmpty[ResourceUri],
         isetEmpty[EdgeT],
         isetEmpty[ResourceUri],
-        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, port, ReachAnalysisStage.Port)
+        isetEmpty[Tag] + errorMessageGen(MISSING_NODE, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
       )
     }
   }

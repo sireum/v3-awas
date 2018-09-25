@@ -1,0 +1,16 @@
+x
+ -------------- 
+{ port-in-virtual:$$AWAS$PCA_PulseOx_scenario1_Instance$activate_app#in[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission ]
+port-in-virtual:$$AWAS$PCA_PulseOx_scenario1_Instance$activate_pump#in[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission, error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_omission ]
+port-in-virtual:$$AWAS$PCA_PulseOx_scenario1_Instance$administer#in[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#LateServiceTermination ]
+port-in:$$AWAS$PCA_PulseOx_scenario1_Instance$PCA_Pump#control[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission, error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_omission ]
+port-in:$$AWAS$PCA_PulseOx_scenario1_Instance$Patient#Vein_infuse[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#LateServiceTermination ]
+port-in:$$AWAS$PCA_PulseOx_scenario1_Instance$wifi_command#in_interface[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission ]
+port-out-virtual:$$AWAS$PCA_PulseOx_scenario1_Instance$activate_app#out[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission ]
+port-out-virtual:$$AWAS$PCA_PulseOx_scenario1_Instance$activate_pump#out[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission, error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_omission ]
+port-out-virtual:$$AWAS$PCA_PulseOx_scenario1_Instance$administer#out[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#LateServiceTermination ]
+port-out:$$AWAS$PCA_PulseOx_scenario1_Instance$App#command[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission ]
+port-out:$$AWAS$PCA_PulseOx_scenario1_Instance$PCA_Pump#IV_infuse[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#LateServiceTermination ]
+port-out:$$AWAS$PCA_PulseOx_scenario1_Instance$wifi_command#out_interface[ error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_commission, error:$$AWAS$example/Query/Spiral-1-5-no-bus.awas$PCA_Error#stop_omission ] } 
+
+ -------------- 

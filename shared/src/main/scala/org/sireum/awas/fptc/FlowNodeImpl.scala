@@ -180,7 +180,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
       //we know, if we are performing a forward analysis,
       // and calculating intra flow(this method), then given port is input
       if (isForward) result ++= outPorts else result ++= inPorts
-      errors = errors + warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.Port)
+      errors = errors + warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.Port)
 
       collector.FlowCollector(isetEmpty + this.getOwner, result, edges, flows, errors)
     } else {
@@ -198,13 +198,13 @@ final case class FlowNodeImpl(uri: ResourceUri,
                 if (compST.flow(f).fromPortUri.isDefined)
                   result = result + compST.flow(f).fromPortUri.get
               } else {
-                errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, port, ReachAnalysisStage.Port)
+                errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
               }
             }
           } else if (H.isPort(port) && compST.ports.toSet.contains(port)) {
             if (isForward) result ++= outPorts else result ++= inPorts
           } else {
-            errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, port, ReachAnalysisStage.Port)
+            errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
           }
         }
         case NodeType.CONNECTION => Resource.getParentUri(uri) match {
@@ -221,7 +221,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
                   if (connST.flow(f).fromPortUri.isDefined)
                     result = result + connST.flow(f).fromPortUri.get
                 } else {
-                  errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, port, ReachAnalysisStage.Port)
+                  errors = errors + errorMessageGen(INSUFFICIENT_FLOW_INFO, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
                 }
               }
             }
@@ -278,7 +278,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
         val port = compST.port(tuple._1).get
         errors += errorMessageGen(
           INSUFFICIENT_FLOW_INFO_ERROR,
-          tuple._1 + ", " + tuple._2,
+          H.uri2CanonicalName(tuple._1) + ", " + H.uri2CanonicalName(tuple._2),
           ReachAnalysisStage.FlowError
         )
         val tos = if (isForward) flowForward(tuple._1) else flowBackward(tuple._1)
@@ -291,7 +291,7 @@ final case class FlowNodeImpl(uri: ResourceUri,
       }
     } else {
       result = result ++ outPorts.flatMap(it => getPropagation(it).map(e => (it, e))).toSet
-      errors += warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.FlowError)
+      errors += warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.FlowError)
     }
     collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors, isetEmpty + getOwner)
   }
@@ -336,13 +336,13 @@ final case class FlowNodeImpl(uri: ResourceUri,
         //propagate on the conservative step
         errors += errorMessageGen(
           INSUFFICIENT_FLOW_INFO_ERROR,
-          tuple._1 + ", " + tuple._2,
+          H.uri2CanonicalName(tuple._1) + ", " + H.uri2CanonicalName(tuple._2),
           ReachAnalysisStage.FlowError
         )
         result ++= ports.map(op => (op, tuple._2))
       }
     } else {
-      errors += warningMessageGen(FLOW_INFO_MISSING, uri, ReachAnalysisStage.FlowError)
+      errors += warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.FlowError)
       result ++= ports.map(op => (op, tuple._2))
     }
     collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors, isetEmpty + getOwner)

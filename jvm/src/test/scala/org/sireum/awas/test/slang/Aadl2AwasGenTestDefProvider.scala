@@ -54,7 +54,7 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
     //equals test by excluding some
     val filesEqual = files.filter { p =>
     //  true
-          p.toLowerCase.contains("no")
+          p.toLowerCase.contains("15")
     }
 
     filesEqual.toVector.map { x =>

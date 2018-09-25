@@ -21,7 +21,7 @@ class FIATestDefProvider(tf: TestFramework) extends TestDefProvider {
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "fia")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "fia")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -29,8 +29,8 @@ class FIATestDefProvider(tf: TestFramework) extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-//      true
-       p.toLowerCase.contains("no")
+      true
+    //       p.toLowerCase.contains("no")
     }
 
     filesEqual.toVector.map { x =>

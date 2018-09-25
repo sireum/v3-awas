@@ -1,0 +1,124 @@
+spo2_reach
+ -------------- 
+Warning: 
+
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$PCAModelFlow$a1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$app1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$p1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$p2#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s2#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s3#in, 
+port-in:$$AWAS$PCAModelFlow$App#etco2, 
+port-in:$$AWAS$PCAModelFlow$App#rr, 
+port-in:$$AWAS$PCAModelFlow$App#spo2, 
+port-in:$$AWAS$PCAModelFlow$Capnography#breath, 
+port-in:$$AWAS$PCAModelFlow$Patient#vein, 
+port-in:$$AWAS$PCAModelFlow$PulseOx#refracted_light, 
+port-in:$$AWAS$PCAModelFlow$Pump#cmd, 
+port-out-virtual:$$AWAS$PCAModelFlow$a1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$app1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$p1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$p2#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s2#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s3#out, 
+port-out:$$AWAS$PCAModelFlow$App#pump_cmd, 
+port-out:$$AWAS$PCAModelFlow$Capnography#etco2, 
+port-out:$$AWAS$PCAModelFlow$Capnography#resp_rate, 
+port-out:$$AWAS$PCAModelFlow$Patient#exhalation, 
+port-out:$$AWAS$PCAModelFlow$Patient#fingerclip, 
+port-out:$$AWAS$PCAModelFlow$PulseOx#spo2, 
+port-out:$$AWAS$PCAModelFlow$Pump#drug } 
+
+ -------------- 
+spo2_reachback
+ -------------- 
+Warning: 
+
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$PCAModelFlow$a1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$app1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$p1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$p2#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s2#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s3#in, 
+port-in:$$AWAS$PCAModelFlow$App#etco2, 
+port-in:$$AWAS$PCAModelFlow$App#rr, 
+port-in:$$AWAS$PCAModelFlow$App#spo2, 
+port-in:$$AWAS$PCAModelFlow$Capnography#breath, 
+port-in:$$AWAS$PCAModelFlow$Patient#vein, 
+port-in:$$AWAS$PCAModelFlow$PulseOx#refracted_light, 
+port-in:$$AWAS$PCAModelFlow$Pump#cmd, 
+port-out-virtual:$$AWAS$PCAModelFlow$a1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$app1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$p1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$p2#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s2#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s3#out, 
+port-out:$$AWAS$PCAModelFlow$App#pump_cmd, 
+port-out:$$AWAS$PCAModelFlow$Capnography#etco2, 
+port-out:$$AWAS$PCAModelFlow$Capnography#resp_rate, 
+port-out:$$AWAS$PCAModelFlow$Patient#exhalation, 
+port-out:$$AWAS$PCAModelFlow$Patient#fingerclip, 
+port-out:$$AWAS$PCAModelFlow$PulseOx#spo2, 
+port-out:$$AWAS$PCAModelFlow$Pump#drug } 
+
+ -------------- 
+spo2_pump
+ -------------- 
+Warning: 
+
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$PCAModelFlow$a1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$app1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$p1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$p2#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s1#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s2#in, 
+port-in-virtual:$$AWAS$PCAModelFlow$s3#in, 
+port-in:$$AWAS$PCAModelFlow$App#etco2, 
+port-in:$$AWAS$PCAModelFlow$App#rr, 
+port-in:$$AWAS$PCAModelFlow$App#spo2, 
+port-in:$$AWAS$PCAModelFlow$Capnography#breath, 
+port-in:$$AWAS$PCAModelFlow$Patient#vein, 
+port-in:$$AWAS$PCAModelFlow$PulseOx#refracted_light, 
+port-in:$$AWAS$PCAModelFlow$Pump#cmd, 
+port-out-virtual:$$AWAS$PCAModelFlow$a1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$app1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$p1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$p2#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s1#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s2#out, 
+port-out-virtual:$$AWAS$PCAModelFlow$s3#out, 
+port-out:$$AWAS$PCAModelFlow$App#pump_cmd, 
+port-out:$$AWAS$PCAModelFlow$Capnography#etco2, 
+port-out:$$AWAS$PCAModelFlow$Capnography#resp_rate, 
+port-out:$$AWAS$PCAModelFlow$Patient#exhalation, 
+port-out:$$AWAS$PCAModelFlow$Patient#fingerclip, 
+port-out:$$AWAS$PCAModelFlow$PulseOx#spo2, 
+port-out:$$AWAS$PCAModelFlow$Pump#drug } 
+
+ -------------- 
+spo2_pump2
+ -------------- 
+Warning: 
+
+Missing flow relationships for node ''
+{ component:$$AWAS$PCAModelFlow#App, 
+component:$$AWAS$PCAModelFlow#Capnography, 
+component:$$AWAS$PCAModelFlow#Patient, 
+component:$$AWAS$PCAModelFlow#PulseOx, 
+component:$$AWAS$PCAModelFlow#Pump, 
+connection:$$AWAS$PCAModelFlow#a1, 
+connection:$$AWAS$PCAModelFlow#app1, 
+connection:$$AWAS$PCAModelFlow#p1, 
+connection:$$AWAS$PCAModelFlow#p2, 
+connection:$$AWAS$PCAModelFlow#s1, 
+connection:$$AWAS$PCAModelFlow#s2, 
+connection:$$AWAS$PCAModelFlow#s3 } 
+
+ -------------- 

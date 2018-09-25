@@ -30,7 +30,7 @@ package org.sireum.awas
 import facades._
 import org.scalajs.dom
 import org.scalajs.dom.ext._
-import org.scalajs.dom.html.{Anchor, Div, Input, Table}
+import org.scalajs.dom.html.{Anchor, Div, Input, Label, Table}
 import org.scalajs.dom.raw.Node
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
@@ -69,6 +69,7 @@ object Main {
   var gl: Option[GoldenLayout] = None
   var qI: Option[QueryInter] = None
   var st: Option[SymbolTable] = None
+  var terminal: Option[Terminal] = None
 
   def getInitLayout(title: String, inGraph: String): js.Dictionary[scalajs.js.Any] = js.Dictionary(
     ("settings", js.Dictionary(("showPopoutIcon", false),
@@ -669,15 +670,47 @@ object Main {
     rows.foreach(r => table.appendChild(r))
     treeTableAdapter()
     val buttons = PimpedNodeList(table.querySelectorAll(".query-table-button"))
+    def notifyErrors(id: String, coll: Collector): Unit = {
+      if (coll.getGraphs.isEmpty) {
+        Notification.notify(Notification.Kind.Info, "The result is empty.")
+      }
+      if (coll.getErrors.nonEmpty) {
+        val resErrMsg = coll.getErrors.flatMap {
+          case m: ErrorMessage => Some(value = m.message)
+          case _ => None
+        }
+        resErrMsg.foreach(Notification.notify(Notification.Kind.Error, _))
+        if (terminal.isDefined) {
+          terminal.get.echo("[[;red;]" + "Error(s) in " + id + "]")
+          resErrMsg.foreach(it => terminal.get.echo("[[;red;]" + it + "]"))
+        }
+      }
+      if (coll.getWarnings.nonEmpty) {
+        val resWarnMsg = coll.getWarnings.flatMap {
+          case m: WarningMessage => Some(value = m.message)
+          case _ => None
+        }
+        resWarnMsg.foreach(Notification.notify(Notification.Kind.Warning, _))
+        if (terminal.isDefined) {
+          terminal.get.echo("[[;orange;]" + "Warning(s) in " + id + "]")
+          resWarnMsg.foreach(it => terminal.get.echo("[[;orange;]" + it + "]"))
+        }
+      }
+
+    }
     buttons.foreach { b =>
       val id = b.asInstanceOf[Anchor].getAttribute("id")
       b.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
 //        b.asInstanceOf[Anchor].
-        if (id.contains(":")) {
-          highlight(collectorToUris(results(id.split(":").head)
-            .getPaths.toIndexedSeq(id.split(":").last.toInt)))
-        } else {
-          highlight(collectorToUris(results(id)))
+if (id.contains(":")) {
+  val resColl = results(id.split(":").head)
+  val res = resColl.getPaths.toIndexedSeq(id.split(":").last.toInt)
+  notifyErrors(id, res)
+  highlight(collectorToUris(res))
+} else {
+  val res = results(id)
+  notifyErrors(id, res)
+  highlight(collectorToUris(res))
         }
       }
     }
@@ -721,7 +754,8 @@ object Main {
         qI = Some(new QueryInter(st))
       }
       //gl.get.root.contentItems(0).addChild(cliConfig())
-      Terminal("#term1").terminal({ (cmd: String, term: Terminal) => {
+      terminal = Some(
+        Terminal("#term1").terminal({ (cmd: String, term: Terminal) => {
 
         val res = Future(qI.get.evalCmd(cmd))
 
@@ -729,7 +763,7 @@ object Main {
           if (r.isSuccess) {
             if (r.get._2.messages.isEmpty) {
               if (r.get._1.last._2.hasErrors) {
-                term.echo("Errors :" + r.get._1.last._2.getErrors.map(x =>
+                term.error("Errors :" + r.get._1.last._2.getErrors.map(x =>
               x.asInstanceOf[MessageTag].message).mkString("\n"))
           } else {
                 term.echo("Computed: " + r.get._1.last._1)
@@ -755,7 +789,8 @@ object Main {
           t.find("textarea").blur().focus()
         }
         }: js.ThisFunction0[Terminal, Unit])
-      )).resize()
+      )))
+      terminal.get.resize()
       val x = $[Div](".terminal-output")
       x.setAttribute("overflow", "auto")
     }
@@ -765,7 +800,7 @@ object Main {
   private def openQueryCli(st: SymbolTable, graph : FlowGraph[FlowNode, FlowEdge[FlowNode]]): Boolean = {
     var queryLayout: Option[GoldenLayout] = None
     if (gl.isDefined) {
-      println(gl.get)
+
       if (gl.get.root.getItemsById("cli").nonEmpty) {
         val ci = gl.get.root.getItemsById("cli").head
         val stacks = gl.get.root.getItemsByType("stack")
@@ -831,7 +866,6 @@ object Main {
           } else {
             qBox.querySelectorAll(".select-query").foreach(_.asInstanceOf[Input].checked = false)
           }
-          println("select all clicked")
         }
 
         queryLayout.get.registerComponent("query_table", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
@@ -860,9 +894,12 @@ object Main {
           reader.onload = (_: UIEvent) => {
 
             queries = reader.result.asInstanceOf[String]
-//            println(queries)
-            qI.get.evalQueryFile(queries)
-            updateTable(qI.get.getQueries, qI.get.getResults)
+
+            qI.get.evalQueryFile(queries).onComplete { res =>
+              if (res.isSuccess) {
+                updateTable(qI.get.getQueries, res.get)
+              }
+            }
             if (qI.get.getReporter.messages.nonEmpty) {
               println(qI.get.getReporter.messages.elements.mkString("\n"))
             }
@@ -875,7 +912,7 @@ object Main {
 
         val inputExport = qBox.querySelector("#export-queries")
         inputExport.asInstanceOf[Input].onclick = (_: MouseEvent) => {
-          println("exporter")
+
           val selectedQueries = qBox.querySelectorAll(".select-query")
             .filter(_.asInstanceOf[Input].checked).flatMap{sq =>
             sq.attributes.get("id")}.map(_.value.split(":").last).toSet
@@ -892,8 +929,16 @@ object Main {
 
         val inputFia = qBox.querySelector("#gen-queries")
         inputFia.asInstanceOf[Input].onclick = (_: MouseEvent) => {
-          qI.get.evalQueryFile(new FaultImpactAnalysis().generateFIAQueries(st, graph, true))
-          updateTable(qI.get.getQueries, qI.get.getResults)
+          val magic = inputFia.parentNode.asInstanceOf[Label].querySelector(".file-icon").firstChild
+          inputFia.parentNode
+            .asInstanceOf[Label].querySelector(".file-icon")
+            .replaceChild(render[Node](i(cls := "fas fa-spinner")), magic)
+          val res = qI.get.evalQueryFile(new FaultImpactAnalysis().generateFIAQueries(st, graph, true))
+          res.onComplete(r => if (r.isSuccess) { updateTable(qI.get.getQueries, r.get) })
+          val doing = inputFia.parentNode.asInstanceOf[Label].querySelector(".file-icon").firstChild
+          inputFia.parentNode.asInstanceOf[Label].querySelector(".file-icon").replaceChild(magic, doing)
+          Notification.notify(Notification.Kind.Success, "Generated FIA queries")
+//          updateTable(qI.get.getQueries, qI.get.getResults)
         }
 
         val inputRemove = qBox.querySelector("#remove-queries")

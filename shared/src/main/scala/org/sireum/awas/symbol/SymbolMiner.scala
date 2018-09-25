@@ -840,9 +840,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       }
     } else {
       //here comp is vacuously defined
-      reporter.report(errorMessageGen(MISSING_COMPONENT,
-        comp.get,
-        m, comp.get.value.map(_.value).mkString("::")))
+      reporter.report(errorMessageGen(MISSING_COMPONENT, comp.get.value.last, m, (comp.get.value.map(_.value)).mkString("::"))
+      )
       false
     }
   }

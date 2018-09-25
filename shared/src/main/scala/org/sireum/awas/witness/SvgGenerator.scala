@@ -259,7 +259,7 @@ object SvgGenerator {
                               tag("font")(
                                 attr("POINT-SIZE") := 8,
                                 tabledata(
-                                  H.uri2IdString(error),
+                                  H.uri2CanonicalName(error),
                                   if (inPorts.last != (portid, uri, text)) true
                                   else false
                                 )
