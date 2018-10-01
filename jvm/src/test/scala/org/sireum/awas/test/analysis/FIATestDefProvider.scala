@@ -3,14 +3,10 @@ import java.nio.file.Paths
 
 import org.sireum.awas.analysis.FaultImpactAnalysis
 import org.sireum.awas.ast.Builder
-import org.sireum.awas.fptc.FlowGraph
-import org.sireum.awas.query.{QueryEval, QueryParser}
-import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils.{extensor, makePath, writeResult}
-import org.sireum.message.Reporter
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
-import org.sireum.util.{AccumulatingTagReporter, FileResourceUri, ISeq, Uri}
 import org.sireum.util.jvm.FileUtil._
+import org.sireum.util.{FileResourceUri, ISeq, Uri}
 
 class FIATestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(
@@ -56,6 +52,7 @@ class FIATestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     Builder(Some(relativeUri.toString), model) match {
       case None => ""
+
       case Some(m) => {
         "From Source \n\n" + new FaultImpactAnalysis().generateFIAQueries(m, true)+
           "\n\nFrom Sink \n\n" +  new FaultImpactAnalysis().generateFIAQueries(m, false)
