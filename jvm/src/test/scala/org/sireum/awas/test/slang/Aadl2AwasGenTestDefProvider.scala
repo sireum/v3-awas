@@ -27,16 +27,14 @@
 
 package org.sireum.awas.test.slang
 
-import org.sireum.awas.analysis.FaultImpactAnalysis
-import org.sireum.awas.ast.{Builder, PrettyPrinter}
+import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.util.TestUtils._
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.jvm.FileUtil._
 import org.sireum.util.{FileResourceUri, ISeq, Uri}
 
-class Aadl2AwasGenTestDefProvider(tf: TestFramework)
-  extends TestDefProvider {
+class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(makePath("..", "example", "aadl-json"))
 
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "slang")))
@@ -47,14 +45,13 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
   val outputExtension = ".awas"
 
   override def testDefs: ISeq[TestDef] = {
-    val files = testDirs.flatMap { d =>
-      listFiles(fileUri(this.getClass, d), ".json")
+    val files = testDirs.flatMap { d => listFiles(fileUri(this.getClass, d), ".json")
     }
 
     //equals test by excluding some
     val filesEqual = files.filter { p =>
-    //  true
-          p.toLowerCase.contains("15")
+      true
+//          p.toLowerCase.contains("15")
     }
 
     filesEqual.toVector.map { x =>
@@ -64,22 +61,17 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework)
 
       val outputFileName = fileWithOutExt + outputExtension
 
-      writeResult(outputFileName,
-        translateAndParse(x, readFile(x)._1), expectedDir, resultsDir, generateExpected)
+      writeResult(outputFileName, translateAndParse(x, readFile(x)._1), expectedDir, resultsDir, generateExpected)
 
-      EqualTest(fileWithOutExt,
+      EqualTest(
+        fileWithOutExt,
         readFile(toUri(makePath(resultsDir, outputFileName)))._1,
-        readFile(toUri(makePath(expectedDir, outputFileName)))._1)
+        readFile(toUri(makePath(expectedDir, outputFileName)))._1
+      )
     }
   }
 
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
-    Builder(None, model) match {
-      case None => ""
-      case Some(m) =>
-    }
-
-
     Aadl2Awas(model) match {
       case Some(x) => {
 //                        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
