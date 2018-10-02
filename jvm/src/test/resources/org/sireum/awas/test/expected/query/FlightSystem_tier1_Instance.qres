@@ -1,0 +1,87 @@
+q1
+ -------------- 
+{ port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$afgtofc#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$gpstoafg#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$satellite#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-in:$$AWAS$FlightSystem_tier1_Instance#satelliteSignal[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#position[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$FlightControl#guidanceCommands[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$GPS#satelliteSignal[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$afgtofc#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$gpstoafg#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$satellite#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#AFGOutput[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FlightControl#flightSurfaceControl[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$GPS#location[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ] } 
+
+ -------------- 
+q2
+ -------------- 
+{ port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$PilottoAfg#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$afgtofc#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$gpstoafg#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$power1#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$power2#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$satellite#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-in:$$AWAS$FlightSystem_tier1_Instance#pilotInput[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-in:$$AWAS$FlightSystem_tier1_Instance#satelliteSignal[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#operatorCommand[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#position[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#powersupply[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$FlightControl#guidanceCommands[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$FlightControl#powersupply[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$GPS#satelliteSignal[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$PilottoAfg#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$afgtofc#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$gpstoafg#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$power1#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$power2#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$satellite#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$GPSErrorLibrary#NoSignal ]
+port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#AFGOutput[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FSpowersupply#power[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FlightControl#flightSurfaceControl[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$GPS#location[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ] } 
+
+ -------------- 
+q3
+ -------------- 
+{ port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$PilottoAfg#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$afgtofc#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in:$$AWAS$FlightSystem_tier1_Instance#pilotInput[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#operatorCommand[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$FlightControl#guidanceCommands[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$PilottoAfg#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoPilotInput ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$afgtofc#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$AutoFlightGuidance#AFGOutput[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ] } 
+
+ -------------- 
+q4
+ -------------- 
+{ component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance, 
+component:$$AWAS$FlightSystem_tier1_Instance#FSpowersupply, 
+component:$$AWAS$FlightSystem_tier1_Instance#FlightControl, 
+connection:$$AWAS$FlightSystem_tier1_Instance#FlightControlEffect, 
+connection:$$AWAS$FlightSystem_tier1_Instance#afgtofc, 
+connection:$$AWAS$FlightSystem_tier1_Instance#power1, 
+connection:$$AWAS$FlightSystem_tier1_Instance#power2, 
+port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure } 
+
+ -------------- 
+error_paths_with_some
+ -------------- 
+{ port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-in-virtual:$$AWAS$FlightSystem_tier1_Instance$power2#in[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-in:$$AWAS$FlightSystem_tier1_Instance$FlightControl#powersupply[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$FlightControlEffect#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ]
+port-out-virtual:$$AWAS$FlightSystem_tier1_Instance$power2#out[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FSpowersupply#power[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$ErrorLibrary#ServiceOmission ]
+port-out:$$AWAS$FlightSystem_tier1_Instance$FlightControl#flightSurfaceControl[ error:$$AWAS$example/Query/FlightSystem_tier1_Instance.awas$AFGErrorLibrary#NoService ] } 
+
+ -------------- 

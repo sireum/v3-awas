@@ -1,0 +1,50 @@
+system  Simple_Comm_s1_Instance
+
+    sub-components {
+      alice
+        ports
+          in send_port_IN
+          out send_port_OUT
+        flows
+          receive_ack : send_port_IN -> *
+          send_msg : * -> send_port_OUT
+
+      bob
+        ports
+          in receive_Port_IN
+          out receive_Port_OUT
+        flows
+          receive_msg : receive_Port_IN -> *
+          send_ack : * -> receive_Port_OUT
+
+      mallory
+        ports
+          in receive_Port_IN
+          out receive_Port_OUT
+        flows
+          receive_msg : receive_Port_IN -> *
+          send_ack : * -> receive_Port_OUT
+
+      router
+        ports
+          in socket1_IN
+          out socket1_OUT
+          in socket2_IN
+          out socket2_OUT
+          in socket3_IN
+          out socket3_OUT
+          in socket4_IN
+          out socket4_OUT
+    }
+    connections
+      alice_send : alice.send_port_OUT -> router.socket1_IN
+
+      bob_send : bob.receive_Port_OUT -> router.socket2_IN
+
+      mallory_send : mallory.receive_Port_OUT -> router.socket3_IN
+
+      alice_receive : router.socket1_OUT -> alice.send_port_IN
+
+      bob_receive : router.socket2_OUT -> bob.receive_Port_IN
+
+      mallory_receive : router.socket3_OUT -> mallory.receive_Port_IN

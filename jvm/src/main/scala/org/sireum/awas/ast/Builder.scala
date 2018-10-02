@@ -1,27 +1,29 @@
 /*
-Copyright (c) 2015, Robby, Kansas State University
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ *
+ *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice, this
+ *     list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
 
 package org.sireum.awas.ast
 
@@ -42,9 +44,10 @@ final class Builder private() {
     val r = Model(ctx.typeDecl().map(build),
       ctx.behaviorDecl().map(build),
       ctx.constantDecl().map(build),
-      ctx.componentDecl().map(build),
-      ctx.connectionDecl().map(build),
-      ctx.deploymentDecl().map(build)
+      if (ctx.componentDecl() != null) Some(build(ctx.componentDecl())) else None
+      //      ctx.componentDecl().map(build),
+      //      ctx.connectionDecl().map(build),
+      //      ctx.deploymentDecl().map(build)
     ) at ctx
     r.nodeLocMap = this.nodeLocMap
     r.fileUriOpt = fileUriOpt
@@ -79,20 +82,23 @@ final class Builder private() {
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else {
         None
       },
+      ctx.componentDecl().map(build),
+      ctx.connectionDecl().map(build),
+      ctx.deploymentDecl().map(build),
       ctx.property().map(build)
     ) at ctx
   }
 
   def build(ctx: ConnectionDeclContext): ConnectionDecl = {
     ConnectionDecl(buildId(ctx.connName),
-      build(ctx.fromComponent),
+      if (ctx.fromComponent != null) Some(build(ctx.fromComponent)) else None,
       buildId(ctx.fromPort),
       if (ctx.connType.getText == "<->") {
         true
       } else {
         false
       },
-      build(ctx.toComponent),
+      if (ctx.toComponent != null) Some(build(ctx.toComponent)) else None,
       buildId(ctx.toPort),
       ctx.flowc().map(build),
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else None,
@@ -101,12 +107,13 @@ final class Builder private() {
 
   def build(ctx: DeploymentDeclContext): DeploymentDecl = {
     DeploymentDecl(build(ctx.fromComponent),
-      build(ctx.toComponent)) at ctx
+      if (ctx.fromPort != null) Some(buildId(ctx.fromPort)) else None,
+      build(ctx.toComponent),
+      if (ctx.toPort != null) Some(buildId(ctx.toPort)) else None) at ctx
   }
 
   def build(ctx: TypeAliasDeclContext): AliasDecl = {
-    AliasDecl(buildId(ctx.ID()),
-      build(ctx.`type`())) at ctx
+    AliasDecl(build(ctx.name()), build(ctx.basicType())) at ctx
   }
 
   def build(ctx: EnumDeclContext): EnumDecl = {
@@ -189,10 +196,10 @@ final class Builder private() {
   }
 
   def build(ctx: TupleContext): Tuple = {
-    var result = ilinkedMapEmpty[Id, One]
+    var result = ilistEmpty[(Id, One)]
     if(ctx != null) {
       ctx.faultPort().foreach { fp =>
-        result = result + (buildId(fp.ID()) -> build(fp.one()))
+        result = result :+ ((buildId(fp.ID()), build(fp.one())))
       }
     }
     Tuple(result)

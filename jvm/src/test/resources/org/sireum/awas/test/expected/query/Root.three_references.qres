@@ -1,0 +1,91 @@
+q1
+ -------------- 
+{ component:$$AWAS$Root_three_references_Instance#Sub, 
+component:$$AWAS$Root_three_references_Instance$Sub#sub_proc, 
+component:$$AWAS$Root_three_references_Instance$Sub$sub_proc#thread1, 
+connection:$$AWAS$Root_three_references_Instance#system_to_comp_in, 
+connection:$$AWAS$Root_three_references_Instance#system_to_comp_out, 
+connection:$$AWAS$Root_three_references_Instance$Sub#child_to_parent, 
+connection:$$AWAS$Root_three_references_Instance$Sub#parent_to_child, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_BACKWARD, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_FORWARD, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_in, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_port_IN, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_IN, 
+port-out:$$AWAS$Root_three_references_Instance#root_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub#sub_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub#sub_port_OUT, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_OUT, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_out } 
+
+ -------------- 
+q2
+ -------------- 
+{ component:$$AWAS$Root_three_references_Instance#Sub, 
+component:$$AWAS$Root_three_references_Instance$Sub#sub_proc, 
+component:$$AWAS$Root_three_references_Instance$Sub$sub_proc#thread1, 
+connection:$$AWAS$Root_three_references_Instance#system_to_comp_out, 
+connection:$$AWAS$Root_three_references_Instance$Sub#child_to_parent, 
+connection:$$AWAS$Root_three_references_Instance$Sub#parent_to_child, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_BACKWARD, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_FORWARD, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_in, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_port_IN, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_IN, 
+port-out:$$AWAS$Root_three_references_Instance#root_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub#sub_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub#sub_port_OUT, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_OUT, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_out } 
+
+ -------------- 
+q3
+ -------------- 
+Warning: 
+
+Missing flow relationships for node 'Sub.child_to_parent'
+Missing flow relationships for node 'Sub.parent_to_child'
+Missing flow relationships for node ''
+Missing flow relationships for node 'Sub.sub_proc.proc_to_thread_BACKWARD'
+Missing flow relationships for node 'Sub.sub_proc.thread1'
+Missing flow relationships for node 'Sub.sub_proc.proc_to_thread_FORWARD'
+Missing flow relationships for node 'Sub.sub_proc'
+{ port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$child_to_parent#in, 
+port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$parent_to_child#in, 
+port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$sub_proc$proc_to_thread_BACKWARD#in, 
+port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$sub_proc$proc_to_thread_FORWARD#in, 
+port-in-virtual:$$AWAS$Root_three_references_Instance$system_to_comp_in#in, 
+port-in-virtual:$$AWAS$Root_three_references_Instance$system_to_comp_out#in, 
+port-in:$$AWAS$Root_three_references_Instance#root_in, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_port_IN, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_IN, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc$thread1#access_point_IN, 
+port-out-virtual:$$AWAS$Root_three_references_Instance$Sub$child_to_parent#out, 
+port-out-virtual:$$AWAS$Root_three_references_Instance$Sub$parent_to_child#out, 
+port-out-virtual:$$AWAS$Root_three_references_Instance$Sub$sub_proc$proc_to_thread_BACKWARD#out, 
+port-out-virtual:$$AWAS$Root_three_references_Instance$Sub$sub_proc$proc_to_thread_FORWARD#out, 
+port-out-virtual:$$AWAS$Root_three_references_Instance$system_to_comp_in#out, 
+port-out-virtual:$$AWAS$Root_three_references_Instance$system_to_comp_out#out, 
+port-out:$$AWAS$Root_three_references_Instance#root_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub#sub_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub#sub_port_OUT, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_OUT, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_out, 
+port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc$thread1#access_point_OUT } 
+
+ -------------- 
+q4
+ -------------- 
+{ component:$$AWAS$Root_three_references_Instance#Sub, 
+component:$$AWAS$Root_three_references_Instance$Sub#sub_proc, 
+component:$$AWAS$Root_three_references_Instance$Sub$sub_proc#thread1, 
+connection:$$AWAS$Root_three_references_Instance#system_to_comp_in, 
+connection:$$AWAS$Root_three_references_Instance$Sub#parent_to_child, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_BACKWARD, 
+connection:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_to_thread_FORWARD, 
+port-in:$$AWAS$Root_three_references_Instance$Sub#sub_port_IN, 
+port-in:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_in_out_IN } 
+
+ -------------- 

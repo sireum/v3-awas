@@ -1,0 +1,1415 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "scenario_drop_scalpel_Instance"
+        ]
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "clinician"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Abstract"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "knife::clinician"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "clinician",
+                  "hand"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "clinician",
+                  "foot"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+            {
+              "type": "Property",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "clinician",
+                  "AAMI_80001::Hazardous_Situations"
+                ]
+              },
+              "propertyValues": [
+                {
+                  "type": "RecordProp",
+                  "properties": [
+                    {
+                      "type": "Property",
+                      "name": {
+                        "type": "Name",
+                        "name": [
+                          "scenario_drop_scalpel_Instance",
+                          "clinician",
+                          "AAMI_80001::Hazardous_Situation.ID"
+                        ]
+                      },
+                      "propertyValues": [
+                        {
+                          "type": "ValueProp",
+                          "value": "HS01"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Property",
+                      "name": {
+                        "type": "Name",
+                        "name": [
+                          "scenario_drop_scalpel_Instance",
+                          "clinician",
+                          "AAMI_80001::Hazardous_Situation.Description"
+                        ]
+                      },
+                      "propertyValues": [
+                        {
+                          "type": "ValueProp",
+                          "value": "Clinician loses control of scalpel"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Property",
+                      "name": {
+                        "type": "Name",
+                        "name": [
+                          "scenario_drop_scalpel_Instance",
+                          "clinician",
+                          "AAMI_80001::Hazardous_Situation.Paths_to_Unintended_Consequences"
+                        ]
+                      },
+                      "propertyValues": [
+                        {
+                          "type": "RecordProp",
+                          "properties": [
+                            {
+                              "type": "Property",
+                              "name": {
+                                "type": "Name",
+                                "name": [
+                                  "scenario_drop_scalpel_Instance",
+                                  "clinician",
+                                  "null.Unintended_Consequence"
+                                ]
+                              },
+                              "propertyValues": [
+                                {
+                                  "type": "RecordProp",
+                                  "properties": [
+                                    {
+                                      "type": "Property",
+                                      "name": {
+                                        "type": "Name",
+                                        "name": [
+                                          "scenario_drop_scalpel_Instance",
+                                          "clinician",
+                                          "AAMI_80001::Unintended_Consequence.ID"
+                                        ]
+                                      },
+                                      "propertyValues": [
+                                        {
+                                          "type": "ValueProp",
+                                          "value": "UC01"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Property",
+                                      "name": {
+                                        "type": "Name",
+                                        "name": [
+                                          "scenario_drop_scalpel_Instance",
+                                          "clinician",
+                                          "AAMI_80001::Unintended_Consequence.Description"
+                                        ]
+                                      },
+                                      "propertyValues": [
+                                        {
+                                          "type": "ValueProp",
+                                          "value": "laceration of clinician's foot"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "Property",
+                                      "name": {
+                                        "type": "Name",
+                                        "name": [
+                                          "scenario_drop_scalpel_Instance",
+                                          "clinician",
+                                          "AAMI_80001::Unintended_Consequence.Severity"
+                                        ]
+                                      },
+                                      "propertyValues": [
+                                        {
+                                          "type": "ValueProp",
+                                          "value": "Low"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Property",
+                              "name": {
+                                "type": "Name",
+                                "name": [
+                                  "scenario_drop_scalpel_Instance",
+                                  "clinician",
+                                  "null.Contributing_Factors"
+                                ]
+                              },
+                              "propertyValues": [
+                              ]
+                            },
+                            {
+                              "type": "Property",
+                              "name": {
+                                "type": "Name",
+                                "name": [
+                                  "scenario_drop_scalpel_Instance",
+                                  "clinician",
+                                  "null.Likelihood_of_Transition"
+                                ]
+                              },
+                              "propertyValues": [
+                                {
+                                  "type": "ValueProp",
+                                  "value": "Probable"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "In"
+                    },
+                    "propagationPoint": [
+                      "scenario_drop_scalpel_Instance",
+                      "clinician",
+                      "foot"
+                    ],
+                    "errorTokens": [
+                      "ItemCommission"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "scenario_drop_scalpel_Instance",
+                      "clinician",
+                      "hand"
+                    ],
+                    "errorTokens": [
+                      "ItemCommission"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "scenario_drop_scalpel_Instance",
+                        "clinician",
+                        "slippery_hand"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "scenario_drop_scalpel_Instance",
+                          "clinician",
+                          "hand"
+                        ],
+                        "errorTokens": [
+                          "ItemCommission"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "scenario_drop_scalpel_Instance",
+                        "clinician",
+                        "drop"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Sink"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "scenario_drop_scalpel_Instance",
+                          "clinician",
+                          "foot"
+                        ],
+                        "errorTokens": [
+                          "ItemCommission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "None"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "patient"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Abstract"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "knife::patient"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "patient",
+                  "skin"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "scalpel"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Device"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "knife::scalpel"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "scalpel",
+                  "handle"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "scalpel",
+                  "sharp_edge"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "AbstractFeature"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+                {
+                  "type": "Property",
+                  "name": {
+                    "type": "Name",
+                    "name": [
+                      "scenario_drop_scalpel_Instance",
+                      "scalpel",
+                      "sharp_edge",
+                      "AAMI_80001::Hazards"
+                    ]
+                  },
+                  "propertyValues": [
+                    {
+                      "type": "RecordProp",
+                      "properties": [
+                        {
+                          "type": "Property",
+                          "name": {
+                            "type": "Name",
+                            "name": [
+                              "scenario_drop_scalpel_Instance",
+                              "scalpel",
+                              "sharp_edge",
+                              "AAMI_80001::Hazard.ID"
+                            ]
+                          },
+                          "propertyValues": [
+                            {
+                              "type": "ValueProp",
+                              "value": "Haz01"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Property",
+                          "name": {
+                            "type": "Name",
+                            "name": [
+                              "scenario_drop_scalpel_Instance",
+                              "scalpel",
+                              "sharp_edge",
+                              "AAMI_80001::Hazard.Description"
+                            ]
+                          },
+                          "propertyValues": [
+                            {
+                              "type": "ValueProp",
+                              "value": "Sharp Edge"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                  "ErrorLibrary"
+                ],
+                "propagations": [
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "In"
+                    },
+                    "propagationPoint": [
+                      "scenario_drop_scalpel_Instance",
+                      "scalpel",
+                      "handle"
+                    ],
+                    "errorTokens": [
+                      "ItemCommission"
+                    ]
+                  },
+                  {
+                    "type": "Emv2Propagation",
+                    "direction": {
+                      "type": "PropagationDirection",
+                      "value": "Out"
+                    },
+                    "propagationPoint": [
+                      "scenario_drop_scalpel_Instance",
+                      "scalpel",
+                      "sharp_edge"
+                    ],
+                    "errorTokens": [
+                      "ItemCommission"
+                    ]
+                  }
+                ],
+                "flows": [
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "scenario_drop_scalpel_Instance",
+                        "scalpel",
+                        "slippery_handle"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "scenario_drop_scalpel_Instance",
+                          "scalpel",
+                          "sharp_edge"
+                        ],
+                        "errorTokens": [
+                          "ItemCommission"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "scenario_drop_scalpel_Instance",
+                        "scalpel",
+                        "drop"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "scenario_drop_scalpel_Instance",
+                          "scalpel",
+                          "handle"
+                        ],
+                        "errorTokens": [
+                          "ItemCommission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "scenario_drop_scalpel_Instance",
+                          "scalpel",
+                          "sharp_edge"
+                        ],
+                        "errorTokens": [
+                          "ItemCommission"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "hold"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician",
+                "hand"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "handle"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician",
+                "hand -> scalpel",
+                "handle"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "intended_use"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "sharp_edge"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "patient"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "patient",
+                "skin"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "sharp_edge -> patient",
+                "skin"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "unintended_use"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "sharp_edge"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician",
+                "foot"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "sharp_edge -> clinician",
+                "foot"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "clinician.hand -> scalpel.handle"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician",
+                "hand"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "handle"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "hold"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "scalpel.sharp_edge -> patient.skin"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "sharp_edge"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "patient"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "patient",
+                "skin"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "intended_use"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "scenario_drop_scalpel_Instance",
+              "scalpel.sharp_edge -> clinician.foot"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "scalpel",
+                "sharp_edge"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician"
+              ]
+            },
+            "feature": {
+              "type": "Name",
+              "name": [
+                "scenario_drop_scalpel_Instance",
+                "clinician",
+                "foot"
+              ]
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance",
+                  "unintended_use"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "scenario_drop_scalpel_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [],
+            "propagations": [
+            ],
+            "flows": [
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "errorLib": [
+    {
+      "type": "Emv2Library",
+      "name": {
+        "type": "Name",
+        "name": [
+          "ErrorLibrary"
+        ]
+      },
+      "useTypes": [],
+      "tokens": [
+        "ServiceError",
+        "ItemOmission",
+        "ServiceOmission",
+        "SequenceOmission",
+        "TransientServiceOmission",
+        "LateServiceStart",
+        "EarlyServiceTermination",
+        "BoundedOmissionInterval",
+        "ItemCommission",
+        "ServiceCommission",
+        "SequenceCommission",
+        "EarlyServiceStart",
+        "LateServiceTermination",
+        "ItemTimingError",
+        "EarlyDelivery",
+        "LateDelivery",
+        "SequenceTimingError",
+        "HighRate",
+        "LowRate",
+        "RateJitter",
+        "ServiceTimingError",
+        "DelayedService",
+        "EarlyService",
+        "TimingError",
+        "RateError",
+        "EarlyData",
+        "LateData",
+        "ServiceTimeShift",
+        "ItemValueError",
+        "UndetectableValueError",
+        "DetectableValueError",
+        "OutOfRange",
+        "BelowRange",
+        "AboveRange",
+        "OutOfBounds",
+        "SequenceValueError",
+        "BoundedValueChange",
+        "StuckValue",
+        "OutOfOrder",
+        "ServiceValueError",
+        "OutOfCalibration",
+        "ValueError",
+        "IncorrectValue",
+        "ValueCorruption",
+        "BadValue",
+        "SequenceError",
+        "SubtleValueError",
+        "BenignValueError",
+        "SubtleValueCorruption",
+        "ReplicationError",
+        "AsymmetricReplicatesError",
+        "AsymmetricValue",
+        "AsymmetricApproximateValue",
+        "AsymmetricExactValue",
+        "AsymmetricTiming",
+        "AsymmetricOmission",
+        "AsymmetricItemOmission",
+        "AsymmetricServiceOmission",
+        "SymmetricReplicatesError",
+        "SymmetricValue",
+        "SymmetricApproximateValue",
+        "SymmetricExactValue",
+        "SymmetricTiming",
+        "SymmetricOmission",
+        "SymmetricItemOmission",
+        "SymmetricServiceOmission",
+        "InconsistentValue",
+        "InconsistentTiming",
+        "InconsistentOmission",
+        "InconsistentItemOmission",
+        "InconsistentServiceOmission",
+        "AsymmetricTransmissive",
+        "ConcurrencyError",
+        "RaceCondition",
+        "ReadWriteRace",
+        "WriteWriteRace",
+        "MutExError",
+        "Deadlock",
+        "Starvation"
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 19,
+        "entries": [
+          [
+            "InconsistentValue",
+            "AsymmetricValue"
+          ],
+          [
+            "SubtleValueCorruption",
+            "DetectableValueError"
+          ],
+          [
+            "InconsistentItemOmission",
+            "AsymmetricItemOmission"
+          ],
+          [
+            "IncorrectValue",
+            "ItemValueError"
+          ],
+          [
+            "RateError",
+            "SequenceTimingError"
+          ],
+          [
+            "InconsistentTiming",
+            "AsymmetricTiming"
+          ],
+          [
+            "TimingError",
+            "ItemTimingError"
+          ],
+          [
+            "EarlyData",
+            "HighRate"
+          ],
+          [
+            "ValueError",
+            "ItemValueError"
+          ],
+          [
+            "LateData",
+            "LowRate"
+          ],
+          [
+            "BenignValueError",
+            "DetectableValueError"
+          ],
+          [
+            "ValueCorruption",
+            "ItemValueError"
+          ],
+          [
+            "SubtleValueError",
+            "UndetectableValueError"
+          ],
+          [
+            "BadValue",
+            "ItemValueError"
+          ],
+          [
+            "SequenceError",
+            "SequenceValueError"
+          ],
+          [
+            "InconsistentOmission",
+            "AsymmetricOmission"
+          ],
+          [
+            "InconsistentServiceOmission",
+            "AsymmetricServiceOmission"
+          ],
+          [
+            "AsymmetricTransmissive",
+            "AsymmetricValue"
+          ],
+          [
+            "ServiceTimeShift",
+            "ServiceTimingError"
+          ]
+        ]
+      }
+    }
+  ]
+}

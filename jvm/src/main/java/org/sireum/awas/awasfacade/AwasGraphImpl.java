@@ -1,30 +1,33 @@
 /*
- Copyright (c) 2017, Robby, Kansas State University
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- 1. Redistributions of source code must retain the above copyright notice, this
-    list of conditions and the following disclaimer.
- 2. Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice, this
+ *     list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
 
 package org.sireum.awas.awasfacade;
 
+import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
 import org.sireum.awas.query.Model;
@@ -37,7 +40,6 @@ import org.sireum.awas.reachability.PortReachability;
 import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTableHelper;
-import org.sireum.awas.util.AwasUtil;
 import org.sireum.awas.util.JavaConverters;
 
 import java.util.*;
@@ -48,7 +50,7 @@ import static org.sireum.awas.util.JavaConverters.*;
 
 
 public class AwasGraphImpl implements AwasGraph {
-    private FlowGraph<FlowNode> graph;
+    private FlowGraph<FlowNode, FlowEdge<FlowNode>> graph;
 
     private SymbolTable st;
 
@@ -56,11 +58,11 @@ public class AwasGraphImpl implements AwasGraph {
 
     private ErrorReachability<FlowNode> er;
 
-    public AwasGraphImpl(FlowGraph<FlowNode> graph, SymbolTable st) {
+    public AwasGraphImpl(FlowGraph<FlowNode, FlowEdge<FlowNode>> graph, SymbolTable st) {
         this.graph = graph;
         this.st = st;
-        this.pr = PortReachability$.MODULE$.apply(graph, st);
-        this.er = ErrorReachability$.MODULE$.apply(graph, st);
+        this.pr = PortReachability$.MODULE$.apply(st);
+        this.er = ErrorReachability$.MODULE$.apply(st);
     }
 
     /**
@@ -138,7 +140,8 @@ public class AwasGraphImpl implements AwasGraph {
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.forwardErrorReach(
                 portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
-        return AwasUtil.toJavaMap(temp);
+        return toJavaMap(temp).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> toJavaSet(e.getValue())));
     }
 
     @Override
@@ -152,7 +155,8 @@ public class AwasGraphImpl implements AwasGraph {
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.backwardErrorReach(
                 portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
-        return AwasUtil.toJavaMap(temp);
+        return toJavaMap(temp).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> toJavaSet(e.getValue())));
     }
 
     public Map<String, Collector> queryEvaluator(String query) {
@@ -160,7 +164,7 @@ public class AwasGraphImpl implements AwasGraph {
                 QueryBuilder.apply$default$2(),
                 QueryBuilder.apply$default$3()));
 
-        return queryModel.map(model -> toJavaMap(QueryEval.apply(model, graph, st)).entrySet()
+        return queryModel.map(model -> toJavaMap(QueryEval.apply(model, st)).entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> {
                     org.sireum.awas.collector.Collector c = e.getValue();
@@ -170,7 +174,7 @@ public class AwasGraphImpl implements AwasGraph {
     }
 
     @Override
-    public FlowGraph<FlowNode> getGraph() {
+    public FlowGraph<FlowNode, FlowEdge<FlowNode>> getGraph() {
         return graph;
     }
 

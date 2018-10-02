@@ -1,125 +1,165 @@
+/*
+ *
+ *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice, this
+ *     list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
 // Generated from /workspace-v3/sireum-v3/awas/jvm/src/main/resources/org/sireum/aq/parser/Antlr4AQ.g4 by ANTLR 4.7
 package org.sireum.aq.parser;
 
 // @formatter:off
 
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Antlr4AQLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+    static {
+        RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION);
+    }
 
-	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
-	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38,
+    protected static final DFA[] _decisionToDFA;
+    protected static final PredictionContextCache _sharedContextCache =
+            new PredictionContextCache();
+    public static final int
+            T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
+            T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
+            T__17 = 18, T__18 = 19, T__19 = 20, T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24,
+            T__24 = 25, T__25 = 26, T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31,
+            T__31 = 32, T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38,
             T__38 = 39, T__39 = 40, T__40 = 41, T__41 = 42, T__42 = 43, T__43 = 44, T__44 = 45,
             T__45 = 46, T__46 = 47, INTEGER = 48, REAL = 49, STRING = 50, ID = 51, WS = 52, COMMENT = 53,
             LINE_COMMENT = 54, ERROR_CHAR = 55;
     public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
-	};
+            "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+    };
 
-	public static String[] modeNames = {
-		"DEFAULT_MODE"
-	};
+    public static String[] modeNames = {
+            "DEFAULT_MODE"
+    };
 
-	public static final String[] ruleNames = {
-		"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
-		"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16", 
-		"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
-		"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32",
+    public static final String[] ruleNames = {
+            "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
+            "T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16",
+            "T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24",
+            "T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32",
             "T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40",
             "T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "INTEGER", "REAL",
             "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT", "ERROR_CHAR"
-	};
+    };
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'='", "'-'", "'union'", "'intersect'", "'reach'", "':'", "'forward'", 
-		"'backward'", "'from'", "'to'", "'paths'", "'with'", "'some'", "'all'", 
-		"'none'", "'('", "')'", "'*'", "'+'", "'?'", "','", "'|'", "'_'", "'node'", 
-		"'NODE'", "'port'", "'PORT'", "'in-port'", "'IN-PORT'", "'out-port'",
+    private static final String[] _LITERAL_NAMES = {
+            null, "'='", "'-'", "'union'", "'intersect'", "'reach'", "':'", "'forward'",
+            "'backward'", "'from'", "'to'", "'paths'", "'with'", "'some'", "'all'",
+            "'none'", "'('", "')'", "'*'", "'+'", "'?'", "','", "'|'", "'_'", "'node'",
+            "'NODE'", "'port'", "'PORT'", "'in-port'", "'IN-PORT'", "'out-port'",
             "'OUT-PORT'", "'error'", "'ERROR'", "'porterror'", "'PORTERROR'", "'flows'",
             "'FLOWS'", "'flow-source'", "'FLOW-SOURCE'", "'flow-sink'", "'FLOW-SINK'",
             "'flow-path'", "'FLOW-PATH'", "'{'", "'}'", "'''", "'.'"
     };
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null,
+    private static final String[] _SYMBOLIC_NAMES = {
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null, null, null, null, null,
             "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT", "ERROR_CHAR"
     };
-	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+    public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
-	/**
-	 * @deprecated Use {@link #VOCABULARY} instead.
-	 */
-	@Deprecated
-	public static final String[] tokenNames;
-	static {
-		tokenNames = new String[_SYMBOLIC_NAMES.length];
-		for (int i = 0; i < tokenNames.length; i++) {
-			tokenNames[i] = VOCABULARY.getLiteralName(i);
-			if (tokenNames[i] == null) {
-				tokenNames[i] = VOCABULARY.getSymbolicName(i);
-			}
+    /**
+     * @deprecated Use {@link #VOCABULARY} instead.
+     */
+    @Deprecated
+    public static final String[] tokenNames;
 
-			if (tokenNames[i] == null) {
-				tokenNames[i] = "<INVALID>";
-			}
-		}
-	}
+    static {
+        tokenNames = new String[_SYMBOLIC_NAMES.length];
+        for (int i = 0; i < tokenNames.length; i++) {
+            tokenNames[i] = VOCABULARY.getLiteralName(i);
+            if (tokenNames[i] == null) {
+                tokenNames[i] = VOCABULARY.getSymbolicName(i);
+            }
 
-	@Override
-	@Deprecated
-	public String[] getTokenNames() {
-		return tokenNames;
-	}
+            if (tokenNames[i] == null) {
+                tokenNames[i] = "<INVALID>";
+            }
+        }
+    }
 
-	@Override
+    @Override
+    @Deprecated
+    public String[] getTokenNames() {
+        return tokenNames;
+    }
 
-	public Vocabulary getVocabulary() {
-		return VOCABULARY;
-	}
+    @Override
+
+    public Vocabulary getVocabulary() {
+        return VOCABULARY;
+    }
 
 
-	public Antlr4AQLexer(CharStream input) {
-		super(input);
-		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
-	}
+    public Antlr4AQLexer(CharStream input) {
+        super(input);
+        _interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+    }
 
-	@Override
-	public String getGrammarFileName() { return "Antlr4AQ.g4"; }
+    @Override
+    public String getGrammarFileName() {
+        return "Antlr4AQ.g4";
+    }
 
-	@Override
-	public String[] getRuleNames() { return ruleNames; }
+    @Override
+    public String[] getRuleNames() {
+        return ruleNames;
+    }
 
-	@Override
-	public String getSerializedATN() { return _serializedATN; }
+    @Override
+    public String getSerializedATN() {
+        return _serializedATN;
+    }
 
-	@Override
-	public String[] getChannelNames() { return channelNames; }
+    @Override
+    public String[] getChannelNames() {
+        return channelNames;
+    }
 
-	@Override
-	public String[] getModeNames() { return modeNames; }
+    @Override
+    public String[] getModeNames() {
+        return modeNames;
+    }
 
-	@Override
-	public ATN getATN() { return _ATN; }
+    @Override
+    public ATN getATN() {
+        return _ATN;
+    }
 
-	public static final String _serializedATN =
+    public static final String _serializedATN =
             "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\29\u01d3\b\1\4\2\t" +
                     "\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13" +
                     "\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22" +
@@ -274,11 +314,12 @@ public class Antlr4AQLexer extends Lexer {
                     "\u01d0n\3\2\2\2\u01d1\u01d2\13\2\2\2\u01d2p\3\2\2\2\20\2\u017e\u0181\u0188" +
                     "\u018b\u0191\u0199\u019b\u01a5\u01ac\u01af\u01b4\u01be\u01cc\3\b\2\2";
     public static final ATN _ATN =
-		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
-	static {
-		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
-		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
-			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
-		}
-	}
+            new ATNDeserializer().deserialize(_serializedATN.toCharArray());
+
+    static {
+        _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+        for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+            _decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
+        }
+    }
 }

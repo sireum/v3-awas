@@ -1,0 +1,12 @@
+x
+ -------------- 
+{ port-in-virtual:$$AWAS$Simple_Comm_routing_table_Instance$alice_send#in, 
+port-in-virtual:$$AWAS$Simple_Comm_routing_table_Instance$bob_receive#in, 
+port-in:$$AWAS$Simple_Comm_routing_table_Instance$bob#receive_Port_IN, 
+port-in:$$AWAS$Simple_Comm_routing_table_Instance$router#socket1_IN, 
+port-out-virtual:$$AWAS$Simple_Comm_routing_table_Instance$alice_send#out, 
+port-out-virtual:$$AWAS$Simple_Comm_routing_table_Instance$bob_receive#out, 
+port-out:$$AWAS$Simple_Comm_routing_table_Instance$alice#send_port_OUT, 
+port-out:$$AWAS$Simple_Comm_routing_table_Instance$router#socket2_OUT } 
+
+ -------------- 

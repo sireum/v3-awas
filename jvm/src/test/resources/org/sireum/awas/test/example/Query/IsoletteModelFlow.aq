@@ -1,4 +1,4 @@
-infant_backreach = reach backward Infant
+infant_backreach = reach backward Isolette.Infant
 
-air_infant = reach from Air.to_infant to Infant.heat_in
+air_infant = reach from Isolette.Air.to_infant to Isolette.Infant.heat_in
 

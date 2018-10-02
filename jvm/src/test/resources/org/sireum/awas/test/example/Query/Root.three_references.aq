@@ -1,0 +1,5 @@
+q1 = reach forward Root_three_references_Instance.system_to_comp_in
+q2 = reach forward Root_three_references_Instance.Sub
+q3 = reach forward Root_three_references_Instance.root_in
+q4 = reach paths from Root_three_references_Instance.system_to_comp_in
+                 to Root_three_references_Instance.Sub.sub_proc.proc_to_thread_BACKWARD

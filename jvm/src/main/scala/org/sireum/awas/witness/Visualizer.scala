@@ -1,185 +1,77 @@
+/*
+ *
+ *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice, this
+ *     list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
 package org.sireum.awas.witness
 
-import java.io.File
-import java.net.URL
-import java.nio.file.{Files, Path, Paths}
-import java.util.jar.JarFile
+import java.io._
+import java.nio.file.{Files, Paths}
+import java.util.zip.ZipInputStream
 
-import org.sireum.awas.ast.Builder
-import org.sireum.awas.collector.{Collector, ResultType}
-import org.sireum.awas.fptc.{FlowGraph, FlowGraphUpdate, FlowNode}
-import org.sireum.awas.query.{QueryBuilder, QueryEval, QueryPPrinter, QueryStmt}
-import org.sireum.awas.symbol.SymbolTable
-import org.sireum.util._
 import org.sireum.util.jvm.FileUtil
-import org.sireum.util.jvm.FileUtil._
-
-import scala.collection.JavaConverters._
 
 object Visualizer {
-  def main(args: Array[String]): Unit = {
-    //    val modelFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/Query/abcEF.awas"
-    //    val modelFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral2.awas"
-    //    val modelFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral3.awas"
-    //    val modelFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.awas"
-    //    val outputPath = "awas/js/target/scala-2.12/classes/min/graphVar.js"
-    //    val queryFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/Query/abcEF.aq"
-    //    val queryFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral2.aq"
-    //    val queryFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral3.aq"
-    //    val queryFile = "awas/jvm/src/test/resources/org/sireum/awas/test/example/bindings/spiral4.aq"
-    //    val outputFolder = "/workspace-v3/stash/temp2/"
 
-    val modelFile = args(0)
-    val queryFile = args(1)
-    val outputFolder = args(2)
-    val sireumJarLoc = if (args.length == 4) args(3) else ""
-    val resourceLoc = "/org/sireum/web"
+  /**
+    * @param modelJson : serialized AWAS model in JSON
+    * @param outputDirLoc : output dir path
+    * @param queries : optional query file
+    */
+  @throws[IOException]
+  def apply(modelJson : String,
+            outputDirLoc : String,
+            queries : String): Unit = {
+
+    val resourceLoc = "/org/sireum/awas/AADLBridge/awas-web.zip"
+
+    val zipFolderName = "awas-web/"
 
     val graphVarPath = "/min/graphVar.js"
 
-    val web = this.getClass.getResource(resourceLoc)
-
-    if (Files.exists(Paths.get(outputFolder))) {
-      FileUtil.delete(Paths.get(outputFolder))
-    }
-
-    def extractFromJar(jarFile: JarFile) = {
-      jarFile.stream().iterator().asScala.foreach { je =>
-        if (je.getName.startsWith("org/sireum/web")) {
-          val in = jarFile.getInputStream(je)
-          val fileName = outputFolder + "/" + je.getName.substring(resourceLoc.length)
-          if (je.isDirectory) {
-            Files.createDirectories(Paths.get(fileName))
-          } else {
-            Files.copy(in, Paths.get(fileName))
-          }
+    def extractFromZip(zis : ZipInputStream): Unit = {
+      Stream.continually(zis.getNextEntry).takeWhile(_ != null).foreach { file =>
+        val fileName = outputDirLoc + "/" + file.getName.substring(zipFolderName.length)
+        if(file.isDirectory) {
+          Files.createDirectories(Paths.get(fileName))
+        } else {
+          val fout = new FileOutputStream(fileName)
+          val buffer = new Array[Byte](1024)
+          Stream.continually(zis.read(buffer)).takeWhile(_ != -1).foreach(fout.write(buffer, 0, _))
         }
       }
     }
 
-    def copyWebResources(sourceURL: URL, dstFile: File) = {
-      println("entered extracter")
-      println("input URL :" + sourceURL.toExternalForm)
-      if (sourceURL.getProtocol == "jar") {
-        //command line resource access
-        val resource = sourceURL.toString.split('!')
-        val jarPath = sourceURL.getFile
-        val jarFile = new JarFile(toFilePath(jarPath.split('!')(0)))
-        extractFromJar(jarFile)
-      } else if (sourceURL.getProtocol == "bundleresource") {
-        //eclipse plugin resource access
-        val jarFile = new JarFile(sireumJarLoc)
-        extractFromJar(jarFile)
-      } else {
-        //IDE resource access
-        walkFileTree(Paths.get(web.getPath), test, false)
-        //println("Dont come here")
-      }
-    }
-
-    //    val web =toFilePath(fileUri(this.getClass, "/org/sireum/web"))
-    def test(isDir: Boolean, path: Path) = {
-      val basePath = Paths.get(web.getPath)
-      val tempPath = path.toAbsolutePath
-      val relPath = basePath.relativize(tempPath)
-
-      Files.copy(tempPath, Paths.get(outputFolder + relPath.toString))
-      //relPath.toString
-    }
-
-    println(this.getClass.getResource(resourceLoc))
-
-    copyWebResources(this.getClass.getResource(resourceLoc), new File(outputFolder))
-
-    // walkFileTree(Paths.get(web.getPath), test, false)
-
-
-    val relativeUri = Paths.get(modelFile)
+    val res = this.getClass.getResource(resourceLoc)
+    extractFromZip(new ZipInputStream(res.openStream()))
     var result = ""
-    println(modelFile)
+    //println(modelFile)
+    var graphVar = "var awas = `" + modelJson + "`;\n"
+    if(queries.nonEmpty) {graphVar = graphVar + "var queries = `" + queries + "`;\n" }
+    result = result + graphVar
 
-    Builder(Some(relativeUri.toString), readFile(FileUtil.toUri(modelFile))._1) match {
-      case None =>
-      case Some(m) =>
-        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-        val st = SymbolTable(m)
-        val graph = FlowGraph(m, st)
-        val graphVar = "var graph = `" + SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode] with FlowGraphUpdate[FlowNode]]) + "`;\n"
-        result = result + graphVar
-        QueryBuilder(readFile(FileUtil.toUri(queryFile))._1) match {
-          case None =>
-          case Some(q) =>
-            val qres = QueryEval(q, graph, st)
-            val queryExp = q.queryStmt.flatMap(it => qexpToJSMap(it, qres))
-
-            result = result + "var queryExp = {" + queryExp.mkString(", ") + "};\n"
-
-            val queryRes = qresToJSMap(qres)
-            //              "\"" + it._1 + "\":" + "[" + collector2String(it._2).map("\"" + _ + "\"").mkString(", ") + "]"
-
-            result = result + "var queryRes = {" + queryRes.mkString(",") + "};\n"
-
-            val queryCriteria = qresToJSMap_criteria(qres)
-
-            result = result + "var queryCriteria = {" + queryCriteria.mkString(",") + "};"
-        }
-    }
-    FileUtil.writeFile(FileUtil.toUri(outputFolder + graphVarPath), result)
-  }
-
-  private def qexpToJSMap(qStmt: QueryStmt, qRes: QueryEval.Result): ISeq[String] = {
-    var res = ivectorEmpty[String]
-    val qid = QueryPPrinter(qStmt.qName)
-    val qexpr = QueryPPrinter(qStmt.qExpr)
-    res = res :+ "\"" + qid + "\":" + "\"" + qexpr + "\""
-    if (qRes(qid).getPaths.size > 1) {
-      for (i <- qRes(qid).getPaths.indices) {
-        res = res :+ "\"" + qid + ":Path " + (i + 1) + "\":" + "\"" + qexpr + "\""
-      }
-    }
-    res
-  }
-
-  private def qresToJSMap(qRes: QueryEval.Result): ISeq[String] = {
-    var res = ivectorEmpty[String]
-    qRes.foreach { it =>
-      res = res :+ "\"" + it._1 + "\":" + "[" + collector2String(it._2).map("\"" + _ + "\"").mkString(", ") + "]"
-      if (it._2.getPaths.size > 1)
-        for (i <- it._2.getPaths.indices) {
-          res = res :+ "\"" + it._1 + ":Path " + (i + 1) + "\":" + "[" + collector2String(it._2.getPaths(i)).map("\"" + _ + "\"").mkString(", ") + "]"
-        }
-    }
-    res
-  }
-
-  private def qresToJSMap_criteria(qRes: QueryEval.Result): ISeq[String] = {
-    var res = ivectorEmpty[String]
-    qRes.foreach { it =>
-      res = res :+ "\"" + it._1 + "\":" + "[" + it._2.getCriteria.map("\"" + _ + "\"").mkString(", ") + "]"
-      if (it._2.getPaths.size > 1)
-        for (i <- it._2.getPaths.indices) {
-          res = res :+ "\"" + it._1 + ":Path " + (i + 1) + "\":" + "[" + it._2.getPaths(i).getCriteria.map("\"" + _ + "\"").mkString(", ") + "]"
-        }
-    }
-    res
-  }
-
-  private def collector2Criteria(collector: Collector): ISet[String] = {
-    collector.getCriteria
-  }
-
-  private def collector2String(collector: Collector): ISet[String] = {
-    var res = isetEmpty[String]
-    collector.getResultType match {
-      case Some(ResultType.Node) =>
-        res ++= collector.getNodes.map(_.getUri)
-      case Some(ResultType.Port) =>
-        res ++= collector.getPorts ++ collector.getFlows
-      case Some(ResultType.Error) =>
-        res ++= collector.getPortErrors.flatMap(it => it._2.map(e => "Error" + ":" + it._1 + ":" + e) + it._1) ++ collector.getFlows
-      case _ =>
-    }
-    res ++= collector.getEdges.map(it => "Edge+" + it.sourcePort.get + ":" + it.targetPort.get)
-    res
+    FileUtil.writeFile(FileUtil.toUri(outputDirLoc + graphVarPath), result)
   }
 }

@@ -1,0 +1,1765 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "Simple_Comm_s1_Instance"
+        ]
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "alice"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Device"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Simple_Flow_Demo::Sender.impl"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice",
+                  "send_port"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice",
+                  "receive_ack"
+                ]
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Sink"
+              },
+              "source": {
+                "type": "Some",
+                "value": {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Simple_Comm_s1_Instance",
+                      "alice",
+                      "receive_ack",
+                      "send_port"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "InOut"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "DataPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              },
+              "sink": {
+                "type": "None"
+              }
+            },
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice",
+                  "send_msg"
+                ]
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Source"
+              },
+              "source": {
+                "type": "None"
+              },
+              "sink": {
+                "type": "Some",
+                "value": {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Simple_Comm_s1_Instance",
+                      "alice",
+                      "send_msg",
+                      "send_port"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "InOut"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "DataPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              }
+            }
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "bob"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Device"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Simple_Flow_Demo::Receiver.s1"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob",
+                  "receive_Port"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob",
+                  "receive_msg"
+                ]
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Sink"
+              },
+              "source": {
+                "type": "Some",
+                "value": {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Simple_Comm_s1_Instance",
+                      "bob",
+                      "receive_msg",
+                      "receive_Port"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "InOut"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "DataPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              },
+              "sink": {
+                "type": "None"
+              }
+            },
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob",
+                  "send_ack"
+                ]
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Source"
+              },
+              "source": {
+                "type": "None"
+              },
+              "sink": {
+                "type": "Some",
+                "value": {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Simple_Comm_s1_Instance",
+                      "bob",
+                      "send_ack",
+                      "receive_Port"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "InOut"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "DataPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              }
+            }
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "mallory"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Device"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Simple_Flow_Demo::Receiver.s1"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory",
+                  "receive_Port"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory",
+                  "receive_msg"
+                ]
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Sink"
+              },
+              "source": {
+                "type": "Some",
+                "value": {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Simple_Comm_s1_Instance",
+                      "mallory",
+                      "receive_msg",
+                      "receive_Port"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "InOut"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "DataPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              },
+              "sink": {
+                "type": "None"
+              }
+            },
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory",
+                  "send_ack"
+                ]
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Source"
+              },
+              "source": {
+                "type": "None"
+              },
+              "sink": {
+                "type": "Some",
+                "value": {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Simple_Comm_s1_Instance",
+                      "mallory",
+                      "send_ack",
+                      "receive_Port"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "InOut"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "DataPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              }
+            }
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "router"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Device"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Simple_Flow_Demo::Switch.s1"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket1"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket2"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket3"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket4"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "alice_send"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "alice",
+                    "send_port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "router",
+                    "socket1"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "alice",
+                "send_port -> router",
+                "socket1"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "bob_send"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "bob",
+                    "receive_Port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "router",
+                    "socket2"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "bob",
+                "receive_Port -> router",
+                "socket2"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "mallory_send"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "mallory",
+                    "receive_Port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "router",
+                    "socket3"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "mallory",
+                "receive_Port -> router",
+                "socket3"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "alice_receive"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "router",
+                    "socket1"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "alice",
+                    "send_port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router",
+                "socket1 -> alice",
+                "send_port"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "bob_receive"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "router",
+                    "socket2"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "bob",
+                    "receive_Port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router",
+                "socket2 -> bob",
+                "receive_Port"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "mallory_receive"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "router",
+                    "socket3"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Simple_Comm_s1_Instance",
+                    "mallory",
+                    "receive_Port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router",
+                "socket3 -> mallory",
+                "receive_Port"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "alice.send_port -> router.socket1"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "alice"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice",
+                  "send_port"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket1"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice_send"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "bob.receive_Port -> router.socket2"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "bob"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob",
+                  "receive_Port"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket2"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob_send"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "mallory.receive_Port -> router.socket3"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "mallory"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory",
+                  "receive_Port"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket3"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory_send"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "router.socket1 -> alice.send_port"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket1"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "alice"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice",
+                  "send_port"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "alice_receive"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "router.socket2 -> bob.receive_Port"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket2"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "bob"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob",
+                  "receive_Port"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "bob_receive"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Simple_Comm_s1_Instance",
+              "router.socket3 -> mallory.receive_Port"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "router"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "router",
+                  "socket3"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Simple_Comm_s1_Instance",
+                "mallory"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory",
+                  "receive_Port"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance",
+                  "mallory_receive"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Simple_Comm_s1_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [],
+            "propagations": [
+            ],
+            "flows": [
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "errorLib": [
+  ]
+}

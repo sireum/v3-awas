@@ -12,9 +12,8 @@ model
   : ( 'types' typeDecl* )?
     ( 'behavior' behaviorDecl* )?
     ( 'constants' constantDecl* )?
-    ( 'components' componentDecl* )?
-    ( 'connections' connectionDecl* )?
-    ( 'deployment' deploymentDecl* )?
+    ( 'system' componentDecl )?
+
   ;
 
 typeDecl
@@ -36,27 +35,30 @@ componentDecl
       ( 'flows' flow* )?
       ( 'transitions' transition)?
       ( 'behavior' behaviour)?
+      ( 'sub-components''{' componentDecl* '}')?
+      ( 'connections' connectionDecl* )?
+      ( 'deployment' deploymentDecl* )?
       ( 'properties' property* )?
   ;
 
 connectionDecl
   : connName=ID ':'
-    fromComponent=name '.' fromPort=ID
+    (fromComponent=name '.')? fromPort=ID
     connType=('->' | '<->')
-    toComponent=name '.' toPort=ID
+    (toComponent=name '.')? toPort=ID
     ( 'flows' flowc* )?
     ( 'behavior' behaviour)?
     ( 'properties' property* )?
   ;
 
 deploymentDecl
-  : fromComponent=name
-    '<->'
-    toComponent=name
+  : fromComponent=name ('.' fromPort=ID)?
+    '->'
+    toComponent=name ('.' toPort=ID)?
   ;
 
 typeAliasDecl
-  : 'alias' ID '=' type
+  : 'alias' name '=' basicType
   ;
 
 enumDecl

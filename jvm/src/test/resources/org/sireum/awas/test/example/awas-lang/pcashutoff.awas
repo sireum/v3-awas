@@ -2,7 +2,7 @@
 
 types
 
-  alias Natural = Integer (0, _)
+  alias Natural = Integer(0, _)
 
   enum States
 
@@ -216,8 +216,8 @@ constants
   DisplayMustShowPumpStatus: Constraint = Constraint(description = "The app must correctly inform the display of the pump command status.",
                                                      hazard = BadInfoGiven)
 
-
-components
+system Pca_Shutoff
+sub-components {
 
   // from https://github.com/santoslab/aadl-map-apps/blob/develop/pca-shutoff/packages/Capnograph_Interface.aadl
 
@@ -304,12 +304,12 @@ components
     properties
       relevantStates: RelevantStates = PatientDeath
 
-
+}
 connections
 
   // from https://github.com/santoslab/aadl-map-apps/blob/develop/pca-shutoff/packages/PCA_Shutoff_System.aadl
 
-  Spo2Logic: PulseOx.SpO2{InadvertentPumpNormally} -> AppLogic.SpO2
+  Spo2Logic: PulseOx.SpO2 -> AppLogic.SpO2
   // Q.4: Sam, what does https://github.com/santoslab/aadl-map-apps/blob/develop/pca-shutoff/packages/PCA_Shutoff_System.aadl#L49-L51 mean?
   //      Specifically, what does error source on a connection mean?
   //      Which port of the connection originates the error?

@@ -1,5 +1,5 @@
-q1 = reach forward B2C.in{Error.Low}
-q2 = reach forward B2C.out{Error.Low}
-q3 = reach backward A2B.out{Error.Low}
-q4 = reach forward A.in{Error.High}
-q5 = reach backward C.cIn{Error.High}
+q1 = reach forward abc_connection.B2C.in{Error.Low}
+q2 = reach forward abc_connection.B2C.out{Error.Low}
+q3 = reach backward abc_connection.A2B.out{Error.Low}
+q4 = reach forward abc_connection.A.in{Error.High}
+q5 = reach backward abc_connection.C.cIn{Error.High}

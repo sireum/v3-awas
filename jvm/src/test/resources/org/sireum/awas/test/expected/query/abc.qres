@@ -1,125 +1,117 @@
 q1
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-component:$AWAS$$example/Query/abc.awas#C, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A, 
-connection:$AWAS$$example/Query/abc.awas#B2C } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
 
  -------------- 
 q2
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-component:$AWAS$$example/Query/abc.awas#C, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A, 
-connection:$AWAS$$example/Query/abc.awas#B2C } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
 
  -------------- 
 q3
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#C } 
+{ component:$$AWAS$abc#C } 
 
  -------------- 
 q5
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A } 
 
  -------------- 
 q6
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-component:$AWAS$$example/Query/abc.awas#C, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A, 
-connection:$AWAS$$example/Query/abc.awas#B2C } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
 
  -------------- 
 q7
  -------------- 
 Warning: 
 
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abc.awas#A2B'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abc.awas#B2C'
-Missing flow relationships for node 'component:$AWAS$$example/Query/abc.awas#B'
-Missing flow relationships for node 'component:$AWAS$$example/Query/abc.awas#C'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abc.awas#B2A'
-{ port-in-virtual:$AWAS$$example/Query/abc.awas$A2B#in, 
-port-in-virtual:$AWAS$$example/Query/abc.awas$B2A#in, 
-port-in-virtual:$AWAS$$example/Query/abc.awas$B2C#in, 
-port-in:$AWAS$$example/Query/abc.awas$A#aIn, 
-port-in:$AWAS$$example/Query/abc.awas$B#bIn, 
-port-in:$AWAS$$example/Query/abc.awas$C#cIn, 
-port-out-virtual:$AWAS$$example/Query/abc.awas$A2B#out, 
-port-out-virtual:$AWAS$$example/Query/abc.awas$B2A#out, 
-port-out-virtual:$AWAS$$example/Query/abc.awas$B2C#out, 
-port-out:$AWAS$$example/Query/abc.awas$A#aOut, 
-port-out:$AWAS$$example/Query/abc.awas$B#bOut, 
-port-out:$AWAS$$example/Query/abc.awas$B#bOut2, 
-port-out:$AWAS$$example/Query/abc.awas$C#cOut } 
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$abc$A2B#in, 
+port-in-virtual:$$AWAS$abc$B2A#in, 
+port-in-virtual:$$AWAS$abc$B2C#in, 
+port-in:$$AWAS$abc$A#aIn, 
+port-in:$$AWAS$abc$B#bIn, 
+port-in:$$AWAS$abc$C#cIn, 
+port-out-virtual:$$AWAS$abc$A2B#out, 
+port-out-virtual:$$AWAS$abc$B2A#out, 
+port-out-virtual:$$AWAS$abc$B2C#out, 
+port-out:$$AWAS$abc$A#aOut, 
+port-out:$$AWAS$abc$B#bOut, 
+port-out:$$AWAS$abc$B#bOut2, 
+port-out:$$AWAS$abc$C#cOut } 
 
  -------------- 
 q8
  -------------- 
 Warning: 
 
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abc.awas#A2B'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abc.awas#B2C'
-Missing flow relationships for node 'component:$AWAS$$example/Query/abc.awas#B'
-Missing flow relationships for node 'component:$AWAS$$example/Query/abc.awas#C'
-Missing flow relationships for node 'connection:$AWAS$$example/Query/abc.awas#B2A'
-{ port-in-virtual:$AWAS$$example/Query/abc.awas$A2B#in, 
-port-in-virtual:$AWAS$$example/Query/abc.awas$B2A#in, 
-port-in-virtual:$AWAS$$example/Query/abc.awas$B2C#in, 
-port-in:$AWAS$$example/Query/abc.awas$A#aIn, 
-port-in:$AWAS$$example/Query/abc.awas$B#bIn, 
-port-in:$AWAS$$example/Query/abc.awas$C#cIn, 
-port-out-virtual:$AWAS$$example/Query/abc.awas$A2B#out, 
-port-out-virtual:$AWAS$$example/Query/abc.awas$B2A#out, 
-port-out-virtual:$AWAS$$example/Query/abc.awas$B2C#out, 
-port-out:$AWAS$$example/Query/abc.awas$A#aOut, 
-port-out:$AWAS$$example/Query/abc.awas$B#bOut, 
-port-out:$AWAS$$example/Query/abc.awas$B#bOut2, 
-port-out:$AWAS$$example/Query/abc.awas$C#cOut } 
+Missing flow relationships for node ''
+{ port-in-virtual:$$AWAS$abc$A2B#in, 
+port-in-virtual:$$AWAS$abc$B2A#in, 
+port-in-virtual:$$AWAS$abc$B2C#in, 
+port-in:$$AWAS$abc$A#aIn, 
+port-in:$$AWAS$abc$B#bIn, 
+port-in:$$AWAS$abc$C#cIn, 
+port-out-virtual:$$AWAS$abc$A2B#out, 
+port-out-virtual:$$AWAS$abc$B2A#out, 
+port-out-virtual:$$AWAS$abc$B2C#out, 
+port-out:$$AWAS$abc$A#aOut, 
+port-out:$$AWAS$abc$B#bOut, 
+port-out:$$AWAS$abc$B#bOut2, 
+port-out:$$AWAS$abc$C#cOut } 
 
  -------------- 
 q9
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A } 
 
  -------------- 
 q10
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-component:$AWAS$$example/Query/abc.awas#C, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A, 
-connection:$AWAS$$example/Query/abc.awas#B2C } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
 
  -------------- 
 q11
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#C, 
-connection:$AWAS$$example/Query/abc.awas#B2C } 
+{ component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#B2C } 
 
  -------------- 
 q12
  -------------- 
-{ component:$AWAS$$example/Query/abc.awas#A, 
-component:$AWAS$$example/Query/abc.awas#B, 
-component:$AWAS$$example/Query/abc.awas#C, 
-connection:$AWAS$$example/Query/abc.awas#A2B, 
-connection:$AWAS$$example/Query/abc.awas#B2A, 
-connection:$AWAS$$example/Query/abc.awas#B2C } 
+{ component:$$AWAS$abc#A, 
+component:$$AWAS$abc#B, 
+component:$$AWAS$abc#C, 
+connection:$$AWAS$abc#A2B, 
+connection:$$AWAS$abc#B2A, 
+connection:$$AWAS$abc#B2C } 
 
  -------------- 

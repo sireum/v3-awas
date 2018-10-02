@@ -1,24 +1,24 @@
 q1
  -------------- 
-{ port-in-virtual:$AWAS$$example/Query/abc_connection_flow.awas$B2C#in[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#Low ]
-port-in:$AWAS$$example/Query/abc_connection_flow.awas$C#cIn[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#Low ]
-port-out-virtual:$AWAS$$example/Query/abc_connection_flow.awas$B2C#out[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#Low ]
-port-out:$AWAS$$example/Query/abc_connection_flow.awas$C#cOut[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#High ] } 
+{ port-in-virtual:$$AWAS$abc_connection$B2C#in[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-in:$$AWAS$abc_connection$C#cIn[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-out-virtual:$$AWAS$abc_connection$B2C#out[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-out:$$AWAS$abc_connection$C#cOut[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#High ] } 
 
  -------------- 
 q2
  -------------- 
-{ port-in:$AWAS$$example/Query/abc_connection_flow.awas$C#cIn[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#Low ]
-port-out-virtual:$AWAS$$example/Query/abc_connection_flow.awas$B2C#out[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#Low ]
-port-out:$AWAS$$example/Query/abc_connection_flow.awas$C#cOut[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#High ] } 
+{ port-in:$$AWAS$abc_connection$C#cIn[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-out-virtual:$$AWAS$abc_connection$B2C#out[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-out:$$AWAS$abc_connection$C#cOut[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#High ] } 
 
  -------------- 
 q3
  -------------- 
-Error: 
-
-Missing flow relationship for port & Error: 'port-out-virtual:$AWAS$$example/Query/abc_connection_flow.awas$B2A#out, error:$AWAS$$example/Query/abc_connection_flow.awas$Error#High'
-Missing flow relationship for port & Error: 'port-out:$AWAS$$example/Query/abc_connection_flow.awas$B#bOut2, error:$AWAS$$example/Query/abc_connection_flow.awas$Error#High'
+{ port-in-virtual:$$AWAS$abc_connection$A2B#in[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-in:$$AWAS$abc_connection$A#aIn[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#High ]
+port-out-virtual:$$AWAS$abc_connection$A2B#out[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ]
+port-out:$$AWAS$abc_connection$A#aOut[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#Low ] } 
 
  -------------- 
 q4
@@ -27,7 +27,6 @@ q4
  -------------- 
 q5
  -------------- 
-{ port-in:$AWAS$$example/Query/abc_connection_flow.awas$C#cIn[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#High ]
-port-out-virtual:$AWAS$$example/Query/abc_connection_flow.awas$B2C#out[ error:$AWAS$$example/Query/abc_connection_flow.awas$Error#High ] } 
+{ port-in:$$AWAS$abc_connection$C#cIn[ error:$$AWAS$example/Query/abc_connection_flow.awas$Error#High ] } 
 
  -------------- 

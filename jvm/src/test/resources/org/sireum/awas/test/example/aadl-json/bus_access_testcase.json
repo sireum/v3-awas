@@ -1,0 +1,826 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "Dual_Processor_PowerPC_Instance"
+        ]
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "System_Bus"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Bus"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Bus_Access::VME"
+            }
+          },
+          "features": [
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "Shared_Memory"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Memory"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Bus_Access::Memory_Card"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Shared_Memory",
+                  "Card_Connector"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "BusAccess"
+              },
+              "classifier": {
+                "type": "Some",
+                "value": {
+                  "type": "Classifier",
+                  "name": "Bus_Access::VME"
+                }
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "Left"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Processor"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Bus_Access::PowerPC.Linux"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Left",
+                  "Card_Connector"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "BusAccess"
+              },
+              "classifier": {
+                "type": "Some",
+                "value": {
+                  "type": "Classifier",
+                  "name": "Bus_Access::VME"
+                }
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "Right"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Processor"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Bus_Access::PowerPC.Linux"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Right",
+                  "Card_Connector"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "InOut"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "BusAccess"
+              },
+              "classifier": {
+                "type": "Some",
+                "value": {
+                  "type": "Classifier",
+                  "name": "Bus_Access::VME"
+                }
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "LCConn"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "System_Bus"
+                ]
+              },
+              "feature": {
+                "type": "None"
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Left"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Dual_Processor_PowerPC_Instance",
+                    "Left",
+                    "Card_Connector"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Access"
+          },
+          "isBiDirectional": true,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "System_Bus <-> Left",
+                "Card_Connector"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "RCConn"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "System_Bus"
+                ]
+              },
+              "feature": {
+                "type": "None"
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Right"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Dual_Processor_PowerPC_Instance",
+                    "Right",
+                    "Card_Connector"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Access"
+          },
+          "isBiDirectional": true,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "System_Bus <-> Right",
+                "Card_Connector"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "SMConn"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "System_Bus"
+                ]
+              },
+              "feature": {
+                "type": "None"
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Shared_Memory"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Dual_Processor_PowerPC_Instance",
+                    "Shared_Memory",
+                    "Card_Connector"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Access"
+          },
+          "isBiDirectional": true,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "System_Bus <-> Shared_Memory",
+                "Card_Connector"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "System_Bus <-> Left.Card_Connector"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "System_Bus"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "System_Bus"
+                ]
+              }
+            },
+            "direction": {
+              "type": "None"
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "Left"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Left",
+                  "Card_Connector"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Access"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "LCConn"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "System_Bus <-> Right.Card_Connector"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "System_Bus"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "System_Bus"
+                ]
+              }
+            },
+            "direction": {
+              "type": "None"
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "Right"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Right",
+                  "Card_Connector"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Access"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "RCConn"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Dual_Processor_PowerPC_Instance",
+              "System_Bus <-> Shared_Memory.Card_Connector"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "System_Bus"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "System_Bus"
+                ]
+              }
+            },
+            "direction": {
+              "type": "None"
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Dual_Processor_PowerPC_Instance",
+                "Shared_Memory"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "Shared_Memory",
+                  "Card_Connector"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "InOut"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Access"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance",
+                  "SMConn"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Dual_Processor_PowerPC_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [],
+            "propagations": [
+            ],
+            "flows": [
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "errorLib": [
+  ]
+}

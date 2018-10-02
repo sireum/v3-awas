@@ -1,0 +1,38 @@
+system  Root_two_references_Instance
+    ports
+      in root_in
+      out root_out
+sub-components {
+    Sub1
+      ports
+        in sub_in
+        out sub_out
+        in sub_port_IN
+        out sub_port_OUT
+sub-components {
+      sub_proc1
+        ports
+          in proc_in
+          out proc_out
+          in proc_in_out_IN
+          out proc_in_out_OUT
+
+      sub_proc2
+        ports
+          in proc_in
+          out proc_out
+          in proc_in_out_IN
+          out proc_in_out_OUT
+}
+connections
+      parent_to_child_in : sub_in -> sub_proc1.proc_in
+
+      child_to_parent_out : sub_proc2.proc_out -> sub_out
+
+      child_to_child : sub_proc1.proc_out -> sub_proc2.proc_in
+
+}
+connections
+    system_to_comp_in : root_in -> Sub1.sub_in
+
+    system_to_comp_out : Sub1.sub_out -> root_out

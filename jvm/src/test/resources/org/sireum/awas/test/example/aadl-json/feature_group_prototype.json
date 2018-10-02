@@ -1,0 +1,978 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "Concrete_Sys_impl_Instance"
+        ]
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+        {
+          "type": "FeatureGroup",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "feat"
+            ]
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "f_in"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "f_out"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "cf_in"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "cf_out"
+                ]
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "isInverse": false,
+          "category": {
+            "type": "FeatureCategory",
+            "value": "FeatureGroup"
+          },
+          "properties": [
+          ]
+        }
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "sub_comp"
+            ]
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "System"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "Feature_Group_TestCase::dst_sys.impl"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureGroup",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp",
+                  "dst"
+                ]
+              },
+              "features": [
+                {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Concrete_Sys_impl_Instance",
+                      "sub_comp",
+                      "dst",
+                      "f_in"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "In"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "EventPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                },
+                {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Concrete_Sys_impl_Instance",
+                      "sub_comp",
+                      "dst",
+                      "f_out"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "Out"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "EventPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                },
+                {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Concrete_Sys_impl_Instance",
+                      "sub_comp",
+                      "dst",
+                      "cf_in"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "In"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "EventPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                },
+                {
+                  "type": "FeatureEnd",
+                  "identifier": {
+                    "type": "Name",
+                    "name": [
+                      "Concrete_Sys_impl_Instance",
+                      "sub_comp",
+                      "dst",
+                      "cf_out"
+                    ]
+                  },
+                  "direction": {
+                    "type": "Direction",
+                    "value": "Out"
+                  },
+                  "category": {
+                    "type": "FeatureCategory",
+                    "value": "EventPort"
+                  },
+                  "classifier": {
+                    "type": "None"
+                  },
+                  "properties": [
+                  ]
+                }
+              ],
+              "isInverse": false,
+              "category": {
+                "type": "FeatureCategory",
+                "value": "FeatureGroup"
+              },
+              "properties": [
+              ]
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [],
+                "propagations": [
+                ],
+                "flows": [
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "con"
+            ]
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "feat_f_in"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            },
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "feat_f_out"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            },
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "feat_cf_in"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            },
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "feat_cf_out"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "sub_comp",
+                    "dst_f_in"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            },
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "sub_comp",
+                    "dst_f_out"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            },
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "sub_comp",
+                    "dst_cf_in"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            },
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Concrete_Sys_impl_Instance",
+                    "sub_comp",
+                    "dst_cf_out"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "FeatureGroup"
+          },
+          "isBiDirectional": true,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "feat",
+                "f_in -> sub_comp",
+                "dst",
+                "f_in"
+              ]
+            },
+            {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "feat",
+                "cf_in -> sub_comp",
+                "dst",
+                "cf_in"
+              ]
+            },
+            {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "sub_comp",
+                "dst",
+                "f_out -> feat",
+                "f_out"
+              ]
+            },
+            {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "sub_comp",
+                "dst",
+                "cf_out -> feat",
+                "cf_out"
+              ]
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "feat.f_in -> sub_comp.dst.f_in"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "f_in"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "sub_comp"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp",
+                  "dst",
+                  "f_in"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "con"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "feat.cf_in -> sub_comp.dst.cf_in"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "cf_in"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "sub_comp"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp",
+                  "dst",
+                  "cf_in"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "con"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "sub_comp.dst.f_out -> feat.f_out"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "sub_comp"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp",
+                  "dst",
+                  "f_out"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "f_out"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "con"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "Concrete_Sys_impl_Instance",
+              "sub_comp.dst.cf_out -> feat.cf_out"
+            ]
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance",
+                "sub_comp"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "sub_comp",
+                  "dst",
+                  "cf_out"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "Concrete_Sys_impl_Instance"
+              ]
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "feat",
+                  "cf_out"
+                ]
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance",
+                  "con"
+                ]
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "Concrete_Sys_impl_Instance"
+                ]
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [],
+            "propagations": [
+            ],
+            "flows": [
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "errorLib": [
+  ]
+}

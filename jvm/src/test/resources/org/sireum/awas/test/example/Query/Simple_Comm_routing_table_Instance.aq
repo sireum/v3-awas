@@ -1,0 +1,1 @@
+x = reach paths from Simple_Comm_routing_table_Instance.alice.send_port_OUT to Simple_Comm_routing_table_Instance.bob.receive_Port_IN with none(Simple_Comm_routing_table_Instance.eve.receive)
