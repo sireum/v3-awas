@@ -1,6 +1,9 @@
 jdk:
   - openjdk9
 
+env:
+  SIREUM_HOME: "/home/jitpack/build/sireum-v3"
+
 before_install:
   - echo $PWD
   - ls
@@ -8,6 +11,7 @@ before_install:
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
   - ln -s ../ ./awas
+
 install:
   - echo $PWD
   - ls
