@@ -3,10 +3,12 @@ jdk:
 
 before_install:
   - echo $PWD
+  - ls
   - git clone -b hari-jitpack-play --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
   - ln -s ../ ./awas
 install:
   - echo $PWD
+  - ls
   - ./bin/sbt-launch.sh "project awasPub" publishLocal
