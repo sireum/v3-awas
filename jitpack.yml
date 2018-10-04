@@ -5,8 +5,6 @@ env:
   SIREUM_HOME: "/home/jitpack/build/sireum-v3"
 
 before_install:
-  - echo $PWD
-  - ls
   - git clone -b hari-jitpack-play --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
@@ -15,4 +13,4 @@ before_install:
 install:
   - echo $PWD
   - ls
-  - sbt "project awasPub" publishM2
+  - ./bin/sbt-launch.sh "project awasPub" publishM2
