@@ -8,7 +8,9 @@ before_install:
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
   - ln -s ../ ./awas
+  - cd awas
+  - ls
 install:
   - echo $PWD
   - ls
-  - ./bin/sbt-launch.sh "project awasPub" publishLocal
+  - bin/sbt-launch.sh "project awasPub" publishLocal
