@@ -1,0 +1,15 @@
+jdk:
+  - openjdk9
+
+env:
+  - JAVA_OPTIONS="-Xmx2G -XX:+UseG1GC -XX:ReservedCodeCacheSize=1G -Xss2m -XX:+CMSClassUnloadingEnabled"
+
+before_install:
+  - echo $PWD
+  - git clone -b hari-jitpack-play --recursive https://github.com/sireum/v3.git sireum-v3
+  - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
+  - cd sireum-v3
+  - ln -s ../ ./awas
+install:
+  - echo $PWD
+  - ./bin/sbt-launch.sh "project awasPub" publishLocal
