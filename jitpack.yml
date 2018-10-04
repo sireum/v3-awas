@@ -1,9 +1,6 @@
 jdk:
   - openjdk9
 
-env:
-  JAVA_OPTIONS: "-Xmx2G -XX:+UseG1GC -XX:ReservedCodeCacheSize=1G -Xss2m -XX:+CMSClassUnloadingEnabled"
-
 before_install:
   - echo $PWD
   - git clone -b hari-jitpack-play --recursive https://github.com/sireum/v3.git sireum-v3
