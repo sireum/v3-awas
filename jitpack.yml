@@ -11,6 +11,4 @@ before_install:
   - ln -s ../ ./awas
 
 install:
-  - echo $PWD
-  - cd bin
-  - ./sbt-launch.sh "project awasPub" publishM2
+  - sbt "project awasPub" publishM2
