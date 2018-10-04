@@ -2,7 +2,7 @@ jdk:
   - openjdk9
 
 env:
-  - JAVA_OPTIONS="-Xmx2G -XX:+UseG1GC -XX:ReservedCodeCacheSize=1G -Xss2m -XX:+CMSClassUnloadingEnabled"
+  JAVA_OPTIONS: "-Xmx2G -XX:+UseG1GC -XX:ReservedCodeCacheSize=1G -Xss2m -XX:+CMSClassUnloadingEnabled"
 
 before_install:
   - echo $PWD
