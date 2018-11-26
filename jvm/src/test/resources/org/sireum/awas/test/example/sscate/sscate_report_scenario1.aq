@@ -1,7 +1,0 @@
-//Identify all the causes for the hazardous situation HS1
-
-HS1 = reach backward Patient.Vein{PCA_Errors.InCorrectDrugAdministration}
-
-root_cause_HS1 = (reach backward Patient.Vein{PCA_Errors.InCorrectDrugAdministration}):flow-source
-
-causal_path_H1_HS1 = reach from activate.out{PCA_Errors.CmdLate, PCA_Errors.MissingCmd} to Patient.Vein{PCA_Errors.InCorrectDrugAdministration}

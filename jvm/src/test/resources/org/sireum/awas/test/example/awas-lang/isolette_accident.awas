@@ -1,9 +1,0 @@
-types
-  record Accident
-    description : String
-    level : AccidentLevel
-
-constants
-  Serious_injury : Accident = Accident(description = "Prolonged exposure of Infant to unsafe heat leads to serious injury or death", level = Catastrophic)
-  Short_term : Accident = Accident(description = "Burst(Shorten) exposure of Infant to unsafe heat causes skin burns / skin damages", level = Critical)
-  unsafe_cold : Accident = Accident(description = "Exposure of Infant to unsafe cold", level = Catastrophic)

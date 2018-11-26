@@ -1,6 +1,0 @@
-From Source 
-
-B2C_out__Error_Low__Internal = reach simple paths from abc_connection.B2C.out{Error.Low} to abc_connection.C.cOut{Error.High}
-
-From Sink 
-

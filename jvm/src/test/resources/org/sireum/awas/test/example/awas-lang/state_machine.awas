@@ -1,8 +1,0 @@
-behavior
-  FailStop:
-    states = [operational, fail]
-    events = {failure, recovery}
-
-  FailRecover:
-    states = [operational, operational, soft_fail]
-    events = {failure, recovery, recovery, repair}

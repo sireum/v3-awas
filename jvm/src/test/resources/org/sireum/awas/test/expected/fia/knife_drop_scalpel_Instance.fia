@@ -1,9 +1,0 @@
-From Source 
-
-clinician_hand__ErrorLibrary_ItemCommission__Internal = reach simple paths from scenario_drop_scalpel_Instance.clinician.hand{ErrorLibrary.ItemCommission} to scenario_drop_scalpel_Instance.clinician.foot{ErrorLibrary.ItemCommission}
-scalpel_sharp_edge__ErrorLibrary_ItemCommission__Internal = reach simple paths from scenario_drop_scalpel_Instance.scalpel.sharp_edge{ErrorLibrary.ItemCommission} to scenario_drop_scalpel_Instance.clinician.foot{ErrorLibrary.ItemCommission}
-
-From Sink 
-
-clinician_foot__ErrorLibrary_ItemCommission__Internal__1 = reach simple paths from scenario_drop_scalpel_Instance.clinician.hand{ErrorLibrary.ItemCommission} to scenario_drop_scalpel_Instance.clinician.foot{ErrorLibrary.ItemCommission}
-clinician_foot__ErrorLibrary_ItemCommission__Internal__2 = reach simple paths from scenario_drop_scalpel_Instance.scalpel.sharp_edge{ErrorLibrary.ItemCommission} to scenario_drop_scalpel_Instance.clinician.foot{ErrorLibrary.ItemCommission}

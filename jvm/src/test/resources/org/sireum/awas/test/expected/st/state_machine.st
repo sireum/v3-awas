@@ -1,2 +1,0 @@
-{".class":"FileLocationInfoErrorMessage","kind":"Symbol Checker","uri":"example/awas-lang/state_machine.awas","lineBegin":7,"columnBegin":28,"lineEnd":7,"columnEnd":38,"offset":130,"length":11,"message":"State 'WrappedArray(operational)' already declared in the state machine"}
-{".class":"FileLocationInfoErrorMessage","kind":"Symbol Checker","uri":"example/awas-lang/state_machine.awas","lineBegin":8,"columnBegin":34,"lineEnd":8,"columnEnd":41,"offset":187,"length":8,"message":"Event 'WrappedArray(recovery)' already declared in the state machine"}
