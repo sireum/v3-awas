@@ -47,7 +47,7 @@ public interface Collector {
 
     SymbolTable getSymbolTable();
 
-    Set<FlowGraph<FlowNode, FlowEdge<FlowNode>>> getGraph();
+    Set<String> getGraph();
 
     Optional<Enumeration.Value> getResultType();
 

@@ -31,7 +31,15 @@ import org.scalajs.dom.MouseEvent
 import org.scalajs.dom.html.Anchor
 import org.sireum.awas.SvgNodeType.SvgNodeType
 import org.sireum.awas.fptc.FlowNode
-import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
+import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
+//TODO
+// convert this to SvgNode factory and SvgNode as a case class
+// add the following methods in the case class
+// 1. getUri
+// 2. select(color)
+// 3. pop - pops the color in the top
+// 4. clear - removes all the color
+// 5. getType
 
 object SvgNodeType extends Enumeration {
   type SvgNodeType = Value
@@ -43,7 +51,7 @@ trait SvgNode {
 
   def getUri: String
 
-  def select(isCriteria: Boolean): Unit
+  def select(isCriteria: Boolean, color: String): Unit
 
   def nodeColor: String
 
@@ -89,7 +97,6 @@ trait SvgNodeUpdateColors {
 class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpdateColors {
   this: SvgNode =>
   val H = SymbolTableHelper
-
   private var nodeType: Option[SvgNodeType] = None
   private var criteria: Boolean = false
   private var uri: Option[String] = None
@@ -102,7 +109,7 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
   private var _errorSelectionColor: String = "#ff9999"
   private var _nodeCriteriaColor: String = "#008080"
   private var _portCriteriaColor: String = "#008080"
-  private var _errorCriteriaColor: String = "#008080"
+  private var _errorCriteriaColor: String = "#ff0000"
   private var _edgeColor: String = "#000000"
   private var _edgeSelectionColor: String = "#ff0000"
 
@@ -119,8 +126,6 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
   private def edgeColor_=(value: String): Unit = {
     _edgeColor = value
   }
-
-  processNode()
 
   def nodeColor: String = _nodeColor
 
@@ -182,7 +187,16 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
     //    node.addEventListener("click touchstart", {(_: MouseEvent) =>
     //      Main.cellClicked(getUri)
     //    }:js.Function1[MouseEvent, _])
-    node.setAttribute("xlink:title", "Click to select")
+    if (!SettingsView.currentConfig.simpleConn &&
+      getUri.startsWith(H.CONNECTION_TYPE) &&
+      FlowNode.getNode(getUri).isDefined &&
+      FlowNode.getNode(getUri).get.getOwner.getIncomingEdges(FlowNode.getNode(getUri).get).size == 1 &&
+      FlowNode.getNode(getUri).get.getOwner.getIncomingEdges(FlowNode.getNode(getUri).get).size == 1) {
+        node.setAttribute("xlink:title", "Connection: " + getUri.split(H.ID_SEPARATOR).last)
+    } else {
+      node.setAttribute("xlink:title", "Click to select")
+    }
+
     if (getUri.startsWith(H.COMPONENT_TYPE) &&
       FlowNode.getNode(getUri).isDefined &&
       FlowNode.getNode(getUri).get.getSubGraph.isDefined) {
@@ -200,10 +214,22 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
       getNodeType
     }
     nodeType.get match {
-      case SvgNodeType.Node => node.firstElementChild.setAttribute("fill", _nodeColor)
-      case SvgNodeType.Port => node.firstElementChild.setAttribute("fill", _portColor)
-      case SvgNodeType.Flow => node.firstElementChild.setAttribute("fill", _portColor)
-      case SvgNodeType.Error => node.firstElementChild.setAttribute("fill", _errorColor)
+      case SvgNodeType.Node => {
+        node.firstElementChild.setAttribute("fill", _nodeColor)
+        node.firstElementChild.setAttribute("fill-opacity", "1")
+      }
+      case SvgNodeType.Port => {
+        node.firstElementChild.setAttribute("fill", _portColor)
+        node.firstElementChild.setAttribute("fill-opacity", "1")
+      }
+      case SvgNodeType.Flow => {
+        node.firstElementChild.setAttribute("fill", _portColor)
+        node.firstElementChild.setAttribute("fill-opacity", "1")
+      }
+      case SvgNodeType.Error => {
+        node.firstElementChild.setAttribute("fill", _errorColor)
+        node.firstElementChild.setAttribute("fill-opacity", "1")
+      }
       case SvgNodeType.Edge => {
         node.firstElementChild.nextElementSibling.setAttribute("fill", _edgeColor)
         node.firstElementChild.nextElementSibling.setAttribute("fill-opacity", ".2")
@@ -212,16 +238,27 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
         node.firstElementChild.setAttribute("opacity", ".2")
       }
     }
-
   }
 
-  override def select(isCriteria: Boolean): Unit = {
+  override def select(isCriteria: Boolean, color: String): Unit = {
     if (isCriteria) {
       nodeType.get match {
-        case SvgNodeType.Node => node.firstElementChild.setAttribute("fill", _nodeCriteriaColor)
-        case SvgNodeType.Port => node.firstElementChild.setAttribute("fill", _portCriteriaColor)
-        case SvgNodeType.Flow => node.firstElementChild.setAttribute("fill", _portCriteriaColor)
-        case SvgNodeType.Error => node.firstElementChild.setAttribute("fill", _errorCriteriaColor)
+        case SvgNodeType.Node => {
+          node.firstElementChild.setAttribute("fill", "#1878c0")
+          node.firstElementChild.setAttribute("fill-opacity", ".8")
+        }
+        case SvgNodeType.Port => {
+          node.firstElementChild.setAttribute("fill", "#1878c0")
+          node.firstElementChild.setAttribute("fill-opacity", ".8")
+        }
+        case SvgNodeType.Flow => {
+          node.firstElementChild.setAttribute("fill", "#1878c0")
+          node.firstElementChild.setAttribute("fill-opacity", ".8")
+        }
+        case SvgNodeType.Error => {
+          node.firstElementChild.setAttribute("fill", _errorCriteriaColor)
+          node.firstElementChild.setAttribute("fill-opacity", ".6")
+        }
         case SvgNodeType.Edge => {
           node.firstElementChild.nextElementSibling.setAttribute("fill", _edgeSelectionColor)
           node.firstElementChild.nextElementSibling.setAttribute("fill-opacity", ".8")
@@ -231,10 +268,34 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
       }
     } else {
       nodeType.get match {
-        case SvgNodeType.Node => node.firstElementChild.setAttribute("fill", _nodeSelectionColor)
-        case SvgNodeType.Port => node.firstElementChild.setAttribute("fill", _portSelectionColor)
-        case SvgNodeType.Flow => node.firstElementChild.setAttribute("fill", _portSelectionColor)
-        case SvgNodeType.Error => node.firstElementChild.setAttribute("fill", _errorSelectionColor)
+        case SvgNodeType.Node => {
+          node.firstElementChild.setAttribute("fill", color)
+          node.firstElementChild.setAttribute("fill-opacity", ".8")
+        }
+        case SvgNodeType.Port => {
+          node.firstElementChild.setAttribute("fill", color)
+          node.firstElementChild.setAttribute("fill-opacity", ".6")
+        }
+        case SvgNodeType.Flow => {
+          if (Resource.getParentUri(getUri).isDefined &&
+            FlowNode.getNode(Resource.getParentUri(getUri).get).isDefined) {
+            val flow = FlowNode.getNode(Resource.getParentUri(getUri).get).get.getFlows(getUri)
+            if ((flow.fromPortUri.isEmpty && flow.toPortUri.nonEmpty) || (flow.fromPortUri.nonEmpty && flow.toPortUri.isEmpty)) {
+              node.firstElementChild.setAttribute("fill", color)
+              node.firstElementChild.setAttribute("fill-opacity", "1.5")
+            } else {
+              node.firstElementChild.setAttribute("fill", color)
+              node.firstElementChild.setAttribute("fill-opacity", ".6")
+            }
+          } else {
+            node.firstElementChild.setAttribute("fill", color)
+            node.firstElementChild.setAttribute("fill-opacity", ".6")
+          }
+        }
+        case SvgNodeType.Error => {
+          node.firstElementChild.setAttribute("fill", _errorCriteriaColor)
+          node.firstElementChild.setAttribute("fill-opacity", ".6")
+        }
         case SvgNodeType.Edge => {
           node.firstElementChild.nextElementSibling.setAttribute("fill", _edgeSelectionColor)
           node.firstElementChild.nextElementSibling.setAttribute("fill-opacity", ".8")
@@ -269,6 +330,8 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
           nodeType = Some(SvgNodeType.Flow)
         } else if (title == "error") {
           nodeType = Some(SvgNodeType.Error)
+        } else {
+          nodeType = Some(SvgNodeType.Edge)
         }
       } else {
         nodeType = Some(SvgNodeType.Edge)

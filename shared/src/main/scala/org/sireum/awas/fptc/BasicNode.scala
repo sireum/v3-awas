@@ -43,7 +43,5 @@ trait BasicNode[G] {
 
 object NodeType extends Enumeration {
   type NodeType = Value
-  val COMPONENT,
-  CONNECTION,
-  PORT = Value
+  val COMPONENT, CONNECTION, PORT = Value
 }

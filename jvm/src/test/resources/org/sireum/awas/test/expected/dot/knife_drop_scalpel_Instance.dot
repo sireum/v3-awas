@@ -1,0 +1,19 @@
+digraph "component:$$AWAS#scenario_drop_scalpel_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$scenario_drop_scalpel_Instance#clinician" [label="{In Port|<foot>foot} |component\nclinician|{Out Port|<hand>hand} ",  shape="record"] 
+   "component:$$AWAS$scenario_drop_scalpel_Instance#patient" [label="{In Port|<skin>skin} |component\npatient|{Out Port|} ",  shape="record"] 
+   "component:$$AWAS$scenario_drop_scalpel_Instance#scalpel" [label="{In Port|<handle>handle} |component\nscalpel|{Out Port|<sharp_edge>sharp_edge} ",  shape="record"] 
+   "connection:$$AWAS$scenario_drop_scalpel_Instance#hold" [label="{In Port|<in>in} |connection\nhold|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$scenario_drop_scalpel_Instance#intended_use" [label="{In Port|<in>in} |connection\nintended_use|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$scenario_drop_scalpel_Instance#unintended_use" [label="{In Port|<in>in} |connection\nunintended_use|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$scenario_drop_scalpel_Instance#clinician" -> "connection:$$AWAS$scenario_drop_scalpel_Instance#hold" [headport=in, tailport=hand] 
+   "component:$$AWAS$scenario_drop_scalpel_Instance#scalpel" -> "connection:$$AWAS$scenario_drop_scalpel_Instance#intended_use" [headport=in, tailport=sharp_edge] 
+   "component:$$AWAS$scenario_drop_scalpel_Instance#scalpel" -> "connection:$$AWAS$scenario_drop_scalpel_Instance#unintended_use" [headport=in, tailport=sharp_edge] 
+   "connection:$$AWAS$scenario_drop_scalpel_Instance#hold" -> "component:$$AWAS$scenario_drop_scalpel_Instance#scalpel" [headport=handle, tailport=out] 
+   "connection:$$AWAS$scenario_drop_scalpel_Instance#intended_use" -> "component:$$AWAS$scenario_drop_scalpel_Instance#patient" [headport=skin, tailport=out] 
+   "connection:$$AWAS$scenario_drop_scalpel_Instance#unintended_use" -> "component:$$AWAS$scenario_drop_scalpel_Instance#clinician" [headport=foot, tailport=out] 
+
+}

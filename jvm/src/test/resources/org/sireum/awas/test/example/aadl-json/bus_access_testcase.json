@@ -90,7 +90,7 @@
           },
           "features": [
             {
-              "type": "FeatureEnd",
+              "type": "FeatureAccess",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -98,10 +98,6 @@
                   "Shared_Memory",
                   "Card_Connector"
                 ]
-              },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
               },
               "category": {
                 "type": "FeatureCategory",
@@ -113,6 +109,14 @@
                   "type": "Classifier",
                   "name": "Bus_Access::VME"
                 }
+              },
+              "accessType": {
+                "type": "AccessType",
+                "value": "Requires"
+              },
+              "accessCategory": {
+                "type": "AccessCategory",
+                "value": "Bus"
               },
               "properties": [
               ]
@@ -167,7 +171,7 @@
           },
           "features": [
             {
-              "type": "FeatureEnd",
+              "type": "FeatureAccess",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -175,10 +179,6 @@
                   "Left",
                   "Card_Connector"
                 ]
-              },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
               },
               "category": {
                 "type": "FeatureCategory",
@@ -190,6 +190,14 @@
                   "type": "Classifier",
                   "name": "Bus_Access::VME"
                 }
+              },
+              "accessType": {
+                "type": "AccessType",
+                "value": "Requires"
+              },
+              "accessCategory": {
+                "type": "AccessCategory",
+                "value": "Bus"
               },
               "properties": [
               ]
@@ -244,7 +252,7 @@
           },
           "features": [
             {
-              "type": "FeatureEnd",
+              "type": "FeatureAccess",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -252,10 +260,6 @@
                   "Right",
                   "Card_Connector"
                 ]
-              },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
               },
               "category": {
                 "type": "FeatureCategory",
@@ -267,6 +271,14 @@
                   "type": "Classifier",
                   "name": "Bus_Access::VME"
                 }
+              },
+              "accessType": {
+                "type": "AccessType",
+                "value": "Requires"
+              },
+              "accessCategory": {
+                "type": "AccessCategory",
+                "value": "Bus"
               },
               "properties": [
               ]
@@ -822,5 +834,7 @@
     }
   ],
   "errorLib": [
+  ],
+  "dataComponents": [
   ]
 }

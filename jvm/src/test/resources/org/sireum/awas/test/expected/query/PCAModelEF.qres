@@ -1,0 +1,16 @@
+x
+ -------------- 
+{ component:$$AWAS$PCAModelEF#App, 
+component:$$AWAS$PCAModelEF#Capnography, 
+component:$$AWAS$PCAModelEF#Patient, 
+component:$$AWAS$PCAModelEF#PulseOx, 
+component:$$AWAS$PCAModelEF#Pump, 
+connection:$$AWAS$PCAModelEF#a1, 
+connection:$$AWAS$PCAModelEF#app1, 
+connection:$$AWAS$PCAModelEF#p1, 
+connection:$$AWAS$PCAModelEF#p2, 
+connection:$$AWAS$PCAModelEF#s1, 
+connection:$$AWAS$PCAModelEF#s2, 
+connection:$$AWAS$PCAModelEF#s3 } 
+
+ -------------- 

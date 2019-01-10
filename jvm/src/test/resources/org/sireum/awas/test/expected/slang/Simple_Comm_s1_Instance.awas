@@ -27,24 +27,24 @@ system  Simple_Comm_s1_Instance
 
       router
         ports
-          in socket1_IN
-          out socket1_OUT
-          in socket2_IN
-          out socket2_OUT
-          in socket3_IN
-          out socket3_OUT
-          in socket4_IN
-          out socket4_OUT
+          in alice_skt_IN
+          out alice_skt_OUT
+          in bob_skt_IN
+          out bob_skt_OUT
+          in mallory_skt_IN
+          out mallory_skt_OUT
+          in eve_skt_IN
+          out eve_skt_OUT
     }
     connections
-      alice_send : alice.send_port_OUT -> router.socket1_IN
+      alice_send : alice.send_port_OUT -> router.alice_skt_IN
 
-      bob_send : bob.receive_Port_OUT -> router.socket2_IN
+      bob_send : bob.receive_Port_OUT -> router.bob_skt_IN
 
-      mallory_send : mallory.receive_Port_OUT -> router.socket3_IN
+      mallory_send : mallory.receive_Port_OUT -> router.mallory_skt_IN
 
-      alice_receive : router.socket1_OUT -> alice.send_port_IN
+      alice_receive : router.alice_skt_OUT -> alice.send_port_IN
 
-      bob_receive : router.socket2_OUT -> bob.receive_Port_IN
+      bob_receive : router.bob_skt_OUT -> bob.receive_Port_IN
 
-      mallory_receive : router.socket3_OUT -> mallory.receive_Port_IN
+      mallory_receive : router.mallory_skt_OUT -> mallory.receive_Port_IN

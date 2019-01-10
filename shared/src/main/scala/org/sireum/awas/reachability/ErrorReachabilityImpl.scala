@@ -105,7 +105,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
         workList = workList.tail
       }
     collector.Collector(st,
-      resGraph,
+      resGraph.map(_.getUri),
       result.map(v => (v._1, v._2.toSet)).toMap,
       resFlows, resEdges, isForward, isetEmpty[ResourceUri] + port, resError)
   }
@@ -185,36 +185,51 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
   }
 
   def errorPathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
-                        target: IMap[ResourceUri, ISet[ResourceUri]]):
+    target: IMap[ResourceUri, ISet[ResourceUri]],
+    isRefined: Boolean
+  ):
   Collector = {
 
     source.toSet.foldLeft(Collector(st))((c, n) => c union
       target.toSet.foldLeft(Collector(st))((c2, n2) => c2 union
-        errorPathReach(n._1, n._2, n2._1, n2._2)))
+        errorPathReach(n._1, n._2, n2._1, n2._2, isRefined)
+        )
+    )
   }
 
   def errorPathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
-                     targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
+    targetPort: ResourceUri,
+    targetErrors: ISet[ResourceUri],
+    isRefined: Boolean):
   Collector = {
-    val paths = reachPath(sourcePort, targetPort).getPaths.flatMap(it => pathErrorRefine(it, sourcePort,
-      sourceErrors, targetPort, targetErrors, None)).toSet
-    Collector(st,
-      paths.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
+    val paths = reachPath(sourcePort, targetPort, isRefined).getPaths
+      .flatMap(it => pathErrorRefine(it, sourcePort,
+      sourceErrors, targetPort, targetErrors, None))
+      .toSet
+    Collector(
+      st,
+      paths.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
       ilinkedSetEmpty ++ paths.toVector, Some(ResultType.Error))
   }
 
   def errorPathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
-                            target: IMap[ResourceUri, ISet[ResourceUri]],
-                            constraint: ConstraintExpr): Collector = {
+    target: IMap[ResourceUri, ISet[ResourceUri]],
+    constraint: ConstraintExpr,
+    isRefined: Boolean): Collector = {
     var reformatedArgs = isetEmpty[(ResourceUri, ISet[ResourceUri], ResourceUri, ISet[ResourceUri], ConstraintExpr)]
 
-    source.foreach { s => target.foreach { t => reformatedArgs += ((s._1, s._2, t._1, t._2, constraint)) } }
+    source.foreach { s =>
+      target.foreach { t => reformatedArgs += ((s._1, s._2, t._1, t._2, constraint))
+      }
+    }
 
-    val pathsConst = reformatedArgs.flatMap(e => reachPath(e._1, e._3).getPaths.flatMap(it =>
-      pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5))
-    ))
-    Collector(st,
-      pathsConst.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
+    val pathsConst = reformatedArgs.flatMap(
+      e =>
+        reachPath(e._1, e._3, isRefined).getPaths.flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5)))
+    )
+    Collector(
+      st,
+      pathsConst.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
       ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 
@@ -367,15 +382,28 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
 
           val cycles = it._1.union(it._2.foldLeft(
             collector.FlowErrorPathCollector(ivectorEmpty[(ResourceUri, ResourceUri)],
-              isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty))(_.union(_)))
+              isetEmpty[Edge], isetEmpty[ResourceUri], isetEmpty[Tag], isetEmpty
+            )
+          )(_.union(_))
+          )
 
-          tempPaths = tempPaths + FlowErrorNextCollector(cycles.path.toSet, cycles.edges,
-            cycles.flows, cycles.errors, cycles.graphs)
+          tempPaths = tempPaths + FlowErrorNextCollector(
+            cycles.path.toSet,
+            cycles.edges,
+            cycles.flows,
+            cycles.errors,
+            cycles.graphs
+          )
         }
       }
     }
 
-    result = result ++ tempPaths.map(it => collector.Collector(st, it.graph, it.tuples.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap,
+    result = result ++ tempPaths.map(
+      it =>
+        collector.Collector(
+          st,
+          it.graph.map(_.getUri),
+          it.tuples.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap,
       ResultType.Error, it.edges, it.flows, isetEmpty[ResourceUri] + sourcePort + targetPort, it.errors))
 
 
@@ -415,45 +443,54 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     sourcePort: ResourceUri,
     sourceErrors: ISet[ResourceUri],
     targetPort: ResourceUri,
-    targetErrors: ISet[ResourceUri]
+    targetErrors: ISet[ResourceUri],
+    isRefined: Boolean
   ): Collector = {
-    val paths = reachSimplePath(sourcePort, targetPort).getPaths.flatMap(it => pathErrorRefine(it, sourcePort,
-      sourceErrors, targetPort, targetErrors, None)).toSet
-    Collector(st,
-      paths.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
-      ilinkedSetEmpty ++ paths.toVector, Some(ResultType.Error))
+    val paths = reachSimplePath(sourcePort, targetPort, isRefined).getPaths
+      .flatMap(it => pathErrorRefine(it, sourcePort, sourceErrors, targetPort, targetErrors, None))
+      .toSet
+    Collector(
+      st,
+      paths.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
+      ilinkedSetEmpty ++ paths.toVector,
+      Some(ResultType.Error)
+    )
   }
   override def errorSimplePathReachMap(
-    source: IMap[ResourceUri, ISet[
-      ResourceUri
-    ]],
-    target: IMap[ResourceUri, ISet[
-      ResourceUri
-    ]]
+    source: IMap[ResourceUri, ISet[ResourceUri]],
+    target: IMap[ResourceUri, ISet[ResourceUri]],
+    isRefined: Boolean
   ): Collector = {
 
-    source.toSet.foldLeft(Collector(st))((c, n) => c union
-      target.toSet.foldLeft(Collector(st))((c2, n2) => c2 union
-        errorSimplePathReach(n._1, n._2, n2._1, n2._2)))
+    source.toSet.foldLeft(Collector(st))(
+      (c, n) =>
+        c union
+          target.toSet.foldLeft(Collector(st))(
+            (c2, n2) => c2 union
+        errorSimplePathReach(n._1, n._2, n2._1, n2._2, isRefined)
+        )
+    )
   }
   override def errorSimplePathReachMapWith(
-    source: IMap[ResourceUri, ISet[
-      ResourceUri
-    ]],
+    source: IMap[ResourceUri, ISet[ResourceUri]],
     target: IMap[ResourceUri, ISet[
       ResourceUri
     ]],
-    constraint: ConstraintExpr
+    constraint: ConstraintExpr, isRefined : Boolean
   ): Collector = {
     var reformatedArgs = isetEmpty[(ResourceUri, ISet[ResourceUri], ResourceUri, ISet[ResourceUri], ConstraintExpr)]
 
-    source.foreach { s => target.foreach { t => reformatedArgs += ((s._1, s._2, t._1, t._2, constraint)) } }
+    source.foreach { s =>
+      target.foreach { t => reformatedArgs += ((s._1, s._2, t._1, t._2, constraint))
+      }
+    }
 
-    val pathsConst = reformatedArgs.flatMap(e => reachSimplePath(e._1, e._3).getPaths.flatMap(it =>
-      pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5))
-    ))
+    val pathsConst = reformatedArgs.flatMap(
+      e =>
+        reachSimplePath(e._1, e._3, isRefined).getPaths.flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5)))
+    )
     Collector(st,
-      pathsConst.map(_.getGraphs).fold(isetEmpty[Graph])((s, t) => s ++ t),
+      pathsConst.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
       ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 }

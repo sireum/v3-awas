@@ -1,0 +1,36 @@
+digraph "component:$$AWAS#Simple_Comm_routing_table_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#alice" [label="{In Port|<send_port_IN>send_port_IN} |component\nalice|{Out Port|<send_port_OUT>send_port_OUT} ",  shape="record"] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#bob" [label="{In Port|<receive_Port_IN>receive_Port_IN} |component\nbob|{Out Port|<receive_Port_OUT>receive_Port_OUT} ",  shape="record"] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#eve" [label="{In Port|<receive>receive} |component\neve|{Out Port|<send>send} ",  shape="record"] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#mallory" [label="{In Port|<receive_Port_IN>receive_Port_IN} |component\nmallory|{Out Port|<receive_Port_OUT>receive_Port_OUT} ",  shape="record"] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [label="{In Port|<socket3_IN>socket3_IN|<socket1_IN>socket1_IN|<socket4_IN>socket4_IN|<socket2_IN>socket2_IN} |component\nrouter|{Out Port|<socket2_OUT>socket2_OUT|<socket3_OUT>socket3_OUT|<socket4_OUT>socket4_OUT|<socket1_OUT>socket1_OUT} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_receive" [label="{In Port|<in>in} |connection\nalice_receive|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_send" [label="{In Port|<in>in} |connection\nalice_send|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_receive" [label="{In Port|<in>in} |connection\nbob_receive|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_send" [label="{In Port|<in>in} |connection\nbob_send|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#eve_receive" [label="{In Port|<in>in} |connection\neve_receive|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#eve_send" [label="{In Port|<in>in} |connection\neve_send|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#mallory_receive" [label="{In Port|<in>in} |connection\nmallory_receive|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#mallory_send" [label="{In Port|<in>in} |connection\nmallory_send|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#alice" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_send" [headport=in, tailport=send_port_OUT] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#bob" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_send" [headport=in, tailport=receive_Port_OUT] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#eve" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#eve_send" [headport=in, tailport=send] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#mallory" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#mallory_send" [headport=in, tailport=receive_Port_OUT] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_receive" [headport=in, tailport=socket1_OUT] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_receive" [headport=in, tailport=socket2_OUT] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#eve_receive" [headport=in, tailport=socket4_OUT] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" -> "connection:$$AWAS$Simple_Comm_routing_table_Instance#mallory_receive" [headport=in, tailport=socket3_OUT] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_receive" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#alice" [headport=send_port_IN, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_send" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [headport=socket1_IN, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_receive" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#bob" [headport=receive_Port_IN, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_send" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [headport=socket2_IN, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#eve_receive" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#eve" [headport=receive, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#eve_send" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [headport=socket4_IN, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#mallory_receive" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#mallory" [headport=receive_Port_IN, tailport=out] 
+   "connection:$$AWAS$Simple_Comm_routing_table_Instance#mallory_send" -> "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [headport=socket3_IN, tailport=out] 
+
+}

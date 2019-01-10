@@ -74,8 +74,10 @@ object QueryPPrinter {
     st"""reach from $sExp to $tExp"""
   }
 
-  def pathExpr(sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
-    st"""reach paths from $sExp to $tExp${if (wExp.nonEmpty) " " + wExp.get.render else ""}"""
+  def pathExpr(isRefined: Boolean, isSimple: Boolean, sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
+    st"""reach ${if (isRefined) "refined " else ""}${if (isSimple) "simple " else ""}paths from $sExp to $tExp${if (wExp.nonEmpty)
+      " " + wExp.get.render
+    else ""}"""
   }
 
   def simplePathExpr(sExp: ST, tExp: ST, wExp: org.sireum.Option[ST]): ST = {
@@ -172,7 +174,7 @@ final class QueryPPrinter() {
       case be : BackwardExpr => print(be)
       case ce : ChopExpr => print(ce)
       case pe : PathExpr => print(pe)
-      case spe : SimplePathExpr => print(spe)
+      //case spe : SimplePathExpr => print(spe)
     }
   }
 
@@ -189,14 +191,21 @@ final class QueryPPrinter() {
   }
 
   def print(pe : PathExpr): ST = {
-    QueryPPrinter.pathExpr(print(pe.source), print(pe.target), if (pe.withExpr.isDefined)
-      org.sireum.Option.some[ST](print(pe.withExpr.get)) else org.sireum.Option.none[ST]())
+    QueryPPrinter.pathExpr(
+      pe.isRefined,
+      pe.isSimple,
+      print(pe.source),
+      print(pe.target),
+      if (pe.withExpr.isDefined)
+      org.sireum.Option.some[ST](print(pe.withExpr.get))
+      else org.sireum.Option.none[ST]()
+    )
   }
 
-  def print(spe : SimplePathExpr): ST = {
-    QueryPPrinter.simplePathExpr(print(spe.source), print(spe.target), if (spe.withExpr.isDefined)
-      org.sireum.Option.some[ST](print(spe.withExpr.get)) else org.sireum.Option.none[ST]())
-  }
+//  def print(spe : SimplePathExpr): ST = {
+//    QueryPPrinter.simplePathExpr(print(spe.source), print(spe.target), if (spe.withExpr.isDefined)
+//      org.sireum.Option.some[ST](print(spe.withExpr.get)) else org.sireum.Option.none[ST]())
+//  }
 
   def print(we : WithExpr): ST = {
     we match {

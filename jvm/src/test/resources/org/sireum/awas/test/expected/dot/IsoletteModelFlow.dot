@@ -1,56 +1,44 @@
-strict digraph G {
-  Thermostat [ label="{In Port|<sensed_temp>sensed_temp|<settings>settings} |component
-Thermostat|{Out Port|<feedback>feedback|<heater_ctrl>heater_ctrl} " shape="record" ];
-  Nurse [ label="{In Port|<monitor>monitor} |component
-Nurse|{Out Port|<set_params>set_params} " shape="record" ];
-  Air [ label="{In Port|<from_heater>from_heater|<from_infant>from_infant} |component
-Air|{Out Port|<to_sensor>to_sensor|<to_infant>to_infant} " shape="record" ];
-  Infant [ label="{In Port|<heat_in>heat_in} |component
-Infant|{Out Port|<heat_out>heat_out} " shape="record" ];
-  OperatorInterface [ label="{In Port|<settings_in>settings_in|<feedback_in>feedback_in} |component
-OperatorInterface|{Out Port|<feedback_out>feedback_out|<settings_out>settings_out} " shape="record" ];
-  HeatSource [ label="{In Port|<on_heater>on_heater} |component
-HeatSource|{Out Port|<heater_output>heater_output} " shape="record" ];
-  TempSensor [ label="{In Port|<air_heat>air_heat} |component
-TempSensor|{Out Port|<air_temp>air_temp} " shape="record" ];
-  i1 [ label="connection
-i1" shape="record" ];
-  t1 [ label="connection
-t1" shape="record" ];
-  o3 [ label="connection
-o3" shape="record" ];
-  h1 [ label="connection
-h1" shape="record" ];
-  o2 [ label="connection
-o2" shape="record" ];
-  i2 [ label="connection
-i2" shape="record" ];
-  t2 [ label="connection
-t2" shape="record" ];
-  o1 [ label="connection
-o1" shape="record" ];
-  o4 [ label="connection
-o4" shape="record" ];
-  h2 [ label="connection
-h2" shape="record" ];
-  Air -> i1 [ tailport="to_infant" ];
-  i1 -> Infant [ headport="heat_in" ];
-  Thermostat -> t1 [ tailport="heater_ctrl" ];
-  t1 -> HeatSource [ headport="on_heater" ];
-  OperatorInterface -> o3 [ tailport="feedback_out" ];
-  o3 -> Nurse [ headport="monitor" ];
-  HeatSource -> h1 [ tailport="heater_output" ];
-  h1 -> Air [ headport="from_heater" ];
-  Thermostat -> o2 [ tailport="feedback" ];
-  o2 -> OperatorInterface [ headport="feedback_in" ];
-  Infant -> i2 [ tailport="heat_out" ];
-  i2 -> Air [ headport="from_infant" ];
-  TempSensor -> t2 [ tailport="air_temp" ];
-  t2 -> Thermostat [ headport="sensed_temp" ];
-  OperatorInterface -> o1 [ tailport="settings_out" ];
-  o1 -> Thermostat [ headport="settings" ];
-  Nurse -> o4 [ tailport="set_params" ];
-  o4 -> OperatorInterface [ headport="settings_in" ];
-  Air -> h2 [ tailport="to_sensor" ];
-  h2 -> TempSensor [ headport="air_heat" ];
+digraph "component:$$AWAS#Isolette" {
+
+  rankdir=TB
+
+   "component:$$AWAS$Isolette#Air" [label="{In Port|<from_infant>from_infant|<from_heater>from_heater} |component\nAir|{Out Port|<to_sensor>to_sensor|<to_infant>to_infant} ",  shape="record"] 
+   "component:$$AWAS$Isolette#HeatSource" [label="{In Port|<on_heater>on_heater} |component\nHeatSource|{Out Port|<heater_output>heater_output} ",  shape="record"] 
+   "component:$$AWAS$Isolette#Infant" [label="{In Port|<heat_in>heat_in} |component\nInfant|{Out Port|<heat_out>heat_out} ",  shape="record"] 
+   "component:$$AWAS$Isolette#Nurse" [label="{In Port|<monitor>monitor} |component\nNurse|{Out Port|<set_params>set_params} ",  shape="record"] 
+   "component:$$AWAS$Isolette#OperatorInterface" [label="{In Port|<settings_in>settings_in|<feedback_in>feedback_in} |component\nOperatorInterface|{Out Port|<feedback_out>feedback_out|<settings_out>settings_out} ",  shape="record"] 
+   "component:$$AWAS$Isolette#TempSensor" [label="{In Port|<air_heat>air_heat} |component\nTempSensor|{Out Port|<air_temp>air_temp} ",  shape="record"] 
+   "component:$$AWAS$Isolette#Thermostat" [label="{In Port|<settings>settings|<sensed_temp>sensed_temp} |component\nThermostat|{Out Port|<feedback>feedback|<heater_ctrl>heater_ctrl} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#h1" [label="{In Port|<in>in} |connection\nh1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#h2" [label="{In Port|<in>in} |connection\nh2|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#i1" [label="{In Port|<in>in} |connection\ni1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#i2" [label="{In Port|<in>in} |connection\ni2|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#o1" [label="{In Port|<in>in} |connection\no1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#o2" [label="{In Port|<in>in} |connection\no2|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#o3" [label="{In Port|<in>in} |connection\no3|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#o4" [label="{In Port|<in>in} |connection\no4|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#t1" [label="{In Port|<in>in} |connection\nt1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Isolette#t2" [label="{In Port|<in>in} |connection\nt2|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$Isolette#Air" -> "connection:$$AWAS$Isolette#h2" [headport=in, tailport=to_sensor] 
+   "component:$$AWAS$Isolette#Air" -> "connection:$$AWAS$Isolette#i1" [headport=in, tailport=to_infant] 
+   "component:$$AWAS$Isolette#HeatSource" -> "connection:$$AWAS$Isolette#h1" [headport=in, tailport=heater_output] 
+   "component:$$AWAS$Isolette#Infant" -> "connection:$$AWAS$Isolette#i2" [headport=in, tailport=heat_out] 
+   "component:$$AWAS$Isolette#Nurse" -> "connection:$$AWAS$Isolette#o4" [headport=in, tailport=set_params] 
+   "component:$$AWAS$Isolette#OperatorInterface" -> "connection:$$AWAS$Isolette#o1" [headport=in, tailport=settings_out] 
+   "component:$$AWAS$Isolette#OperatorInterface" -> "connection:$$AWAS$Isolette#o3" [headport=in, tailport=feedback_out] 
+   "component:$$AWAS$Isolette#TempSensor" -> "connection:$$AWAS$Isolette#t2" [headport=in, tailport=air_temp] 
+   "component:$$AWAS$Isolette#Thermostat" -> "connection:$$AWAS$Isolette#o2" [headport=in, tailport=feedback] 
+   "component:$$AWAS$Isolette#Thermostat" -> "connection:$$AWAS$Isolette#t1" [headport=in, tailport=heater_ctrl] 
+   "connection:$$AWAS$Isolette#h1" -> "component:$$AWAS$Isolette#Air" [headport=from_heater, tailport=out] 
+   "connection:$$AWAS$Isolette#h2" -> "component:$$AWAS$Isolette#TempSensor" [headport=air_heat, tailport=out] 
+   "connection:$$AWAS$Isolette#i1" -> "component:$$AWAS$Isolette#Infant" [headport=heat_in, tailport=out] 
+   "connection:$$AWAS$Isolette#i2" -> "component:$$AWAS$Isolette#Air" [headport=from_infant, tailport=out] 
+   "connection:$$AWAS$Isolette#o1" -> "component:$$AWAS$Isolette#Thermostat" [headport=settings, tailport=out] 
+   "connection:$$AWAS$Isolette#o2" -> "component:$$AWAS$Isolette#OperatorInterface" [headport=feedback_in, tailport=out] 
+   "connection:$$AWAS$Isolette#o3" -> "component:$$AWAS$Isolette#Nurse" [headport=monitor, tailport=out] 
+   "connection:$$AWAS$Isolette#o4" -> "component:$$AWAS$Isolette#OperatorInterface" [headport=settings_in, tailport=out] 
+   "connection:$$AWAS$Isolette#t1" -> "component:$$AWAS$Isolette#HeatSource" [headport=on_heater, tailport=out] 
+   "connection:$$AWAS$Isolette#t2" -> "component:$$AWAS$Isolette#Thermostat" [headport=sensed_temp, tailport=out] 
+
 }

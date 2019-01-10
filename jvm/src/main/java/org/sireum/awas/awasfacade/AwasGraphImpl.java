@@ -180,6 +180,6 @@ public class AwasGraphImpl implements AwasGraph {
 
     @Override
     public String getDotGraph() {
-        return graph.toDot();
+        return graph.getDot();
     }
 }

@@ -18,7 +18,7 @@
       },
       "features": [
         {
-          "type": "Feature",
+          "type": "FeatureEnd",
           "identifier": {
             "type": "Name",
             "name": [
@@ -41,7 +41,7 @@
           ]
         },
         {
-          "type": "Feature",
+          "type": "FeatureEnd",
           "identifier": {
             "type": "Name",
             "name": [
@@ -64,7 +64,7 @@
           ]
         },
         {
-          "type": "Feature",
+          "type": "FeatureEnd",
           "identifier": {
             "type": "Name",
             "name": [
@@ -110,7 +110,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -237,7 +237,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -261,7 +261,7 @@
               ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -285,7 +285,7 @@
               ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -309,7 +309,7 @@
               ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -353,7 +353,8 @@
                 "type": "Emv2Clause",
                 "libraries": [
                   "AFGErrorLibrary",
-                  "GPSErrorLibrary"
+                  "GPSErrorLibrary",
+                  "ErrorLibrary"
                 ],
                 "propagations": [
                   {
@@ -761,7 +762,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -785,7 +786,7 @@
               ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -809,7 +810,7 @@
               ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -1120,7 +1121,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -1144,7 +1145,7 @@
               ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -1192,7 +1193,7 @@
               },
               "features": [
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1518,7 +1519,7 @@
               },
               "features": [
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1543,7 +1544,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1568,7 +1569,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1593,7 +1594,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureAccess",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1603,16 +1604,24 @@
                       "networkaccess"
                     ]
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
-                  },
                   "category": {
                     "type": "FeatureCategory",
                     "value": "BusAccess"
                   },
                   "classifier": {
-                    "type": "None"
+                    "type": "Some",
+                    "value": {
+                      "type": "Classifier",
+                      "name": "HardwareParts::Network"
+                    }
+                  },
+                  "accessType": {
+                    "type": "AccessType",
+                    "value": "Requires"
+                  },
+                  "accessCategory": {
+                    "type": "AccessCategory",
+                    "value": "Bus"
                   },
                   "properties": [
                   ]
@@ -1684,7 +1693,7 @@
                           "FlightSystem_TwoSensorGPS_Instance",
                           "GPS",
                           "SatelliteSignalReceiver1",
-                          "networkaccess"
+                          "networkaccess_IN"
                         ],
                         "errorTokens": [
                           "ServiceOmission"
@@ -1827,7 +1836,7 @@
                               "FlightSystem_TwoSensorGPS_Instance",
                               "GPS",
                               "SatelliteSignalReceiver1",
-                              "networkaccess"
+                              "networkaccess_IN"
                             ],
                             "errorTokens": [
                               "ServiceOmission"
@@ -1936,7 +1945,7 @@
               },
               "features": [
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1961,7 +1970,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -1986,7 +1995,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2011,7 +2020,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureAccess",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2021,16 +2030,24 @@
                       "networkaccess"
                     ]
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
-                  },
                   "category": {
                     "type": "FeatureCategory",
                     "value": "BusAccess"
                   },
                   "classifier": {
-                    "type": "None"
+                    "type": "Some",
+                    "value": {
+                      "type": "Classifier",
+                      "name": "HardwareParts::Network"
+                    }
+                  },
+                  "accessType": {
+                    "type": "AccessType",
+                    "value": "Requires"
+                  },
+                  "accessCategory": {
+                    "type": "AccessCategory",
+                    "value": "Bus"
                   },
                   "properties": [
                   ]
@@ -2102,7 +2119,7 @@
                           "FlightSystem_TwoSensorGPS_Instance",
                           "GPS",
                           "SatelliteSignalReceiver2",
-                          "networkaccess"
+                          "networkaccess_IN"
                         ],
                         "errorTokens": [
                           "ServiceOmission"
@@ -2245,7 +2262,7 @@
                               "FlightSystem_TwoSensorGPS_Instance",
                               "GPS",
                               "SatelliteSignalReceiver2",
-                              "networkaccess"
+                              "networkaccess_IN"
                             ],
                             "errorTokens": [
                               "ServiceOmission"
@@ -2354,7 +2371,7 @@
               },
               "features": [
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2486,7 +2503,7 @@
               },
               "features": [
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2511,7 +2528,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureAccess",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2521,16 +2538,24 @@
                       "networkaccess"
                     ]
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
-                  },
                   "category": {
                     "type": "FeatureCategory",
                     "value": "BusAccess"
                   },
                   "classifier": {
-                    "type": "None"
+                    "type": "Some",
+                    "value": {
+                      "type": "Classifier",
+                      "name": "HardwareParts::Network"
+                    }
+                  },
+                  "accessType": {
+                    "type": "AccessType",
+                    "value": "Requires"
+                  },
+                  "accessCategory": {
+                    "type": "AccessCategory",
+                    "value": "Bus"
                   },
                   "properties": [
                   ]
@@ -2585,7 +2610,7 @@
                           "FlightSystem_TwoSensorGPS_Instance",
                           "GPS",
                           "cpu1",
-                          "networkaccess"
+                          "networkaccess_IN"
                         ],
                         "errorTokens": [
                           "ServiceOmission"
@@ -2618,7 +2643,7 @@
                           "FlightSystem_TwoSensorGPS_Instance",
                           "GPS",
                           "cpu1",
-                          "networkaccess"
+                          "networkaccess_OUT"
                         ],
                         "errorTokens": [
                           "ServiceOmission"
@@ -2693,7 +2718,7 @@
               },
               "features": [
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2718,7 +2743,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -2743,7 +2768,7 @@
                   ]
                 },
                 {
-                  "type": "Feature",
+                  "type": "FeatureEnd",
                   "identifier": {
                     "type": "Name",
                     "name": [
@@ -3116,57 +3141,71 @@
                   "sattoSatelliteSignalReceiver1"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "satelliteSignal"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "satelliteSignal"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "satelliteSignal"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver1",
+                        "satelliteSignal"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Feature"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3193,57 +3232,71 @@
                   "sattoSatelliteSignalReceiver2"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "satelliteSignal"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "satelliteSignal"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "satelliteSignal"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver2",
+                        "satelliteSignal"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Feature"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3270,57 +3323,71 @@
                   "proctoext"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing",
-                    "location"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "processing"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "processing",
+                        "location"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "location"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "location"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Port"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3348,49 +3415,64 @@
                   "s1tonetwork"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
-                },
-                "direction": {
-                  "type": "None"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  },
+                  "feature": {
+                    "type": "None"
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "InOut"
+                    }
+                  }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "networkaccess"
-                  ]
-                },
-                "direction": {
-                  "type": "None"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver1",
+                        "networkaccess"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "InOut"
+                    }
+                  }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Access"
               },
               "isBiDirectional": true,
               "connectionInstances": [
@@ -3417,49 +3499,64 @@
                   "s2tonetwork"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
-                },
-                "direction": {
-                  "type": "None"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  },
+                  "feature": {
+                    "type": "None"
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "InOut"
+                    }
+                  }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "networkaccess"
-                  ]
-                },
-                "direction": {
-                  "type": "None"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver2",
+                        "networkaccess"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "InOut"
+                    }
+                  }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Access"
               },
               "isBiDirectional": true,
               "connectionInstances": [
@@ -3486,49 +3583,64 @@
                   "cputonetwork"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "cpu1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "cpu1",
-                    "networkaccess"
-                  ]
-                },
-                "direction": {
-                  "type": "None"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "cpu1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "cpu1",
+                        "networkaccess"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "InOut"
+                    }
+                  }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
-                },
-                "direction": {
-                  "type": "None"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  },
+                  "feature": {
+                    "type": "None"
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "InOut"
+                    }
+                  }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Access"
               },
               "isBiDirectional": true,
               "connectionInstances": [
@@ -3555,59 +3667,73 @@
                   "s1toproc"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "sensedData"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver1",
+                        "sensedData"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing",
-                    "inSensor1"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "processing"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "processing",
+                        "inSensor1"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Port"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3635,59 +3761,73 @@
                   "s2toproc"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "sensedData"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver2",
+                        "sensedData"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing",
-                    "inSensor2"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "processing"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "processing",
+                        "inSensor2"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Port"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3715,59 +3855,73 @@
                   "powertos1"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "powersupply1",
+                        "power"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "powersource"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver1",
+                        "powersource"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Feature"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3795,59 +3949,73 @@
                   "powertos2"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "powersupply1",
+                        "power"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "powersource"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "SatelliteSignalReceiver2",
+                        "powersource"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Feature"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3875,59 +4043,73 @@
                   "powertocpu"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "powersupply1",
+                        "power"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "cpu1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "cpu1",
-                    "powersource"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "cpu1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "cpu1",
+                        "powersource"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Feature"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -3955,59 +4137,73 @@
                   "powertonetwork"
                 ]
               },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "src": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "powersupply1",
+                        "power"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "Out"
+                    }
                   }
                 }
-              },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
-                },
-                "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network",
-                    "power"
-                  ]
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+              ],
+              "dst": [
+                {
+                  "type": "EndPoint",
+                  "component": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  },
+                  "feature": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Name",
+                      "name": [
+                        "FlightSystem_TwoSensorGPS_Instance",
+                        "GPS",
+                        "network",
+                        "power"
+                      ]
+                    }
+                  },
+                  "direction": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Direction",
+                      "value": "In"
+                    }
                   }
                 }
+              ],
+              "kind": {
+                "type": "ConnectionKind",
+                "value": "Feature"
               },
               "isBiDirectional": false,
               "connectionInstances": [
@@ -4048,12 +4244,15 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "None"
@@ -4070,13 +4269,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "networkaccess"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1",
+                      "networkaccess"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4135,12 +4337,15 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "None"
@@ -4157,13 +4362,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "networkaccess"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2",
+                      "networkaccess"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4222,12 +4430,15 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "None"
@@ -4244,13 +4455,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "cpu1",
-                    "networkaccess"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "cpu1",
+                      "networkaccess"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4309,13 +4523,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "sensedData"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1",
+                      "sensedData"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4336,13 +4553,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing",
-                    "inSensor1"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "processing",
+                      "inSensor1"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4401,13 +4621,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "sensedData"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2",
+                      "sensedData"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4428,13 +4651,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "processing",
-                    "inSensor2"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "processing",
+                      "inSensor2"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4493,13 +4719,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1",
+                      "power"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4520,13 +4749,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver1",
-                    "powersource"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver1",
+                      "powersource"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4585,13 +4817,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1",
+                      "power"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4612,13 +4847,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "SatelliteSignalReceiver2",
-                    "powersource"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "SatelliteSignalReceiver2",
+                      "powersource"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4677,13 +4915,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1",
+                      "power"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4704,13 +4945,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "cpu1",
-                    "powersource"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "cpu1",
+                      "powersource"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4769,13 +5013,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "powersupply1",
-                    "power"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "powersupply1",
+                      "power"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -4796,13 +5043,16 @@
                   ]
                 },
                 "feature": {
-                  "type": "Name",
-                  "name": [
-                    "FlightSystem_TwoSensorGPS_Instance",
-                    "GPS",
-                    "network",
-                    "power"
-                  ]
+                  "type": "Some",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "FlightSystem_TwoSensorGPS_Instance",
+                      "GPS",
+                      "network",
+                      "power"
+                    ]
+                  }
                 },
                 "direction": {
                   "type": "Some",
@@ -5049,53 +5299,67 @@
               "satellite"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "satelliteSignal"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "satelliteSignal"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS",
-                "satelliteSignal"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "GPS"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "GPS",
+                    "satelliteSignal"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5130,53 +5394,67 @@
               "PilottoAfg"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "pilotInput"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "pilotInput"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "operatorCommand"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "AutoFlightGuidance",
+                    "operatorCommand"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5201,55 +5479,69 @@
               "power1"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FSpowersupply"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FSpowersupply",
-                "power"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FSpowersupply"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "FSpowersupply",
+                    "power"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "powersupply"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "AutoFlightGuidance",
+                    "powersupply"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5275,55 +5567,69 @@
               "power2"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FSpowersupply"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FSpowersupply",
-                "power"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FSpowersupply"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "FSpowersupply",
+                    "power"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl",
-                "powersupply"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FlightControl"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "FlightControl",
+                    "powersupply"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5349,55 +5655,69 @@
               "afgtofc"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "AFGOutput"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "AutoFlightGuidance",
+                    "AFGOutput"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl",
-                "guidanceCommands"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FlightControl"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "FlightControl",
+                    "guidanceCommands"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5423,53 +5743,67 @@
               "FlightControlEffect"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl",
-                "flightSurfaceControl"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FlightControl"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "FlightControl",
+                    "flightSurfaceControl"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "ObservableFailure"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "ObservableFailure"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5494,55 +5828,69 @@
               "gpstoafg"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS",
-                "location"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "GPS"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "GPS",
+                    "location"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "position"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "FlightSystem_TwoSensorGPS_Instance",
+                    "AutoFlightGuidance",
+                    "position"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -5580,11 +5928,14 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "satelliteSignal"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "satelliteSignal"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5605,13 +5956,16 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS",
-                "SatelliteSignalReceiver1",
-                "satelliteSignal"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "GPS",
+                  "SatelliteSignalReceiver1",
+                  "satelliteSignal"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5684,11 +6038,14 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "satelliteSignal"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "satelliteSignal"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5709,13 +6066,16 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS",
-                "SatelliteSignalReceiver2",
-                "satelliteSignal"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "GPS",
+                  "SatelliteSignalReceiver2",
+                  "satelliteSignal"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5788,11 +6148,14 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "pilotInput"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "pilotInput"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5812,12 +6175,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "operatorCommand"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance",
+                  "operatorCommand"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5872,12 +6238,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FSpowersupply",
-                "power"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FSpowersupply",
+                  "power"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5897,12 +6266,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "powersupply"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance",
+                  "powersupply"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5957,12 +6329,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FSpowersupply",
-                "power"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FSpowersupply",
+                  "power"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -5982,12 +6357,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl",
-                "powersupply"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FlightControl",
+                  "powersupply"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6042,12 +6420,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "AFGOutput"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance",
+                  "AFGOutput"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6067,12 +6448,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl",
-                "guidanceCommands"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FlightControl",
+                  "guidanceCommands"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6127,12 +6511,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "FlightControl",
-                "flightSurfaceControl"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "FlightControl",
+                  "flightSurfaceControl"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6151,11 +6538,14 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "ObservableFailure"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "ObservableFailure"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6211,13 +6601,16 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "GPS",
-                "processing",
-                "location"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "GPS",
+                  "processing",
+                  "location"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6237,12 +6630,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "FlightSystem_TwoSensorGPS_Instance",
-                "AutoFlightGuidance",
-                "position"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "FlightSystem_TwoSensorGPS_Instance",
+                  "AutoFlightGuidance",
+                  "position"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -6312,7 +6708,8 @@
             "type": "Emv2Clause",
             "libraries": [
               "ErrorLibrary",
-              "GPSErrorLibrary"
+              "GPSErrorLibrary",
+              "AFGErrorLibrary"
             ],
             "propagations": [
               {
@@ -6589,6 +6986,7 @@
           "ErrorLibrary"
         ]
       },
+      "useTypes": [],
       "tokens": [
         "ServiceError",
         "ItemOmission",
@@ -6669,7 +7067,89 @@
         "MutExError",
         "Deadlock",
         "Starvation"
-      ]
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 19,
+        "entries": [
+          [
+            "InconsistentValue",
+            "AsymmetricValue"
+          ],
+          [
+            "SubtleValueCorruption",
+            "DetectableValueError"
+          ],
+          [
+            "InconsistentItemOmission",
+            "AsymmetricItemOmission"
+          ],
+          [
+            "IncorrectValue",
+            "ItemValueError"
+          ],
+          [
+            "RateError",
+            "SequenceTimingError"
+          ],
+          [
+            "InconsistentTiming",
+            "AsymmetricTiming"
+          ],
+          [
+            "TimingError",
+            "ItemTimingError"
+          ],
+          [
+            "EarlyData",
+            "HighRate"
+          ],
+          [
+            "ValueError",
+            "ItemValueError"
+          ],
+          [
+            "LateData",
+            "LowRate"
+          ],
+          [
+            "BenignValueError",
+            "DetectableValueError"
+          ],
+          [
+            "ValueCorruption",
+            "ItemValueError"
+          ],
+          [
+            "SubtleValueError",
+            "UndetectableValueError"
+          ],
+          [
+            "BadValue",
+            "ItemValueError"
+          ],
+          [
+            "SequenceError",
+            "SequenceValueError"
+          ],
+          [
+            "InconsistentOmission",
+            "AsymmetricOmission"
+          ],
+          [
+            "InconsistentServiceOmission",
+            "AsymmetricServiceOmission"
+          ],
+          [
+            "AsymmetricTransmissive",
+            "AsymmetricValue"
+          ],
+          [
+            "ServiceTimeShift",
+            "ServiceTimingError"
+          ]
+        ]
+      }
     },
     {
       "type": "Emv2Library",
@@ -6679,6 +7159,9 @@
           "GPSErrorLibrary"
         ]
       },
+      "useTypes": [
+        "ErrorLibrary"
+      ],
       "tokens": [
         "SensorFailure",
         "CPUFailure",
@@ -6688,7 +7171,12 @@
         "IncorrectData",
         "NoSignal",
         "LowSignal"
-      ]
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 0,
+        "entries": []
+      }
     },
     {
       "type": "Emv2Library",
@@ -6698,6 +7186,9 @@
           "AFGErrorLibrary"
         ]
       },
+      "useTypes": [
+        "ErrorLibrary"
+      ],
       "tokens": [
         "NoValue",
         "NoService",
@@ -6706,7 +7197,23 @@
         "ErraticPilotInput",
         "ErraticValue",
         "FlightSystemfailure"
-      ]
+      ],
+      "alias": {
+        "type": "HashMap",
+        "size": 2,
+        "entries": [
+          [
+            "NoValue",
+            "ServiceOmission"
+          ],
+          [
+            "NoService",
+            "ServiceOmission"
+          ]
+        ]
+      }
     }
+  ],
+  "dataComponents": [
   ]
 }

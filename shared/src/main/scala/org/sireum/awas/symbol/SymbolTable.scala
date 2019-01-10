@@ -30,6 +30,7 @@ package org.sireum.awas.symbol
 import org.sireum.awas.ast._
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
+import upickle.default.{macroRW, ReadWriter => RW}
 
 object SymbolTable {
 
@@ -42,6 +43,9 @@ object SymbolTable {
     val stp = SymbolMiner(m, new STProducer())
     stp.toSymbolTable
   }
+
+  implicit def rw: RW[SymbolTable] = RW.merge(STProducer.rw)
+
 }
 
 trait SymbolTable {
@@ -82,6 +86,7 @@ trait SymbolTable {
   def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
+
 sealed case class SymbolTableData
 (declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
  typeDeclTable: MMap[ResourceUri, TypeDecl] = mmapEmpty,
@@ -99,7 +104,7 @@ sealed case class SymbolTableData
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
-class STProducer(var systemUri: Option[ResourceUri] = None,
+case class STProducer(var systemUri: Option[ResourceUri] = None,
                  var systemD: Option[ComponentDecl] = None) extends SymbolTable {
   //TODO: make sure, mutable collections are not exposed by the traits
   st =>
@@ -221,6 +226,10 @@ class STProducer(var systemUri: Option[ResourceUri] = None,
   override def components: Iterable[ResourceUri] = {
     tables.componentDeclTable.keys
   }
+}
+
+object STProducer {
+  implicit def rw: RW[STProducer] = macroRW
 }
 
 trait TypeTable {

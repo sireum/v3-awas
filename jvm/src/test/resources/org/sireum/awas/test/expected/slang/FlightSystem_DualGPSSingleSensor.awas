@@ -1,0 +1,274 @@
+types
+  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
+
+  enum GPSErrorLibrary {SensorFailure, CPUFailure, PowerSupplyFailure, NetworkFailure, LowPrecisionData, IncorrectData, NoSignal, LowSignal}
+
+  enum AFGErrorLibrary {NoValue, NoService, ErraticBehavior, NoPilotInput, ErraticPilotInput, ErraticValue, FlightSystemfailure}
+
+  alias ErrorLibrary::TimingError = ErrorLibrary::ItemTimingError
+
+  alias ErrorLibrary::BadValue = ErrorLibrary::ItemValueError
+
+  alias ErrorLibrary::InconsistentValue = ErrorLibrary::AsymmetricValue
+
+  alias ErrorLibrary::RateError = ErrorLibrary::SequenceTimingError
+
+  alias ErrorLibrary::InconsistentItemOmission = ErrorLibrary::AsymmetricItemOmission
+
+  alias ErrorLibrary::ValueError = ErrorLibrary::ItemValueError
+
+  alias ErrorLibrary::LateData = ErrorLibrary::LowRate
+
+  alias ErrorLibrary::AsymmetricTransmissive = ErrorLibrary::AsymmetricValue
+
+  alias ErrorLibrary::SequenceError = ErrorLibrary::SequenceValueError
+
+  alias ErrorLibrary::IncorrectValue = ErrorLibrary::ItemValueError
+
+  alias ErrorLibrary::InconsistentOmission = ErrorLibrary::AsymmetricOmission
+
+  alias ErrorLibrary::ServiceTimeShift = ErrorLibrary::ServiceTimingError
+
+  alias ErrorLibrary::SubtleValueCorruption = ErrorLibrary::DetectableValueError
+
+  alias ErrorLibrary::EarlyData = ErrorLibrary::HighRate
+
+  alias ErrorLibrary::InconsistentServiceOmission = ErrorLibrary::AsymmetricServiceOmission
+
+  alias ErrorLibrary::BenignValueError = ErrorLibrary::DetectableValueError
+
+  alias ErrorLibrary::ValueCorruption = ErrorLibrary::ItemValueError
+
+  alias ErrorLibrary::SubtleValueError = ErrorLibrary::UndetectableValueError
+
+  alias ErrorLibrary::InconsistentTiming = ErrorLibrary::AsymmetricTiming
+
+  alias AFGErrorLibrary::NoValue = ErrorLibrary::ServiceOmission
+
+  alias AFGErrorLibrary::NoService = ErrorLibrary::ServiceOmission
+
+system  FlightSystem_DualGPSSingleSensor_Instance
+    ports
+      in satelliteSignal
+      out ObservableFailure
+      in pilotInput
+    propagations
+      satelliteSignal = {NoSignal, LowSignal}
+      pilotInput = {NoPilotInput, ErraticPilotInput}
+      ObservableFailure = {ServiceOmission, ErraticBehavior}
+    flows
+      SatelliteError : satelliteSignal{NoSignal} -> ObservableFailure{ServiceOmission}
+      NoFlightSystem : * -> ObservableFailure{ServiceOmission}
+      NoPilot : pilotInput{NoPilotInput} -> ObservableFailure{ServiceOmission}
+      ErraticPilot : pilotInput{ErraticPilotInput} -> ObservableFailure{ErraticBehavior}
+      ErraticFlightSystem : * -> ObservableFailure{ErraticBehavior}
+
+    sub-components {
+      AutoFlightGuidance
+        with AFGErrorLibrary, GPSErrorLibrary, ErrorLibrary
+          ports
+            in powersupply
+            in position
+            in operatorCommand
+            out AFGOutput
+          propagations
+            position = {ServiceOmission, LowPrecisionData, IncorrectData}
+            operatorCommand = {NoPilotInput, ErraticPilotInput}
+            powersupply = {NoService}
+            AFGOutput = {NoService, ErraticValue}
+          flows
+            ErraticPilotPath : operatorCommand{ErraticPilotInput} -> AFGOutput{ErraticValue}
+            GPSPath1 : position{LowPrecisionData} -> *
+            GPSPath : position{NoService} -> AFGOutput{NoService}
+            NoPilotPath : operatorCommand{NoPilotInput} -> AFGOutput{NoService}
+            epPower : powersupply{NoService} -> AFGOutput{NoService}
+            AFGsource : * -> AFGOutput{NoService}
+            AFGsource1 : * -> AFGOutput{ErraticValue}
+
+      FSpowersupply
+        with ErrorLibrary, GPSErrorLibrary
+          ports
+            out power
+          propagations
+            power = {ServiceOmission}
+          flows
+            power_es : * -> power{ServiceOmission}
+
+      FlightControl
+        with AFGErrorLibrary
+          ports
+            in powersupply
+            in guidanceCommands
+            out flightSurfaceControl
+          propagations
+            guidanceCommands = {NoService, ErraticValue}
+            powersupply = {NoService}
+            flightSurfaceControl = {NoService, ErraticBehavior}
+          flows
+            fces : * -> flightSurfaceControl{NoService}
+            fgtofcNo : guidanceCommands{NoService} -> flightSurfaceControl{NoService}
+            fgtofcErratic : guidanceCommands{ErraticValue} -> flightSurfaceControl{ErraticBehavior}
+            epPower : powersupply{NoService} -> flightSurfaceControl{NoService}
+
+      GPS1
+        with ErrorLibrary, GPSErrorLibrary
+          ports
+            in satelliteSignal
+            out location
+          propagations
+            satelliteSignal = {NoSignal, LowSignal}
+            location = {ServiceOmission, LowPrecisionData, IncorrectData}
+          flows
+            GPSAsErrorSource : * -> location{ServiceOmission, LowPrecisionData, IncorrectData}
+            SatelliteError : satelliteSignal{NoSignal} -> location{ServiceOmission}
+            SatelliteError1 : satelliteSignal{LowSignal} -> location{LowPrecisionData}
+
+          sub-components {
+            SatelliteSignalReceiver1
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  in satelliteSignal
+                  in powersource
+                  out sensedData
+                  in networkaccess_bus_access_IN
+                  out networkaccess_bus_access_OUT
+                propagations
+                  satelliteSignal = {NoSignal, LowSignal}
+                  powersource = {ServiceOmission}
+                  networkaccess_IN = {ServiceOmission}
+                  sensedData = {ServiceOmission}
+                flows
+                  sensorfailsrc : * -> sensedData{ServiceOmission}
+                  satelliteimpact : satelliteSignal{NoSignal} -> sensedData{ServiceOmission}
+                  networkimpact : networkaccess_IN{ServiceOmission} -> sensedData{ServiceOmission}
+                  powerimpact : powersource{ServiceOmission} -> sensedData{ServiceOmission}
+
+            cpu
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  in powersource
+                  in networkaccess_bus_access_IN
+                  out networkaccess_bus_access_OUT
+                propagations
+                  powersource = {ServiceOmission}
+                  networkaccess_IN = {ServiceOmission}
+                  bindings_OUT = {ServiceOmission, ValueError}
+                  networkaccess_OUT = {ServiceOmission}
+                flows
+                  cpu_es1 : * -> bindings_OUT{ServiceOmission, ValueError}
+
+            network
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  in power
+                  in ACCESS_IN
+                  out ACCESS_OUT
+                propagations
+                  power = {ServiceOmission}
+                  access = {ServiceOmission}
+                  bindings_OUT = {ServiceOmission}
+                flows
+                  network_binding_es : * -> bindings_OUT{ServiceOmission}
+                  network_access_es : * -> access{ServiceOmission}
+                  cpu_es : access{ServiceOmission} -> bindings_OUT{ServiceOmission}
+                  power_es : power{ServiceOmission} -> bindings_OUT{ServiceOmission}
+
+            powersupply1
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  out power
+                propagations
+                  power = {ServiceOmission}
+                flows
+                  power_es : * -> power{ServiceOmission}
+          }
+
+      GPS2
+        with ErrorLibrary, GPSErrorLibrary
+          ports
+            in satelliteSignal
+            out location
+          propagations
+            satelliteSignal = {NoSignal, LowSignal}
+            location = {ServiceOmission, LowPrecisionData, IncorrectData}
+          flows
+            GPSAsErrorSource : * -> location{ServiceOmission, LowPrecisionData, IncorrectData}
+            SatelliteError : satelliteSignal{NoSignal} -> location{ServiceOmission}
+            SatelliteError1 : satelliteSignal{LowSignal} -> location{LowPrecisionData}
+
+          sub-components {
+            SatelliteSignalReceiver1
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  in satelliteSignal
+                  in powersource
+                  out sensedData
+                  in networkaccess_bus_access_IN
+                  out networkaccess_bus_access_OUT
+                propagations
+                  satelliteSignal = {NoSignal, LowSignal}
+                  powersource = {ServiceOmission}
+                  networkaccess_IN = {ServiceOmission}
+                  sensedData = {ServiceOmission}
+                flows
+                  sensorfailsrc : * -> sensedData{ServiceOmission}
+                  satelliteimpact : satelliteSignal{NoSignal} -> sensedData{ServiceOmission}
+                  networkimpact : networkaccess_IN{ServiceOmission} -> sensedData{ServiceOmission}
+                  powerimpact : powersource{ServiceOmission} -> sensedData{ServiceOmission}
+
+            cpu
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  in powersource
+                  in networkaccess_bus_access_IN
+                  out networkaccess_bus_access_OUT
+                propagations
+                  powersource = {ServiceOmission}
+                  networkaccess_IN = {ServiceOmission}
+                  bindings_OUT = {ServiceOmission, ValueError}
+                  networkaccess_OUT = {ServiceOmission}
+                flows
+                  cpu_es1 : * -> bindings_OUT{ServiceOmission, ValueError}
+
+            network
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  in power
+                  in ACCESS_IN
+                  out ACCESS_OUT
+                propagations
+                  power = {ServiceOmission}
+                  access = {ServiceOmission}
+                  bindings_OUT = {ServiceOmission}
+                flows
+                  network_binding_es : * -> bindings_OUT{ServiceOmission}
+                  network_access_es : * -> access{ServiceOmission}
+                  cpu_es : access{ServiceOmission} -> bindings_OUT{ServiceOmission}
+                  power_es : power{ServiceOmission} -> bindings_OUT{ServiceOmission}
+
+            powersupply1
+              with ErrorLibrary, GPSErrorLibrary
+                ports
+                  out power
+                propagations
+                  power = {ServiceOmission}
+                flows
+                  power_es : * -> power{ServiceOmission}
+          }
+
+      voter
+        with ErrorLibrary, GPSErrorLibrary
+          ports
+            in inLocation1
+            in inLocation2
+            out outLocation
+          propagations
+            inLocation1 = {ServiceOmission, LowPrecisionData, IncorrectData}
+            inLocation2 = {ServiceOmission, LowPrecisionData, IncorrectData}
+            processor_IN = {ServiceOmission, ValueError}
+            outLocation = {ServiceOmission, LowPrecisionData, IncorrectData}
+          flows
+            s1toloc : inLocation1{ServiceOmission, LowPrecisionData, IncorrectData} -> outLocation{ServiceOmission, LowPrecisionData, IncorrectData}
+            s2toloc : inLocation2{ServiceOmission, LowPrecisionData, IncorrectData} -> outLocation{ServiceOmission, LowPrecisionData, IncorrectData}
+            ptoloc : processor_IN{ServiceOmission} -> outLocation{ServiceOmission}
+    }

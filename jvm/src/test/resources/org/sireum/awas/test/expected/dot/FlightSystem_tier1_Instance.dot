@@ -1,0 +1,35 @@
+digraph "component:$$AWAS#FlightSystem_tier1_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" [label="{In Port|<operatorCommand>operatorCommand|<position>position|<powersupply>powersupply} |component\nAutoFlightGuidance|{Out Port|<AFGOutput>AFGOutput} ",  shape="record"] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#FSpowersupply" [label="{In Port|} |component\nFSpowersupply|{Out Port|<power>power} ",  shape="record"] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#FlightControl" [label="{In Port|<guidanceCommands>guidanceCommands|<powersupply>powersupply} |component\nFlightControl|{Out Port|<flightSurfaceControl>flightSurfaceControl} ",  shape="record"] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#GPS" [label="{In Port|<satelliteSignal>satelliteSignal} |component\nGPS|{Out Port|<location>location} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#FlightControlEffect" [label="{In Port|<in>in} |connection\nFlightControlEffect|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#PilottoAfg" [label="{In Port|<in>in} |connection\nPilottoAfg|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#afgtofc" [label="{In Port|<in>in} |connection\nafgtofc|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#gpstoafg" [label="{In Port|<in>in} |connection\ngpstoafg|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#power1" [label="{In Port|<in>in} |connection\npower1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#power2" [label="{In Port|<in>in} |connection\npower2|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#satellite" [label="{In Port|<in>in} |connection\nsatellite|{Out Port|<out>out} ",  shape="record"] 
+   "port-in:$$AWAS$FlightSystem_tier1_Instance#pilotInput" [label="{In Port|<pilotInput>pilotInput}", rank="source", shape="record"] 
+   "port-in:$$AWAS$FlightSystem_tier1_Instance#satelliteSignal" [label="{In Port|<satelliteSignal>satelliteSignal}", rank="source", shape="record"] 
+   "port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure" [label="{Out Port|<ObservableFailure>ObservableFailure}", rank="sink", shape="record"] 
+
+   "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" -> "connection:$$AWAS$FlightSystem_tier1_Instance#afgtofc" [headport=in, tailport=AFGOutput] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#FSpowersupply" -> "connection:$$AWAS$FlightSystem_tier1_Instance#power1" [headport=in, tailport=power] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#FSpowersupply" -> "connection:$$AWAS$FlightSystem_tier1_Instance#power2" [headport=in, tailport=power] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#FlightControl" -> "connection:$$AWAS$FlightSystem_tier1_Instance#FlightControlEffect" [headport=in, tailport=flightSurfaceControl] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#GPS" -> "connection:$$AWAS$FlightSystem_tier1_Instance#gpstoafg" [headport=in, tailport=location] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#FlightControlEffect" -> "port-out:$$AWAS$FlightSystem_tier1_Instance#ObservableFailure" [headport=ObservableFailure, tailport=out] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#PilottoAfg" -> "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" [headport=operatorCommand, tailport=out] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#afgtofc" -> "component:$$AWAS$FlightSystem_tier1_Instance#FlightControl" [headport=guidanceCommands, tailport=out] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#gpstoafg" -> "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" [headport=position, tailport=out] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#power1" -> "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" [headport=powersupply, tailport=out] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#power2" -> "component:$$AWAS$FlightSystem_tier1_Instance#FlightControl" [headport=powersupply, tailport=out] 
+   "connection:$$AWAS$FlightSystem_tier1_Instance#satellite" -> "component:$$AWAS$FlightSystem_tier1_Instance#GPS" [headport=satelliteSignal, tailport=out] 
+   "port-in:$$AWAS$FlightSystem_tier1_Instance#pilotInput" -> "connection:$$AWAS$FlightSystem_tier1_Instance#PilottoAfg" [headport=in, tailport=pilotInput] 
+   "port-in:$$AWAS$FlightSystem_tier1_Instance#satelliteSignal" -> "connection:$$AWAS$FlightSystem_tier1_Instance#satellite" [headport=in, tailport=satelliteSignal] 
+
+}

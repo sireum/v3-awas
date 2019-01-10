@@ -34,36 +34,37 @@ system  Simple_Comm_routing_table_Instance
 
       router
         ports
-          in socket1_IN
-          out socket1_OUT
-          in socket2_IN
-          out socket2_OUT
-          in socket3_IN
-          out socket3_OUT
-          in socket4_IN
-          out socket4_OUT
+          in alice_skt_IN
+          out alice_skt_OUT
+          in bob_skt_IN
+          out bob_skt_OUT
+          in mallory_skt_IN
+          out mallory_skt_OUT
+          in eve_skt_IN
+          out eve_skt_OUT
         flows
-          eve_alice_ack : socket4_IN -> socket1_OUT
-          alice_eve_pub : socket1_IN -> socket4_OUT
-          bob_alice_ack : socket2_IN -> socket1_OUT
-          bob_eve_pub : socket2_IN -> socket4_OUT
-          mallory_blocked : socket3_IN -> *
-          alice_bob_pub : socket1_IN -> socket2_OUT
-          eve_bob_ack : socket4_IN -> socket2_OUT
+          eve_bob_ack : eve_skt_IN -> bob_skt_OUT
+          bob_eve_pub : bob_skt_IN -> eve_skt_OUT
+          mallory_empty : * -> mallory_skt_OUT
+          alice_eve_pub : alice_skt_IN -> eve_skt_OUT
+          mallory_blocked : mallory_skt_IN -> *
+          eve_alice_ack : eve_skt_IN -> alice_skt_OUT
+          alice_bob_pub : alice_skt_IN -> bob_skt_OUT
+          bob_alice_ack : bob_skt_IN -> alice_skt_OUT
     }
     connections
-      alice_send : alice.send_port_OUT -> router.socket1_IN
+      alice_send : alice.send_port_OUT -> router.alice_skt_IN
 
-      bob_send : bob.receive_Port_OUT -> router.socket2_IN
+      bob_send : bob.receive_Port_OUT -> router.bob_skt_IN
 
-      mallory_send : mallory.receive_Port_OUT -> router.socket3_IN
+      mallory_send : mallory.receive_Port_OUT -> router.mallory_skt_IN
 
-      eve_send : eve.send -> router.socket4_IN
+      eve_send : eve.send -> router.eve_skt_IN
 
-      alice_receive : router.socket1_OUT -> alice.send_port_IN
+      alice_receive : router.alice_skt_OUT -> alice.send_port_IN
 
-      bob_receive : router.socket2_OUT -> bob.receive_Port_IN
+      bob_receive : router.bob_skt_OUT -> bob.receive_Port_IN
 
-      mallory_receive : router.socket3_OUT -> mallory.receive_Port_IN
+      mallory_receive : router.mallory_skt_OUT -> mallory.receive_Port_IN
 
-      eve_receive : router.socket4_OUT -> eve.receive
+      eve_receive : router.eve_skt_OUT -> eve.receive

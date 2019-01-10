@@ -608,7 +608,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         //default flow
         errors.foreach { e =>
 
-          buildAndAddDefaultConnectionFlows(r, e, i.toString, inr, outr, ntp)
+          buildAndAddDefaultConnectionFlows(r, Some(e), i.toString, inr, outr, ntp)
           i = i + 1
         }
         Some(ntp)
@@ -624,39 +624,36 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
   }
 
-  def buildAndAddDefaultConnectionFlows(r: Resource,
-                                        error: ResourceUri,
-                                        idAppender: String,
-                                        inr: Resource,
-                                        outr: Resource,
-                                        ntp: ConnSTProducer) = {
+  def buildAndAddDefaultConnectionFlows(
+    r: Resource,
+    error: Option[ResourceUri],
+    idAppender: String,
+    inr: Resource,
+    outr: Resource,
+    ntp: ConnSTProducer
+  ) = {
 
     val dfr = Resource(H.FLOW_TYPE, r, H.VIRTUAL_CONN_FLOW_ID + idAppender, some(true))
     ntp.tables.symbol2Uri(H.VIRTUAL_CONN_FLOW_ID) = dfr.toUri
 
-    ntp.tables.flowTable(dfr.toUri) = FlowTableData(dfr.toUri,
+    ntp.tables.flowTable(dfr.toUri) = FlowTableData(
+      dfr.toUri,
       Some(inr.toUri),
       Some(outr.toUri),
-      isetEmpty + error,
-      isetEmpty + error)
+      if (error.isDefined) isetEmpty + error.get else isetEmpty,
+      if (error.isDefined) isetEmpty + error.get else isetEmpty
+    )
 
     if (ntp.tables.portTable.contains(inr.toUri)) {
-      ntp.tables.flowPortRelation.getOrElseUpdate(
-        inr.toUri,
-        msetEmpty[ResourceUri]) += dfr.toUri
+      ntp.tables.flowPortRelation.getOrElseUpdate(inr.toUri, msetEmpty[ResourceUri]) += dfr.toUri
 
-      ntp.tables.portFlowRelation.getOrElseUpdate(
-        dfr.toUri, msetEmpty[ResourceUri]
-      ) += inr.toUri
+      ntp.tables.portFlowRelation.getOrElseUpdate(dfr.toUri, msetEmpty[ResourceUri]) += inr.toUri
     }
-    if (ntp.tables.portTable.contains(outr.toUri))
-      ntp.tables.flowPortRelation.getOrElseUpdate(
-        outr.toUri,
-        msetEmpty[ResourceUri]) += dfr.toUri
+    if (ntp.tables.portTable.contains(outr.toUri)) {
+      ntp.tables.flowPortRelation.getOrElseUpdate(outr.toUri, msetEmpty[ResourceUri]) += dfr.toUri
 
-    ntp.tables.portFlowRelation.getOrElseUpdate(
-      dfr.toUri, msetEmpty[ResourceUri]
-    ) += outr.toUri
+      ntp.tables.portFlowRelation.getOrElseUpdate(dfr.toUri, msetEmpty[ResourceUri]) += outr.toUri
+    }
   }
 
   def deploymentMiner(m: Model,
@@ -785,33 +782,78 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         val res = Resource.getDefResource(nodeUri).get
         if (H.isInPort(otherPort)) {
           propagations(connInPort).intersect(propagations(bindOutPort.toUri)).foreach { e =>
-            buildAndAddDefaultConnectionFlows(res, e, "_bind_out" + temp_i,
-              Resource.getDefResource(connInPort).get, bindOutPort,
-              cstp.tables.connectionSymbolTabel(nodeUri))
+            buildAndAddDefaultConnectionFlows(
+              res,
+              Some(e),
+              "_bind_out" + temp_i,
+              Resource.getDefResource(connInPort).get,
+              bindOutPort,
+              cstp.tables.connectionSymbolTabel(nodeUri)
+            )
             temp_i = temp_i + 1
           }
 
+          buildAndAddDefaultConnectionFlows(
+            res,
+            None,
+            "_bind_out" + temp_i,
+            Resource.getDefResource(connInPort).get,
+            bindOutPort,
+            cstp.tables.connectionSymbolTabel(nodeUri)
+          )
+
+          temp_i = temp_i + 1
+
           propagations(connInPort).diff(propagations(bindOutPort.toUri)).foreach { e =>
-            buildAndAddDefaultConnectionFlows(res, e, "_bind" + temp_i,
-              Resource.getDefResource(connInPort).get, Resource.getDefResource(connOutPort).get,
-              cstp.tables.connectionSymbolTabel(nodeUri))
+            buildAndAddDefaultConnectionFlows(
+              res,
+              Some(e),
+              "_bind" + temp_i,
+              Resource.getDefResource(connInPort).get,
+              Resource.getDefResource(connOutPort).get,
+              cstp.tables.connectionSymbolTabel(nodeUri)
+            )
             temp_i = temp_i + 1
           }
+
+          buildAndAddDefaultConnectionFlows(
+            res,
+            None,
+            "_bind" + temp_i,
+            Resource.getDefResource(connInPort).get,
+            Resource.getDefResource(connOutPort).get,
+            cstp.tables.connectionSymbolTabel(nodeUri)
+          )
+
+          temp_i = temp_i + 1
         } else {
           propagations(bindInPort.toUri).foreach { e =>
-            buildAndAddDefaultConnectionFlows(res, e, "_bind_in" + temp_i,
-              bindInPort, Resource.getDefResource(connOutPort).get,
-              cstp.tables.connectionSymbolTabel(nodeUri))
+            buildAndAddDefaultConnectionFlows(
+              res,
+              Some(e),
+              "_bind_in" + temp_i,
+              bindInPort,
+              Resource.getDefResource(connOutPort).get,
+              cstp.tables.connectionSymbolTabel(nodeUri)
+            )
             temp_i = temp_i + 1
           }
+          buildAndAddDefaultConnectionFlows(
+            res,
+            None,
+            "_bind_in" + temp_i,
+            bindInPort,
+            Resource.getDefResource(connOutPort).get,
+            cstp.tables.connectionSymbolTabel(nodeUri)
+          )
+
+          temp_i = temp_i + 1
         }
       }
     }
   }
 
-
-  def compPortCheck(m: Model,
-                    comp: Option[Name],
+  def compPortCheck(m: Model, comp: Option[Name],
                     port: Id,
                     parentCST: ComponentTable)(
                      implicit reporter: AccumulatingTagReporter): Boolean = {

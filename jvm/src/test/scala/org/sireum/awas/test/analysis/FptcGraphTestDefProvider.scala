@@ -46,7 +46,7 @@ extends TestDefProvider {
   val testDirs = Seq(
     //makePath("..", "example", "awas-lang"),
     //makePath("..", "example", "fptc"),
-    //    makePath("..", "example", "Query"),
+    makePath("..", "example", "Query"),
     //    makePath("..", "example", "sscate"),
     //makePath("..", "example", "hierarchial"),
     makePath("..", "example", "bindings")
@@ -54,7 +54,7 @@ extends TestDefProvider {
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "dot")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "dot")))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -62,7 +62,8 @@ extends TestDefProvider {
     }
 
     val filesEqual = files.filter { p =>
-      p.toLowerCase.contains("impl3")
+      true
+    //      p.toLowerCase.contains("impl3")
     }
 
     filesEqual.toVector.map { x =>
@@ -73,7 +74,7 @@ extends TestDefProvider {
       val res = dotGraphPrinter(x, readFile(x)._1)
 
       TestUtils.writeResult(outputFileName,
-        if (res.isDefined) res.get else "",
+        if (res.isDefined) res.get else "Result not found",
         expectedDir, resultsDir, generateExpected)
 
       EqualTest(fileWithOutExt,
@@ -95,7 +96,7 @@ extends TestDefProvider {
         Resource.reset()
         st = SymbolTable(updatedModel)
         val graph = FlowGraph(m, st)
-        Some(graph.toDot)
+        Some(graph.getDot)
     }
   }
 }

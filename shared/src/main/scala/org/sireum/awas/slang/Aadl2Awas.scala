@@ -283,14 +283,22 @@ final class Aadl2Awas private() {
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
                       Port(false, Id(BINDINGS_OUT), None)))
-                  resDepl = resDepl + DeploymentDecl(
-                    Name(ci.connectionRefs.elements.head.name.name.elements.map(it => Id(it.value)).toVector),
-                    None, Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(BINDINGS_IN)))
-                  resDepl = resDepl + DeploymentDecl(Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(BINDINGS_OUT)),
-                    Name(ci.connectionRefs.elements.head.name.name.elements.map(it => Id(it.value)).toVector),
-                    None)
+                  val bus_parent = rp.value.name.elements.dropRight(1).last
+                  val conn_ref = ci.connectionRefs.elements.filter(_.name.name.elements.dropRight(1).last == bus_parent)
+                  if (conn_ref.nonEmpty) {
+                    resDepl = resDepl + DeploymentDecl(
+                      Name(conn_ref.head.name.name.elements.map(it => Id(it.value)).toVector),
+                      None,
+                      Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                      Some(Id(BINDINGS_IN))
+                    )
+                    resDepl = resDepl + DeploymentDecl(
+                      Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                      Some(Id(BINDINGS_OUT)),
+                      Name(conn_ref.head.name.name.elements.map(it => Id(it.value)).toVector),
+                      None
+                    )
+                  }
                 }
               }
               case _ =>
@@ -458,9 +466,6 @@ final class Aadl2Awas private() {
   def build(featureEnd: FeatureEnd,
             isInverse: B, portId: String): Seq[Port] = {
     var pId = portId + featureEnd.identifier.name.elements.last.value
-    if (featureEnd.category == ir.FeatureCategory.BusAccess) {
-      pId = pId + BUS_ACCESS
-    }
     if (featureEnd.direction == ir.Direction.InOut) {
       Seq(Port(isIn = true, buildId(pId + "_IN"), None),
         Port(isIn = false, buildId(pId + "_OUT"), None))
@@ -469,6 +474,14 @@ final class Aadl2Awas private() {
     } else {
       Seq(Port(isIn = false, buildId(pId), None))
     }
+  }
+
+  def build(featureAccess: FeatureAccess, isInverse: B, portId: String): Seq[Port] = {
+    var pId = portId + featureAccess.identifier.name.elements.last.value
+    if (featureAccess.category == ir.FeatureCategory.BusAccess) {
+      pId = pId + BUS_ACCESS
+    }
+    Seq(Port(isIn = true, buildId(pId + "_IN"), None), Port(isIn = false, buildId(pId + "_OUT"), None))
   }
 
   def build(featureGroup: FeatureGroup,
@@ -489,6 +502,7 @@ final class Aadl2Awas private() {
     feature match {
       case fe: FeatureEnd => build(fe, false, "")
       case fg: FeatureGroup => build(fg, false, "")
+      case fa: FeatureAccess => build(fa, isInverse = false, portId = "")
     }
 
   }

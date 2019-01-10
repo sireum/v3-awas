@@ -10,8 +10,8 @@ import org.sireum.util.{FileResourceUri, ISeq, Uri}
 
 class FIATestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(
-    makePath("..", "example", "Query"),
-    makePath("..", "example", "sscate")
+    makePath("..", "example", "Query")
+    //    makePath("..", "example", "sscate")
   )
 
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "fia")))
@@ -51,7 +51,7 @@ class FIATestDefProvider(tf: TestFramework) extends TestDefProvider {
     val relativeUri = basePath.relativize(Paths.get(modelfile))
 
     Builder(Some(relativeUri.toString), model) match {
-      case None => ""
+      case None => "Failed to build the model"
 
       case Some(m) => {
         "From Source \n\n" + new FaultImpactAnalysis().generateFIAQueries(m, true)+

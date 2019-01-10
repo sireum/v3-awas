@@ -47,17 +47,26 @@ class GoldenLayout(configuration: js.Dictionary[js.Any],
   def init(): Nothing = js.native
   def updateSize(width: UndefOr[Int], height: UndefOr[Int]) : Nothing = js.native
   def on(event : String, callBack: js.Function): Nothing = js.native
-
+  def destroy(): Nothing = js.native
   def toConfig(): scalajs.js.Dictionary[js.Any] = js.native
-  def getComponent(name: String): js.Function2[Container, js.Dictionary[Object], Nothing] = js.native
+  def getComponent(name: String): js.Dynamic = js.native
 }
 
 @js.native
 trait ContentItem extends js.Object {
-  var id: String = js.native
+  var id: Option[String] = config.get("id").map(_.toString)
+
   //  var id : js.Array[String] = js.native
-  var element: Element = js.native
+  var element: js.Array[Element] = js.native
   var contentItems: js.Array[ContentItem] = js.native
+
+  var config: js.Dictionary[scalajs.js.Any] = js.native
+
+  var parent: ContentItem = js.native
+
+  val isComponent: Boolean = js.native
+
+  var container: Container = js.native
 
   def select: Nothing = js.native
 
@@ -66,6 +75,10 @@ trait ContentItem extends js.Object {
   def getItemsByType(`type`: String): js.Array[ContentItem] = js.native
 
   def getItemsById(id: String): js.Array[ContentItem] = js.native
+
+  def getComponentsByName(componentName: String): js.Array[ContentItem] = js.native
+
+  def getItemsByFilter(filterFunction: js.Function1[ContentItem, Boolean]): js.Array[ContentItem] = js.native
 
   def setActiveContentItem(contentItem: ContentItem): js.Dynamic = js.native
 
@@ -78,17 +91,12 @@ trait ContentItem extends js.Object {
   def addChild(itemOrItemConfig: js.Dictionary[js.Any], index: Int): Nothing = js.native
 }
 
-//@js.native
-//class Component(container : Container, state : js.Any) extends js.Object {
-//  def getContainer : Container = {
-//    container
-//  }
-//}
-
 @js.native
 trait Container extends js.Object {
   def getElement(): JQuery= js.native
 
   def on(event: String, callBack: js.Function): js.UndefOr[Nothing] = js.native
+
+  def close(): Nothing = js.native
 }
 

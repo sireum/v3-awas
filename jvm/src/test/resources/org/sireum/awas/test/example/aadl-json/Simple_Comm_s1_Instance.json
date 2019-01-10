@@ -542,7 +542,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket1"
+                  "alice_skt"
                 ]
               },
               "direction": {
@@ -566,7 +566,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket2"
+                  "bob_skt"
                 ]
               },
               "direction": {
@@ -590,7 +590,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket3"
+                  "mallory_skt"
                 ]
               },
               "direction": {
@@ -614,7 +614,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket4"
+                  "eve_skt"
                 ]
               },
               "direction": {
@@ -717,7 +717,7 @@
                   "name": [
                     "Simple_Comm_s1_Instance",
                     "router",
-                    "socket1"
+                    "alice_skt"
                   ]
                 }
               },
@@ -742,7 +742,7 @@
                 "Simple_Comm_s1_Instance",
                 "alice",
                 "send_port -> router",
-                "socket1"
+                "alice_skt"
               ]
             }
           ],
@@ -805,7 +805,7 @@
                   "name": [
                     "Simple_Comm_s1_Instance",
                     "router",
-                    "socket2"
+                    "bob_skt"
                   ]
                 }
               },
@@ -830,7 +830,7 @@
                 "Simple_Comm_s1_Instance",
                 "bob",
                 "receive_Port -> router",
-                "socket2"
+                "bob_skt"
               ]
             }
           ],
@@ -893,7 +893,7 @@
                   "name": [
                     "Simple_Comm_s1_Instance",
                     "router",
-                    "socket3"
+                    "mallory_skt"
                   ]
                 }
               },
@@ -918,7 +918,7 @@
                 "Simple_Comm_s1_Instance",
                 "mallory",
                 "receive_Port -> router",
-                "socket3"
+                "mallory_skt"
               ]
             }
           ],
@@ -951,7 +951,7 @@
                   "name": [
                     "Simple_Comm_s1_Instance",
                     "router",
-                    "socket1"
+                    "alice_skt"
                   ]
                 }
               },
@@ -1005,7 +1005,7 @@
               "name": [
                 "Simple_Comm_s1_Instance",
                 "router",
-                "socket1 -> alice",
+                "alice_skt -> alice",
                 "send_port"
               ]
             }
@@ -1039,7 +1039,7 @@
                   "name": [
                     "Simple_Comm_s1_Instance",
                     "router",
-                    "socket2"
+                    "bob_skt"
                   ]
                 }
               },
@@ -1093,7 +1093,7 @@
               "name": [
                 "Simple_Comm_s1_Instance",
                 "router",
-                "socket2 -> bob",
+                "bob_skt -> bob",
                 "receive_Port"
               ]
             }
@@ -1127,7 +1127,7 @@
                   "name": [
                     "Simple_Comm_s1_Instance",
                     "router",
-                    "socket3"
+                    "mallory_skt"
                   ]
                 }
               },
@@ -1181,7 +1181,7 @@
               "name": [
                 "Simple_Comm_s1_Instance",
                 "router",
-                "socket3 -> mallory",
+                "mallory_skt -> mallory",
                 "receive_Port"
               ]
             }
@@ -1197,7 +1197,7 @@
             "type": "Name",
             "name": [
               "Simple_Comm_s1_Instance",
-              "alice.send_port -> router.socket1"
+              "alice.send_port -> router.alice_skt"
             ]
           },
           "src": {
@@ -1244,7 +1244,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket1"
+                  "alice_skt"
                 ]
               }
             },
@@ -1288,7 +1288,7 @@
             "type": "Name",
             "name": [
               "Simple_Comm_s1_Instance",
-              "bob.receive_Port -> router.socket2"
+              "bob.receive_Port -> router.bob_skt"
             ]
           },
           "src": {
@@ -1335,7 +1335,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket2"
+                  "bob_skt"
                 ]
               }
             },
@@ -1379,7 +1379,7 @@
             "type": "Name",
             "name": [
               "Simple_Comm_s1_Instance",
-              "mallory.receive_Port -> router.socket3"
+              "mallory.receive_Port -> router.mallory_skt"
             ]
           },
           "src": {
@@ -1426,7 +1426,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket3"
+                  "mallory_skt"
                 ]
               }
             },
@@ -1470,7 +1470,7 @@
             "type": "Name",
             "name": [
               "Simple_Comm_s1_Instance",
-              "router.socket1 -> alice.send_port"
+              "router.alice_skt -> alice.send_port"
             ]
           },
           "src": {
@@ -1489,7 +1489,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket1"
+                  "alice_skt"
                 ]
               }
             },
@@ -1561,7 +1561,7 @@
             "type": "Name",
             "name": [
               "Simple_Comm_s1_Instance",
-              "router.socket2 -> bob.receive_Port"
+              "router.bob_skt -> bob.receive_Port"
             ]
           },
           "src": {
@@ -1580,7 +1580,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket2"
+                  "bob_skt"
                 ]
               }
             },
@@ -1652,7 +1652,7 @@
             "type": "Name",
             "name": [
               "Simple_Comm_s1_Instance",
-              "router.socket3 -> mallory.receive_Port"
+              "router.mallory_skt -> mallory.receive_Port"
             ]
           },
           "src": {
@@ -1671,7 +1671,7 @@
                 "name": [
                   "Simple_Comm_s1_Instance",
                   "router",
-                  "socket3"
+                  "mallory_skt"
                 ]
               }
             },
@@ -1761,5 +1761,7 @@
     }
   ],
   "errorLib": [
+  ],
+  "dataComponents": [
   ]
 }

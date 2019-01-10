@@ -1,0 +1,16 @@
+digraph "component:$$AWAS#Root_two_references_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$Root_two_references_Instance#Sub1" [label="{In Port|<sub_port_IN>sub_port_IN|<sub_in>sub_in} |component\nSub1|{Out Port|<sub_out>sub_out|<sub_port_OUT>sub_port_OUT} ",  shape="record"] 
+   "connection:$$AWAS$Root_two_references_Instance#system_to_comp_in" [label="{In Port|<in>in} |connection\nsystem_to_comp_in|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$Root_two_references_Instance#system_to_comp_out" [label="{In Port|<in>in} |connection\nsystem_to_comp_out|{Out Port|<out>out} ",  shape="record"] 
+   "port-in:$$AWAS$Root_two_references_Instance#root_in" [label="{In Port|<root_in>root_in}", rank="source", shape="record"] 
+   "port-out:$$AWAS$Root_two_references_Instance#root_out" [label="{Out Port|<root_out>root_out}", rank="sink", shape="record"] 
+
+   "component:$$AWAS$Root_two_references_Instance#Sub1" -> "connection:$$AWAS$Root_two_references_Instance#system_to_comp_out" [headport=in, tailport=sub_out] 
+   "connection:$$AWAS$Root_two_references_Instance#system_to_comp_in" -> "component:$$AWAS$Root_two_references_Instance#Sub1" [headport=sub_in, tailport=out] 
+   "connection:$$AWAS$Root_two_references_Instance#system_to_comp_out" -> "port-out:$$AWAS$Root_two_references_Instance#root_out" [headport=root_out, tailport=out] 
+   "port-in:$$AWAS$Root_two_references_Instance#root_in" -> "connection:$$AWAS$Root_two_references_Instance#system_to_comp_in" [headport=in, tailport=root_in] 
+
+}

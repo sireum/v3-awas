@@ -5,7 +5,9 @@
       "type" : "Component",
       "identifier" : {
         "type" : "Name",
-        "name" : ["PCA_PulseOx_scenario1_Instance"]
+        "name": [
+          "PCA_PulseOx_insecure_Instance"
+        ]
       },
       "category" : {
         "type" : "ComponentCategory",
@@ -21,7 +23,10 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "PCA_Pump"
+            ]
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -39,14 +44,23 @@
               "type" : "FeatureGroup",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump",
+                  "IV"
+                ]
               },
               "features" : [
                 {
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "PCA_Pump",
+                      "IV",
+                      "infuse"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -64,7 +78,13 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse", "AAMI_80001::Hazards"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "IV",
+                          "infuse",
+                          "AAMI_80001::Hazards"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -74,7 +94,13 @@
                               "type" : "Property",
                               "name" : {
                                 "type" : "Name",
-                                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse", "AAMI_80001::Hazard.ID"]
+                                "name": [
+                                  "PCA_PulseOx_insecure_Instance",
+                                  "PCA_Pump",
+                                  "IV",
+                                  "infuse",
+                                  "AAMI_80001::Hazard.ID"
+                                ]
                               },
                               "propertyValues" : [
                                 {
@@ -87,7 +113,13 @@
                               "type" : "Property",
                               "name" : {
                                 "type" : "Name",
-                                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse", "AAMI_80001::Hazard.Description"]
+                                "name": [
+                                  "PCA_PulseOx_insecure_Instance",
+                                  "PCA_Pump",
+                                  "IV",
+                                  "infuse",
+                                  "AAMI_80001::Hazard.Description"
+                                ]
                               },
                               "propertyValues" : [
                                 {
@@ -105,7 +137,13 @@
                               "type" : "Property",
                               "name" : {
                                 "type" : "Name",
-                                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse", "AAMI_80001::Hazard.ID"]
+                                "name": [
+                                  "PCA_PulseOx_insecure_Instance",
+                                  "PCA_Pump",
+                                  "IV",
+                                  "infuse",
+                                  "AAMI_80001::Hazard.ID"
+                                ]
                               },
                               "propertyValues" : [
                                 {
@@ -118,7 +156,13 @@
                               "type" : "Property",
                               "name" : {
                                 "type" : "Name",
-                                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse", "AAMI_80001::Hazard.Description"]
+                                "name": [
+                                  "PCA_PulseOx_insecure_Instance",
+                                  "PCA_Pump",
+                                  "IV",
+                                  "infuse",
+                                  "AAMI_80001::Hazard.Description"
+                                ]
                               },
                               "propertyValues" : [
                                 {
@@ -146,7 +190,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump",
+                  "control"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -189,7 +237,11 @@
                       "type" : "PropagationDirection",
                       "value" : "In"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "PCA_Pump",
+                      "control"
+                    ],
                     "errorTokens" : ["stop_commission", "stop_omission", "start_commission", "start_omission", "SecurityError"]
                   },
                   {
@@ -198,8 +250,17 @@
                       "type" : "PropagationDirection",
                       "value" : "Out"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV_infuse"],
-                    "errorTokens" : ["EarlyServiceTermination", "LateServiceTermination", "EarlyServiceStart", "LateServiceStart"]
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "PCA_Pump",
+                      "IV_infuse"
+                    ],
+                    "errorTokens": [
+                      "early_service_termination",
+                      "late_service_termination",
+                      "early_service_start",
+                      "late_service_start"
+                    ]
                   }
                 ],
                 "flows" : [
@@ -207,7 +268,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "missed_stop"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PCA_Pump",
+                        "missed_stop"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -221,7 +286,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "control"
+                        ],
                         "errorTokens" : ["stop_omission"]
                       }
                     },
@@ -233,8 +302,14 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV_infuse"],
-                        "errorTokens" : ["LateServiceTermination"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "IV_infuse"
+                        ],
+                        "errorTokens": [
+                          "late_service_termination"
+                        ]
                       }
                     }
                   },
@@ -242,7 +317,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "unexpected_stop"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PCA_Pump",
+                        "unexpected_stop"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -256,7 +335,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "control"
+                        ],
                         "errorTokens" : ["stop_commission"]
                       }
                     },
@@ -268,8 +351,15 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV_infuse"],
-                        "errorTokens" : ["EarlyServiceTermination", "LateServiceTermination"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "IV_infuse"
+                        ],
+                        "errorTokens": [
+                          "early_service_termination",
+                          "late_service_termination"
+                        ]
                       }
                     }
                   },
@@ -277,7 +367,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "missing_start"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PCA_Pump",
+                        "missing_start"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -291,7 +385,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "control"
+                        ],
                         "errorTokens" : ["start_omission"]
                       }
                     },
@@ -303,8 +401,14 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV_infuse"],
-                        "errorTokens" : ["LateServiceStart"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "IV_infuse"
+                        ],
+                        "errorTokens": [
+                          "late_service_start"
+                        ]
                       }
                     }
                   },
@@ -312,7 +416,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "incorrect_start"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PCA_Pump",
+                        "incorrect_start"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -326,7 +434,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "control"
+                        ],
                         "errorTokens" : ["start_commission"]
                       }
                     },
@@ -338,8 +450,69 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV_infuse"],
-                        "errorTokens" : ["EarlyServiceStart"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "IV_infuse"
+                        ],
+                        "errorTokens": [
+                          "early_service_start",
+                          "late_service_start"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PCA_Pump",
+                        "modified_command"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "control"
+                        ],
+                        "errorTokens": [
+                          "SecurityError"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump",
+                          "IV_infuse"
+                        ],
+                        "errorTokens": [
+                          "early_service_termination",
+                          "late_service_termination",
+                          "early_service_start",
+                          "late_service_start"
+                        ]
                       }
                     }
                   }
@@ -352,7 +525,10 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "PulseOx"
+            ]
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -370,14 +546,23 @@
               "type" : "FeatureGroup",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "FingerClip"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx",
+                  "FingerClip"
+                ]
               },
               "features" : [
                 {
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "FingerClip", "Saturation"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "PulseOx",
+                      "FingerClip",
+                      "Saturation"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -406,7 +591,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx",
+                  "SpO2"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -434,7 +623,11 @@
               "type" : "Property",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "AAMI_80001::Hazards"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx",
+                  "AAMI_80001::Hazards"
+                ]
               },
               "propertyValues" : [
                 {
@@ -444,7 +637,11 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "AAMI_80001::Hazard.ID"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PulseOx",
+                          "AAMI_80001::Hazard.ID"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -457,7 +654,11 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "AAMI_80001::Hazard.Description"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PulseOx",
+                          "AAMI_80001::Hazard.Description"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -481,7 +682,9 @@
               "name" : "Emv2",
               "clause" : {
                 "type" : "Emv2Clause",
-                "libraries" : ["ErrorLibrary", "pump_errors", "PCA_Error"],
+                "libraries": [
+                  "PCA_Error"
+                ],
                 "propagations" : [
                   {
                     "type" : "Emv2Propagation",
@@ -489,7 +692,11 @@
                       "type" : "PropagationDirection",
                       "value" : "Out"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "PulseOx",
+                      "SpO2"
+                    ],
                     "errorTokens" : ["SpO2_ValueError", "SpO2_Omission", "SecurityError"]
                   }
                 ],
@@ -498,7 +705,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "numerical_failure"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PulseOx",
+                        "numerical_failure"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -515,7 +726,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PulseOx",
+                          "SpO2"
+                        ],
                         "errorTokens" : ["SpO2_ValueError"]
                       }
                     }
@@ -524,7 +739,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "disloged_sensor"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PulseOx",
+                        "disloged_sensor"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -541,7 +760,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PulseOx",
+                          "SpO2"
+                        ],
                         "errorTokens" : ["SpO2_Omission"]
                       }
                     }
@@ -550,7 +773,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "communicating_out"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "PulseOx",
+                        "communicating_out"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -567,7 +794,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PulseOx",
+                          "SpO2"
+                        ],
                         "errorTokens" : ["SecurityError"]
                       }
                     }
@@ -581,7 +812,10 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "wifi_spo2"
+            ]
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -599,7 +833,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "in_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2",
+                  "in_interface"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -619,7 +857,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2",
+                  "out_interface"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -649,7 +891,11 @@
               "type" : "Flow",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "transmission_wifi"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2",
+                  "transmission_wifi"
+                ]
               },
               "kind" : {
                 "type" : "FlowKind",
@@ -661,7 +907,12 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "transmission_wifi", "in_interface"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_spo2",
+                      "transmission_wifi",
+                      "in_interface"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -684,7 +935,12 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "transmission_wifi", "out_interface"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_spo2",
+                      "transmission_wifi",
+                      "out_interface"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -711,7 +967,9 @@
               "name" : "Emv2",
               "clause" : {
                 "type" : "Emv2Clause",
-                "libraries" : ["ErrorLibrary", "PCA_Error"],
+                "libraries": [
+                  "PCA_Error"
+                ],
                 "propagations" : [
                   {
                     "type" : "Emv2Propagation",
@@ -719,7 +977,11 @@
                       "type" : "PropagationDirection",
                       "value" : "In"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "in_interface"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_spo2",
+                      "in_interface"
+                    ],
                     "errorTokens" : ["SpO2_ValueError", "SecurityError", "SpO2_Omission"]
                   },
                   {
@@ -728,7 +990,11 @@
                       "type" : "PropagationDirection",
                       "value" : "Out"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_spo2",
+                      "out_interface"
+                    ],
                     "errorTokens" : ["SpO2_ValueError", "SecurityError", "SpO2_Omission"]
                   }
                 ],
@@ -737,7 +1003,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "spoof_message"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_spo2",
+                        "spoof_message"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -754,7 +1024,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "out_interface"
+                        ],
                         "errorTokens" : ["SecurityError"]
                       }
                     }
@@ -763,7 +1037,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "accessable"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_spo2",
+                        "accessable"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -777,7 +1055,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "in_interface"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "in_interface"
+                        ],
                         "errorTokens" : ["SecurityError"]
                       }
                     },
@@ -789,34 +1071,152 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "transmission"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_spo2",
+                        "replay_message"
+                      ]
                     },
-                    "kind" : {
-                      "type" : "FlowKind",
-                      "value" : "Path"
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
                     },
-                    "sourcePropagation" : {
-                      "type" : "Some",
-                      "value" : {
-                        "type" : "Emv2Propagation",
-                        "direction" : {
-                          "type" : "PropagationDirection",
-                          "value" : "In"
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "in_interface"],
-                        "errorTokens" : ["SpO2_ValueError", "SpO2_Omission"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "SecurityError"
+                        ]
                       }
                     },
-                    "sinkPropagation" : {
-                      "type" : "Some",
-                      "value" : {
-                        "type" : "Emv2Propagation",
-                        "direction" : {
-                          "type" : "PropagationDirection",
-                          "value" : "Out"
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface"],
-                        "errorTokens" : ["SpO2_ValueError", "SpO2_Omission"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "SecurityError"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_spo2",
+                        "transmission_value_error"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "SpO2_ValueError"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "SpO2_ValueError"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_spo2",
+                        "transmission_omission"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "SpO2_Omission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_spo2",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "SpO2_Omission"
+                        ]
                       }
                     }
                   }
@@ -829,7 +1229,10 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "wifi_command"
+            ]
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -847,7 +1250,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "in_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command",
+                  "in_interface"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -867,7 +1274,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command",
+                  "out_interface"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -897,7 +1308,11 @@
               "type" : "Flow",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "transmission_wifi"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command",
+                  "transmission_wifi"
+                ]
               },
               "kind" : {
                 "type" : "FlowKind",
@@ -909,7 +1324,12 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "transmission_wifi", "in_interface"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_command",
+                      "transmission_wifi",
+                      "in_interface"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -932,7 +1352,12 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "transmission_wifi", "out_interface"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_command",
+                      "transmission_wifi",
+                      "out_interface"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -959,7 +1384,9 @@
               "name" : "Emv2",
               "clause" : {
                 "type" : "Emv2Clause",
-                "libraries" : ["ErrorLibrary", "PCA_Error"],
+                "libraries": [
+                  "PCA_Error"
+                ],
                 "propagations" : [
                   {
                     "type" : "Emv2Propagation",
@@ -967,7 +1394,11 @@
                       "type" : "PropagationDirection",
                       "value" : "In"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "in_interface"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_command",
+                      "in_interface"
+                    ],
                     "errorTokens" : ["SecurityError", "stop_commission", "stop_omission", "start_commission", "start_omission"]
                   },
                   {
@@ -976,7 +1407,11 @@
                       "type" : "PropagationDirection",
                       "value" : "Out"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "wifi_command",
+                      "out_interface"
+                    ],
                     "errorTokens" : ["SecurityError", "stop_commission", "stop_omission", "start_commission", "start_omission"]
                   }
                 ],
@@ -985,7 +1420,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "spoof_message"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "spoof_message"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -1002,7 +1441,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "out_interface"
+                        ],
                         "errorTokens" : ["SecurityError"]
                       }
                     }
@@ -1011,7 +1454,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "accessable"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "accessable"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -1025,7 +1472,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "in_interface"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "in_interface"
+                        ],
                         "errorTokens" : ["SecurityError"]
                       }
                     },
@@ -1037,34 +1488,254 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "transmission_cmd"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "replay_message"
+                      ]
                     },
-                    "kind" : {
-                      "type" : "FlowKind",
-                      "value" : "Path"
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
                     },
-                    "sourcePropagation" : {
-                      "type" : "Some",
-                      "value" : {
-                        "type" : "Emv2Propagation",
-                        "direction" : {
-                          "type" : "PropagationDirection",
-                          "value" : "In"
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "in_interface"],
-                        "errorTokens" : ["stop_commission", "stop_omission", "start_commission", "start_omission"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "SecurityError"
+                        ]
                       }
                     },
-                    "sinkPropagation" : {
-                      "type" : "Some",
-                      "value" : {
-                        "type" : "Emv2Propagation",
-                        "direction" : {
-                          "type" : "PropagationDirection",
-                          "value" : "Out"
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface"],
-                        "errorTokens" : ["stop_commission", "stop_omission", "start_commission", "start_omission"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "SecurityError"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "transmission_stop_commission"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "stop_commission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "stop_commission"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "transmission_stop_omission"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "stop_omission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "stop_omission"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "transmission_start_commission"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "start_commission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "start_commission"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "wifi_command",
+                        "transmission_start_omission"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Path"
+                    },
+                    "sourcePropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "In"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "in_interface"
+                        ],
+                        "errorTokens": [
+                          "start_omission"
+                        ]
+                      }
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "wifi_command",
+                          "out_interface"
+                        ],
+                        "errorTokens": [
+                          "start_omission"
+                        ]
                       }
                     }
                   }
@@ -1077,7 +1748,10 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "Patient"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "Patient"
+            ]
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -1095,14 +1769,23 @@
               "type" : "FeatureGroup",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "Vein"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "Patient",
+                  "Vein"
+                ]
               },
               "features" : [
                 {
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "Vein", "infuse"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "Patient",
+                      "Vein",
+                      "infuse"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -1131,14 +1814,23 @@
               "type" : "FeatureGroup",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "BloodSat"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "Patient",
+                  "BloodSat"
+                ]
               },
               "features" : [
                 {
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "BloodSat", "Saturation"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "Patient",
+                      "BloodSat",
+                      "Saturation"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -1190,8 +1882,17 @@
                       "type" : "PropagationDirection",
                       "value" : "In"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "Patient", "Vein_infuse"],
-                    "errorTokens" : ["EarlyServiceTermination", "LateServiceTermination", "EarlyServiceStart", "LateServiceStart"]
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "Patient",
+                      "Vein_infuse"
+                    ],
+                    "errorTokens": [
+                      "early_service_termination",
+                      "late_service_termination",
+                      "early_service_start",
+                      "late_service_start"
+                    ]
                   }
                 ],
                 "flows" : [
@@ -1199,7 +1900,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "accident"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "Patient",
+                        "accident"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -1213,8 +1918,17 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "Patient", "Vein_infuse"],
-                        "errorTokens" : ["EarlyServiceTermination", "LateServiceTermination", "EarlyServiceStart", "LateServiceStart"]
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "Patient",
+                          "Vein_infuse"
+                        ],
+                        "errorTokens": [
+                          "early_service_termination",
+                          "late_service_termination",
+                          "early_service_start",
+                          "late_service_start"
+                        ]
                       }
                     },
                     "sinkPropagation" : {
@@ -1230,7 +1944,10 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "App"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "App"
+            ]
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -1248,7 +1965,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App", "SpO2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App",
+                  "SpO2"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -1268,7 +1989,11 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App", "command"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App",
+                  "command"
+                ]
               },
               "direction" : {
                 "type" : "Direction",
@@ -1296,7 +2021,11 @@
               "type" : "Property",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App", "AAMI_80001::Hazards"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App",
+                  "AAMI_80001::Hazards"
+                ]
               },
               "propertyValues" : [
                 {
@@ -1306,7 +2035,11 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "App", "AAMI_80001::Hazard.ID"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "AAMI_80001::Hazard.ID"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -1319,7 +2052,11 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "App", "AAMI_80001::Hazard.Description"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "AAMI_80001::Hazard.Description"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -1338,7 +2075,11 @@
               "type" : "Flow",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App", "Check_Status"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App",
+                  "Check_Status"
+                ]
               },
               "kind" : {
                 "type" : "FlowKind",
@@ -1350,7 +2091,12 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "App", "Check_Status", "SpO2"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "App",
+                      "Check_Status",
+                      "SpO2"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -1373,7 +2119,12 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["PCA_PulseOx_scenario1_Instance", "App", "Check_Status", "command"]
+                    "name": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "App",
+                      "Check_Status",
+                      "command"
+                    ]
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -1408,7 +2159,11 @@
                       "type" : "PropagationDirection",
                       "value" : "In"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "SpO2"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "App",
+                      "SpO2"
+                    ],
                     "errorTokens" : ["SpO2_ValueError", "SecurityError", "SpO2_Omission"]
                   },
                   {
@@ -1417,7 +2172,11 @@
                       "type" : "PropagationDirection",
                       "value" : "Out"
                     },
-                    "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "command"],
+                    "propagationPoint": [
+                      "PCA_PulseOx_insecure_Instance",
+                      "App",
+                      "command"
+                    ],
                     "errorTokens" : ["stop_commission", "stop_omission", "start_commission", "start_omission", "SecurityError"]
                   }
                 ],
@@ -1426,7 +2185,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "App", "stop_fault"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "App",
+                        "stop_fault"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -1443,7 +2206,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "command"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "command"
+                        ],
                         "errorTokens" : ["stop_omission", "stop_commission"]
                       }
                     }
@@ -1452,7 +2219,47 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "App", "inappropriate_ticket_provided"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "App",
+                        "command_in_plaintext"
+                      ]
+                    },
+                    "kind": {
+                      "type": "FlowKind",
+                      "value": "Source"
+                    },
+                    "sourcePropagation": {
+                      "type": "None"
+                    },
+                    "sinkPropagation": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Emv2Propagation",
+                        "direction": {
+                          "type": "PropagationDirection",
+                          "value": "Out"
+                        },
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "command"
+                        ],
+                        "errorTokens": [
+                          "SecurityError"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "Emv2Flow",
+                    "identifier": {
+                      "type": "Name",
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "App",
+                        "inappropriate_ticket_provided"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -1466,7 +2273,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "SpO2"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "SpO2"
+                        ],
                         "errorTokens" : ["SpO2_ValueError", "SecurityError"]
                       }
                     },
@@ -1478,7 +2289,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "command"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "command"
+                        ],
                         "errorTokens" : ["stop_commission", "stop_omission", "start_commission", "start_omission"]
                       }
                     }
@@ -1487,7 +2302,11 @@
                     "type" : "Emv2Flow",
                     "identifier" : {
                       "type" : "Name",
-                      "name" : ["PCA_PulseOx_scenario1_Instance", "App", "no_spo2"]
+                      "name": [
+                        "PCA_PulseOx_insecure_Instance",
+                        "App",
+                        "no_spo2"
+                      ]
                     },
                     "kind" : {
                       "type" : "FlowKind",
@@ -1501,7 +2320,11 @@
                           "type" : "PropagationDirection",
                           "value" : "In"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "SpO2"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "SpO2"
+                        ],
                         "errorTokens" : ["SpO2_Omission"]
                       }
                     },
@@ -1513,7 +2336,11 @@
                           "type" : "PropagationDirection",
                           "value" : "Out"
                         },
-                        "propagationPoint" : ["PCA_PulseOx_scenario1_Instance", "App", "command"],
+                        "propagationPoint": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "App",
+                          "command"
+                        ],
                         "errorTokens" : ["stop_omission", "start_omission"]
                       }
                     }
@@ -1529,20 +2356,30 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "administer"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "administer"
+            ]
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV_infuse"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "PCA_Pump",
+                    "IV_infuse"
+                  ]
                 }
               },
               "direction" : {
@@ -1559,13 +2396,20 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "Patient"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "Patient"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "Vein_infuse"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "Patient",
+                    "Vein_infuse"
+                  ]
                 }
               },
               "direction" : {
@@ -1585,7 +2429,14 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse -> Patient", "Vein", "infuse"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "PCA_Pump",
+                "IV",
+                "infuse -> Patient",
+                "Vein",
+                "infuse"
+              ]
             }
           ],
           "properties" : [
@@ -1595,20 +2446,30 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "spo2"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "spo2"
+            ]
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "PulseOx",
+                    "SpO2"
+                  ]
                 }
               },
               "direction" : {
@@ -1625,13 +2486,20 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "in_interface"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "wifi_spo2",
+                    "in_interface"
+                  ]
                 }
               },
               "direction" : {
@@ -1651,7 +2519,12 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2 -> wifi_spo2", "in_interface"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "PulseOx",
+                "SpO2 -> wifi_spo2",
+                "in_interface"
+              ]
             }
           ],
           "properties" : [
@@ -1661,20 +2534,30 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "spo2_app"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "spo2_app"
+            ]
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "wifi_spo2",
+                    "out_interface"
+                  ]
                 }
               },
               "direction" : {
@@ -1691,13 +2574,20 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "App", "SpO2"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "App",
+                    "SpO2"
+                  ]
                 }
               },
               "direction" : {
@@ -1717,7 +2607,12 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface -> App", "SpO2"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "wifi_spo2",
+                "out_interface -> App",
+                "SpO2"
+              ]
             }
           ],
           "properties" : [
@@ -1727,20 +2622,30 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "activate_pump"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "activate_pump"
+            ]
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "wifi_command",
+                    "out_interface"
+                  ]
                 }
               },
               "direction" : {
@@ -1757,13 +2662,20 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "PCA_Pump",
+                    "control"
+                  ]
                 }
               },
               "direction" : {
@@ -1783,7 +2695,12 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface -> PCA_Pump", "control"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "wifi_command",
+                "out_interface -> PCA_Pump",
+                "control"
+              ]
             }
           ],
           "properties" : [
@@ -1793,20 +2710,30 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "read"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "read"
+            ]
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "Patient"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "Patient"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "BloodSat_Saturation"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "Patient",
+                    "BloodSat_Saturation"
+                  ]
                 }
               },
               "direction" : {
@@ -1823,13 +2750,20 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "FingerClip_Saturation"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "PulseOx",
+                    "FingerClip_Saturation"
+                  ]
                 }
               },
               "direction" : {
@@ -1849,7 +2783,14 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "BloodSat", "Saturation -> PulseOx", "FingerClip", "Saturation"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "Patient",
+                "BloodSat",
+                "Saturation -> PulseOx",
+                "FingerClip",
+                "Saturation"
+              ]
             }
           ],
           "properties" : [
@@ -1859,20 +2800,30 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "activate_app"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "activate_app"
+            ]
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "App", "command"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "App",
+                    "command"
+                  ]
                 }
               },
               "direction" : {
@@ -1889,13 +2840,20 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command"
+                ]
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "in_interface"]
+                  "name": [
+                    "PCA_PulseOx_insecure_Instance",
+                    "wifi_command",
+                    "in_interface"
+                  ]
                 }
               },
               "direction" : {
@@ -1915,7 +2873,12 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "App", "command -> wifi_command", "in_interface"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "App",
+                "command -> wifi_command",
+                "in_interface"
+              ]
             }
           ],
           "properties" : [
@@ -1927,19 +2890,30 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump.IV.infuse -> Patient.Vein.infuse"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "PCA_Pump.IV.infuse -> Patient.Vein.infuse"
+            ]
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "PCA_Pump"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "IV", "infuse"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump",
+                  "IV",
+                  "infuse"
+                ]
               }
             },
             "direction" : {
@@ -1954,13 +2928,21 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "Patient"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "Patient"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "Vein", "infuse"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "Patient",
+                  "Vein",
+                  "infuse"
+                ]
               }
             },
             "direction" : {
@@ -1980,11 +2962,16 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "administer"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "administer"
+                ]
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance"
+                ]
               },
               "isParent" : true
             }
@@ -1994,7 +2981,11 @@
               "type" : "Property",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump.IV.infuse -> Patient.Vein.infuse", "AAMI_80001::Hazards"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump.IV.infuse -> Patient.Vein.infuse",
+                  "AAMI_80001::Hazards"
+                ]
               },
               "propertyValues" : [
                 {
@@ -2004,7 +2995,11 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump.IV.infuse -> Patient.Vein.infuse", "AAMI_80001::Hazard.ID"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump.IV.infuse -> Patient.Vein.infuse",
+                          "AAMI_80001::Hazard.ID"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -2017,7 +3012,11 @@
                       "type" : "Property",
                       "name" : {
                         "type" : "Name",
-                        "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump.IV.infuse -> Patient.Vein.infuse", "AAMI_80001::Hazard.Description"]
+                        "name": [
+                          "PCA_PulseOx_insecure_Instance",
+                          "PCA_Pump.IV.infuse -> Patient.Vein.infuse",
+                          "AAMI_80001::Hazard.Description"
+                        ]
                       },
                       "propertyValues" : [
                         {
@@ -2036,19 +3035,29 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx.SpO2 -> wifi_spo2.in_interface"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "PulseOx.SpO2 -> wifi_spo2.in_interface"
+            ]
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "PulseOx"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "SpO2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx",
+                  "SpO2"
+                ]
               }
             },
             "direction" : {
@@ -2063,13 +3072,20 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "wifi_spo2"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "in_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2",
+                  "in_interface"
+                ]
               }
             },
             "direction" : {
@@ -2089,11 +3105,16 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "spo2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "spo2"
+                ]
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance"
+                ]
               },
               "isParent" : true
             }
@@ -2105,19 +3126,29 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2.out_interface -> App.SpO2"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "wifi_spo2.out_interface -> App.SpO2"
+            ]
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "wifi_spo2"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_spo2", "out_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_spo2",
+                  "out_interface"
+                ]
               }
             },
             "direction" : {
@@ -2132,13 +3163,20 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "App"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "App"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App", "SpO2"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App",
+                  "SpO2"
+                ]
               }
             },
             "direction" : {
@@ -2158,11 +3196,16 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "spo2_app"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "spo2_app"
+                ]
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance"
+                ]
               },
               "isParent" : true
             }
@@ -2174,19 +3217,29 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command.out_interface -> PCA_Pump.control"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "wifi_command.out_interface -> PCA_Pump.control"
+            ]
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "wifi_command"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "out_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command",
+                  "out_interface"
+                ]
               }
             },
             "direction" : {
@@ -2201,13 +3254,20 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "PCA_Pump"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PCA_Pump", "control"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PCA_Pump",
+                  "control"
+                ]
               }
             },
             "direction" : {
@@ -2227,11 +3287,16 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "activate_pump"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "activate_pump"
+                ]
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance"
+                ]
               },
               "isParent" : true
             }
@@ -2243,19 +3308,30 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "Patient.BloodSat.Saturation -> PulseOx.FingerClip.Saturation"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "Patient.BloodSat.Saturation -> PulseOx.FingerClip.Saturation"
+            ]
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "Patient"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "Patient"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "Patient", "BloodSat", "Saturation"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "Patient",
+                  "BloodSat",
+                  "Saturation"
+                ]
               }
             },
             "direction" : {
@@ -2270,13 +3346,21 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "PulseOx"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "PulseOx", "FingerClip", "Saturation"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "PulseOx",
+                  "FingerClip",
+                  "Saturation"
+                ]
               }
             },
             "direction" : {
@@ -2296,11 +3380,16 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "read"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "read"
+                ]
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance"
+                ]
               },
               "isParent" : true
             }
@@ -2312,19 +3401,29 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["PCA_PulseOx_scenario1_Instance", "App.command -> wifi_command.in_interface"]
+            "name": [
+              "PCA_PulseOx_insecure_Instance",
+              "App.command -> wifi_command.in_interface"
+            ]
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "App"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "App"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "App", "command"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "App",
+                  "command"
+                ]
               }
             },
             "direction" : {
@@ -2339,13 +3438,20 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command"]
+              "name": [
+                "PCA_PulseOx_insecure_Instance",
+                "wifi_command"
+              ]
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "wifi_command", "in_interface"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "wifi_command",
+                  "in_interface"
+                ]
               }
             },
             "direction" : {
@@ -2365,11 +3471,16 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance", "activate_app"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance",
+                  "activate_app"
+                ]
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["PCA_PulseOx_scenario1_Instance"]
+                "name": [
+                  "PCA_PulseOx_insecure_Instance"
+                ]
               },
               "isParent" : true
             }
@@ -2407,41 +3518,37 @@
         "type" : "Name",
         "name" : ["PCA_Error"]
       },
-      "useTypes" : ["ErrorLibrary"],
-      "tokens" : ["SecurityError", "MessageLeak", "MessageLeakMitM", "UnlikelyLeak", "AuthenticityError", "MessageCommission", "MessageOmission", "MessageReplay", "UnlikelyCommission", "MessageCorruption", "UnlikelyCorruption", "start_commission", "start_omission", "stop_commission", "stop_omission", "SpO2_ValueError", "SpO2_Omission", "EarlyServiceTermination", "LateServiceTermination", "EarlyServiceStart", "LateServiceStart"],
-      "alias" : {
-        "type" : "HashMap",
-        "size" : 0,
-        "entries" : [  ]
-      }
-    },
-    {
-      "type" : "Emv2Library",
-      "name" : {
-        "type" : "Name",
-        "name" : ["ErrorLibrary"]
-      },
       "useTypes" : [],
-      "tokens" : ["ServiceError", "ItemOmission", "ServiceOmission", "SequenceOmission", "TransientServiceOmission", "LateServiceStart", "EarlyServiceTermination", "BoundedOmissionInterval", "ItemCommission", "ServiceCommission", "SequenceCommission", "EarlyServiceStart", "LateServiceTermination", "ItemTimingError", "EarlyDelivery", "LateDelivery", "SequenceTimingError", "HighRate", "LowRate", "RateJitter", "ServiceTimingError", "DelayedService", "EarlyService", "TimingError", "RateError", "EarlyData", "LateData", "ServiceTimeShift", "ItemValueError", "UndetectableValueError", "DetectableValueError", "OutOfRange", "BelowRange", "AboveRange", "OutOfBounds", "SequenceValueError", "BoundedValueChange", "StuckValue", "OutOfOrder", "ServiceValueError", "OutOfCalibration", "ValueError", "IncorrectValue", "ValueCorruption", "BadValue", "SequenceError", "SubtleValueError", "BenignValueError", "SubtleValueCorruption", "ReplicationError", "AsymmetricReplicatesError", "AsymmetricValue", "AsymmetricApproximateValue", "AsymmetricExactValue", "AsymmetricTiming", "AsymmetricOmission", "AsymmetricItemOmission", "AsymmetricServiceOmission", "SymmetricReplicatesError", "SymmetricValue", "SymmetricApproximateValue", "SymmetricExactValue", "SymmetricTiming", "SymmetricOmission", "SymmetricItemOmission", "SymmetricServiceOmission", "InconsistentValue", "InconsistentTiming", "InconsistentOmission", "InconsistentItemOmission", "InconsistentServiceOmission", "AsymmetricTransmissive", "ConcurrencyError", "RaceCondition", "ReadWriteRace", "WriteWriteRace", "MutExError", "Deadlock", "Starvation"],
-      "alias" : {
-        "type" : "HashMap",
-        "size" : 19,
-        "entries" : [ [ "InconsistentValue", "AsymmetricValue" ],[ "SubtleValueCorruption", "DetectableValueError" ],[ "InconsistentItemOmission", "AsymmetricItemOmission" ],[ "IncorrectValue", "ItemValueError" ],[ "RateError", "SequenceTimingError" ],[ "InconsistentTiming", "AsymmetricTiming" ],[ "TimingError", "ItemTimingError" ],[ "EarlyData", "HighRate" ],[ "ValueError", "ItemValueError" ],[ "LateData", "LowRate" ],[ "BenignValueError", "DetectableValueError" ],[ "ValueCorruption", "ItemValueError" ],[ "SubtleValueError", "UndetectableValueError" ],[ "BadValue", "ItemValueError" ],[ "SequenceError", "SequenceValueError" ],[ "InconsistentOmission", "AsymmetricOmission" ],[ "InconsistentServiceOmission", "AsymmetricServiceOmission" ],[ "AsymmetricTransmissive", "AsymmetricValue" ],[ "ServiceTimeShift", "ServiceTimingError" ] ]
-      }
-    },
-    {
-      "type" : "Emv2Library",
-      "name" : {
-        "type" : "Name",
-        "name" : ["pump_errors"]
-      },
-      "useTypes" : ["ErrorLibrary"],
-      "tokens" : ["start_commission", "start_omission", "stop_commission", "stop_omission"],
+      "tokens": [
+        "SecurityError",
+        "message_leak",
+        "message_leak_MitM",
+        "unlikely_leak",
+        "authenticity_error",
+        "message_commission",
+        "message_omission",
+        "message_replay",
+        "unlikely_commission",
+        "message_corruption",
+        "unlikely_corruption",
+        "start_commission",
+        "start_omission",
+        "stop_commission",
+        "stop_omission",
+        "SpO2_ValueError",
+        "SpO2_Omission",
+        "early_service_termination",
+        "late_service_termination",
+        "early_service_start",
+        "late_service_start"
+      ],
       "alias" : {
         "type" : "HashMap",
         "size" : 0,
         "entries" : [  ]
       }
     }
+  ],
+  "dataComponents": [
   ]
 }

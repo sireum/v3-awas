@@ -1,20 +1,19 @@
-strict digraph G {
-  A [ label="{In Port|<aIn>aIn} |component
-A|{Out Port|<aOut>aOut} " shape="record" ];
-  C [ label="{In Port|<cIn>cIn} |component
-C|{Out Port|<cOut>cOut} " shape="record" ];
-  B [ label="{In Port|<bIn>bIn} |component
-B|{Out Port|<bOut2>bOut2|<bOut>bOut} " shape="record" ];
-  B2A [ label="connection
-B2A" shape="record" ];
-  A2B [ label="connection
-A2B" shape="record" ];
-  B2C [ label="connection
-B2C" shape="record" ];
-  B -> B2A [ tailport="bOut2" ];
-  B2A -> A [ headport="aIn" ];
-  A -> A2B [ tailport="aOut" ];
-  A2B -> B [ headport="bIn" ];
-  B -> B2C [ tailport="bOut" ];
-  B2C -> C [ headport="cIn" ];
+digraph "component:$$AWAS#abc_connection" {
+
+  rankdir=TB
+
+   "component:$$AWAS$abc_connection#A" [label="{In Port|<aIn>aIn} |component\nA|{Out Port|<aOut>aOut} ",  shape="record"] 
+   "component:$$AWAS$abc_connection#B" [label="{In Port|<bIn>bIn} |component\nB|{Out Port|<bOut>bOut|<bOut2>bOut2} ",  shape="record"] 
+   "component:$$AWAS$abc_connection#C" [label="{In Port|<cIn>cIn} |component\nC|{Out Port|<cOut>cOut} ",  shape="record"] 
+   "connection:$$AWAS$abc_connection#A2B" [label="{In Port|<in>in} |connection\nA2B|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$abc_connection#B2A" [label="{In Port|<in>in} |connection\nB2A|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$abc_connection#B2C" [label="{In Port|<in>in} |connection\nB2C|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$abc_connection#A" -> "connection:$$AWAS$abc_connection#A2B" [headport=in, tailport=aOut] 
+   "component:$$AWAS$abc_connection#B" -> "connection:$$AWAS$abc_connection#B2A" [headport=in, tailport=bOut2] 
+   "component:$$AWAS$abc_connection#B" -> "connection:$$AWAS$abc_connection#B2C" [headport=in, tailport=bOut] 
+   "connection:$$AWAS$abc_connection#A2B" -> "component:$$AWAS$abc_connection#B" [headport=bIn, tailport=out] 
+   "connection:$$AWAS$abc_connection#B2A" -> "component:$$AWAS$abc_connection#A" [headport=aIn, tailport=out] 
+   "connection:$$AWAS$abc_connection#B2C" -> "component:$$AWAS$abc_connection#C" [headport=cIn, tailport=out] 
+
 }

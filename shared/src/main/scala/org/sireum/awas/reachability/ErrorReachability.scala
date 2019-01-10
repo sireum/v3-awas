@@ -44,26 +44,40 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
   def backwardErrorSetReach(errorRes: IMap[ResourceUri, Set[ResourceUri]]): Collector
 
   def errorPathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
-                     targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
+    targetPort: ResourceUri,
+    targetErrors: ISet[ResourceUri],
+    isRefined: Boolean
+  ):
   Collector
 
   def errorSimplePathReach(sourcePort: ResourceUri, sourceErrors: ISet[ResourceUri],
-                     targetPort: ResourceUri, targetErrors: ISet[ResourceUri]):
+    targetPort: ResourceUri,
+    targetErrors: ISet[ResourceUri],
+    isRefined: Boolean
+  ):
   Collector
 
   def errorSimplePathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
-                        target: IMap[ResourceUri, ISet[ResourceUri]]): Collector
+    target: IMap[ResourceUri, ISet[ResourceUri]],
+    isRefined: Boolean
+  ): Collector
 
   def errorSimplePathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
                             target: IMap[ResourceUri, ISet[ResourceUri]],
-                            constraint: ConstraintExpr): Collector
+    constraint: ConstraintExpr,
+    isRefined: Boolean
+  ): Collector
 
   def errorPathReachMap(source: IMap[ResourceUri, ISet[ResourceUri]],
-                        target: IMap[ResourceUri, ISet[ResourceUri]]): Collector
+    target: IMap[ResourceUri, ISet[ResourceUri]],
+    isRefined: Boolean
+  ): Collector
 
   def errorPathReachMapWith(source: IMap[ResourceUri, ISet[ResourceUri]],
-                            target: IMap[ResourceUri, ISet[ResourceUri]],
-                            constraint: ConstraintExpr): Collector
+    target: IMap[ResourceUri, ISet[ResourceUri]],
+    constraint: ConstraintExpr,
+    isRefined: Boolean
+  ): Collector
 
   def getPredecessor(currentPort: ResourceUri,
                      currentError: ResourceUri)

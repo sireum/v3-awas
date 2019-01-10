@@ -34,6 +34,7 @@ import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{ILinkedSet, IMap, ISet, Tag}
+import upickle.default.{macroRW, ReadWriter => RW}
 
 trait Collector {
   def getNodes: ISet[FlowNode]
@@ -42,7 +43,7 @@ trait Collector {
 
   def getSymbolTable: SymbolTable
 
-  def getGraphs: ISet[FlowGraph[FlowNode, FlowNode.Edge]]
+  def getGraphs: ISet[ResourceUri]
 
   def getResultType: Option[ResultType]
 
@@ -87,26 +88,12 @@ trait Collector {
   def hasCycles : Boolean
 }
 
-object ResultType extends Enumeration {
-  type ResultType = Value
-  val Node, Port, Error, Flow = Value
-}
 
-object Operator extends Enumeration {
-  type Operator = Value
-  val Forward,
-  Backward,
-  Path,
-  Union,
-  Intersection,
-  Difference,
-  ID = Value
-}
 
 object Collector {
 
   def apply(st: SymbolTable,
-            graphs: ISet[FlowGraph[FlowNode, Edge]],
+    graphs: ISet[ResourceUri],
             nodes: ISet[FlowNode],
             ports: ISet[ResourceUri],
             resType: ResultType,
@@ -124,7 +111,7 @@ object Collector {
 
 
   def apply(st: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
             path: IMap[ResourceUri, ISet[ResourceUri]],
             resType: ResultType.Value,
             edges: ISet[Edge],
@@ -133,14 +120,15 @@ object Collector {
             errors: ISet[Tag]) =
     buildErrorPath(st, graph, path, resType, edges, flows, criteria, errors)
 
-  def apply(st: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+  def apply(
+    st: SymbolTable,
+    graph: ISet[ResourceUri],
             paths: ILinkedSet[Collector],
             resType: Option[ResultType]): Collector =
     buildPathWrapper(st, graph, paths, resType)
 
   def apply(st: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
             nodes: ISet[FlowNode],
             edges: ISet[FlowEdge[FlowNode]],
             isForward: Boolean,
@@ -150,7 +138,7 @@ object Collector {
     buildNode(st, graph, nodes, edges, isForward, criteria, error)
 
   def apply(st: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
             ports: ISet[ResourceUri],
             flows: ISet[ResourceUri],
             edges: ISet[Edge],
@@ -161,7 +149,7 @@ object Collector {
 
 
   def apply(st: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
             portError: Map[ResourceUri, ISet[ResourceUri]],
             flows: ISet[ResourceUri],
             edges: ISet[Edge],
@@ -170,13 +158,12 @@ object Collector {
             error: ISet[Tag]): Collector =
     buildPortError(st, graph, portError, flows, edges, isForward, criteria, error)
 
-  def apply(st: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+  def apply(st: SymbolTable, graph: ISet[ResourceUri],
             error: ISet[Tag]): Collector =
     buildError(st, graph, error)
 
   def apply(symbolTable: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
             resType: Option[ResultType],
             operator: Option[Operator],
             criteria: ISet[ResourceUri],
@@ -188,14 +175,12 @@ object Collector {
     graph,
     resType,
     operator,
-    criteria,
-    resNodes,
-    resPorts,
+    criteria, resNodes, resPorts,
     resPortError)
 
 
   def apply(symbolTable: SymbolTable,
-            graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
             resType: Option[ResultType],
             resEdges: ISet[FlowEdge[FlowNode]],
             operator: Option[Operator],
@@ -231,7 +216,7 @@ object Collector {
   def apply(st: SymbolTable): Collector = buildEmpty(st)
 
   def buildNode(st: SymbolTable,
-                graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                 nodes: ISet[FlowNode],
                 edges: ISet[FlowEdge[FlowNode]],
                 isForward: Boolean,
@@ -247,7 +232,7 @@ object Collector {
       error = error)
 
   def buildNodePath(st: SymbolTable,
-                    graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                     nodes: ISet[FlowNode],
                     edges: ISet[FlowEdge[FlowNode]],
                     criteria: ISet[ResourceUri],
@@ -264,7 +249,7 @@ object Collector {
     )
 
   def buildErrorPath(st: SymbolTable,
-                     graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                      path: IMap[ResourceUri, ISet[ResourceUri]],
                      resType: ResultType.Value,
                      edges: ISet[Edge],
@@ -283,7 +268,7 @@ object Collector {
 
 
   def buildPortPath(st: SymbolTable,
-                    graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                     ports: ISet[ResourceUri],
                     edges: ISet[Edge],
                     flows: ISet[ResourceUri],
@@ -303,17 +288,18 @@ object Collector {
       error = error)
 
   def buildPathWrapper(st: SymbolTable,
-                       graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                        paths: ILinkedSet[Collector],
                        resType: Option[ResultType]) =
-    new CollectorImpl(symbolTable = st,
+    new CollectorImpl(
+      symbolTable = st,
       graphs = graph,
       resType = resType,
       operator = Some(Operator.Path),
       resPaths = paths)
 
   def buildPort(st: SymbolTable,
-                graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                 ports: ISet[ResourceUri],
                 flows: ISet[ResourceUri],
                 edges: ISet[Edge],
@@ -331,7 +317,7 @@ object Collector {
       error = error)
 
   def buildPortError(st: SymbolTable,
-                     graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                      portError: Map[ResourceUri, ISet[ResourceUri]],
                      flows: ISet[ResourceUri],
                      edges: ISet[Edge],
@@ -350,7 +336,7 @@ object Collector {
 
 
   def buildAll(symbolTable: SymbolTable,
-               graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                resType: Option[ResultType],
                resEdges: ISet[FlowEdge[FlowNode]],
                operator: Option[Operator],
@@ -384,7 +370,7 @@ object Collector {
   }
 
   def buildCriteria(symbolTable: SymbolTable,
-                    graph: ISet[FlowGraph[FlowNode, Edge]],
+    graph: ISet[ResourceUri],
                     resType: Option[ResultType],
                     operator: Option[Operator],
                     criteria: ISet[ResourceUri],
@@ -407,12 +393,13 @@ object Collector {
     new CollectorImpl(symbolTable = symbolTable)
   }
 
-  def buildError(symbolTable: SymbolTable,
-                 graph: ISet[FlowGraph[FlowNode, Edge]],
+  def buildError(symbolTable: SymbolTable, graph: ISet[ResourceUri],
                  error: ISet[Tag]): Collector = {
     new CollectorImpl(
       symbolTable = symbolTable,
       graphs = graph,
       error = error)
   }
+
+  implicit def rw: RW[Collector] = RW.merge(CollectorImpl.rw)
 }

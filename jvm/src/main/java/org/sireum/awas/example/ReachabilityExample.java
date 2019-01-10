@@ -70,7 +70,7 @@ public class ReachabilityExample {
                 //build graph
                 FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
                 System.out.println("Constructed Graph: ");
-                System.out.println(graph.toDot());
+                System.out.println(graph.getDot());
 
                 //query the graph step 1: get the uri of the criterion
                 String criterion = null;

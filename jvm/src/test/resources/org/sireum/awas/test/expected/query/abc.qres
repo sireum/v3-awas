@@ -43,9 +43,6 @@ connection:$$AWAS$abc#B2C }
  -------------- 
 q7
  -------------- 
-Warning: 
-
-Missing flow relationships for node ''
 { port-in-virtual:$$AWAS$abc$A2B#in, 
 port-in-virtual:$$AWAS$abc$B2A#in, 
 port-in-virtual:$$AWAS$abc$B2C#in, 
@@ -63,9 +60,6 @@ port-out:$$AWAS$abc$C#cOut }
  -------------- 
 q8
  -------------- 
-Warning: 
-
-Missing flow relationships for node ''
 { port-in-virtual:$$AWAS$abc$A2B#in, 
 port-in-virtual:$$AWAS$abc$B2A#in, 
 port-in-virtual:$$AWAS$abc$B2C#in, 

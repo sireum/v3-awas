@@ -1,0 +1,28 @@
+digraph "component:$$AWAS#UAS_Impl_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$UAS_Impl_Instance#GND" [label="{In Port|<RFA_bus_access_IN>RFA_bus_access_IN|<recv_status>recv_status} |component\nGND|{Out Port|<send_map>send_map|<RFA_bus_access_OUT>RFA_bus_access_OUT} ",  shape="record"] 
+   "component:$$AWAS$UAS_Impl_Instance#RFB" [label="{In Port|<bindings_IN>bindings_IN|<ACCESS_IN>ACCESS_IN} |component\nRFB|{Out Port|<bindings_OUT>bindings_OUT|<ACCESS_OUT>ACCESS_OUT} ",  shape="record"] 
+   "component:$$AWAS$UAS_Impl_Instance#UAV" [label="{In Port|<recv_map>recv_map|<RFA_bus_access_IN>RFA_bus_access_IN} |component\nUAV|{Out Port|<RFA_bus_access_OUT>RFA_bus_access_OUT|<send_status>send_status} ",  shape="record"] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac1_BACKWARD" [label="{In Port|<in>in} |connection\nbac1_BACKWARD|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac1_FORWARD" [label="{In Port|<in>in} |connection\nbac1_FORWARD|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac2_BACKWARD" [label="{In Port|<in>in} |connection\nbac2_BACKWARD|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac2_FORWARD" [label="{In Port|<in>in} |connection\nbac2_FORWARD|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$UAS_Impl_Instance#c1" [label="{In Port|<in>in} |connection\nc1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$UAS_Impl_Instance#c2" [label="{In Port|<in>in} |connection\nc2|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$UAS_Impl_Instance#GND" -> "connection:$$AWAS$UAS_Impl_Instance#bac1_BACKWARD" [headport=in, tailport=RFA_bus_access_OUT] 
+   "component:$$AWAS$UAS_Impl_Instance#GND" -> "connection:$$AWAS$UAS_Impl_Instance#c1" [headport=in, tailport=send_map] 
+   "component:$$AWAS$UAS_Impl_Instance#RFB" -> "connection:$$AWAS$UAS_Impl_Instance#bac1_FORWARD" [headport=in, tailport=ACCESS_OUT] 
+   "component:$$AWAS$UAS_Impl_Instance#RFB" -> "connection:$$AWAS$UAS_Impl_Instance#bac2_FORWARD" [headport=in, tailport=ACCESS_OUT] 
+   "component:$$AWAS$UAS_Impl_Instance#UAV" -> "connection:$$AWAS$UAS_Impl_Instance#bac2_BACKWARD" [headport=in, tailport=RFA_bus_access_OUT] 
+   "component:$$AWAS$UAS_Impl_Instance#UAV" -> "connection:$$AWAS$UAS_Impl_Instance#c2" [headport=in, tailport=send_status] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac1_BACKWARD" -> "component:$$AWAS$UAS_Impl_Instance#RFB" [headport=ACCESS_IN, tailport=out] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac1_FORWARD" -> "component:$$AWAS$UAS_Impl_Instance#GND" [headport=RFA_bus_access_IN, tailport=out] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac2_BACKWARD" -> "component:$$AWAS$UAS_Impl_Instance#RFB" [headport=ACCESS_IN, tailport=out] 
+   "connection:$$AWAS$UAS_Impl_Instance#bac2_FORWARD" -> "component:$$AWAS$UAS_Impl_Instance#UAV" [headport=RFA_bus_access_IN, tailport=out] 
+   "connection:$$AWAS$UAS_Impl_Instance#c1" -> "component:$$AWAS$UAS_Impl_Instance#UAV" [headport=recv_map, tailport=out] 
+   "connection:$$AWAS$UAS_Impl_Instance#c2" -> "component:$$AWAS$UAS_Impl_Instance#GND" [headport=recv_status, tailport=out] 
+
+}

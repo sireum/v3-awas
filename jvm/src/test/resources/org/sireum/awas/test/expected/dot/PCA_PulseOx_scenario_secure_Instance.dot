@@ -1,0 +1,34 @@
+digraph "component:$$AWAS#PCA_PulseOx_scenario_secure_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#App" [label="{In Port|<SpO2>SpO2} |component\nApp|{Out Port|<command>command} ",  shape="record"] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#PCA_Pump" [label="{In Port|<control>control} |component\nPCA_Pump|{Out Port|<IV_infuse>IV_infuse} ",  shape="record"] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#Patient" [label="{In Port|<Vein_infuse>Vein_infuse} |component\nPatient|{Out Port|<BloodSat_Saturation>BloodSat_Saturation} ",  shape="record"] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#PulseOx" [label="{In Port|<FingerClip_Saturation>FingerClip_Saturation} |component\nPulseOx|{Out Port|<SpO2>SpO2} ",  shape="record"] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#authenticate" [label="{In Port|<connection_IN>connection_IN|<bindings_IN>bindings_IN} |component\nauthenticate|{Out Port|<bindings_OUT>bindings_OUT|<connection_OUT>connection_OUT} ",  shape="record"] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" [label="{In Port|<bindings_IN>bindings_IN|<connection_IN>connection_IN} |component\nencrypt|{Out Port|<bindings_OUT>bindings_OUT|<connection_OUT>connection_OUT} ",  shape="record"] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#wifi" [label="{In Port|<bindings_IN>bindings_IN} |component\nwifi|{Out Port|<bindings_OUT>bindings_OUT} ",  shape="record"] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#activate" [label="{In Port|<BIND_IN>BIND_IN|<in>in} |connection\nactivate|{Out Port|<BIND_OUT>BIND_OUT|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#administer" [label="{In Port|<in>in} |connection\nadminister|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#read" [label="{In Port|<in>in} |connection\nread|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#spo2" [label="{In Port|<BIND_IN>BIND_IN|<in>in} |connection\nspo2|{Out Port|<BIND_OUT>BIND_OUT|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#App" -> "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#activate" [headport=in, tailport=command] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#PCA_Pump" -> "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#administer" [headport=in, tailport=IV_infuse] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#Patient" -> "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#read" [headport=in, tailport=BloodSat_Saturation] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#PulseOx" -> "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#spo2" [headport=in, tailport=SpO2] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#authenticate" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" [headport=connection_IN, tailport=bindings_OUT] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#authenticate" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#wifi" [headport=bindings_IN, tailport=connection_OUT] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#authenticate" [headport=bindings_IN, tailport=connection_OUT] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" -> "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#activate" [headport=BIND_IN, tailport=bindings_OUT] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" -> "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#spo2" [headport=BIND_IN, tailport=bindings_OUT] 
+   "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#wifi" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#authenticate" [headport=connection_IN, tailport=bindings_OUT] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#activate" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#PCA_Pump" [headport=control, tailport=out] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#activate" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" [headport=bindings_IN, tailport=BIND_OUT] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#administer" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#Patient" [headport=Vein_infuse, tailport=out] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#read" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#PulseOx" [headport=FingerClip_Saturation, tailport=out] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#spo2" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#App" [headport=SpO2, tailport=out] 
+   "connection:$$AWAS$PCA_PulseOx_scenario_secure_Instance#spo2" -> "component:$$AWAS$PCA_PulseOx_scenario_secure_Instance#encrypt" [headport=bindings_IN, tailport=BIND_OUT] 
+
+}

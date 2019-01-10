@@ -1,0 +1,257 @@
+system  UAS_Impl_Instance
+
+    sub-components {
+      GND
+        ports
+          out send_map
+          in recv_status
+          in RFA_bus_access_IN
+          out RFA_bus_access_OUT
+        flows
+          transmit_map : * -> send_map
+          receive_status : recv_status -> *
+
+      RFB
+        ports
+          in ACCESS_IN
+          out ACCESS_OUT
+
+      UAV
+        ports
+          in RFA_bus_access_IN
+          out RFA_bus_access_OUT
+          in recv_map
+          out send_status
+        flows
+          provide_map : recv_map -> *
+          update_status : * -> send_status
+
+        sub-components {
+          FCTL
+            ports
+              in UARTA_bus_access_IN
+              out UARTA_bus_access_OUT
+              in waypoint
+              out position_status
+            flows
+              follow_waypoints : waypoint -> *
+              send_pos : * -> position_status
+
+          MCMP
+            ports
+              in UARTA_bus_access_IN
+              out UARTA_bus_access_OUT
+              in RFA_bus_access_IN
+              out RFA_bus_access_OUT
+              in recv_map
+              in position_status
+              out waypoint
+              out send_status
+            flows
+              compute_waypoint : recv_map -> waypoint
+              compute_status : position_status -> send_status
+
+            sub-components {
+              BUS_HW
+                ports
+                  in ACCESS_IN
+                  out ACCESS_OUT
+
+              MEM_HW
+                ports
+                  in MCA_bus_access_IN
+                  out MCA_bus_access_OUT
+
+              PROC_HW
+                ports
+                  in MCA_bus_access_IN
+                  out MCA_bus_access_OUT
+
+              PROC_SW
+                ports
+                  in recv_map
+                  out send_status
+                  out waypoint
+                  in position_status
+                flows
+                  compute_waypoint_flight_plan : recv_map -> waypoint
+                  compute_waypoint_pos_status : position_status -> waypoint
+                  compute_status : position_status -> send_status
+
+                sub-components {
+                  FLT
+                    ports
+                      in filter_in
+                      out filter_out
+                    flows
+                      filtered_cmd : filter_in -> filter_out
+
+                  FPLN
+                    ports
+                      out flight_plan
+                      in recv_map
+                      in position_status
+                    flows
+                      compute_flight_plan_map : recv_map -> flight_plan
+                      compute_flight_plan_pos : position_status -> flight_plan
+
+                  RADIO
+                    ports
+                      in recv_map_in
+                      out send_status_out
+                      in send_status_in
+                      out recv_map_out
+                    flows
+                      comm_map : recv_map_in -> recv_map_out
+                      comm_status : send_status_in -> send_status_out
+
+                  UART
+                    ports
+                      in position_status_in
+                      out waypoint_out
+                      out position_status_out
+                      in waypoint_in
+                    flows
+                      comm_waypoint : waypoint_in -> waypoint_out
+                      comm_status : position_status_in -> position_status_out
+
+                  WPM
+                    ports
+                      in flight_plan
+                      out waypoint
+                      in position_status
+                    flows
+                      compute_waypoint_flight_plan : flight_plan -> waypoint
+                      compute_waypoint_pos_status : position_status -> waypoint
+                }
+                connections
+                  c1 : recv_map -> RADIO.recv_map_in
+
+                  c11 : position_status -> UART.position_status_in
+
+                  c2 : RADIO.send_status_out -> send_status
+
+                  c10 : UART.waypoint_out -> waypoint
+
+                  c3 : RADIO.recv_map_out -> FLT.filter_in
+
+                  c4 : FLT.filter_out -> FPLN.recv_map
+
+                  c5 : FPLN.flight_plan -> WPM.flight_plan
+
+                  c6 : WPM.waypoint -> UART.waypoint_in
+
+                  c7 : UART.position_status_out -> WPM.position_status
+
+                  c8 : UART.position_status_out -> FPLN.position_status
+
+                  c9 : UART.position_status_out -> RADIO.send_status_in
+
+
+              RADIO_HW
+                ports
+                  in recv_map_in
+                  out recv_map_out
+                  in send_status_in
+                  out send_status_out
+                  in MCA_bus_access_IN
+                  out MCA_bus_access_OUT
+                  in RFA_bus_access_IN
+                  out RFA_bus_access_OUT
+                flows
+                  comm_map : recv_map_in -> recv_map_out
+                  comm_status : send_status_in -> send_status_out
+
+              UART_HW
+                ports
+                  in waypoint_in
+                  out waypoint_out
+                  in position_status_in
+                  out position_status_out
+                  in MCA_bus_access_IN
+                  out MCA_bus_access_OUT
+                  in UARTA_bus_access_IN
+                  out UARTA_bus_access_OUT
+                flows
+                  comm_waypoint : waypoint_in -> waypoint_out
+                  comm_status : position_status_in -> position_status_out
+            }
+            connections
+              bac5_FORWARD : RADIO_HW.RFA_bus_access_OUT -> RFA_bus_access_OUT
+
+              bac5_BACKWARD : RFA_bus_access_IN -> RADIO_HW.RFA_bus_access_IN
+
+              c1 : recv_map -> RADIO_HW.recv_map_in
+
+              c4 : RADIO_HW.send_status_out -> send_status
+
+              bac6_FORWARD : UART_HW.UARTA_bus_access_OUT -> UARTA_bus_access_OUT
+
+              bac6_BACKWARD : UARTA_bus_access_IN -> UART_HW.UARTA_bus_access_IN
+
+              c6 : UART_HW.waypoint_out -> waypoint
+
+              c7 : position_status -> UART_HW.position_status_in
+
+              bac1_FORWARD : RADIO_HW.MCA_bus_access_OUT -> BUS_HW.ACCESS_IN
+
+              bac1_BACKWARD : BUS_HW.ACCESS_OUT -> RADIO_HW.MCA_bus_access_IN
+
+              bac2_FORWARD : UART_HW.MCA_bus_access_OUT -> BUS_HW.ACCESS_IN
+
+              bac2_BACKWARD : BUS_HW.ACCESS_OUT -> UART_HW.MCA_bus_access_IN
+
+              bac3_FORWARD : PROC_HW.MCA_bus_access_OUT -> BUS_HW.ACCESS_IN
+
+              bac3_BACKWARD : BUS_HW.ACCESS_OUT -> PROC_HW.MCA_bus_access_IN
+
+              bac4_FORWARD : MEM_HW.MCA_bus_access_OUT -> BUS_HW.ACCESS_IN
+
+              bac4_BACKWARD : BUS_HW.ACCESS_OUT -> MEM_HW.MCA_bus_access_IN
+
+              c2 : RADIO_HW.recv_map_out -> PROC_SW.recv_map
+
+              c8 : UART_HW.position_status_out -> PROC_SW.position_status
+
+              c3 : PROC_SW.send_status -> RADIO_HW.send_status_in
+
+              c5 : PROC_SW.waypoint -> UART_HW.waypoint_in
+
+
+          SBUS
+            ports
+              in ACCESS_IN
+              out ACCESS_OUT
+        }
+        connections
+          bac3 : RFA_bus_access_IN -> MCMP.RFA_bus_access_IN
+
+          c1 : recv_map -> MCMP.recv_map
+
+          c2 : MCMP.send_status -> send_status
+
+          bac1_FORWARD : SBUS.ACCESS_OUT -> MCMP.UARTA_bus_access_IN
+
+          bac1_BACKWARD : MCMP.UARTA_bus_access_OUT -> SBUS.ACCESS_IN
+
+          bac2_FORWARD : SBUS.ACCESS_OUT -> FCTL.UARTA_bus_access_IN
+
+          bac2_BACKWARD : FCTL.UARTA_bus_access_OUT -> SBUS.ACCESS_IN
+
+          c3 : MCMP.waypoint -> FCTL.waypoint
+
+          c4 : FCTL.position_status -> MCMP.position_status
+
+    }
+    connections
+      bac1_FORWARD : RFB.ACCESS_OUT -> GND.RFA_bus_access_IN
+
+      bac1_BACKWARD : GND.RFA_bus_access_OUT -> RFB.ACCESS_IN
+
+      bac2_FORWARD : RFB.ACCESS_OUT -> UAV.RFA_bus_access_IN
+
+      bac2_BACKWARD : UAV.RFA_bus_access_OUT -> RFB.ACCESS_IN
+
+      c1 : GND.send_map -> UAV.recv_map
+
+      c2 : UAV.send_status -> GND.recv_status

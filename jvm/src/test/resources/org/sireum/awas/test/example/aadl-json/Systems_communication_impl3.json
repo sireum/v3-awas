@@ -256,7 +256,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -300,7 +300,13 @@
               "propertyValues": [
                 {
                   "type": "ReferenceProp",
-                  "value": "hw1"
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "Communication_impl3_Instance",
+                      "hw1"
+                    ]
+                  }
                 }
               ]
             }
@@ -466,7 +472,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -510,7 +516,13 @@
               "propertyValues": [
                 {
                   "type": "ReferenceProp",
-                  "value": "hw2"
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "Communication_impl3_Instance",
+                      "hw2"
+                    ]
+                  }
                 }
               ]
             }
@@ -613,7 +625,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureAccess",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -622,16 +634,24 @@
                   "nwInterface"
                 ]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
-              },
               "category": {
                 "type": "FeatureCategory",
                 "value": "BusAccess"
               },
               "classifier": {
-                "type": "None"
+                "type": "Some",
+                "value": {
+                  "type": "Classifier",
+                  "name": "bindings_example::Comm_substrate"
+                }
+              },
+              "accessType": {
+                "type": "AccessType",
+                "value": "Requires"
+              },
+              "accessCategory": {
+                "type": "AccessCategory",
+                "value": "Bus"
               },
               "properties": [
               ]
@@ -683,7 +703,7 @@
                     "propagationPoint": [
                       "Communication_impl3_Instance",
                       "hw1",
-                      "nwInterface"
+                      "nwInterface_OUT"
                     ],
                     "errorTokens": [
                       "ItemOmission"
@@ -755,7 +775,7 @@
                         "propagationPoint": [
                           "Communication_impl3_Instance",
                           "hw1",
-                          "nwInterface"
+                          "nwInterface_OUT"
                         ],
                         "errorTokens": [
                           "ItemOmission"
@@ -790,7 +810,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureAccess",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -799,16 +819,24 @@
                   "nwInterface"
                 ]
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
-              },
               "category": {
                 "type": "FeatureCategory",
                 "value": "BusAccess"
               },
               "classifier": {
-                "type": "None"
+                "type": "Some",
+                "value": {
+                  "type": "Classifier",
+                  "name": "bindings_example::Comm_substrate"
+                }
+              },
+              "accessType": {
+                "type": "AccessType",
+                "value": "Requires"
+              },
+              "accessCategory": {
+                "type": "AccessCategory",
+                "value": "Bus"
               },
               "properties": [
               ]
@@ -860,7 +888,7 @@
                     "propagationPoint": [
                       "Communication_impl3_Instance",
                       "hw2",
-                      "nwInterface"
+                      "nwInterface_OUT"
                     ],
                     "errorTokens": [
                       "ItemOmission"
@@ -932,7 +960,7 @@
                         "propagationPoint": [
                           "Communication_impl3_Instance",
                           "hw2",
-                          "nwInterface"
+                          "nwInterface_OUT"
                         ],
                         "errorTokens": [
                           "ItemOmission"
@@ -956,55 +984,69 @@
               "publish"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Communication_impl3_Instance",
-                "sender"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Communication_impl3_Instance",
-                "sender",
-                "pub"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "sender"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Communication_impl3_Instance",
+                    "sender",
+                    "pub"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Communication_impl3_Instance",
-                "receiver"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Communication_impl3_Instance",
-                "receiver",
-                "sub"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "receiver"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Communication_impl3_Instance",
+                    "receiver",
+                    "sub"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -1042,12 +1084,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Communication_impl3_Instance",
-                "sender",
-                "pub"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "sender",
+                  "pub"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -1067,12 +1112,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Communication_impl3_Instance",
-                "receiver",
-                "sub"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "receiver",
+                  "sub"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -1106,6 +1154,29 @@
             }
           ],
           "properties": [
+            {
+              "type": "Property",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "Communication_impl3_Instance",
+                  "sender.pub -> receiver.sub",
+                  "Deployment_Properties::Actual_Connection_Binding"
+                ]
+              },
+              "propertyValues": [
+                {
+                  "type": "ReferenceProp",
+                  "value": {
+                    "type": "Name",
+                    "name": [
+                      "Communication_impl3_Instance",
+                      "network"
+                    ]
+                  }
+                }
+              ]
+            }
           ]
         }
       ],
@@ -1305,5 +1376,7 @@
         ]
       }
     }
+  ],
+  "dataComponents": [
   ]
 }

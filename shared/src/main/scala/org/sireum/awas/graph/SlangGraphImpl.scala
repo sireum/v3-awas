@@ -142,6 +142,10 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     * @return set of cycles
     */
   override def getCycles: Seq[Seq[Node]] = GraphOps(graph).getCycles.elements.map(_.elements)
+
+  override def removeEdge(from: Node, to: Node): Unit = {
+    graph = graph -- graph.edges(from, to)
+  }
 }
 
 //case class SlangGraphAwasEdgeImpl[Node](src: Node, snk: Node) extends AwasEdge[Node] {

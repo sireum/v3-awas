@@ -27,30 +27,57 @@
 
 package org.sireum.awas.witness
 
-
+import org.sireum.awas.witness._
 import org.sireum.awas.fptc._
 import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.ops.ISZOps
-import org.sireum.util.{IMap, ilistEmpty, ivectorEmpty}
+import org.sireum.util._
 import org.sireum.{$Slang, ISZ, ST, $internal}
 import scalatags.Text.all._
 
-object SvgGenerator {
+import org.sireum.{T, F}
 
-  def apply(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge], isLR: Boolean): String = {
+object SvgGenerator {
+  var viewConfig = SvgGenConfig.defaultConfig
+
+//      SvgGenConfig(
+//      rankDir = RankDir,
+//      simpleConn = false,
+//      complexConn = true,
+//      viewVirtualPorts = true,
+//      viewErrors = true,
+//      viewFlows = true,
+//      bindings = true)
+  private var edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
+
+  def apply(
+    graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge],
+    viewConfig: SvgGenConfig
+  ): String = {
+    this.viewConfig = viewConfig
     //    graph.setNodeAttProvider(attProvider)
     //    graph.setNodeIdProvider(nIdProvider)
     //    graph.setEdgeAttrProvider(eAttrProvider)
     //    graph.setNodeLabelProvider(nlabelProvide)
 
+    if (!this.viewConfig.bindings) {
+      FlowGraph.graphs.foreach { gra =>
+        removeBindings(gra._2.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
+      }
+    } else {
+      FlowGraph.graphs.foreach { gra =>
+        addBindings(gra._2.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
+      }
+    }
+
     graph.setNodeToST(nodeToST)
     graph.setEdgeToST(edgeToST)
-
-    graph.setGraphAttributes(ivectorEmpty[ST] :+ (if (isLR) attributeLR else attributeTB))
-    graph.toDot.toString
+    graph.setGraphAttributes(graphAttributes)
+    val res = getDot(graph, this.viewConfig)
       .replaceAll("label=\"<<", "label=<<")
       .replaceAll(">>\"", ">>")
+    res
   }
 
   type Edge = FlowEdge[FlowNode]
@@ -58,10 +85,9 @@ object SvgGenerator {
   val H = SymbolTableHelper
 
   private def nodeToST(node: FlowNode): ST = {
-    st""" "${node.getUri}" [label="${getNodeLabel(node)}" ${
-      if (H.isInPort(node.getUri)) "rank=max"
-      else if (H.isOutPort(node.getUri)) "rank=min" else ""
-    } shape=plaintext]"""
+    st""" "${node.getUri}" [label="${getNodeLabel(node)}" ${if (H.isInPort(node.getUri)) "rank=max"
+    else if (H.isOutPort(node.getUri)) "rank=min"
+    else ""} shape=plaintext]"""
   }
 
   private def edgeToST(edge: Edge): ST = {
@@ -72,32 +98,101 @@ object SvgGenerator {
 
   private val attributeTB = st"""rankdir=TB"""
 
-  //  private val attProvider = new ComponentAttributeProvider[FlowNode] {
-  //    override def getComponentAttributes(node: FlowNode): util.Map[String, Attribute] = {
-  //      val res = mlinkedMapEmpty[String, Attribute]
-  //      res("shape") = new DefaultAttribute("plaintext", AttributeType.STRING)
-  //      res("id") = new DefaultAttribute(node.getUri, AttributeType.STRING)
-  //      res
-  //    }
-  //  }
+  private def graphAttributes =
+    ivectorEmpty[ST] :+
+      (if (viewConfig.rankDir == RankDir.LR) attributeLR else attributeTB)
 
-  //  private val nIdProvider = new StringComponentNameProvider[FlowNode] {
-  //    override def getName(component: FlowNode): FileResourceUri = {
-  //      component.getUri.split(H.ID_SEPARATOR).last
-  //    }
-  //  }
+  def getDot(graph: FlowGraph[FlowNode, FlowNode.Edge], viewConfig: SvgGenConfig): String = {
+    var nST: ISZ[ST] = ISZ[ST]()
+    var eST: ISZ[ST] = ISZ[ST]()
+    println(viewConfig.simpleConn.value)
+    if (!viewConfig.simpleConn.value) {
+      val simpleConn = graph.nodes.filter(
+        n =>
+          n.getResourceType == NodeType.CONNECTION &&
+            graph.getIncomingEdges(n).size == 1 && graph.getOutgoingEdges(n).size == 1
+      )
+
+      val simpleEdges = simpleConn.flatMap(n => graph.getIncomingEdges(n) ++ graph.getOutgoingEdges(n))
+      nST = nST ++ ISZ((for (e <- (graph.nodes.toSet -- simpleConn).toSeq) yield st"""${nodeToST(e)}"""): _*)
+      eST = eST ++ ISZ[ST]((for (e <- (graph.edges.toSet -- simpleEdges).toSeq) yield edgeToST(e)): _*)
+      eST = eST ++ ISZ[ST](
+        (for (e <- simpleConn.toSeq)
+          yield
+            st""" "${graph.getIncomingEdges(e).head.source.getUri}" -> "${graph.getOutgoingEdges(e)
+              .head
+              .target
+              .getUri}" [${simpleConnToEdge(e, graph)}] """): _*
+      )
+
+    } else {
+      nST = nST ++ ISZ((for (e <- graph.nodes) yield st"""${nodeToST(e)}""").toSeq: _*)
+      eST = eST ++ ISZ[ST]((for (e <- graph.edges.toSeq) yield edgeToST(e)): _*)
+    }
+    val r =
+      st"""digraph "${graph.getUri}" {
+      |
+      |  ${(graphAttributes, "\n")}
+      |
+      |  ${(nST, "\n")}
+      |
+      |  ${(eST, "\n")}
+      |
+      |}"""
+    r.render.value
+  }
+
+  def simpleConnToEdge(conn: FlowNode, graph: FlowGraph[FlowNode, FlowNode.Edge]): String = {
+    var res = ISZ[String]()
+    assert(
+      conn.getResourceType == NodeType.CONNECTION &&
+        graph.getIncomingEdges(conn).size == 1 &&
+        graph.getOutgoingEdges(conn).size == 1
+    )
+    res = res :+ "tailport" + "=" + "\"" + graph
+      .getEdgeForPort(conn.inPorts.filter(it => H.getUriType(it).startsWith(H.PORT_IN_VIRTUAL_TYPE)).head)
+      .head
+      .sourcePort
+      .get
+      .split('$')
+      .last + "\""
+    res = res :+ "headport" + "=" + "\"" + graph
+      .getEdgeForPort(conn.outPorts.filter(it => H.getUriType(it).startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head)
+      .head
+      .targetPort
+      .get
+      .split('$')
+      .last + "\""
+    res = res :+ "target" + "=" + "\"" + conn.getUri + "\""
+    res = res :+ "tooltip" + "=" + "\"" + conn.getUri.split(H.ID_SEPARATOR).last + "\""
+    res = res ++ edgeAttrConst
+    ISZOps(res).foldLeft[String]({ (x, y) => x + " " + y
+    }, "")
+  }
 
   def getNodeLabel(vertex: FlowNode): String = {
     val inPorts = vertex.inPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
     val outPorts = vertex.outPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
-    val errors = vertex.ports.map(it => (it, vertex.getPropagation(it).toSeq)).toMap
-    val flows = if (vertex.isComponent) vertex.getFlows.map(it => (it._1, it._2.toString)).toSeq else ilistEmpty
+
+    val errors = vertex.ports.map(it => (it, if (viewConfig.viewErrors.value) vertex.getPropagation(it).toSeq else ilistEmpty[String]))
+      .toMap
+
+    val flows =
+      if (vertex.isComponent && this.viewConfig.viewFlows.value)
+        if (this.viewConfig.viewErrors.value) {
+          vertex.getFlows.map(it => (it._1, it._2.toString)).toSeq
+        } else {
+          vertex.getFlows.filter(it => it._2.fromFaults.isEmpty && it._2.toFaults.isEmpty).map(it => (it._1, it._2.toString))
+            .toSeq
+        }
+      else ilistEmpty
     val subGraphIcon = "min/images/sub-graph-icon.png"
     val label =
       if ((vertex.getResourceType == NodeType.COMPONENT) ||
         (vertex.getResourceType == NodeType.CONNECTION)) {
-        tag("font")(
-          attr("POINT-SIZE") := 12, attr("FACE") := "Courier",
+          tag("font")(
+            attr("POINT-SIZE") := 12,
+          attr("FACE") := "Courier",
           table(
             attr("border") := 0,
             attr("cellborder") := 1,
@@ -125,15 +220,12 @@ object SvgGenerator {
                     )
                   )
                 } else
-                  b(
-                    if (vertex.isComponent) {
-                      "Component: " + H.uri2IdString(vertex.getUri)
-                    }
-                    else "Connection: " + H.uri2IdString(vertex.getUri)
-                  )
+                  b(if (vertex.isComponent) {
+                    "Component: " + H.uri2IdString(vertex.getUri)
+                  } else "Connection: " + H.uri2IdString(vertex.getUri))
               )
             ),
-            if (vertex.isFlowDefined && vertex.isComponent)
+            if (flows.nonEmpty && vertex.isComponent)
               tr(
                 td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
                 td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Flows")),
@@ -144,14 +236,15 @@ object SvgGenerator {
                 td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("In ports")),
                 td(attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Out ports"))
               ),
-            if (vertex.isFlowDefined && vertex.isComponent)
+            if (flows.nonEmpty && vertex.isComponent)
               tr(portContent(inPorts, errors), flowContent(flows), portContent(outPorts, errors))
             else tr(portContent(inPorts, errors), portContent(outPorts, errors))
           )
         ).render
-      } else {
-        tag("font")(
-          attr("POINT-SIZE") := 12, attr("FACE") := "Courier",
+        } else {
+          tag("font")(
+            attr("POINT-SIZE") := 12,
+          attr("FACE") := "Courier",
           table(
             attr("border") := 0,
             attr("cellborder") := 1,
@@ -293,17 +386,53 @@ object SvgGenerator {
       )
     )
 
+  val edgeAttrConst = ISZ[String](
+    "edgehref" + "=" + "templink",
+    "title" + "=" + "edgetype",
+    "arrowsize" + "=" + "1",
+    "weight" + "=" + "1",
+    "penwidth" + "=" + "2"
+  )
+
   def getEdgeAttributes(component: Edge): String = {
     var res = ISZ[String]()
     res = res :+ "tailport" + "=" + "\"" + component.sourcePort.get.split('$').last + "\""
     res = res :+ "headport" + "=" + "\"" + component.targetPort.get.split('$').last + "\""
-    res = res :+ "edgehref" + "=" + "templink"
-    res = res :+ "title" + "=" + "edgetype"
     res = res :+ "target" + "=" + "\"" + "Edge+" + component.sourcePort.get + "+" + component.targetPort.get + "\""
-    res = res :+ "arrowsize" + "=" + "1"
-    res = res :+ "weight" + "=" + "1"
-    res = res :+ "penwidth" + "=" + "2"
-    ISZOps(res).foldLeft[String]({ (x, y) => x + " " + y }, "")
+    res = res ++ edgeAttrConst
+    ISZOps(res).foldLeft[String]({ (x, y) => x + " " + y
+    }, "")
   }
+
+  def removeBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+    val ports = graph.nodes.flatMap(_.ports)
+    println(ports.size)
+    val bindPorts = ports.filter(it => H.getUriType(it).endsWith(H.BIND_PORT_TYPE))
+    println(bindPorts.size)
+    val bindEdges = bindPorts.flatMap(graph.getEdgeForPort)
+    val edgePorts = bindEdges.map(it => it -> (it.sourcePort.get, it.targetPort.get)).toMap
+    println(bindEdges.size)
+    edgesRemoved = edgesRemoved +
+      (graph.getUri -> (edgesRemoved
+        .getOrElse(graph.getUri, imapEmpty[FlowNode.Edge, (ResourceUri, ResourceUri)]) ++ edgePorts))
+    bindEdges.foreach(it => graph.removeEdge(it.source, it.target))
+    bindEdges.foreach(e => println(e.sourcePort))
+  }
+
+  def addBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+    println(edgesRemoved.size)
+    if (edgesRemoved.keySet.contains(graph.getUri)) {
+      val edgePorts = edgesRemoved(graph.getUri)
+      edgePorts.keySet.foreach { e =>
+        graph.addEdge(e.source, e.target, e)
+        graph.addEdgePortRelation(e, edgePorts(e)._1, edgePorts(e)._2)
+        graph.addPortEdge(edgePorts(e)._1, e)
+        graph.addPortEdge(edgePorts(e)._2, e)
+      }
+      edgesRemoved = edgesRemoved - graph.getUri
+    }
+  }
+
+  def getCurrentConfig(): SvgGenConfig = this.viewConfig
 
 }

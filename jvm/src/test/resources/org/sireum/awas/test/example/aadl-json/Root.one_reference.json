@@ -18,7 +18,7 @@
       },
       "features": [
         {
-          "type": "Feature",
+          "type": "FeatureEnd",
           "identifier": {
             "type": "Name",
             "name": [
@@ -37,10 +37,11 @@
           "classifier": {
             "type": "None"
           },
-          "properties": []
+          "properties": [
+          ]
         },
         {
-          "type": "Feature",
+          "type": "FeatureEnd",
           "identifier": {
             "type": "Name",
             "name": [
@@ -59,7 +60,8 @@
           "classifier": {
             "type": "None"
           },
-          "properties": []
+          "properties": [
+          ]
         }
       ],
       "subComponents": [
@@ -85,7 +87,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -105,10 +107,11 @@
               "classifier": {
                 "type": "None"
               },
-              "properties": []
+              "properties": [
+              ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -128,10 +131,11 @@
               "classifier": {
                 "type": "None"
               },
-              "properties": []
+              "properties": [
+              ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -151,15 +155,22 @@
               "classifier": {
                 "type": "None"
               },
-              "properties": []
+              "properties": [
+              ]
             }
           ],
-          "subComponents": [],
-          "connections": [],
-          "connectionInstances": [],
-          "properties": [],
-          "flows": [],
-          "modes": [],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
           "annexes": [
             {
               "type": "Annex",
@@ -167,8 +178,10 @@
               "clause": {
                 "type": "Emv2Clause",
                 "libraries": [],
-                "propagations": [],
-                "flows": []
+                "propagations": [
+                ],
+                "flows": [
+                ]
               }
             }
           ]
@@ -195,7 +208,7 @@
           },
           "features": [
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -215,10 +228,11 @@
               "classifier": {
                 "type": "None"
               },
-              "properties": []
+              "properties": [
+              ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -238,10 +252,11 @@
               "classifier": {
                 "type": "None"
               },
-              "properties": []
+              "properties": [
+              ]
             },
             {
-              "type": "Feature",
+              "type": "FeatureEnd",
               "identifier": {
                 "type": "Name",
                 "name": [
@@ -261,15 +276,22 @@
               "classifier": {
                 "type": "None"
               },
-              "properties": []
+              "properties": [
+              ]
             }
           ],
-          "subComponents": [],
-          "connections": [],
-          "connectionInstances": [],
-          "properties": [],
-          "flows": [],
-          "modes": [],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
           "annexes": [
             {
               "type": "Annex",
@@ -277,8 +299,10 @@
               "clause": {
                 "type": "Emv2Clause",
                 "libraries": [],
-                "propagations": [],
-                "flows": []
+                "propagations": [
+                ],
+                "flows": [
+                ]
               }
             }
           ]
@@ -294,53 +318,67 @@
               "system_to_comp_in"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "root_in"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Root_one_reference_Instance",
+                    "root_in"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1",
-                "sub_in"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Root_one_reference_Instance",
+                    "Sub1",
+                    "sub_in"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -353,7 +391,8 @@
               ]
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         },
         {
           "type": "Connection",
@@ -364,55 +403,69 @@
               "comp_to_comp"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1",
-                "sub_port"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Root_one_reference_Instance",
+                    "Sub1",
+                    "sub_port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2",
-                "sub_port"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Root_one_reference_Instance",
+                    "Sub2",
+                    "sub_port"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "InOut"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
           },
           "isBiDirectional": true,
           "connectionInstances": [
@@ -435,7 +488,8 @@
               ]
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         },
         {
           "type": "Connection",
@@ -446,53 +500,67 @@
               "system_to_comp_out"
             ]
           },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2",
-                "sub_out"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Root_one_reference_Instance",
+                    "Sub2",
+                    "sub_out"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
-          },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "root_out"
-              ]
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance"
+                ]
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "Root_one_reference_Instance",
+                    "root_out"
+                  ]
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
               }
             }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Feature"
           },
           "isBiDirectional": false,
           "connectionInstances": [
@@ -505,7 +573,8 @@
               ]
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         }
       ],
       "connectionInstances": [
@@ -527,11 +596,14 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "root_in"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "root_in"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -551,12 +623,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1",
-                "sub_in"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1",
+                  "sub_in"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -589,7 +664,8 @@
               "isParent": true
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         },
         {
           "type": "ConnectionInstance",
@@ -610,12 +686,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1",
-                "sub_port"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1",
+                  "sub_port"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -635,12 +714,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2",
-                "sub_port"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2",
+                  "sub_port"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -673,7 +755,8 @@
               "isParent": true
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         },
         {
           "type": "ConnectionInstance",
@@ -694,12 +777,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2",
-                "sub_out"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2",
+                  "sub_out"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -718,11 +804,14 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "root_out"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "root_out"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -755,7 +844,8 @@
               "isParent": true
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         },
         {
           "type": "ConnectionInstance",
@@ -776,12 +866,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub2",
-                "sub_port"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub2",
+                  "sub_port"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -801,12 +894,15 @@
               ]
             },
             "feature": {
-              "type": "Name",
-              "name": [
-                "Root_one_reference_Instance",
-                "Sub1",
-                "sub_port"
-              ]
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "Root_one_reference_Instance",
+                  "Sub1",
+                  "sub_port"
+                ]
+              }
             },
             "direction": {
               "type": "Some",
@@ -839,12 +935,16 @@
               "isParent": true
             }
           ],
-          "properties": []
+          "properties": [
+          ]
         }
       ],
-      "properties": [],
-      "flows": [],
-      "modes": [],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
       "annexes": [
         {
           "type": "Annex",
@@ -852,12 +952,17 @@
           "clause": {
             "type": "Emv2Clause",
             "libraries": [],
-            "propagations": [],
-            "flows": []
+            "propagations": [
+            ],
+            "flows": [
+            ]
           }
         }
       ]
     }
   ],
-  "errorLib": []
+  "errorLib": [
+  ],
+  "dataComponents": [
+  ]
 }

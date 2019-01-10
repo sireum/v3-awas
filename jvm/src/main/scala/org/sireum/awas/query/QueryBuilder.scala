@@ -77,7 +77,7 @@ final class QueryBuilder private() {
   }
 
   def build(ctx: PathContext): PathExpr = {
-    PathExpr(build(ctx.s), build(ctx.t), if(ctx.we == null) None else Some(build(ctx.we)))
+    PathExpr(build(ctx.s), build(ctx.t), if (ctx.we == null) None else Some(build(ctx.we)), false, false)
   }
 
   def build(ctx: WithExprContext): WithExpr = {

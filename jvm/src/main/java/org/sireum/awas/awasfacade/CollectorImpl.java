@@ -63,7 +63,7 @@ public class CollectorImpl implements Collector {
     }
 
     @Override
-    public Set<FlowGraph<FlowNode, FlowEdge<FlowNode>>> getGraph() {
+    public Set<String> getGraph() {
         return toJavaSet(collector.getGraphs());
     }
 

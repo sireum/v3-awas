@@ -2,7 +2,7 @@ package org.sireum.awas.analysis
 import org.sireum.awas.ast.Model
 import org.sireum.awas.collector.Collector
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
-import org.sireum.awas.query.{PathExpr, QueryEval, QueryParser, SimplePathExpr}
+import org.sireum.awas.query.{PathExpr, QueryEval, QueryParser}
 import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.{FlowTableData, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -87,18 +87,16 @@ class FaultImpactAnalysis {
         case None => ""
         case Some(q) => {
           q.queryStmt.last.qExpr match {
-            case pe : SimplePathExpr => {
-              val source = QueryEval(st , pe.source)
-              val target = QueryEval(st, pe.target)
-              val qres = QueryEval(q, st).values
-              if(qry.contains("__Internal")) {
-                qres
-                  .flatMap(_.getPaths)
-                  .foreach(q => result_in = result_in :+ printFIARow(st, source, target, q, qry.contains("__Internal")))
-              } else {
-                qres
-                  .flatMap(_.getPaths)
-                  .foreach(q => result_ex = result_ex :+ printFIARow(st, source, target, q, qry.contains("__Internal")))
+            case pe: PathExpr => {
+              if (pe.isSimple) {
+                val source = QueryEval(st, pe.source)
+                val target = QueryEval(st, pe.target)
+                val qres = QueryEval(q, st).values
+                if (qry.contains("__Internal")) {
+                  qres.flatMap(_.getPaths).foreach(q => result_in = result_in :+ printFIARow(st, source, target, q, qry.contains("__Internal")))
+                } else {
+                  qres.flatMap(_.getPaths).foreach(q => result_ex = result_ex :+ printFIARow(st, source, target, q, qry.contains("__Internal")))
+                }
               }
             }
             case _ =>

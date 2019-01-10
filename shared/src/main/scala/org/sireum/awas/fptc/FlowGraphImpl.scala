@@ -81,7 +81,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
   //    res.asJava
   //  }
 
-  def addPortEdge(port: ResourceUri, edge: EdgeT): Unit = {
+  override def addPortEdge(port: ResourceUri, edge: EdgeT): Unit = {
     portEdgeMap += port -> (portEdgeMap.getOrElse(port, isetEmpty[EdgeT]) + edge)
   }
 
@@ -366,9 +366,11 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     superClass.getCycles
   }
 
-  override def toDot: String = {
-    val nST: ISZ[ST] = ISZ((for (e <- this.nodes) yield st"""${nodeToDot(e)}""").toSeq: _*)
-    val eST: ISZ[ST] = ISZ[ST]((for (e <- this.edges.toSeq) yield edgeToDot(e)): _*)
+  private var toDot: () => String = () => {
+    val nST: ISZ[ST] = ISZ((for (e <- this.nodes) yield st"""${nodeToDot(e)}""").toSeq.sortWith((lt1, lt2) => lt1.render < lt2.render): _*)
+    val eST: ISZ[ST] =
+      ISZ[ST]((for (e <- this.edges.toSeq) yield edgeToDot(e)).sortWith((e1, e2) => e1.render < e2.render): _*)
+
     val r =
       st"""digraph "${this.getUri}" {
           |
@@ -379,7 +381,7 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
       |  ${(eST, "\n")}
           |
       |}"""
-    return r.render.value
+    r.render.value
   }
 
   //  override def getAllPaths(source: FlowNode, sink: FlowNode): Set[Set[FlowNode]] = superClass.getAllPaths(source, sink)
@@ -429,6 +431,8 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
 
   override def setGraphAttributes(attributes: ISeq[ST]): Unit = graphAttributes = attributes.toVector
 
+  override def setDot(updatedToDot: () => String): Unit = toDot = updatedToDot
+
   private def getNodeDot(vertex: FlowNode): String = {
     var result = ""
     vertex.getResourceType match {
@@ -464,5 +468,19 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
       "<" + pname + ">" + pname
     }.mkString("|") + "} "
     result
+  }
+  override def getDot: String = toDot()
+
+  override def removeEdge(from: FlowNode, to: FlowNode): Unit = {
+    if (hasEdge(from, to)) {
+      val edges = getEdge(from, to)
+      edges.foreach { e =>
+        val ports = edgePortsMap(e)
+        edgePortsMap = edgePortsMap - e
+        portEdgeMap = portEdgeMap + (ports._1 -> (portEdgeMap(ports._1) - e))
+        portEdgeMap = portEdgeMap + (ports._2 -> (portEdgeMap(ports._2) - e))
+        superClass.removeEdge(e.source, e.target)
+      }
+    }
   }
 }

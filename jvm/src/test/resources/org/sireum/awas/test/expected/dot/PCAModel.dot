@@ -1,40 +1,33 @@
-strict digraph G {
-  Pump [ label="{In Port|<cmd>cmd} |component
-Pump|{Out Port|<drug>drug} " shape="record" ];
-  Patient [ label="{In Port|<vein>vein} |component
-Patient|{Out Port|<exhalation>exhalation|<fingerclip>fingerclip} " shape="record" ];
-  Capnography [ label="{In Port|<breath>breath} |component
-Capnography|{Out Port|<etco2>etco2|<resp_rate>resp_rate} " shape="record" ];
-  App [ label="{In Port|<etco2>etco2|<rr>rr|<spo2>spo2} |component
-App|{Out Port|<pump_cmd>pump_cmd} " shape="record" ];
-  PulseOx [ label="{In Port|<refracted_light>refracted_light} |component
-PulseOx|{Out Port|<spo2>spo2} " shape="record" ];
-  p2 [ label="connection
-p2" shape="record" ];
-  s1 [ label="connection
-s1" shape="record" ];
-  p1 [ label="connection
-p1" shape="record" ];
-  s3 [ label="connection
-s3" shape="record" ];
-  a1 [ label="connection
-a1" shape="record" ];
-  app1 [ label="connection
-app1" shape="record" ];
-  s2 [ label="connection
-s2" shape="record" ];
-  Patient -> p2 [ tailport="exhalation" ];
-  p2 -> Capnography [ headport="breath" ];
-  PulseOx -> s1 [ tailport="spo2" ];
-  s1 -> App [ headport="spo2" ];
-  Patient -> p1 [ tailport="fingerclip" ];
-  p1 -> PulseOx [ headport="refracted_light" ];
-  Capnography -> s3 [ tailport="resp_rate" ];
-  s3 -> App [ headport="rr" ];
-  Pump -> a1 [ tailport="drug" ];
-  a1 -> Patient [ headport="vein" ];
-  App -> app1 [ tailport="pump_cmd" ];
-  app1 -> Pump [ headport="cmd" ];
-  Capnography -> s2 [ tailport="etco2" ];
-  s2 -> App [ headport="etco2" ];
+digraph "component:$$AWAS#PCAModel" {
+
+  rankdir=TB
+
+   "component:$$AWAS$PCAModel#App" [label="{In Port|<etco2>etco2|<spo2>spo2|<rr>rr} |component\nApp|{Out Port|<pump_cmd>pump_cmd} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#Capnography" [label="{In Port|<breath>breath} |component\nCapnography|{Out Port|<etco2>etco2|<resp_rate>resp_rate} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#Patient" [label="{In Port|<vein>vein} |component\nPatient|{Out Port|<exhalation>exhalation|<fingerclip>fingerclip} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#PulseOx" [label="{In Port|<refracted_light>refracted_light} |component\nPulseOx|{Out Port|<spo2>spo2} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#Pump" [label="{In Port|<cmd>cmd} |component\nPump|{Out Port|<drug>drug} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#a1" [label="{In Port|<in>in} |connection\na1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#app1" [label="{In Port|<in>in} |connection\napp1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#p1" [label="{In Port|<in>in} |connection\np1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#p2" [label="{In Port|<in>in} |connection\np2|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#s1" [label="{In Port|<in>in} |connection\ns1|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#s2" [label="{In Port|<in>in} |connection\ns2|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$PCAModel#s3" [label="{In Port|<in>in} |connection\ns3|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$PCAModel#App" -> "connection:$$AWAS$PCAModel#app1" [headport=in, tailport=pump_cmd] 
+   "component:$$AWAS$PCAModel#Capnography" -> "connection:$$AWAS$PCAModel#s2" [headport=in, tailport=etco2] 
+   "component:$$AWAS$PCAModel#Capnography" -> "connection:$$AWAS$PCAModel#s3" [headport=in, tailport=resp_rate] 
+   "component:$$AWAS$PCAModel#Patient" -> "connection:$$AWAS$PCAModel#p1" [headport=in, tailport=fingerclip] 
+   "component:$$AWAS$PCAModel#Patient" -> "connection:$$AWAS$PCAModel#p2" [headport=in, tailport=exhalation] 
+   "component:$$AWAS$PCAModel#PulseOx" -> "connection:$$AWAS$PCAModel#s1" [headport=in, tailport=spo2] 
+   "component:$$AWAS$PCAModel#Pump" -> "connection:$$AWAS$PCAModel#a1" [headport=in, tailport=drug] 
+   "connection:$$AWAS$PCAModel#a1" -> "component:$$AWAS$PCAModel#Patient" [headport=vein, tailport=out] 
+   "connection:$$AWAS$PCAModel#app1" -> "component:$$AWAS$PCAModel#Pump" [headport=cmd, tailport=out] 
+   "connection:$$AWAS$PCAModel#p1" -> "component:$$AWAS$PCAModel#PulseOx" [headport=refracted_light, tailport=out] 
+   "connection:$$AWAS$PCAModel#p2" -> "component:$$AWAS$PCAModel#Capnography" [headport=breath, tailport=out] 
+   "connection:$$AWAS$PCAModel#s1" -> "component:$$AWAS$PCAModel#App" [headport=spo2, tailport=out] 
+   "connection:$$AWAS$PCAModel#s2" -> "component:$$AWAS$PCAModel#App" [headport=etco2, tailport=out] 
+   "connection:$$AWAS$PCAModel#s3" -> "component:$$AWAS$PCAModel#App" [headport=rr, tailport=out] 
+
 }

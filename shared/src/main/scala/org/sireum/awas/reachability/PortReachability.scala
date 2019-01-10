@@ -56,17 +56,27 @@ trait PortReachability[Node] extends BasicReachability[Node]{
 
   def backwardReachSet(criterion: Set[ResourceUri]): Collector
 
-  def reachPath(source: ResourceUri, target: ResourceUri): Collector
+  def reachPath(source: ResourceUri, target: ResourceUri, isRefined: Boolean): Collector
 
-  def reachSimplePath(source: ResourceUri, target: ResourceUri): Collector
+  def reachSimplePath(source: ResourceUri, target: ResourceUri, isRefined: Boolean): Collector
 
-  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri]): Collector
+  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri], isRefined: Boolean): Collector
 
-  def reachPathSet(source: Set[ResourceUri], target: Set[ResourceUri], constraint: ConstraintExpr): Collector
+  def reachPathSet(
+    source: Set[ResourceUri],
+    target: Set[ResourceUri],
+    constraint: ConstraintExpr,
+    isRefined: Boolean
+  ): Collector
 
-  def reachSimplePathSet(source: Set[ResourceUri], target: Set[ResourceUri]): Collector
+  def reachSimplePathSet(source: Set[ResourceUri], target: Set[ResourceUri], isRefined: Boolean): Collector
 
-  def reachSimplePathSet(source: Set[ResourceUri], target: Set[ResourceUri], constraint: ConstraintExpr): Collector
+  def reachSimplePathSet(
+    source: Set[ResourceUri],
+    target: Set[ResourceUri],
+    constraint: ConstraintExpr,
+    isRefined: Boolean
+  ): Collector
 
   def getSuccessor(currentPort: ResourceUri): ISet[ResourceUri]
 

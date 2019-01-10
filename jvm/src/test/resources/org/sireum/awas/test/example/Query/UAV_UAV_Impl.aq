@@ -1,0 +1,3 @@
+GS_flight_controller = reach paths from UAS_Impl_Instance.GND.send_map
+                                     to UAS_Impl_Instance.UAV.FCTL.waypoint
+                                     with all(UAS_Impl_Instance.UAV.MCMP.PROC_SW.FLT:port)

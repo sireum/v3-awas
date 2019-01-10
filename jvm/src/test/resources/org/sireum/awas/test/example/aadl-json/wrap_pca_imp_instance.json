@@ -1954,14 +1954,10 @@
           ]
         },
         {
-          "type" : "FeatureEnd",
+          "type" : "FeatureAccess",
           "identifier" : {
             "type" : "Name",
             "name" : ["wrap_pca_imp_Instance", "to_ice"]
-          },
-          "direction" : {
-            "type" : "Direction",
-            "value" : "InOut"
           },
           "category" : {
             "type" : "FeatureCategory",
@@ -1974,18 +1970,22 @@
               "name" : "ICE::ICE_Network"
             }
           },
+          "accessType" : {
+            "type" : "AccessType",
+            "value" : "Requires"
+          },
+          "accessCategory" : {
+            "type" : "AccessCategory",
+            "value" : "Bus"
+          },
           "properties" : [
           ]
         },
         {
-          "type" : "FeatureEnd",
+          "type" : "FeatureAccess",
           "identifier" : {
             "type" : "Name",
             "name" : ["wrap_pca_imp_Instance", "maintenance_jack"]
-          },
-          "direction" : {
-            "type" : "Direction",
-            "value" : "InOut"
           },
           "category" : {
             "type" : "FeatureCategory",
@@ -1997,6 +1997,14 @@
               "type" : "Classifier",
               "name" : "PCA_Context::Maintenance_Bus"
             }
+          },
+          "accessType" : {
+            "type" : "AccessType",
+            "value" : "Requires"
+          },
+          "accessCategory" : {
+            "type" : "AccessCategory",
+            "value" : "Bus"
           },
           "properties" : [
           ]
@@ -2758,14 +2766,10 @@
               ]
             },
             {
-              "type" : "FeatureEnd",
+              "type" : "FeatureAccess",
               "identifier" : {
                 "type" : "Name",
                 "name" : ["wrap_pca_imp_Instance", "maint", "Jack"]
-              },
-              "direction" : {
-                "type" : "Direction",
-                "value" : "InOut"
               },
               "category" : {
                 "type" : "FeatureCategory",
@@ -2778,18 +2782,22 @@
                   "name" : "PCA_Context::Maintenance_Bus"
                 }
               },
+              "accessType" : {
+                "type" : "AccessType",
+                "value" : "Requires"
+              },
+              "accessCategory" : {
+                "type" : "AccessCategory",
+                "value" : "Bus"
+              },
               "properties" : [
               ]
             },
             {
-              "type" : "FeatureEnd",
+              "type" : "FeatureAccess",
               "identifier" : {
                 "type" : "Name",
                 "name" : ["wrap_pca_imp_Instance", "maint", "To_PCA"]
-              },
-              "direction" : {
-                "type" : "Direction",
-                "value" : "InOut"
               },
               "category" : {
                 "type" : "FeatureCategory",
@@ -2801,6 +2809,14 @@
                   "type" : "Classifier",
                   "name" : "PCA_System::internal_maintenance_bus"
                 }
+              },
+              "accessType" : {
+                "type" : "AccessType",
+                "value" : "Requires"
+              },
+              "accessCategory" : {
+                "type" : "AccessCategory",
+                "value" : "Bus"
               },
               "properties" : [
               ]
@@ -6182,14 +6198,10 @@
               ]
             },
             {
-              "type" : "FeatureEnd",
+              "type" : "FeatureAccess",
               "identifier" : {
                 "type" : "Name",
                 "name" : ["wrap_pca_imp_Instance", "bus_adaptor", "to_ice"]
-              },
-              "direction" : {
-                "type" : "Direction",
-                "value" : "InOut"
               },
               "category" : {
                 "type" : "FeatureCategory",
@@ -6198,18 +6210,22 @@
               "classifier" : {
                 "type" : "None"
               },
+              "accessType" : {
+                "type" : "AccessType",
+                "value" : "Requires"
+              },
+              "accessCategory" : {
+                "type" : "AccessCategory",
+                "value" : "Bus"
+              },
               "properties" : [
               ]
             },
             {
-              "type" : "FeatureEnd",
+              "type" : "FeatureAccess",
               "identifier" : {
                 "type" : "Name",
                 "name" : ["wrap_pca_imp_Instance", "bus_adaptor", "to_pca"]
-              },
-              "direction" : {
-                "type" : "Direction",
-                "value" : "InOut"
               },
               "category" : {
                 "type" : "FeatureCategory",
@@ -6221,6 +6237,14 @@
                   "type" : "Classifier",
                   "name" : "PCA_System::adaptor_bus"
                 }
+              },
+              "accessType" : {
+                "type" : "AccessType",
+                "value" : "Requires"
+              },
+              "accessCategory" : {
+                "type" : "AccessCategory",
+                "value" : "Bus"
               },
               "properties" : [
               ]
@@ -7949,14 +7973,10 @@
               ]
             },
             {
-              "type" : "FeatureEnd",
+              "type" : "FeatureAccess",
               "identifier" : {
                 "type" : "Name",
                 "name" : ["wrap_pca_imp_Instance", "pump", "To_Maintenance"]
-              },
-              "direction" : {
-                "type" : "Direction",
-                "value" : "InOut"
               },
               "category" : {
                 "type" : "FeatureCategory",
@@ -7969,18 +7989,22 @@
                   "name" : "PCA_System::internal_maintenance_bus"
                 }
               },
+              "accessType" : {
+                "type" : "AccessType",
+                "value" : "Requires"
+              },
+              "accessCategory" : {
+                "type" : "AccessCategory",
+                "value" : "Bus"
+              },
               "properties" : [
               ]
             },
             {
-              "type" : "FeatureEnd",
+              "type" : "FeatureAccess",
               "identifier" : {
                 "type" : "Name",
                 "name" : ["wrap_pca_imp_Instance", "pump", "To_Adaptor"]
-              },
-              "direction" : {
-                "type" : "Direction",
-                "value" : "InOut"
               },
               "category" : {
                 "type" : "FeatureCategory",
@@ -7992,6 +8016,14 @@
                   "type" : "Classifier",
                   "name" : "PCA_System::adaptor_bus"
                 }
+              },
+              "accessType" : {
+                "type" : "AccessType",
+                "value" : "Requires"
+              },
+              "accessCategory" : {
+                "type" : "AccessCategory",
+                "value" : "Bus"
               },
               "properties" : [
               ]
@@ -8468,14 +8500,10 @@
               },
               "features" : [
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "mem", "i_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -8487,6 +8515,14 @@
                       "type" : "Classifier",
                       "name" : "PCA_Pump::Internal_Bus"
                     }
+                  },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
                   },
                   "properties" : [
                   ]
@@ -8538,14 +8574,10 @@
               },
               "features" : [
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "cpu", "i_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -8558,18 +8590,22 @@
                       "name" : "PCA_Pump::Internal_Bus"
                     }
                   },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
+                  },
                   "properties" : [
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "cpu", "p_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -8581,6 +8617,14 @@
                       "type" : "Classifier",
                       "name" : "PCA_Pump::Power_Bus"
                     }
+                  },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
                   },
                   "properties" : [
                   ]
@@ -9052,14 +9096,10 @@
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "safety", "i_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -9072,18 +9112,22 @@
                       "name" : "PCA_Pump::Internal_Bus"
                     }
                   },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
+                  },
                   "properties" : [
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "safety", "p_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -9096,18 +9140,22 @@
                       "name" : "PCA_Pump::Power_Bus"
                     }
                   },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
+                  },
                   "properties" : [
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "safety", "To_Adaptor"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -9119,6 +9167,14 @@
                       "type" : "Classifier",
                       "name" : "PCA_System::adaptor_bus"
                     }
+                  },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
                   },
                   "properties" : [
                   ]
@@ -10314,14 +10370,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "error_detect", "s_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -10333,6 +10385,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Safety::Safety_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -10679,14 +10739,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "fault_log", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -10699,18 +10755,22 @@
                           "name" : "PCA_Pump::Internal_Bus"
                         }
                       },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
+                      },
                       "properties" : [
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "fault_log", "p_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -10723,18 +10783,22 @@
                           "name" : "PCA_Pump::Power_Bus"
                         }
                       },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
+                      },
                       "properties" : [
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "fault_log", "s_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -10746,6 +10810,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Safety::Safety_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -10871,14 +10943,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "led", "s_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -10890,6 +10958,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Safety::Safety_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -16193,14 +16269,10 @@
                   },
                   "features" : [
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "safety_core", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -16213,18 +16285,22 @@
                           "name" : "PCA_Pump::Internal_Bus"
                         }
                       },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
+                      },
                       "properties" : [
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "safety_core", "s_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -16237,18 +16313,22 @@
                           "name" : "PCA_Safety::Safety_Bus"
                         }
                       },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
+                      },
                       "properties" : [
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "safety", "safety_core", "to_adaptor"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -16260,6 +16340,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_System::adaptor_bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -20477,14 +20565,10 @@
               },
               "features" : [
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "power", "p_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -20496,6 +20580,14 @@
                       "type" : "Classifier",
                       "name" : "PCA_Pump::Power_Bus"
                     }
+                  },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
                   },
                   "properties" : [
                   ]
@@ -20944,14 +21036,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "power", "pwr", "p_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -20963,6 +21051,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Power_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -23387,14 +23483,10 @@
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "operation", "i_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -23407,18 +23499,22 @@
                       "name" : "PCA_Pump::Internal_Bus"
                     }
                   },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
+                  },
                   "properties" : [
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "operation", "To_Maintenance"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -23431,18 +23527,22 @@
                       "name" : "PCA_System::internal_maintenance_bus"
                     }
                   },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
+                  },
                   "properties" : [
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "operation", "To_Adaptor"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -23454,6 +23554,14 @@
                       "type" : "Classifier",
                       "name" : "PCA_System::adaptor_bus"
                     }
+                  },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
                   },
                   "properties" : [
                   ]
@@ -24589,14 +24697,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "operation", "scanner", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -24608,6 +24712,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Internal_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -51690,14 +51802,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "operation", "security_subsystem", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -51710,18 +51818,22 @@
                           "name" : "PCA_Pump::Internal_Bus"
                         }
                       },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
+                      },
                       "properties" : [
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "operation", "security_subsystem", "to_adaptor"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -51734,18 +51846,22 @@
                           "name" : "PCA_System::adaptor_bus"
                         }
                       },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
+                      },
                       "properties" : [
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "operation", "security_subsystem", "To_Maintenance"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -51757,6 +51873,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_System::internal_maintenance_bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -52190,14 +52314,10 @@
                   },
                   "features" : [
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "operation", "control_panel", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -52209,6 +52329,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Internal_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -53491,14 +53619,10 @@
                           ]
                         },
                         {
-                          "type" : "FeatureEnd",
+                          "type" : "FeatureAccess",
                           "identifier" : {
                             "type" : "Name",
                             "name" : ["wrap_pca_imp_Instance", "pump", "operation", "control_panel", "display", "i_bus"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "InOut"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
@@ -53510,6 +53634,14 @@
                               "type" : "Classifier",
                               "name" : "PCA_Pump::Internal_Bus"
                             }
+                          },
+                          "accessType" : {
+                            "type" : "AccessType",
+                            "value" : "Requires"
+                          },
+                          "accessCategory" : {
+                            "type" : "AccessCategory",
+                            "value" : "Bus"
                           },
                           "properties" : [
                           ]
@@ -53601,14 +53733,10 @@
                           ]
                         },
                         {
-                          "type" : "FeatureEnd",
+                          "type" : "FeatureAccess",
                           "identifier" : {
                             "type" : "Name",
                             "name" : ["wrap_pca_imp_Instance", "pump", "operation", "control_panel", "audible", "i_bus"]
-                          },
-                          "direction" : {
-                            "type" : "Direction",
-                            "value" : "InOut"
                           },
                           "category" : {
                             "type" : "FeatureCategory",
@@ -53620,6 +53748,14 @@
                               "type" : "Classifier",
                               "name" : "PCA_Pump::Internal_Bus"
                             }
+                          },
+                          "accessType" : {
+                            "type" : "AccessType",
+                            "value" : "Requires"
+                          },
+                          "accessCategory" : {
+                            "type" : "AccessCategory",
+                            "value" : "Bus"
                           },
                           "properties" : [
                           ]
@@ -69449,14 +69585,10 @@
               },
               "features" : [
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "fluid", "i_bus"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -69469,18 +69601,22 @@
                       "name" : "PCA_Pump::Internal_Bus"
                     }
                   },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
+                  },
                   "properties" : [
                   ]
                 },
                 {
-                  "type" : "FeatureEnd",
+                  "type" : "FeatureAccess",
                   "identifier" : {
                     "type" : "Name",
                     "name" : ["wrap_pca_imp_Instance", "pump", "fluid", "Power"]
-                  },
-                  "direction" : {
-                    "type" : "Direction",
-                    "value" : "InOut"
                   },
                   "category" : {
                     "type" : "FeatureCategory",
@@ -69492,6 +69628,14 @@
                       "type" : "Classifier",
                       "name" : "PCA_Pump::Power_Bus"
                     }
+                  },
+                  "accessType" : {
+                    "type" : "AccessType",
+                    "value" : "Requires"
+                  },
+                  "accessCategory" : {
+                    "type" : "AccessCategory",
+                    "value" : "Bus"
                   },
                   "properties" : [
                   ]
@@ -70156,14 +70300,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "fluid", "mech_pump", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -70175,6 +70315,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Internal_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -70836,14 +70984,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "fluid", "upstream_mon", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -70855,6 +70999,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Internal_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -71588,14 +71740,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "fluid", "downstream_mon", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -71607,6 +71755,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Internal_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -72343,14 +72499,10 @@
                       ]
                     },
                     {
-                      "type" : "FeatureEnd",
+                      "type" : "FeatureAccess",
                       "identifier" : {
                         "type" : "Name",
                         "name" : ["wrap_pca_imp_Instance", "pump", "fluid", "reservoir", "i_bus"]
-                      },
-                      "direction" : {
-                        "type" : "Direction",
-                        "value" : "InOut"
                       },
                       "category" : {
                         "type" : "FeatureCategory",
@@ -72362,6 +72514,14 @@
                           "type" : "Classifier",
                           "name" : "PCA_Pump::Internal_Bus"
                         }
+                      },
+                      "accessType" : {
+                        "type" : "AccessType",
+                        "value" : "Requires"
+                      },
+                      "accessCategory" : {
+                        "type" : "AccessCategory",
+                        "value" : "Bus"
                       },
                       "properties" : [
                       ]
@@ -94307,6 +94467,2294 @@
         "size" : 0,
         "entries" : [  ]
       }
+    }
+  ],
+  "dataComponents" : [
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Flow_Rate"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::Integer_16"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "ml\/hr"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Warning_Type"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "enumeration (Over_Max_Drug_Per_Hour,Soft_Limit,\n --     Below_VTBI_Soft_Limit,Above_VTBI_Soft_Limit,       \n --     Below_Basal_Rate_Soft_Limit,Above_Basal_Rate_Soft_Limit,\n      Low_Reservoir,Priming_Failure,\n      Basal_Underinfusion,Bolus_Underinfusion,Square_Bolus_Underinfusion,\n      Input_Needed,Long_Pause,Drug_Not_In_Library,Hard_Limit_Violated,Voltage_OOR,\n      Priming_Failure,No_Warning)"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Enum"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Enumerators"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Over_Max_Drug_Per_Hour"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Soft_Limit"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Low_Reservoir"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Priming_Failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Basal_Underinfusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Bolus_Underinfusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Square_Bolus_Underinfusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Input_Needed"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Long_Pause"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Drug_Not_In_Library"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Hard_Limit_Violated"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Voltage_OOR"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Priming_Failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "No_Warning"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Scan_Data_Type"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Prescription"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "record (\npatient:string;\ndrug_name:string;\ncode: PCA_Types::Drug_Code;\nconcentration: PCA_Types::Drug_Concentration;\ninitial_volume: PCA_Types::Drug_Volume;\nbasal_flow_rate: PCA_Types::Flow_Rate;\nvtbi: PCA_Types::Drug_Volume;\nmax_drug_per_hour: PCA_Types::Drug_Volume;\nminimum_time_between_bolus:ICE_Types::Minute;\ndate_Rx_filled:string;\nprescriber:string;\npharmacist:string;\n)"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Struct"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Element_Names"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "patient"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "drug_name"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "code"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "concentration"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "initial_volume"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "basal_flow_rate"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "max_drug_per_hour"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "minimum_time_between_bolus"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "date_Rx_filled"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "prescriber"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "pharmacist"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::String"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::String"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Code"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Concentration"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "ICE_Types::Minute"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::String"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::String"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::String"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Drug_Library"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "array [#PCA_Properties::Drug_Library_Size] of PCA_Types::Drug_Record"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Array"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Record"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Dimension"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "UnitProp",
+              "value" : "500.0",
+              "unit" : {
+                "type" : "None"
+              }
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "Physical_Types::Voltage"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Physical_Properties::Voltage_Units"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Drug_Record"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "record (\n  code : PCA_Types::Drug_Code;                   --unique identifier for this drug\/concentration\n  name : string;                                 --generic drug name\n--  location : string;                             --Context of drug application\n  dose_rate_unit : PCA_Types::Dose_Rate_Unit;    --The unit of drug dose (for example milliliters\/hour)\n  vtbi_unit : PCA_Types::Infusion_Unit;          --The unit of VTBI (for example milliliter)\n  amount : PCA_Types::Drug_Weight;               --The weight of the drug dissolved in the diluent (mg)\n  concentration : PCA_Types::Drug_Concentration; --Drug concentration; as prescribed\n  vtbi_lower_soft : PCA_Types::Drug_Volume;      --Lower soft limit of drug volume to be infused\n  vtbi_lower_hard : PCA_Types::Drug_Volume;      --Lower hard limit of drug volume to be infused\n  vtbi_typical : PCA_Types::Drug_Volume;         --Typical drug volume to be infused\n  vtbi_upper_soft : PCA_Types::Drug_Volume;      --Upper soft limit of drug volume to be infused\n  vtbi_upper_hard : PCA_Types::Drug_Volume;      --Upper hard limit of drug volume to be infused\n  basal_rate_lower_soft : PCA_Types::Flow_Rate;  --Lower soft limit of basal drug dose rate\n  basal_rate_lower_hard : PCA_Types::Flow_Rate;  --Lower hard limit of basal drug dose rate\n  basal_rate_typical : PCA_Types::Flow_Rate;     --Typical basal drug dose rate\n  basal_rate_upper_soft : PCA_Types::Flow_Rate;  --Upper soft limit of basal drug dose rate\n  basal_rate_upper_hard : PCA_Types::Flow_Rate;  --Upper hard limit of basal drug dose rate\n  bolus_typical : PCA_Types::Drug_Volume;        --Typical Value of Bolus Volume\n  square_bolus_rate_typical : PCA_Types::Flow_Rate;        --Typical duration of clinician commanded bolus\n  )"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Struct"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Element_Names"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "code"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "name"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "dose_rate_unit"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi_unit"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "amount"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "concentration"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi_lower_soft"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi_lower_hard"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi_typical"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi_upper_soft"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "vtbi_upper_hard"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "basal_rate_lower_soft"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "basal_rate_lower_hard"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "basal_rate_typical"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "basal_rate_upper_soft"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "basal_rate_upper_hard"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "bolus_typical"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "square_bolus_rate_typical"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Code"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::String"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Dose_Rate_Unit"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Infusion_Unit"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Weight"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Concentration"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Drug_Volume"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Flow_Rate"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Drug_Volume"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::Integer_16"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "ml"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "Physical_Types::Fluid_Volume"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "ml"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "real"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Event_Log"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "array [#PCA_Properties::Event_Log_Size] of PCA_Types::Event_Record"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Array"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Event_Record"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Dimension"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "UnitProp",
+              "value" : "1500.0",
+              "unit" : {
+                "type" : "None"
+              }
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "Physical_Types::Current"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Physical_Properties::Current_Units"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Message"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "enumeration(No_Message,POST_fail,Turn_Off,If_Beep_Press_Stop_Button,Scan_Badge,Scan_Wristband,Scan_Rx,\n       Clinician_Not_Authenticated,Patient_Not_Authenticated,Prescription_Not_Authenticated,Hard_Limit_Violated,\n       Soft_Limit_Rejected,Insert_Vial_and_Close_Door,Press_start_to_begin_priming,Press_stop_to_end_priming,\n       Priming_Failure,Insert_Needle_Then_Press_Start,Press_Stop_Again_To_End_Infusion_Press_Start_To_Resume_Infusion)"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Status_Type"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "enumeration (Stopped,Bolus,Basal,KVO,Square_Bolus)"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Enum"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Enumerators"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Stopped"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Bolus"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Basal"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "KVO"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Square_Bolus"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "ICE_Types::Minute"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer 0..1000 units min"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Integer"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::Unsigned_16"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Integer_Range"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "RangeProp",
+              "low" : {
+                "type" : "UnitProp",
+                "value" : "0.0",
+                "unit" : {
+                  "type" : "None"
+                }
+              },
+              "high" : {
+                "type" : "UnitProp",
+                "value" : "1000.0",
+                "unit" : {
+                  "type" : "None"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "min"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Drug_Code"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "string"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "String"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Event_Record"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "variant (start_patient_bolus:Start_Patient_Bolus_Event;\n      stop_patient_bolus:Stop_Patient_Bolus_Event;)"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Union"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Start_Patient_Bolus_Event"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Stop_Patient_Bolus_Event"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Element_Names"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "start_patient_bolus"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "stop_patient_bolus"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "Base_Types::Boolean"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Boolean"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "ICE_Types::Milliliter"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer 0..1000 units ml"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Integer"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::Unsigned_16"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Integer_Range"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "RangeProp",
+              "low" : {
+                "type" : "UnitProp",
+                "value" : "0.0",
+                "unit" : {
+                  "type" : "None"
+                }
+              },
+              "high" : {
+                "type" : "UnitProp",
+                "value" : "1000.0",
+                "unit" : {
+                  "type" : "None"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "ml"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "ICE_Types::Alarm_Signal"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Enum"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Enumerators"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "On"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Alarm_Off"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Alarm_Paused"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Audio_Off"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Audio_Paused"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "Base_Types::String"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "String"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Fault_Log"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "array [#PCA_Properties::Fault_Log_Size] of PCA_Types::Fault_Record"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Array"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Fault_Record"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Dimension"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "UnitProp",
+              "value" : "150.0",
+              "unit" : {
+                "type" : "None"
+              }
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Alarm_Type"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "enumeration (Pump_Overheated,Defective_Battery,Low_Battery,\n      POST_Failure,RAM_Failure,ROM_failure,CPU_Failure,Thread_Monitor_Failure,\n      Air_In_Line,Upstream_Occlusion,Downstream_Occlusion,Empty_Reservoir,\n      Basal_Overinfusion,Bolus_Overinfusion,Square_Bolus_Overinfusion,No_Alarm)"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Enum"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Enumerators"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Pump_Overheated"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Defective_Battery"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Low_Battery"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "POST_Failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "RAM_Failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "ROM_failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "CPU_Failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Thread_Monitor_Failure"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Air_In_Line"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Upstream_Occlusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Downstream_Occlusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Empty_Reservoir"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Basal_Overinfusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Bolus_Overinfusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "Square_Bolus_Overinfusion"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "No_Alarm"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Fault_Record"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "record (alarm:Alarm_Type; warning:Warning_Type; occurrence_time:BLESS_Types::Time;)"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Struct"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Element_Names"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "alarm"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "warning"
+            },
+            {
+              "type" : "ValueProp",
+              "value" : "occurrence_time"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Alarm_Type"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "PCA_Types::Warning_Type"
+            },
+            {
+              "type" : "ClassifierProp",
+              "name" : "BLESS_Types::Time"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "PCA_Types::Sound"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "enumeration(Silence,Beep)"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "Physical_Types::Fluid_Flow"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "ml_per_hr"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "real"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
+    },
+    {
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : []
+      },
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "Data"
+      },
+      "classifier" : {
+        "type" : "Some",
+        "value" : {
+          "type" : "Classifier",
+          "name" : "ICE_Types::Milliliter_Per_Hour"
+        }
+      },
+      "features" : [
+      ],
+      "subComponents" : [
+      ],
+      "connections" : [
+      ],
+      "connectionInstances" : [
+      ],
+      "properties" : [
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["BLESS::Typed"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "integer 0..1000 units ml_per_hr"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Data_Representation"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "Integer"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Base_Type"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ClassifierProp",
+              "name" : "Base_Types::Unsigned_16"
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Integer_Range"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "RangeProp",
+              "low" : {
+                "type" : "UnitProp",
+                "value" : "0.0",
+                "unit" : {
+                  "type" : "None"
+                }
+              },
+              "high" : {
+                "type" : "UnitProp",
+                "value" : "1000.0",
+                "unit" : {
+                  "type" : "None"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type" : "Property",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Data_Model::Measurement_Unit"]
+          },
+          "propertyValues" : [
+            {
+              "type" : "ValueProp",
+              "value" : "ml_per_hr"
+            }
+          ]
+        }
+      ],
+      "flows" : [
+      ],
+      "modes" : [
+      ],
+      "annexes" : [
+      ]
     }
   ]
 }

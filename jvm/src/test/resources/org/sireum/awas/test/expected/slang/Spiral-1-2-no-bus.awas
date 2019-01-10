@@ -1,49 +1,7 @@
 types
-  enum PCA_Error {SecurityError, MessageLeak, MessageLeakMitM, UnlikelyLeak, AuthenticityError, MessageCommission, MessageOmission, MessageReplay, UnlikelyCommission, MessageCorruption, UnlikelyCorruption, start_commission, start_omission, stop_commission, stop_omission, SpO2_ValueError, SpO2_Omission, EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+  enum PCA_Error {SecurityError, message_leak, message_leak_MitM, unlikely_leak, authenticity_error, message_commission, message_omission, message_replay, unlikely_commission, message_corruption, unlikely_corruption, start_commission, start_omission, stop_commission, stop_omission, SpO2_ValueError, SpO2_Omission, early_service_termination, late_service_termination, early_service_start, late_service_start}
 
-  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
-
-  enum pump_errors {start_commission, start_omission, stop_commission, stop_omission}
-
-  alias ErrorLibrary::TimingError = ErrorLibrary::ItemTimingError
-
-  alias ErrorLibrary::BadValue = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::InconsistentValue = ErrorLibrary::AsymmetricValue
-
-  alias ErrorLibrary::RateError = ErrorLibrary::SequenceTimingError
-
-  alias ErrorLibrary::InconsistentItemOmission = ErrorLibrary::AsymmetricItemOmission
-
-  alias ErrorLibrary::ValueError = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::LateData = ErrorLibrary::LowRate
-
-  alias ErrorLibrary::AsymmetricTransmissive = ErrorLibrary::AsymmetricValue
-
-  alias ErrorLibrary::SequenceError = ErrorLibrary::SequenceValueError
-
-  alias ErrorLibrary::IncorrectValue = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::InconsistentOmission = ErrorLibrary::AsymmetricOmission
-
-  alias ErrorLibrary::ServiceTimeShift = ErrorLibrary::ServiceTimingError
-
-  alias ErrorLibrary::SubtleValueCorruption = ErrorLibrary::DetectableValueError
-
-  alias ErrorLibrary::EarlyData = ErrorLibrary::HighRate
-
-  alias ErrorLibrary::InconsistentServiceOmission = ErrorLibrary::AsymmetricServiceOmission
-
-  alias ErrorLibrary::BenignValueError = ErrorLibrary::DetectableValueError
-
-  alias ErrorLibrary::ValueCorruption = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::SubtleValueError = ErrorLibrary::UndetectableValueError
-
-  alias ErrorLibrary::InconsistentTiming = ErrorLibrary::AsymmetricTiming
-
-system  PCA_PulseOx_scenario1_Instance
+system  PCA_PulseOx_insecure_Instance
 
     sub-components {
       App
@@ -56,9 +14,10 @@ system  PCA_PulseOx_scenario1_Instance
             command = {stop_commission, stop_omission, start_commission, start_omission, SecurityError}
           flows
             Check_Status : SpO2 -> command
-            stop_fault : * -> command{stop_omission, stop_commission}
             inappropriate_ticket_provided : SpO2{SpO2_ValueError, SecurityError} -> command{stop_commission, stop_omission, start_commission, start_omission}
             no_spo2 : SpO2{SpO2_Omission} -> command{stop_omission, start_omission}
+            command_in_plaintext : * -> command{SecurityError}
+            stop_fault : * -> command{stop_omission, stop_commission}
 
       PCA_Pump
         with PCA_Error
@@ -67,12 +26,13 @@ system  PCA_PulseOx_scenario1_Instance
             in control
           propagations
             control = {stop_commission, stop_omission, start_commission, start_omission, SecurityError}
-            IV_infuse = {EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+            IV_infuse = {early_service_termination, late_service_termination, early_service_start, late_service_start}
           flows
-            missed_stop : control{stop_omission} -> IV_infuse{LateServiceTermination}
-            unexpected_stop : control{stop_commission} -> IV_infuse{EarlyServiceTermination, LateServiceTermination}
-            missing_start : control{start_omission} -> IV_infuse{LateServiceStart}
-            incorrect_start : control{start_commission} -> IV_infuse{EarlyServiceStart}
+            incorrect_start : control{start_commission} -> IV_infuse{early_service_start, late_service_start}
+            missed_stop : control{stop_omission} -> IV_infuse{late_service_termination}
+            modified_command : control{SecurityError} -> IV_infuse{early_service_termination, late_service_termination, early_service_start, late_service_start}
+            missing_start : control{start_omission} -> IV_infuse{late_service_start}
+            unexpected_stop : control{stop_commission} -> IV_infuse{early_service_termination, late_service_termination}
 
       Patient
         with PCA_Error
@@ -80,12 +40,12 @@ system  PCA_PulseOx_scenario1_Instance
             in Vein_infuse
             out BloodSat_Saturation
           propagations
-            Vein_infuse = {EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+            Vein_infuse = {early_service_termination, late_service_termination, early_service_start, late_service_start}
           flows
-            accident : Vein_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart} -> *
+            accident : Vein_infuse{early_service_termination, late_service_termination, early_service_start, late_service_start} -> *
 
       PulseOx
-        with ErrorLibrary, pump_errors, PCA_Error
+        with PCA_Error
           ports
             in FingerClip_Saturation
             out SpO2
@@ -97,7 +57,7 @@ system  PCA_PulseOx_scenario1_Instance
             communicating_out : * -> SpO2{SecurityError}
 
       wifi_command
-        with ErrorLibrary, PCA_Error
+        with PCA_Error
           ports
             in in_interface
             out out_interface
@@ -105,13 +65,17 @@ system  PCA_PulseOx_scenario1_Instance
             in_interface = {SecurityError, stop_commission, stop_omission, start_commission, start_omission}
             out_interface = {SecurityError, stop_commission, stop_omission, start_commission, start_omission}
           flows
+            transmission_stop_commission : in_interface{stop_commission} -> out_interface{stop_commission}
+            transmission_start_commission : in_interface{start_commission} -> out_interface{start_commission}
+            replay_message : in_interface{SecurityError} -> out_interface{SecurityError}
             transmission_wifi : in_interface -> out_interface
             spoof_message : * -> out_interface{SecurityError}
             accessable : in_interface{SecurityError} -> *
-            transmission_cmd : in_interface{stop_commission, stop_omission, start_commission, start_omission} -> out_interface{stop_commission, stop_omission, start_commission, start_omission}
+            transmission_start_omission : in_interface{start_omission} -> out_interface{start_omission}
+            transmission_stop_omission : in_interface{stop_omission} -> out_interface{stop_omission}
 
       wifi_spo2
-        with ErrorLibrary, PCA_Error
+        with PCA_Error
           ports
             in in_interface
             out out_interface
@@ -119,10 +83,12 @@ system  PCA_PulseOx_scenario1_Instance
             in_interface = {SpO2_ValueError, SecurityError, SpO2_Omission}
             out_interface = {SpO2_ValueError, SecurityError, SpO2_Omission}
           flows
+            transmission_omission : in_interface{SpO2_Omission} -> out_interface{SpO2_Omission}
+            replay_message : in_interface{SecurityError} -> out_interface{SecurityError}
             transmission_wifi : in_interface -> out_interface
             spoof_message : * -> out_interface{SecurityError}
+            transmission_value_error : in_interface{SpO2_ValueError} -> out_interface{SpO2_ValueError}
             accessable : in_interface{SecurityError} -> *
-            transmission : in_interface{SpO2_ValueError, SpO2_Omission} -> out_interface{SpO2_ValueError, SpO2_Omission}
     }
     connections
       administer : PCA_Pump.IV_infuse -> Patient.Vein_infuse

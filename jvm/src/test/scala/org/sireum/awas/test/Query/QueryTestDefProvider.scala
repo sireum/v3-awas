@@ -42,8 +42,8 @@ import org.sireum.util.jvm.FileUtil._
 
 final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(
-    makePath("..", "example", "Query"),
-    makePath("..", "example", "sscate")
+    makePath("..", "example", "Query")
+    //    makePath("..", "example", "sscate")
   )
 
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "query")))
@@ -58,7 +58,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     val filesEqual = files.filter { p =>
       true
-    //      p.toLowerCase.contains("tier1")
+//          p.toLowerCase.contains("simplepca")
     }
 
     filesEqual.toVector.map { x =>
@@ -87,13 +87,16 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     val relativeUri = basePath.relativize(Paths.get(modelfile))
 
     Builder(Some(relativeUri.toString), model) match {
-      case None => ""
+      case None => "Failed to build the model"
       case Some(m) =>
         implicit val reporter: Reporter = new Reporter(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
         val graph = FlowGraph(m, st)
         QueryParser(query, reporter) match {
-          case None => ""
+          case None => {
+            reporter.printMessages()
+            "Failed to parse the query:"
+          }
           case Some(q) =>
             val res = QueryEval(q, st)
             var result = ""
@@ -103,7 +106,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
               result += r._2.toString
               result += "\n -------------- \n"
             }
-            result
+            if (result.nonEmpty) result else "Empty result"
         }
     }
   }

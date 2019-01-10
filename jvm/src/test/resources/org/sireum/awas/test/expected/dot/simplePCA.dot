@@ -1,26 +1,23 @@
-strict digraph G {
-  pump [ label="{In Port|<cmd_in>cmd_in} |component
-pump|{Out Port|<dose>dose} " shape="record" ];
-  app [ label="{In Port|<spo2_val>spo2_val} |component
-app|{Out Port|<cmd_out>cmd_out} " shape="record" ];
-  patient [ label="{In Port|<pump_in>pump_in} |component
-patient|{Out Port|<signal>signal} " shape="record" ];
-  pulse_ox [ label="{In Port|<signal>signal} |component
-pulse_ox|{Out Port|<spo2_val>spo2_val} " shape="record" ];
-  infuse [ label="connection
-infuse" shape="record" ];
-  read [ label="connection
-read" shape="record" ];
-  cmd [ label="connection
-cmd" shape="record" ];
-  spo2 [ label="connection
-spo2" shape="record" ];
-  pump -> infuse [ tailport="dose" ];
-  infuse -> patient [ headport="pump_in" ];
-  patient -> read [ tailport="signal" ];
-  read -> pulse_ox [ headport="signal" ];
-  app -> cmd [ tailport="cmd_out" ];
-  cmd -> pump [ headport="cmd_in" ];
-  pulse_ox -> spo2 [ tailport="spo2_val" ];
-  spo2 -> app [ headport="spo2_val" ];
+digraph "component:$$AWAS#simplePCA" {
+
+  rankdir=TB
+
+   "component:$$AWAS$simplePCA#app" [label="{In Port|<spo2_val>spo2_val} |component\napp|{Out Port|<cmd_out>cmd_out} ",  shape="record"] 
+   "component:$$AWAS$simplePCA#patient" [label="{In Port|<pump_in>pump_in} |component\npatient|{Out Port|<signal>signal} ",  shape="record"] 
+   "component:$$AWAS$simplePCA#pulse_ox" [label="{In Port|<signal>signal} |component\npulse_ox|{Out Port|<spo2_val>spo2_val} ",  shape="record"] 
+   "component:$$AWAS$simplePCA#pump" [label="{In Port|<cmd_in>cmd_in} |component\npump|{Out Port|<dose>dose} ",  shape="record"] 
+   "connection:$$AWAS$simplePCA#cmd" [label="{In Port|<in>in} |connection\ncmd|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$simplePCA#infuse" [label="{In Port|<in>in} |connection\ninfuse|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$simplePCA#read" [label="{In Port|<in>in} |connection\nread|{Out Port|<out>out} ",  shape="record"] 
+   "connection:$$AWAS$simplePCA#spo2" [label="{In Port|<in>in} |connection\nspo2|{Out Port|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$simplePCA#app" -> "connection:$$AWAS$simplePCA#cmd" [headport=in, tailport=cmd_out] 
+   "component:$$AWAS$simplePCA#patient" -> "connection:$$AWAS$simplePCA#read" [headport=in, tailport=signal] 
+   "component:$$AWAS$simplePCA#pulse_ox" -> "connection:$$AWAS$simplePCA#spo2" [headport=in, tailport=spo2_val] 
+   "component:$$AWAS$simplePCA#pump" -> "connection:$$AWAS$simplePCA#infuse" [headport=in, tailport=dose] 
+   "connection:$$AWAS$simplePCA#cmd" -> "component:$$AWAS$simplePCA#pump" [headport=cmd_in, tailport=out] 
+   "connection:$$AWAS$simplePCA#infuse" -> "component:$$AWAS$simplePCA#patient" [headport=pump_in, tailport=out] 
+   "connection:$$AWAS$simplePCA#read" -> "component:$$AWAS$simplePCA#pulse_ox" [headport=signal, tailport=out] 
+   "connection:$$AWAS$simplePCA#spo2" -> "component:$$AWAS$simplePCA#app" [headport=spo2_val, tailport=out] 
+
 }

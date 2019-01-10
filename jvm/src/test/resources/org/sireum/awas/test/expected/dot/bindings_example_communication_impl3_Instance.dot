@@ -1,0 +1,21 @@
+digraph "component:$$AWAS#Communication_impl3_Instance" {
+
+  rankdir=TB
+
+   "component:$$AWAS$Communication_impl3_Instance#hw1" [label="{In Port|<nwInterface__BUS_IN>nwInterface__BUS_IN|<bindings_IN>bindings_IN} |component\nhw1|{Out Port|<bindings_OUT>bindings_OUT|<nwInterface__BUS_OUT>nwInterface__BUS_OUT} ",  shape="record"] 
+   "component:$$AWAS$Communication_impl3_Instance#hw2" [label="{In Port|<nwInterface__BUS_IN>nwInterface__BUS_IN|<bindings_IN>bindings_IN} |component\nhw2|{Out Port|<nwInterface__BUS_OUT>nwInterface__BUS_OUT|<bindings_OUT>bindings_OUT} ",  shape="record"] 
+   "component:$$AWAS$Communication_impl3_Instance#network" [label="{In Port|<access_IN>access_IN|<bindings_IN>bindings_IN} |component\nnetwork|{Out Port|<bindings_OUT>bindings_OUT|<access_OUT>access_OUT} ",  shape="record"] 
+   "component:$$AWAS$Communication_impl3_Instance#receiver" [label="{In Port|<sub>sub|<processor_IN>processor_IN} |component\nreceiver|{Out Port|<processor_OUT>processor_OUT} ",  shape="record"] 
+   "component:$$AWAS$Communication_impl3_Instance#sender" [label="{In Port|<processor_IN>processor_IN} |component\nsender|{Out Port|<processor_OUT>processor_OUT|<pub>pub} ",  shape="record"] 
+   "connection:$$AWAS$Communication_impl3_Instance#publish" [label="{In Port|<BIND_IN>BIND_IN|<in>in} |connection\npublish|{Out Port|<BIND_OUT>BIND_OUT|<out>out} ",  shape="record"] 
+
+   "component:$$AWAS$Communication_impl3_Instance#hw1" -> "component:$$AWAS$Communication_impl3_Instance#sender" [headport=processor_IN, tailport=bindings_OUT] 
+   "component:$$AWAS$Communication_impl3_Instance#hw2" -> "component:$$AWAS$Communication_impl3_Instance#receiver" [headport=processor_IN, tailport=bindings_OUT] 
+   "component:$$AWAS$Communication_impl3_Instance#network" -> "connection:$$AWAS$Communication_impl3_Instance#publish" [headport=BIND_IN, tailport=bindings_OUT] 
+   "component:$$AWAS$Communication_impl3_Instance#receiver" -> "component:$$AWAS$Communication_impl3_Instance#hw2" [headport=bindings_IN, tailport=processor_OUT] 
+   "component:$$AWAS$Communication_impl3_Instance#sender" -> "component:$$AWAS$Communication_impl3_Instance#hw1" [headport=bindings_IN, tailport=processor_OUT] 
+   "component:$$AWAS$Communication_impl3_Instance#sender" -> "connection:$$AWAS$Communication_impl3_Instance#publish" [headport=in, tailport=pub] 
+   "connection:$$AWAS$Communication_impl3_Instance#publish" -> "component:$$AWAS$Communication_impl3_Instance#network" [headport=bindings_IN, tailport=BIND_OUT] 
+   "connection:$$AWAS$Communication_impl3_Instance#publish" -> "component:$$AWAS$Communication_impl3_Instance#receiver" [headport=sub, tailport=out] 
+
+}

@@ -72,6 +72,7 @@ class BasicReachabilityImpl(st: SymbolTable)
       val parNode = FlowNode.getNode(curGraph.getUri).get
       val edges = parNode.getOwner.getOutgoingEdges(parNode).filter(e =>
         e.sourcePort.isDefined && e.sourcePort.get == node.getUri)
+
       resEdge = resEdge ++ edges
       resNodes = resNodes ++ edges.map(_.target)
       resGraph += parNode.getOwner
@@ -118,21 +119,21 @@ class BasicReachabilityImpl(st: SymbolTable)
     var workList = ilistEmpty[FlowNode] ++ criteria
     var resEdges = isetEmpty[Edge]
     var resError = isetEmpty[Tag]
-    var resGraph = isetEmpty[Graph]
+    var resGraph = isetEmpty[ResourceUri]
 
     while (workList.nonEmpty) {
       val curr = workList.head
       if (!result.contains(curr)) {
         if (curr.getSubGraph.isDefined) {
           val allSubGraphs = getAllSubNode(curr)
-          result = result ++ allSubGraphs.flatMap(_.nodes)
+          result = result ++ allSubGraphs.flatMap(_.nodes).filterNot(_.getResourceType == NodeType.PORT)
           resEdges = resEdges ++ allSubGraphs.flatMap(_.edges)
-          resGraph = resGraph ++ allSubGraphs
+          resGraph = resGraph ++ allSubGraphs.map(_.getUri)
         }
         val (n, e, g) = if (isForward) nextNode(curr) else previousNode(curr)
         result += curr
         resEdges = resEdges ++ e
-        resGraph = resGraph ++ g
+        resGraph = resGraph ++ g.map(_.getUri)
         n.foreach(nn => workList = workList :+ nn)
       }
       workList = workList.tail
@@ -151,7 +152,7 @@ class BasicReachabilityImpl(st: SymbolTable)
     while (workList.nonEmpty) {
       val current = workList.head
       result = result + current
-      workList = workList ++ current.nodes.flatMap(_.getSubGraph)
+      workList = workList ++ current.nodes.filterNot(_.getResourceType == NodeType.PORT).flatMap(_.getSubGraph)
       workList = workList.tail
     }
     result
@@ -202,7 +203,9 @@ class BasicReachabilityImpl(st: SymbolTable)
       }
     }
     common = common.dropRight(1)
-    srcAn.toSet ++ dstAn.toSet -- common.toSet
+    val relaventGraph = srcAn.toSet ++ dstAn.toSet -- common.toSet
+
+    relaventGraph ++ relaventGraph.flatMap(_.nodes.toSet).flatMap(getAllSubNode)
   }
 
   case class NodeReachPath(graphs: ISet[Graph],
@@ -277,7 +280,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
     val pathColls = result.map(r =>
       collector.Collector(st,
-        graphs = r.graphs.toSet,
+        graphs = r.graphs.map(_.getUri),
         nodes = r.nodes.toSet,
         ports = isetEmpty[ResourceUri],
         resType = ResultType.Node,
@@ -286,7 +289,7 @@ class BasicReachabilityImpl(st: SymbolTable)
         criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri, false,
         error = isetEmpty[Tag]))
 
-    val allGraphs = result.flatMap(_.graphs).toSet
+    val allGraphs = result.flatMap(_.graphs.map(_.getUri)).toSet
     collector.Collector(st, allGraphs, ilinkedSetEmpty ++ pathColls, Some(ResultType.Node))
   }
 
@@ -306,7 +309,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
       val pathNodes = simpleReachPath(source, target)
 
-      val scc = pathNodes.getGraphs.flatMap(_.getCycles).toSet
+      val scc = pathNodes.getGraphs.map(FlowGraph.graphs).flatMap(_.getCycles).toSet
 
       val pathCycleMap = pathNodes.getPaths.map(x => (x,
         scc.flatMap(c =>
@@ -335,7 +338,7 @@ class BasicReachabilityImpl(st: SymbolTable)
         .filter(_.contains(source)).map {
         c =>
           collector.Collector(st,
-            isetEmpty + source.getOwner,
+            isetEmpty + source.getOwner.getUri,
             c.toSet,
             isetEmpty[ResourceUri],
             ResultType.Node,
@@ -344,7 +347,7 @@ class BasicReachabilityImpl(st: SymbolTable)
             isetEmpty[Tag])
       }.toSet
 
-      collector.Collector(st, isetEmpty + source.getOwner, ilinkedSetEmpty ++ paths, Some(ResultType.Node))
+      collector.Collector(st, isetEmpty + source.getOwner.getUri, ilinkedSetEmpty ++ paths, Some(ResultType.Node))
     }
   }
 

@@ -29,7 +29,7 @@ package org.sireum.awas.query
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper.{ReachAnalysisStage, _}
-import org.sireum.awas.collector.{Collector, Operator, ResultType}
+import org.sireum.awas.collector.{Collector, CollectorImpl, Operator, ResultType}
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode}
 import org.sireum.awas.query.ConstraintKind.ConstraintKind
@@ -207,25 +207,35 @@ final class QueryEval(st: SymbolTable) {
         val source = eval(pexp.source)
         val target = eval(pexp.target)
         val constrain = pexp.withExpr
+        val isSimple = pexp.isSimple
+        val isRefined = pexp.isRefined
         if (constrain.isDefined) {
           val cExp = eval(constrain.get)
-          pathReach(source, target, Some(cExp))
-        } else {
-          pathReach(source, target, None)
-        }
-      }
-        case spexp: SimplePathExpr => {
-          val source = eval(spexp.source)
-          val target = eval(spexp.target)
-          val constrain = spexp.withExpr
-          if(constrain.isDefined) {
-            val cExp = eval(constrain.get)
-            simplePathReach(source, target, Some(cExp))
+          if (isSimple) {
+            simplePathReach(source, target, Some(cExp), isRefined)
           } else {
-            pathReach(source, target, None)
+            pathReach(source, target, Some(cExp), isRefined)
+          }
+        } else {
+          if (isSimple) {
+            simplePathReach(source, target, None, isRefined)
+          } else {
+            pathReach(source, target, None, isRefined)
           }
         }
       }
+//        case spexp: SimplePathExpr => {
+//          val source = eval(spexp.source)
+//          val target = eval(spexp.target)
+//          val constrain = spexp.withExpr
+//          if(constrain.isDefined) {
+//            val cExp = eval(constrain.get)
+//            simplePathReach(source, target, Some(cExp))
+//          } else {
+//            pathReach(source, target, None)
+//          }
+//        }
+    }
 
   }
 
@@ -258,7 +268,12 @@ final class QueryEval(st: SymbolTable) {
     reach(criterion, isForward = false)
   }
 
-  def simplePathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
+  def simplePathReach(
+    source: Collector,
+    target: Collector,
+    constraint: Option[ConstraintExpr],
+    isRefined: Boolean
+  ): Collector = {
     if (source.hasErrors || target.hasErrors) {
       source.union(target)
     } else {
@@ -271,37 +286,69 @@ final class QueryEval(st: SymbolTable) {
         target.getResultType
       }
 
-      resType match {
+      val res = resType match {
         case Some(ResultType.Node) => {
           if (constraint.isDefined) {
-            er.reachSimplePathSet(source.getNodes.map(_.getUri),
-              target.getNodes.map(_.getUri), constraint.get)
+            er.reachSimplePathSet(source.getNodes.map(_.getUri), target.getNodes.map(_.getUri), constraint.get, isRefined)
           } else {
-            er.reachSimplePathSet(source.getNodes.map(_.getUri),
-              target.getNodes.map(_.getUri))
+            er.reachSimplePathSet(source.getNodes.map(_.getUri), target.getNodes.map(_.getUri), isRefined)
           }
         }
         case Some(ResultType.Port) => {
           if (constraint.isDefined) {
-            er.reachSimplePathSet(source.getPorts, target.getPorts, constraint.get)
+            er.reachSimplePathSet(source.getPorts, target.getPorts, constraint.get, isRefined)
           } else {
-            er.reachSimplePathSet(source.getPorts, target.getPorts)
+            er.reachSimplePathSet(source.getPorts, target.getPorts, isRefined)
           }
         }
         case Some(ResultType.Error) => {
           if (constraint.isDefined) {
-            er.errorSimplePathReachMapWith(source.getPortErrors, target.getPortErrors, constraint.get)
+            er.errorSimplePathReachMapWith(source.getPortErrors, target.getPortErrors, constraint.get, isRefined)
           } else {
-            er.errorSimplePathReachMap(source.getPortErrors, target.getPortErrors)
+            er.errorSimplePathReachMap(source.getPortErrors, target.getPortErrors, isRefined)
           }
         }
         case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
-          errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))
+          errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query)
+          )
       }
+      res
+//      if(isRefined) {
+//        refinedPathFilter(res)
+//      } else {
+//        res
+//      }
     }
   }
 
-  def pathReach(source: Collector, target: Collector, constraint: Option[ConstraintExpr]): Collector = {
+  def refinedPathFilter(input: Collector): Collector = {
+    val paths = input.getPaths
+    val filteredPaths = paths.filter { p =>
+      p.getFlows.forall { f =>
+        val nuri = Resource.getParentUri(f)
+        if (nuri.isDefined && FlowNode.getNode(nuri.get)
+            .isDefined && FlowNode.getNode(nuri.get).get.getSubGraph.isDefined) {
+          false
+        } else {
+          true
+        }
+      }
+    }
+
+    Collector(
+      st,
+      filteredPaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+      ilinkedSetEmpty[Collector] ++ filteredPaths,
+      input.getResultType
+    )
+  }
+
+  def pathReach(
+    source: Collector,
+    target: Collector,
+    constraint: Option[ConstraintExpr],
+    isRefined: Boolean
+  ): Collector = {
     if (source.hasErrors || target.hasErrors) {
       source.union(target)
     } else {
@@ -314,33 +361,38 @@ final class QueryEval(st: SymbolTable) {
         target.getResultType
       }
 
-      resType match {
+      val res = resType match {
         case Some(ResultType.Node) => {
           if (constraint.isDefined) {
-            er.reachPathSet(source.getNodes.map(_.getUri),
-              target.getNodes.map(_.getUri), constraint.get)
+            er.reachPathSet(source.getNodes.map(_.getUri), target.getNodes.map(_.getUri), constraint.get, isRefined)
           } else {
-            er.reachPathSet(source.getNodes.map(_.getUri),
-              target.getNodes.map(_.getUri))
+            er.reachPathSet(source.getNodes.map(_.getUri), target.getNodes.map(_.getUri), isRefined)
           }
         }
         case Some(ResultType.Port) => {
           if (constraint.isDefined) {
-            er.reachPathSet(source.getPorts, target.getPorts, constraint.get)
+            er.reachPathSet(source.getPorts, target.getPorts, constraint.get, isRefined)
           } else {
-            er.reachPathSet(source.getPorts, target.getPorts)
+            er.reachPathSet(source.getPorts, target.getPorts, isRefined)
           }
         }
         case Some(ResultType.Error) => {
           if (constraint.isDefined) {
-            er.errorPathReachMapWith(source.getPortErrors, target.getPortErrors, constraint.get)
+            er.errorPathReachMapWith(source.getPortErrors, target.getPortErrors, constraint.get, isRefined)
           } else {
-            er.errorPathReachMap(source.getPortErrors, target.getPortErrors)
+            er.errorPathReachMap(source.getPortErrors, target.getPortErrors, isRefined)
           }
         }
         case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
-          errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))
+          errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query)
+          )
       }
+      res
+      //      if(isRefined) {
+      //        refinedPathFilter(res)
+    //      } else {
+    //        res
+//      }
     }
 
     //    val minSType = QueryResult.getMinType(source)
@@ -442,8 +494,9 @@ final class QueryEval(st: SymbolTable) {
       val errorUri = errorSet.flatMap(es =>
         SymbolTableHelper.getErrorUri(st, es.map(_.value).mkString("."))).toSet
 
-      collector.Collector(st,
-        isetEmpty[Graph],
+      collector.Collector(
+        st,
+        isetEmpty[ResourceUri],
         Some(ResultType.Error),
         Some(Operator.ID),
         uris.getPorts,
@@ -461,8 +514,9 @@ final class QueryEval(st: SymbolTable) {
         uri.get.startsWith(H.CONNECTION_TYPE)) &&
         FlowNode.getNode(uri.get).isDefined) {
         assert(FlowNode.getNode(uri.get).isDefined)
-        collector.Collector(st,
-          isetEmpty + FlowNode.getNode(uri.get).get.getOwner,
+        collector.Collector(
+          st,
+          isetEmpty + FlowNode.getNode(uri.get).get.getOwner.getUri,
           Some(ResultType.Node),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri] + uri.get, isetEmpty[ResourceUri],
@@ -476,8 +530,9 @@ final class QueryEval(st: SymbolTable) {
         if (FlowNode.getNode(nodeUri).isDefined) {
           gra += FlowNode.getNode(nodeUri).get.getOwner
         }
-        collector.Collector(st,
-          isetEmpty ++ gra,
+        collector.Collector(
+          st,
+          isetEmpty ++ gra.map(_.getUri),
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] + uri.get,
@@ -486,14 +541,15 @@ final class QueryEval(st: SymbolTable) {
         val nodeUri = Resource.getParentUri(uri.get).get
         val gra = FlowNode.getNode(nodeUri).get.getOwner
         collector.Collector(st,
-          isetEmpty + gra,
+          isetEmpty + gra.getUri,
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] ++ FlowNode.getNode(nodeUri).get.getPortsFromFlows(uri.get),
           imapEmpty[ResourceUri, ISet[ResourceUri]])
       } else if (uri.get.startsWith(H.COMPONENT_TYPE) && uri.get == st.system) {
-        collector.Collector(st,
-          FlowNode.getGraphs,
+        collector.Collector(
+          st,
+          FlowNode.getGraphs.map(_.getUri),
           FlowNode.getGraphs.flatMap(_.nodes),
           isetEmpty[ResourceUri],
           ResultType.Node,

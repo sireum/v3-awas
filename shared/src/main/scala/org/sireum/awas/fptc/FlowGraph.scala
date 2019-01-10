@@ -30,17 +30,18 @@ package org.sireum.awas.fptc
 import org.sireum.ST
 import org.sireum.awas.ast.Model
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.fptc.FlowEdgeFactory.FlowEdgeImpl
 import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{ComponentTable, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-
+import upickle.default.{macroRW, ReadWriter => RW}
 
 trait FlowGraph[Node, Edge <: AwasEdge[Node]] extends AwasGraph[Node, Edge] {
   // type Edge = FlowEdge[Node]
 
-  def toDot: String
+  def getDot: String
 
   def getEdgeForPort(port: ResourceUri): Set[Edge]
 
@@ -76,11 +77,15 @@ trait FlowGraphUpdate[Node, Edge <: AwasEdge[Node]] extends AwasGraphUpdate[Node
 
   def addEdgePortRelation(edge: Edge, source: ResourceUri, target: ResourceUri): Unit
 
+  def addPortEdge(port: ResourceUri, edge: Edge): Unit
+
   def setNodeToST(f: Node => ST): Unit
 
   def setEdgeToST(f: Edge => ST): Unit
 
   def setGraphAttributes(attributes: ISeq[ST]): Unit
+
+  def setDot(updatedToDot: () => String): Unit
 
   //  def setNodeAttProvider(nodeAtt: ComponentAttributeProvider[FlowNode])
   //
@@ -95,6 +100,10 @@ trait FlowEdge[Node] extends AwasEdge[Node] {
   def sourcePort: Option[ResourceUri]
 
   def targetPort: Option[ResourceUri]
+}
+
+object FlowEdge {
+  implicit def rw: RW[FlowEdge[FlowNode]] = RW.merge(FlowEdgeImpl.rw)
 }
 
 /**
@@ -114,6 +123,8 @@ object FlowGraph {
   //      None
   //    }
   //  }
+
+  var graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, FlowEdge[FlowNode]]]
 
   def apply(m: Model): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
@@ -201,18 +212,22 @@ object FlowGraph {
           result.addPortEdge(fromPortUri, edge1)
           result.addPortEdge(toPortUri, edge1)
           result.addEdgePortRelation(edge1, fromPortUri, toPortUri)
-
-
         }
       }
     }
+    graphs = graphs + (result.getUri -> result)
     result
   }
 
   def apply(m: Model, st: SymbolTable): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     FlowNode.newPool()
+    graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, FlowEdge[FlowNode]]]
     val systemST = st.componentTable(st.system)
-    buildGraph(systemST, st)
+    if (graphs.contains(systemST.componentUri)) {
+      graphs(systemST.componentUri)
+    } else {
+      buildGraph(systemST, st)
+    }
   }
 
   private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FlowNode] = {

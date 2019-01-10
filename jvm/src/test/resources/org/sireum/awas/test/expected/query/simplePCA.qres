@@ -1,0 +1,20 @@
+q2
+ -------------- 
+{ port-in-virtual:$$AWAS$simplePCA$cmd#in, 
+port-in-virtual:$$AWAS$simplePCA$infuse#in, 
+port-in-virtual:$$AWAS$simplePCA$read#in, 
+port-in-virtual:$$AWAS$simplePCA$spo2#in, 
+port-in:$$AWAS$simplePCA$app#spo2_val, 
+port-in:$$AWAS$simplePCA$patient#pump_in, 
+port-in:$$AWAS$simplePCA$pulse_ox#signal, 
+port-in:$$AWAS$simplePCA$pump#cmd_in, 
+port-out-virtual:$$AWAS$simplePCA$cmd#out, 
+port-out-virtual:$$AWAS$simplePCA$infuse#out, 
+port-out-virtual:$$AWAS$simplePCA$read#out, 
+port-out-virtual:$$AWAS$simplePCA$spo2#out, 
+port-out:$$AWAS$simplePCA$app#cmd_out, 
+port-out:$$AWAS$simplePCA$patient#signal, 
+port-out:$$AWAS$simplePCA$pulse_ox#spo2_val, 
+port-out:$$AWAS$simplePCA$pump#dose } 
+
+ -------------- 

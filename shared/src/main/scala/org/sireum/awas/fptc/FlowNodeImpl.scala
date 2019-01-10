@@ -34,6 +34,7 @@ import org.sireum.awas.graph.{AwasEdgeFactory, AwasGraph}
 import org.sireum.awas.symbol.{FlowTableData, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
+import upickle.default.{macroRW, ReadWriter => RW}
 
 final case class FlowNodeImpl(uri: ResourceUri,
                               st: SymbolTable,
@@ -180,7 +181,9 @@ final case class FlowNodeImpl(uri: ResourceUri,
       //we know, if we are performing a forward analysis,
       // and calculating intra flow(this method), then given port is input
       if (isForward) result ++= outPorts else result ++= inPorts
-      errors = errors + warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.Port)
+      if (getResourceType == H.COMPONENT_TYPE) {
+        errors = errors + warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.Port)
+      }
 
       collector.FlowCollector(isetEmpty + this.getOwner, result, edges, flows, errors)
     } else {
@@ -368,37 +371,51 @@ object FlowEdgeFactory extends AwasEdgeFactory[FlowNode, FlowEdge[FlowNode]] {
 
   def createFlowEdge(owner: FlowGraph[FlowNode, FlowEdge[FlowNode]],
                      source: FlowNode, target: FlowNode): FlowEdge[FlowNode] = {
-    FlowEdgeImpl(owner, source, target)
+    FlowEdgeImpl(owner.getUri, source.getUri, target.getUri)
   }
 
   case class FlowEdgeImpl(
-                           owner: FlowGraph[FlowNode, FlowEdge[FlowNode]],
-                           override val source: FlowNode,
-                           override val target: FlowNode
+                           owner: ResourceUri,
+                           sourceNodeUri: ResourceUri,
+                           targetNodeUri: ResourceUri
                          ) extends FlowEdge[FlowNode] {
     self: FlowEdge[FlowNode] =>
 
     //either source or target should be a connection
-    val conn: FlowNode =
-      if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
-        source
-      else target
-
-    val isSourceConn: Boolean = conn == source
+  //    val conn: FlowNode =
+    //      if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
+    //        source
+    //      else target
+    //
+    //    val isSourceConn: Boolean = conn == source
 
     override def sourcePort: Option[ResourceUri] = {
-      owner.getPortsFromEdge(this) match {
+      FlowGraph.graphs(owner).getPortsFromEdge(this) match {
         case Some(x) => Some(x._1)
         case None => None
       }
     }
 
     override def targetPort: Option[ResourceUri] = {
-      owner.getPortsFromEdge(this) match {
+      FlowGraph.graphs(owner).getPortsFromEdge(this) match {
         case Some(x) => Some(x._2)
         case None => None
       }
     }
+    override def source: FlowNode = {
+      val source = FlowNode.getNode(sourceNodeUri)
+      assert(source.isDefined, "if edge exists, then source and target nodes are defined")
+      source.get
+    }
+    override def target: FlowNode = {
+      val target = FlowNode.getNode(targetNodeUri)
+      assert(target.isDefined, "if edge exists, then source and target nodes are defined")
+      target.get
+    }
+  }
+
+  object FlowEdgeImpl {
+    implicit val rw: RW[FlowEdgeImpl] = macroRW
   }
 
   override def createEdge(owner: AwasGraph[FlowNode, FlowEdge[FlowNode]],

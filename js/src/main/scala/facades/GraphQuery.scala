@@ -37,9 +37,9 @@ object GraphQuery extends js.Object {
   //  val queryExp: js.Dictionary[String] = js.native
   //  val queryRes: js.Dictionary[js.Array[String]] = js.native
   //  val queryCriteria: js.Dictionary[js.Array[String]] = js.native
-  val json: String = js.native
+  val json: js.UndefOr[String] = js.native
 
-  val awas: String = js.native
+  val awas: js.UndefOr[String] = js.native
 
   val queries: Any = js.native
 }

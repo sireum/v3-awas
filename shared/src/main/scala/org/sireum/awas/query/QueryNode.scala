@@ -65,11 +65,14 @@ final case class ChopExpr(source : QueryExpr, target: QueryExpr)
 
 final case class PathExpr(source : QueryExpr,
                           target:QueryExpr,
-                          withExpr : Option[WithExpr]) extends ReachExpr
+  withExpr: Option[WithExpr],
+  isRefined: Boolean,
+  isSimple: Boolean
+) extends ReachExpr
 
-final case class SimplePathExpr(source : QueryExpr,
-                          target:QueryExpr,
-                          withExpr : Option[WithExpr]) extends ReachExpr
+//final case class SimplePathExpr(source : QueryExpr,
+//                          target:QueryExpr,
+//                          withExpr : Option[WithExpr]) extends ReachExpr
 
 sealed trait WithExpr extends QueryNode
 

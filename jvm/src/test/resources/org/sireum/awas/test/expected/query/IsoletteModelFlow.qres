@@ -21,9 +21,6 @@ connection:$$AWAS$Isolette#t2 }
  -------------- 
 air_infant
  -------------- 
-Warning: 
-
-Missing flow relationships for node ''
 { port-in-virtual:$$AWAS$Isolette$h1#in, 
 port-in-virtual:$$AWAS$Isolette$h2#in, 
 port-in-virtual:$$AWAS$Isolette$i1#in, 

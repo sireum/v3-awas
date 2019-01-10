@@ -27,6 +27,7 @@
 
 package org.sireum.awas.collector
 
+
 import org.sireum.awas.collector.Operator.Operator
 import org.sireum.awas.collector.ResultType.ResultType
 import org.sireum.awas.fptc.FlowNode._
@@ -35,10 +36,12 @@ import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{IMap, ISeq, ISet, Tag, _}
+import ujson.Js
+import upickle.default.{macroRW, ReadWriter => RW}
 
 //In future, even graph and symboltable may become maps where each graph points to a Collector
 case class CollectorImpl(symbolTable: SymbolTable,
-                         graphs: ISet[FlowGraph[FlowNode, Edge]] = isetEmpty[FlowGraph[FlowNode, FlowEdge[FlowNode]]],
+                         graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          resType: Option[ResultType] = None,
                          var resEdges: ISet[FlowEdge[FlowNode]] = isetEmpty[Edge],
                          operator: Option[Operator] = None,
@@ -104,13 +107,14 @@ case class CollectorImpl(symbolTable: SymbolTable,
           resPorts = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
             c union n.getPorts)
         }
-        graphs.flatMap(g => resPorts.flatMap(p => g.getNode(p)))
+
+        graphs.flatMap(g => resPorts.flatMap(p => FlowGraph.graphs(g).getNode(p)))
       case Some(ResultType.Error) =>
         if (hasPath && resPortError.isEmpty) {
           resPortError = resPaths.foldLeft(imapEmpty[ResourceUri, ISet[ResourceUri]])((c, n) =>
             portErrorsUnion(c, n.getPortErrors))
         }
-        val y = graphs.flatMap(g => resPortError.keySet.flatMap(p => g.getNode(p)))
+        val y = graphs.flatMap(g => resPortError.keySet.flatMap(p => FlowGraph.graphs(g).getNode(p)))
         y
 //      case Some(ResultType.Flow) =>
 //        if(hasPath && resFlows.isEmpty) {
@@ -119,7 +123,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
 //        }
 //        resFlows.flatMap(it => graph.get)
       case _ =>
-        graphs.flatMap(g => resNodes.flatMap(n => g.getNode(n)))
+        graphs.flatMap(g => resNodes.flatMap(n => FlowGraph.graphs(g).getNode(n)))
     }
   }
 
@@ -131,7 +135,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
 
   override def getSymbolTable: SymbolTable = symbolTable
 
-  override def getGraphs: ISet[FlowGraph[FlowNode, Edge]] = graphs
+  override def getGraphs: ISet[ResourceUri] = graphs
 
   override def getResultType: Option[ResultType] = resType
 
@@ -151,7 +155,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
           if (hasPath && resNodes.isEmpty)
             resNodes = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
               c union n.getNodes.map(_.getUri))
-          resPorts = graphs.flatMap(g => resNodes.flatMap(n => g.getNode(n))).flatMap(_.ports)
+          resPorts = graphs.flatMap(g => resNodes.flatMap(n => FlowGraph.graphs(g).getNode(n))).flatMap(_.ports)
         }
         case ResultType.Error => {
           if (hasPath && resPortError.isEmpty)
@@ -179,7 +183,8 @@ case class CollectorImpl(symbolTable: SymbolTable,
             c union n.getNodes.map(_.getUri))
         }
         val resPortError = graphs.flatMap(g => resNodes.flatMap(n =>
-          if (g.getNode(n).isDefined) g.getNode(n).get.ports.map(p => (p, g.getNode(n).get.getPropagation(p)))
+          if (FlowGraph.graphs(g).getNode(n).isDefined)
+            FlowGraph.graphs(g).getNode(n).get.ports.map(p => (p, FlowGraph.graphs(g).getNode(n).get.getPropagation(p)))
           else imapEmpty[ResourceUri, ISet[ResourceUri]]
         ))
         resPortError.toMap
@@ -190,7 +195,8 @@ case class CollectorImpl(symbolTable: SymbolTable,
             c union n.getPorts)
         }
         resPortError = graphs.flatMap(g => resPorts.map(p => (p,
-          if (g.getNode(p).isDefined) g.getNode(p).get.getPropagation(p) else
+          if (FlowGraph.graphs(g).getNode(p).isDefined) FlowGraph.graphs(g).getNode(p).get.getPropagation(p)
+          else
             isetEmpty[ResourceUri]
         ))).toMap
 
@@ -407,11 +413,40 @@ case class CollectorImpl(symbolTable: SymbolTable,
   override def getNextPortError(currentPort: ResourceUri,
                                 currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]] = {
-
     intersectErrors(ErrorReachability(symbolTable).getSuccessor(currentPort, currentError),
       getPortErrors)
   }
   override def hasCycles: Boolean = containsCycle
+}
+
+object CollectorImpl {
+  implicit val rw: RW[CollectorImpl] = macroRW
+
+  implicit val rwTag: RW[Tag] = upickle.default.readwriter[String].bimap[Tag](tag => TagPickling.pickle(tag), str => TagPickling.unpickle[Tag](str))
+}
+
+//object Tag {
+//
+//}
+
+object ResultType extends Enumeration {
+  type ResultType = Value
+  val Node, Port, Error, Flow = Value
+
+  implicit val rw: RW[ResultType] = upickle.default.readwriter[Int].bimap[ResultType](resultType => resultType.id, id => {
+//      val Array(i, s) = str.split(" ", 2)
+    ResultType(id)
+  })
+}
+
+object Operator extends Enumeration {
+  type Operator = Value
+  val Forward, Backward, Path, Union, Intersection, Difference, ID = Value
+
+  implicit val rw: RW[Operator] = upickle.default.readwriter[Int].bimap[Operator](operator => operator.id, id => {
+    //      val Array(i, s) = str.split(" ", 2)
+    Operator(id)
+  })
 }
 
 case class FlowCollector(graph: ISet[FlowGraph[FlowNode, Edge]],
