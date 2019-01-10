@@ -59,7 +59,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import scala.scalajs.js.timers.SetTimeoutHandle
 
-@JSExportTopLevel("org.sireum.awas.Main")
+@JSExportTopLevel("Main")
 object Main {
   val H = SymbolTableHelper
 
