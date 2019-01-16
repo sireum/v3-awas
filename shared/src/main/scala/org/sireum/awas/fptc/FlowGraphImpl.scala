@@ -32,10 +32,10 @@ import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.graph._
-import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
+import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-import org.sireum.{$Slang, ISZ, ST, $internal}
+import org.sireum.{$Slang, $internal, ISZ, ST}
 
 class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
   extends FlowGraph[FlowNode, FlowEdge[FlowNode]] with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]] {
@@ -211,7 +211,8 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     if (node.isDefined) {
       if (port.startsWith(H.PORT_IN_TYPE) &&
         (FlowNode.getNode(port).isEmpty ||
-          !nodes.toSet.contains(FlowNode.getNode(port).get))) {
+          (Resource.getParentUri(FlowNode.getNode(port).get.getUri).isDefined &&
+        Resource.getParentUri(FlowNode.getNode(port).get.getUri).get != this.getUri))) {
         node.get.flowForward(port)
       } else {
         //outport: use edge to get the successor
@@ -243,7 +244,8 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     if (uri.startsWith(H.COMPONENT_TYPE) ||
       uri.startsWith(H.CONNECTION_TYPE) ||
       (FlowNode.getNode(uri).isDefined &&
-        nodes.toSet.contains(FlowNode.getNode(uri).get))) {
+      Resource.getParentUri(uri).isDefined &&
+      Resource.getParentUri(uri).get == this.getUri)) {
       FlowNode.getNode(uri)
     } else {
       portNodeMap.get(uri)
@@ -259,7 +261,8 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
 
       if (port.startsWith(H.PORT_IN_TYPE) ||
         (FlowNode.getNode(port).isDefined &&
-          nodes.toSet.contains(FlowNode.getNode(port).get))) {
+        Resource.getParentUri(FlowNode.getNode(port).get.getUri).isDefined &&
+        Resource.getParentUri(FlowNode.getNode(port).get.getUri).get == this.getUri)) {
         var res = isetEmpty[ResourceUri]
         var edges = isetEmpty[EdgeT]
         getEdgeForPort(port).foreach { e =>
@@ -483,4 +486,5 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
       }
     }
   }
+  override def reComputeCycles(): Unit = superClass.reComputeCycles()
 }

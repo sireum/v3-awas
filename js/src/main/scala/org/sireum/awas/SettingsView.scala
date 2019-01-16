@@ -19,7 +19,7 @@ object SettingsView {
     val tdNode = $[Input](settingsNode, "#std")
     val lrNode = $[Input](settingsNode, "#slr")
     val conn = $[Input](settingsNode, "#sconn")
-    val ports = $[Input](settingsNode, "#vports")
+//    val ports = $[Input](settingsNode, "#vports")
     val flows = $[Input](settingsNode, "#vflows")
     val errors = $[Input](settingsNode, "#verrors")
     val bind = $[Input](settingsNode, "#vbind")
@@ -45,7 +45,7 @@ object SettingsView {
     }
 
     if (currentConfig.simpleConn) conn.checked = true
-    if (currentConfig.viewVirtualPorts) ports.checked = true
+//    if (currentConfig.viewVirtualPorts) ports.checked = true
     if (currentConfig.viewErrors) errors.checked = true
     if (currentConfig.viewFlows) flows.checked = true
     if (currentConfig.bindings) bind.checked = true
@@ -54,7 +54,7 @@ object SettingsView {
       val config = SvgGenConfig(
         if (tdNode.checked) RankDir.TB else RankDir.LR,
         B(conn.checked),
-        B(ports.checked),
+        T,
         B(errors.checked),
         B(flows.checked),
         B(bind.checked)

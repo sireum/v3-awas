@@ -124,7 +124,7 @@ object FlowGraph {
   //    }
   //  }
 
-  var graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, FlowEdge[FlowNode]]]
+
 
   def apply(m: Model): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
@@ -215,19 +215,13 @@ object FlowGraph {
         }
       }
     }
-    graphs = graphs + (result.getUri -> result)
     result
   }
 
   def apply(m: Model, st: SymbolTable): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     FlowNode.newPool()
-    graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, FlowEdge[FlowNode]]]
     val systemST = st.componentTable(st.system)
-    if (graphs.contains(systemST.componentUri)) {
-      graphs(systemST.componentUri)
-    } else {
-      buildGraph(systemST, st)
-    }
+    buildGraph(systemST, st)
   }
 
   private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FlowNode] = {

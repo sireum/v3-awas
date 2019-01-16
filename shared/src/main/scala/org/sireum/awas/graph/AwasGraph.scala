@@ -82,6 +82,8 @@ trait AwasGraphUpdate[Node, Edge <: AwasEdge[Node]] {
   def addEdge(from: Node, to: Node, data: Edge): Edge
 
   def removeEdge(from: Node, to: Node): Unit
+
+  def reComputeCycles(): Unit
 }
 
 trait AwasEdgeFactory[Node, Edge <: AwasEdge[Node]] {

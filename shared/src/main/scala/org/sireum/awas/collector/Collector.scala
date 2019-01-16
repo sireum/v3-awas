@@ -33,7 +33,7 @@ import org.sireum.awas.fptc.FlowNode._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{ILinkedSet, IMap, ISet, Tag}
+import org.sireum.util.{ILinkedSet, IMap, ISet, Tag, isetEmpty, imapEmpty}
 import upickle.default.{macroRW, ReadWriter => RW}
 
 trait Collector {

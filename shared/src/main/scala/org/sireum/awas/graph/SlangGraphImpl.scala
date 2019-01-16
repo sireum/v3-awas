@@ -29,7 +29,7 @@ package org.sireum.awas.graph
 
 import org.sireum.Graph
 import org.sireum.ops.GraphOps
-import org.sireum.util.{CSet, isetEmpty}
+import org.sireum.util.{CSet, isetEmpty, ilistEmpty}
 
 class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 //(ef: AwasEdgeFactory[Node, EdgeT])
@@ -45,6 +45,8 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
   }
 
   var graph: Graph[Node, Edge] = Graph.empty[Node, Edge]
+
+  private var cycles: Option[Seq[Seq[Node]]] = None
 
   override def nodes: Iterable[Node] = graph.nodes.keys.elements
 
@@ -141,7 +143,16 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     *
     * @return set of cycles
     */
-  override def getCycles: Seq[Seq[Node]] = GraphOps(graph).getCycles.elements.map(_.elements)
+  override def getCycles: Seq[Seq[Node]] = {
+    if (cycles.isEmpty) {
+      cycles = Some(GraphOps(graph).getCycles.elements.map(_.elements))
+    }
+    cycles.getOrElse(ilistEmpty)
+  }
+
+  override def reComputeCycles(): Unit = {
+    cycles = Some(GraphOps(graph).getCycles.elements.map(_.elements))
+  }
 
   override def removeEdge(from: Node, to: Node): Unit = {
     graph = graph -- graph.edges(from, to)

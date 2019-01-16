@@ -29,8 +29,9 @@ object Util {
 
   def graph2Svg(graphUri: ResourceUri, viewConfig: SvgGenConfig = SettingsView.currentConfig, st: SymbolTable): Node = {
     val dotGraph = SvgGenerator(
-      FlowGraph
-        .graphs(graphUri)
+      FlowNode
+        .getGraph(graphUri)
+        .get
         .asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]],
       viewConfig
     )
@@ -94,7 +95,6 @@ object Util {
         }
 
         val container = ci.container
-        println(container.getElement().context)
         if (ci.config.get("componentState").isDefined) {
           val compState = ci.config.get("componentState").get.asInstanceOf[js.Dictionary[scalajs.js.Any]]
           if (SettingsView.currentConfig.rankDir == RankDir.TB) {

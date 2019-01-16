@@ -291,9 +291,6 @@ object Main {
             openQueryCli(st.get, systemGraph)
             qI.get.evalQueryFile(GraphQuery.queries.toString)
             updateTable(qI.get.getQueries, qI.get.getResults)
-            if (qI.get.getReporter.messages.nonEmpty) {
-              println(qI.get.getReporter.messages.elements.mkString("\n"))
-            }
           }
           QuickView.quickView()
         }
@@ -479,7 +476,6 @@ object Main {
   def collectorToUris(col: Collector): IMap[String, Boolean] = {
     var res = imapEmpty[String, Boolean]
     if (col.getResultType.isDefined) {
-      col.getEdges.foreach(e => if (e.sourcePort.isEmpty) println(e))
       val edges = col.getEdges.map(e => "Edge+" + e.sourcePort.get + "+" + e.targetPort.get)
       val ans = col.getResultType.get match {
         case ResultType.Node => col.getNodes.map(_.getUri)
@@ -681,9 +677,9 @@ object Main {
     val colorPickers = PimpedNodeList(table.querySelectorAll(".query-color-picker"))
     var queryColors = imapEmpty[String, String]
     colorPickers.foreach { cp =>
-      println(cp.asInstanceOf[Div].id)
+
       val te = $[Div]("#" + cp.asInstanceOf[Div].id)
-      println(te)
+
       val tcp = TinyColorPicker("#" + cp.asInstanceOf[Div].id)
       tcp.tinycolorpicker(js.Dictionary(("colors", js.Array("#f07830")), ("backgroundUrl", "min/images/text-color.png")));
       val cpp = tcp.data("plugin_tinycolorpicker").asInstanceOf[TinyColorPicker]
@@ -910,15 +906,14 @@ if (id.contains(":")) {
         ci.element.asInstanceOf[Container]
 
         val inputImport = qBox.querySelector("#import-queries")
-        inputImport.asInstanceOf[Input].onchange = (_: Event) => {
+        inputImport.asInstanceOf[Input].onchange = (e: Event) => {
+
           val files = inputImport.asInstanceOf[Input].files
           val reader = new dom.FileReader()
           var queries = ""
 
           reader.onload = (_: UIEvent) => {
-
             queries = reader.result.asInstanceOf[String]
-//            println(queries)
             qI.get.evalQueryFile(queries)
             updateTable(qI.get.getQueries, qI.get.getResults)
             if (qI.get.getReporter.messages.nonEmpty) {
@@ -983,8 +978,6 @@ if (id.contains(":")) {
           }
         }
       }
-      val tt = gl.get.root.getComponentsByName("cli")
-      println("test :" + tt)
     }
     false
   }

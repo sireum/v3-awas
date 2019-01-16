@@ -29,6 +29,7 @@ package org.sireum.awas.reachability
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
+import org.sireum.awas.collector.ResultType.ResultType
 import org.sireum.awas.collector.{Collector, CollectorErrorHelper, FlowCollector, ResultType}
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode, NodeType}
@@ -527,11 +528,13 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
     paths.foreach { path =>
       var flows = isetEmpty[ResourceUri]
       var edges = isetEmpty[Edge]
-      for (i <- path.toList.indices) {
+      val pathList = path.toList
+      for (i <- pathList.indices) {
         if (i != path.size - 1) {
-          val port = path.toList(i)
-          val nextPort = path.toList(i + 1)
-          val next = nextPorts(path.toList(i)).foldLeft(
+
+          val port = pathList(i)
+          val nextPort = pathList(i + 1)
+          val next = nextPorts(pathList(i)).foldLeft(
           FlowCollector(
             isetEmpty[Graph],
             isetEmpty[ResourceUri],
@@ -607,9 +610,8 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
 
       val filteredPathCycles = pathCycles.map(pc =>
         if (pc._2.nonEmpty) {
-          (pc._1, Some(pc._2.flatMap(cyc =>
-            cyclePortsToCollector(cyc._2, cyc._1)).foldLeft(Collector(st))((x, y) =>
-            x.union(y))))
+          val cols = pc._2.flatMap(cyc => cyclePortsToCollector(cyc._2, cyc._1))
+          (pc._1, Some(Collector.buildPathWrapper(st, cols.flatMap(_.getGraphs).toSet, ilinkedSetEmpty ++ cols, None)))
         } else {
           (pc._1, None)
         }
@@ -625,7 +627,10 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
           }
         ).toSet
 
-      Collector(st, simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+
+      Collector(
+        st,
+        simplePaths.flatMap(_.getGraphs),
         ilinkedSetEmpty[Collector] ++ simplePaths ++ complexPath,
         Some(ResultType.Port)
       )
@@ -797,27 +802,36 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
 
   private def getPortsFromNodes(nodes: ISeq[FlowNode], g: Graph): (ISet[Edge], ISet[ResourceUri]) = {
     var edges = isetEmpty[Edge]
-    for (i <- nodes.indices) {
-      val oe = g.getOutgoingEdges(nodes(i))
-      oe.foreach { it =>
-        if (i + 1 == nodes.size) {
-          if (it.target == nodes.head && it.sourcePort.isDefined && it.targetPort.isDefined) {
+    var ports = isetEmpty[ResourceUri]
 
-            edges = edges + it
-          }
-        } else {
-          if (it.target == nodes(i + 1) && it.sourcePort.isDefined && it.targetPort.isDefined) {
-            edges = edges + it
-          }
+    for (i <- nodes.indices) {
+      val iplus = if (i + 1 == nodes.size) 0 else i + 1
+      g.getEdge(nodes(i), nodes(iplus)).foreach { e =>
+        if (e.sourcePort.isDefined && e.targetPort.isDefined) {
+          edges = edges + e
+          ports = ports + e.sourcePort.get + e.targetPort.get
         }
       }
+    //      val oe = g.getOutgoingEdges(nodes(i))
+//      oe.foreach { it =>
+//        if (i + 1 == nodes.size) {
+//          if (it.target == nodes.head && it.sourcePort.isDefined && it.targetPort.isDefined) {
+//
+//            edges = edges + it
+//          }
+//        } else {
+//          if (it.target == nodes(i + 1) && it.sourcePort.isDefined && it.targetPort.isDefined) {
+//            edges = edges + it
+//          }
+//        }
+//      }
     }
-
-    val p1 = edges.flatMap(_.sourcePort)
-    val p2 = {
-      edges.flatMap(_.targetPort).toSet
-    }
-    (edges, p1 union p2)
+  //
+  //    val p1 = edges.flatMap(_.sourcePort)
+  //    val p2 = {
+  //      edges.flatMap(_.targetPort).toSet
+  //    }
+    (edges, ports)
   }
 
   //  def getPathFlows(ports: ISet[ResourceUri]): (ISet[ResourceUri], Boolean) = {

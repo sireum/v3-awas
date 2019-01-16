@@ -390,14 +390,14 @@ object FlowEdgeFactory extends AwasEdgeFactory[FlowNode, FlowEdge[FlowNode]] {
     //    val isSourceConn: Boolean = conn == source
 
     override def sourcePort: Option[ResourceUri] = {
-      FlowGraph.graphs(owner).getPortsFromEdge(this) match {
+      FlowNode.getGraph(owner).flatMap(_.getPortsFromEdge(this)) match {
         case Some(x) => Some(x._1)
         case None => None
       }
     }
 
     override def targetPort: Option[ResourceUri] = {
-      FlowGraph.graphs(owner).getPortsFromEdge(this) match {
+      FlowNode.getGraph(owner).flatMap(_.getPortsFromEdge(this)) match {
         case Some(x) => Some(x._2)
         case None => None
       }

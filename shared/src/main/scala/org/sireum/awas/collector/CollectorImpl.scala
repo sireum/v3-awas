@@ -33,7 +33,7 @@ import org.sireum.awas.collector.ResultType.ResultType
 import org.sireum.awas.fptc.FlowNode._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.reachability.ErrorReachability
-import org.sireum.awas.symbol.SymbolTable
+import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util.{IMap, ISeq, ISet, Tag, _}
 import ujson.Js
@@ -98,23 +98,21 @@ case class CollectorImpl(symbolTable: SymbolTable,
     resType match {
       case Some(ResultType.Node) =>
         if (hasPath && resNodes.isEmpty) {
-          resNodes = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
-            c union n.getNodes.map(_.getUri))
+          resNodes = resPaths.flatMap(_.getNodes).map(_.getUri)
         }
         resNodes.flatMap(it => FlowNode.getNode(it))
       case Some(ResultType.Port) =>
         if (hasPath && resPorts.isEmpty) {
-          resPorts = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
-            c union n.getPorts)
+          resPorts = resPaths.flatMap(_.getPorts)
         }
-
-        graphs.flatMap(g => resPorts.flatMap(p => FlowGraph.graphs(g).getNode(p)))
+        resPorts.flatMap(FlowNode.getNode) ++ resPorts.flatMap(Resource.getParentUri).flatMap(FlowNode.getNode)
+//        graphs.flatMap(g => resPorts.flatMap(p => FlowGraph.graphs(g).getNode(p)))
       case Some(ResultType.Error) =>
         if (hasPath && resPortError.isEmpty) {
           resPortError = resPaths.foldLeft(imapEmpty[ResourceUri, ISet[ResourceUri]])((c, n) =>
             portErrorsUnion(c, n.getPortErrors))
         }
-        val y = graphs.flatMap(g => resPortError.keySet.flatMap(p => FlowGraph.graphs(g).getNode(p)))
+        val y = graphs.flatMap(g => resPortError.keySet.flatMap(p => FlowNode.getGraph(g).flatMap(_.getNode(p))))
         y
 //      case Some(ResultType.Flow) =>
 //        if(hasPath && resFlows.isEmpty) {
@@ -123,7 +121,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
 //        }
 //        resFlows.flatMap(it => graph.get)
       case _ =>
-        graphs.flatMap(g => resNodes.flatMap(n => FlowGraph.graphs(g).getNode(n)))
+        graphs.flatMap(g => resNodes.flatMap(n => FlowNode.getGraph(g).flatMap(_.getNode(n))))
     }
   }
 
@@ -155,7 +153,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
           if (hasPath && resNodes.isEmpty)
             resNodes = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
               c union n.getNodes.map(_.getUri))
-          resPorts = graphs.flatMap(g => resNodes.flatMap(n => FlowGraph.graphs(g).getNode(n))).flatMap(_.ports)
+          resPorts = graphs.flatMap(g => resNodes.flatMap(n => FlowNode.getGraph(g).flatMap(_.getNode(n)))).flatMap(_.ports)
         }
         case ResultType.Error => {
           if (hasPath && resPortError.isEmpty)
@@ -179,12 +177,11 @@ case class CollectorImpl(symbolTable: SymbolTable,
     resType match {
       case Some(ResultType.Node) => {
         if (hasPath && resNodes.isEmpty) {
-          resNodes = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
-            c union n.getNodes.map(_.getUri))
+          resNodes = resPaths.flatMap(_.getNodes).map(_.getUri)
         }
         val resPortError = graphs.flatMap(g => resNodes.flatMap(n =>
-          if (FlowGraph.graphs(g).getNode(n).isDefined)
-            FlowGraph.graphs(g).getNode(n).get.ports.map(p => (p, FlowGraph.graphs(g).getNode(n).get.getPropagation(p)))
+          if (FlowNode.getGraph(g).flatMap(_.getNode(n)).isDefined)
+            FlowNode.getGraph(g).flatMap(_.getNode(n)).get.ports.map(p => (p, FlowNode.getGraph(g).flatMap(_.getNode(n)).get.getPropagation(p)))
           else imapEmpty[ResourceUri, ISet[ResourceUri]]
         ))
         resPortError.toMap
@@ -194,8 +191,13 @@ case class CollectorImpl(symbolTable: SymbolTable,
           resPorts = resPaths.foldLeft(isetEmpty[ResourceUri])((c, n) =>
             c union n.getPorts)
         }
-        resPortError = graphs.flatMap(g => resPorts.map(p => (p,
-          if (FlowGraph.graphs(g).getNode(p).isDefined) FlowGraph.graphs(g).getNode(p).get.getPropagation(p)
+        resPortError = graphs.flatMap(
+            g =>
+              resPorts.map(
+                p =>
+                  (
+                    p,
+                    if (FlowNode.getGraph(g).flatMap(_.getNode(p)).isDefined) FlowNode.getGraph(g).flatMap(_.getNode(p)).get.getPropagation(p)
           else
             isetEmpty[ResourceUri]
         ))).toMap
@@ -262,24 +264,24 @@ case class CollectorImpl(symbolTable: SymbolTable,
     if (c.getGraphs.isEmpty) {
       this
     } else if (symbolTable == c.getSymbolTable) {
+      val resT = if (resType.isDefined && c.getResultType.isDefined) {
+        if (resType.get < c.getResultType.get) resType else c.getResultType
+      } else if (resType.isDefined) {
+        resType
+      } else {
+        c.getResultType
+      }
       Collector(
         symbolTable,
         graphs ++ c.getGraphs,
-        if (resType.isDefined && c.getResultType.isDefined) {
-          if (resType.get < c.getResultType.get) resType else c.getResultType
-        } else if (resType.isDefined) {
-          resType
-        } else {
-          c.getResultType
-        }
-        ,
+        resT,
         getEdges union c.getEdges,
         Some(Operator.Union),
         criteria union c.getCriteria,
         (getNodes union c.getNodes).map(_.getUri),
-        getPorts union c.getPorts,
-        portErrorsUnion(getPortErrors, c.getPortErrors),
-        getFlows union c.getFlows,
+        if (resT.isDefined && resT.get >= ResultType.Port) getPorts union c.getPorts else isetEmpty,
+        if (resT.isDefined && resT.get >= ResultType.Error) portErrorsUnion(getPortErrors, c.getPortErrors) else imapEmpty,
+        if(resT.isDefined && resT.get >= ResultType.Port)getFlows union c.getFlows else isetEmpty,
         getModes union c.getModes,
         getBehavior union c.getBehavior,
         getEvents union c.getEvents,
@@ -291,29 +293,31 @@ case class CollectorImpl(symbolTable: SymbolTable,
       Collector(symbolTable, graphs, isetEmpty[Tag] +
         CollectorErrorHelper.errorMessageGen(
           CollectorErrorHelper.GRAPH_INCONSISTENT,
-          "", CollectorErrorHelper.ReachAnalysisStage.Other))
+          "", CollectorErrorHelper.ReachAnalysisStage.Other)
+      )
     }
   }
 
   def diff(c: Collector): Collector = {
     if (symbolTable == c.getSymbolTable) {
+      val resT = if (resType.isDefined && c.getResultType.isDefined) {
+        if (resType.get < c.getResultType.get) resType else c.getResultType
+      } else if (resType.isDefined) {
+        resType
+      } else {
+        c.getResultType
+      }
       Collector(
         symbolTable,
         graphs diff c.getGraphs,
-        if (resType.isDefined && c.getResultType.isDefined) {
-          if (resType.get < c.getResultType.get) resType else c.getResultType
-        } else if (resType.isDefined) {
-          resType
-        } else {
-          c.getResultType
-        },
+        resT,
         getEdges diff c.getEdges,
         Some(Operator.Difference),
         criteria union c.getCriteria,
         (getNodes diff c.getNodes).map(_.getUri),
-        getPorts diff c.getPorts,
-        diffErrors(getPortErrors, c.getPortErrors),
-        getFlows diff c.getFlows,
+        if (resT.isDefined && resT.get >= ResultType.Port) getPorts diff c.getPorts else isetEmpty,
+        if (resT.isDefined && resT.get >= ResultType.Error) diffErrors(getPortErrors, c.getPortErrors) else imapEmpty,
+        if(resT.isDefined && resT.get >= ResultType.Flow)getFlows diff c.getFlows else isetEmpty,
         getModes diff c.getModes,
         getBehavior diff c.getBehavior,
         getEvents diff c.getEvents,
@@ -324,30 +328,32 @@ case class CollectorImpl(symbolTable: SymbolTable,
       //future allow collector to collect across systems
       Collector(symbolTable, graphs, isetEmpty[Tag] +
         CollectorErrorHelper.errorMessageGen(
-          CollectorErrorHelper.GRAPH_INCONSISTENT,
-          "", CollectorErrorHelper.ReachAnalysisStage.Other))
+          CollectorErrorHelper.GRAPH_INCONSISTENT, "", CollectorErrorHelper.ReachAnalysisStage.Other)
+      )
     }
   }
 
   def intersect(c: Collector): Collector = {
     if (symbolTable == c.getSymbolTable) {
+      val resT = if (resType.isDefined && c.getResultType.isDefined) {
+        if (resType.get < c.getResultType.get) resType else c.getResultType
+      } else if (resType.isDefined) {
+        resType
+      } else {
+        c.getResultType
+      }
+      println(resT)
       Collector(
         symbolTable,
         graphs intersect c.getGraphs,
-        if (resType.isDefined && c.getResultType.isDefined) {
-          if (resType.get < c.getResultType.get) resType else c.getResultType
-        } else if (resType.isDefined) {
-          resType
-        } else {
-          c.getResultType
-        },
+        resT,
         getEdges intersect c.getEdges,
         Some(Operator.Intersection),
         criteria union c.getCriteria,
         (getNodes intersect c.getNodes).map(_.getUri),
-        getPorts intersect c.getPorts,
-        intersectErrors(getPortErrors, c.getPortErrors),
-        getFlows intersect c.getFlows,
+        if (resT.isDefined && resT.get >= ResultType.Port) getPorts intersect c.getPorts else isetEmpty,
+        if (resT.isDefined && resT.get >= ResultType.Error) intersectErrors(getPortErrors, c.getPortErrors) else imapEmpty,
+        if(resT.isDefined && resT.get >= ResultType.Flow) getFlows intersect c.getFlows else isetEmpty,
         getModes intersect c.getModes,
         getBehavior intersect c.getBehavior,
         getEvents intersect c.getEvents,

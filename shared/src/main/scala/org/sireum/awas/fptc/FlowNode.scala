@@ -67,7 +67,7 @@ object FlowNode {
   val H = SymbolTableHelper
   type Edge = FlowEdge[FlowNode]
   private var nodepool = imapEmpty[ResourceUri, FlowNode]
-  private var graphs = isetEmpty[FlowGraph[FlowNode, Edge]]
+  private var graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, Edge]]
 
   def createNode(uri: ResourceUri,
                  st: SymbolTable,
@@ -79,12 +79,14 @@ object FlowNode {
     } else {
       val node = new FlowNodeImpl(uri, st, graph)
       nodepool += (uri -> node)
-      graphs += graph
+      graphs += (graph.getUri -> graph)
       node
     }
   }
 
-  def getGraphs: ISet[FlowGraph[FlowNode, Edge]] = graphs
+  def getGraphs: ISet[FlowGraph[FlowNode, Edge]] = graphs.values.toSet
+
+  def getGraph(uri: ResourceUri): Option[FlowGraph[FlowNode, Edge]] = graphs.get(uri)
 
   def getNode(uri: ResourceUri): Option[FlowNode] = {
     //    if(H.isFlow(uri) || H.isPort(uri)) {
@@ -95,7 +97,7 @@ object FlowNode {
 
   def newPool(): Unit = {
     nodepool = imapEmpty[ResourceUri, FlowNode]
-    graphs = isetEmpty[FlowGraph[FlowNode, Edge]]
+    graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, Edge]]
   }
 }
 

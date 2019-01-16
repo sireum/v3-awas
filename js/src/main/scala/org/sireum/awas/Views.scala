@@ -347,11 +347,11 @@ object Views {
               label(cls := "label", "View simple connections"),
               div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "sconn")))
             ),
-            div(
-              cls := "field",
-              label(cls := "label", "View ports"),
-              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vports")))
-            ),
+//            div(
+//              cls := "field",
+//              label(cls := "label", "View ports"),
+//              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vports")))
+//            ),
             div(
               cls := "field",
               label(cls := "label", "View flows"),

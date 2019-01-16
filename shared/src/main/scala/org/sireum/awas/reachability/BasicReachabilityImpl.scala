@@ -309,7 +309,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
       val pathNodes = simpleReachPath(source, target)
 
-      val scc = pathNodes.getGraphs.map(FlowGraph.graphs).flatMap(_.getCycles).toSet
+      val scc = pathNodes.getGraphs.flatMap(FlowNode.getGraph).flatMap(_.getCycles).toSet
 
       val pathCycleMap = pathNodes.getPaths.map(x => (x,
         scc.flatMap(c =>
