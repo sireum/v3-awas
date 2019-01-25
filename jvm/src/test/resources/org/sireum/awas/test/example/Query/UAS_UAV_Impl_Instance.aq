@@ -1,3 +1,5 @@
-paths_GS_flight_controller = reach refined paths from UAS_Impl_Instance.GND.send_map to UAS_Impl_Instance.UAV.FCTL.waypoint
+//paths_GS_flight_controller = reach refined paths from UAS_Impl_Instance.GND.send_map to UAS_Impl_Instance.UAV.FCTL.waypoint
+//test = reach refined paths from UAS_Impl_Instance.GND.send_map to UAS_Impl_Instance.UAV.FCTL.waypoint with none(UAS_Impl_Instance.UAV.MCMP.PROC_SW.FLT:port)
 
 //paths_GS_flight_controller_not_filter = reach paths from UAS_Impl_Instance.GND.send_map to UAS_Impl_Instance.UAV.FCTL.waypoint with none(UAS_Impl_Instance.UAV.MCMP.PROC_SW.FLT:port)
+only_wellformed_authorized = reach refined paths from (UAS_Impl_Instance.GND.send_map:port-error) to (UAS_Impl_Instance.UAV.FCTL.waypoint:port-error)

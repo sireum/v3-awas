@@ -476,27 +476,34 @@ object Main {
   def collectorToUris(col: Collector): IMap[String, Boolean] = {
     var res = imapEmpty[String, Boolean]
     if (col.getResultType.isDefined) {
-      val edges = col.getEdges.map(e => "Edge+" + e.sourcePort.get + "+" + e.targetPort.get)
+      val edges = col.getEdges.toSeq.map(e => "Edge+" + e.sourcePort.get + "+" + e.targetPort.get)
       val ans = col.getResultType.get match {
         case ResultType.Node => col.getNodes.map(_.getUri)
         case ResultType.Port => {
-          var connUri = isetEmpty[ResourceUri]
+          var connUri = ilistEmpty[ResourceUri]
           if (!SettingsView.currentConfig.simpleConn) {
-            col.getPorts.foreach { p =>
-              val nodeUri = Resource.getParentUri(p)
-              if (nodeUri.isDefined &&
-                H.getUriType(nodeUri.get) == H.CONNECTION_TYPE &&
-                FlowNode.getNode(nodeUri.get).isDefined) {
-                  val node = FlowNode.getNode(nodeUri.get).get
-                val g = node.getOwner
-                if (g.getIncomingEdges(node) . size == 1 &&
-                  g.getOutgoingEdges(node).size == 1) {
-                  connUri = connUri + node.getUri
+            col.getNodes.filter(_.getResourceType == NodeType.CONNECTION).foreach { c =>
+              if (c.getOwner.getIncomingEdges(c).size == 1 &&
+                c.getOwner.getOutgoingEdges(c).size == 1) {
+                  connUri = connUri :+ c.getUri
                 }
-              }
+
             }
+          //            col.getPorts.foreach { p =>
+          //              val nodeUri = Resource.getParentUri(p)
+          //              if (nodeUri.isDefined &&
+          //                H.getUriType(nodeUri.get) == H.CONNECTION_TYPE &&
+          //                FlowNode.getNode(nodeUri.get).isDefined) {
+          //                  val node = FlowNode.getNode(nodeUri.get).get
+          //                val g = node.getOwner
+          //                if (g.getIncomingEdges(node) . size == 1 &&
+          //                  g.getOutgoingEdges(node).size == 1) {
+          //                  connUri = connUri + node.getUri
+          //                }
+          //              }
+          //            }
           }
-          col.getPorts ++ col.getFlows ++ connUri
+          col.getPorts.toSeq ++ col.getFlows.toSeq ++ connUri
         }
         case ResultType.Error => {
           var connUri = isetEmpty[ResourceUri]
@@ -805,7 +812,7 @@ if (id.contains(":")) {
                       highlight(collectorToUris(r.get._1.last._2), RandomColor())
                       term.echo(
                         "Results found in graph(s): {" +
-                          r.get._1.last._2.getGraphs.map(_.split("\\$\\$AWAS").last).mkString(", ") + "}"
+                          r.get._1.last._2.getGraphs.map(_.getUri).map(_.split("\\$\\$AWAS").last).mkString(", ") + "}"
                       )
                       updateTable(qI.get.getQueries, qI.get.getResults)
 

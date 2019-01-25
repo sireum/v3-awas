@@ -71,9 +71,6 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         //if this port is a port of the system component, then there must be a port node
         isetEmpty + FlowNode.getNode(port).get.getOwner.getSuccessorPorts(port)
       } else {
-        if (FlowNode.getNode(nodeUri).isEmpty) {
-          println(nodeUri)
-        }
         assert(FlowNode.getNode(nodeUri).isDefined)
         isetEmpty + FlowNode.getNode(nodeUri).get.getOwner.getSuccessorPorts(port)
       }
@@ -137,7 +134,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       result += current
     }
 
-    Collector(st, resGraphs.map(_.getUri), result, resFlows, resEdges, isForward, criteria, resError)
+    Collector(st, resGraphs, result, resFlows, resEdges, isForward, criteria, resError)
   }
 
   override def backwardPortReach(criterion: FlowNode): Collector =
@@ -243,7 +240,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     } else {
       collector.Collector(
         st,
-        isetEmpty[ResourceUri],
+        isetEmpty[FlowGraph[FlowNode, Edge]],
         isetEmpty[Tag] + errorMessageGen(CollectorErrorHelper.MISSING_NODE, H.uri2CanonicalName(source),
           ReachAnalysisStage.Node
         ) +
@@ -561,7 +558,7 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       }
       res = res + Collector(
         st,
-        findRelaventGraphs(getNodesFromPort(src), getNodesFromPort(dst)).map(_.getUri),
+        if (path.nonEmpty) findRelaventGraphs(getNodesFromPort(src), getNodesFromPort(dst)) else isetEmpty,
       isetEmpty[FlowNode],
         path,
         ResultType.Port,
@@ -665,14 +662,14 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
             simplePaths.filter(f => f.getPorts.intersect(constraint.simple.get.getPorts).isEmpty)
           Collector(
             st,
-            simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+            simplePaths.flatMap(_.getNodes.map(_.getOwner)),
             ilinkedSetEmpty[Collector] ++ filteredPaths,
             Some(ResultType.Port)
           )
         case _ =>
           Collector(
             st,
-            simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+            simplePaths.flatMap(_.getNodes.map(_.getOwner)),
             ilinkedSetEmpty[Collector] ++ simplePaths,
             Some(ResultType.Port)
           )
@@ -711,7 +708,10 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
             case _ => true
           }
       )
-      Collector(st, simplePaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
+
+      Collector(
+        st,
+        filteredPaths.flatMap(_.getNodes.map(_.getOwner)),
         ilinkedSetEmpty ++ filteredPaths.toSeq, Some(ResultType.Port))
     }
   }
@@ -921,7 +921,7 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       } else {
         collector.Collector(
           st,
-          isetEmpty[ResourceUri],
+          isetEmpty[FlowGraph[FlowNode, Edge]],
           isetEmpty[Tag] + errorMessageGen(
             CollectorErrorHelper.MISSING_NODE,
             H.uri2CanonicalName(source),
@@ -932,7 +932,9 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       }
     } else {
       val simplePaths = getSimplePath(computeSimplePaths(source, target, isRefined), source, target)
-      Collector(st, simplePaths.flatMap(_.getGraphs),
+      Collector(
+        st,
+        simplePaths.flatMap(_.getNodes.map(_.getOwner)),
         ilinkedSetEmpty[Collector] ++ simplePaths,
         Some(ResultType.Port))
     }

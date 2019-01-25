@@ -30,7 +30,7 @@ package org.sireum.awas.reachability
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper.{MISSING_CRITERIA, ReachAnalysisStage, errorMessageGen}
 import org.sireum.awas.collector._
-import org.sireum.awas.fptc.FlowNode
+import org.sireum.awas.fptc.{FlowNode, NodeType}
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.{Resource, SymbolTable}
@@ -105,7 +105,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
         workList = workList.tail
       }
     collector.Collector(st,
-      resGraph.map(_.getUri),
+      resGraph,
       result.map(v => (v._1, v._2.toSet)).toMap,
       resFlows, resEdges, isForward, isetEmpty[ResourceUri] + port, resError)
   }
@@ -203,12 +203,9 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     isRefined: Boolean):
   Collector = {
     val paths = reachPath(sourcePort, targetPort, isRefined).getPaths
-      .flatMap(it => pathErrorRefine(it, sourcePort,
-      sourceErrors, targetPort, targetErrors, None))
+      .flatMap(it => pathErrorRefine(it, sourcePort, sourceErrors, targetPort, targetErrors, None, isRefined))
       .toSet
-    Collector(
-      st,
-      paths.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
+    Collector(st, paths.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ paths.toVector, Some(ResultType.Error))
   }
 
@@ -225,11 +222,10 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
 
     val pathsConst = reformatedArgs.flatMap(
       e =>
-        reachPath(e._1, e._3, isRefined).getPaths.flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5)))
+        reachPath(e._1, e._3, isRefined).getPaths
+          .flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5), isRefined))
     )
-    Collector(
-      st,
-      pathsConst.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
+    Collector(st, pathsConst.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 
@@ -269,7 +265,8 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
                               sourceErrors: ISet[ResourceUri],
                               targetPort: ResourceUri,
                               targetErrors: ISet[ResourceUri],
-                              constraint: Option[ConstraintExpr]):
+    constraint: Option[ConstraintExpr],
+    isRefined: Boolean):
   ISet[Collector] = {
     val snodes = getNodesFromPort(sourcePort)
     val tnodes = getNodesFromPort(targetPort)
@@ -306,40 +303,60 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
                 if (tn.edges.nonEmpty) {
                   paths = paths + FlowErrorPathCollector(current.path :+ t,
                     current.edges union tn.graph.head.getEdges(current.path.last._1, t._1),
-                    current.flows, current.errors union tn.errors, tn.graph)
+                    current.flows,
+                    current.errors union tn.errors,
+                    tn.graph
+                  )
                 } else {
-                  if (tn.flows.size <= 1) {
-                    paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
-                      current.flows ++ tn.flows, current.errors union tn.errors, tn.graph)
-                  } else { //more than one flow so, branch for each flow
+                  if (isRefined &&
+                    getNodesFromPort(t._1).nonEmpty &&
+                    getNodesFromPort(t._1).exists(_.getResourceType != NodeType.PORT) &&
+                    getNodesFromPort(t._1).filter(_.getResourceType != NodeType.PORT).head.getSubGraph.isDefined) {} else {
+                    if (tn.flows.size <= 1) {
 
-                    val resFlows = tn.flows.filter { it =>
-                      val flows = getNodesFromPort(t._1).flatMap(_.getFlows).toMap
-                      flows.get(it).isDefined && flows(it).toPortUri.isDefined &&
+                      paths = paths + FlowErrorPathCollector(
+                        current.path :+ t,
+                        current.edges,
+                        current.flows ++ tn.flows,
+                        current.errors union tn.errors,
+                        tn.graph
+                      )
+
+                    } else { //more than one flow so, branch for each flow
+
+                      val resFlows = tn.flows.filter { it =>
+                        val flows = getNodesFromPort(t._1).flatMap(_.getFlows).toMap
+                        flows.get(it).isDefined && flows(it).toPortUri.isDefined &&
                         flows(it).toPortUri.get == t._1 && flows(it).toFaults.contains(t._2)
                       //.toMap(it)
-                    }
-                    paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
-                      current.flows ++ resFlows, current.errors union tn.errors, current.graphs ++ tn.graph)
+                      }
+                      paths = paths + FlowErrorPathCollector(
+                        current.path :+ t,
+                        current.edges,
+                        current.flows ++ resFlows,
+                        current.errors union tn.errors,
+                        current.graphs ++ tn.graph
+                      )
 
-                    //                    val cnode = graph.getNode(current.path.last._1)
-                    //                    val nnode = graph.getNode(t._1)
-                    //                    if (cnode.isDefined && nnode.isDefined &&
-                    //                      cnode.get == nnode.get) {
-                    //                      var flows = isetEmpty[ResourceUri]
-                    //                      if (cnode.get.isComponent) {
-                    //                        flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
-                    //                          nnode.get.getFlows(it).toPortUri.isDefined &&
-                    //                          nnode.get.getFlows(it).toPortUri.get == t._1 &&
-                    //                          nnode.get.getFlows(it).toFaults.contains(t._2)
-                    //                        )
-                    //                      } else {
-                    //                        flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
-                    //                          nnode.get.getFlows(it).toFaults.contains(t._2))
-                    //                      }
-                    //                      paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
-                    //                        current.flows ++ flows, current.errors union tNext.errors)
-                    //                    }
+                      //                    val cnode = graph.getNode(current.path.last._1)
+                      //                    val nnode = graph.getNode(t._1)
+                      //                    if (cnode.isDefined && nnode.isDefined &&
+                      //                      cnode.get == nnode.get) {
+                      //                      var flows = isetEmpty[ResourceUri]
+                      //                      if (cnode.get.isComponent) {
+                      //                        flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
+                      //                          nnode.get.getFlows(it).toPortUri.isDefined &&
+                      //                          nnode.get.getFlows(it).toPortUri.get == t._1 &&
+                      //                          nnode.get.getFlows(it).toFaults.contains(t._2)
+                      //                        )
+                      //                      } else {
+                      //                        flows ++= tNext.flows.filter(it => nnode.get.getFlows.get(it).isDefined &&
+                      //                          nnode.get.getFlows(it).toFaults.contains(t._2))
+                      //                      }
+                      //                      paths = paths + FlowErrorPathCollector(current.path :+ t, current.edges,
+                      //                        current.flows ++ flows, current.errors union tNext.errors)
+                      //                    }
+                    }
                   }
                 }
               }
@@ -402,7 +419,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
       it =>
         collector.Collector(
           st,
-          it.graph.map(_.getUri),
+          it.graph,
           it.tuples.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap,
       ResultType.Error, it.edges, it.flows, isetEmpty[ResourceUri] + sourcePort + targetPort, it.errors))
 
@@ -447,11 +464,9 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     isRefined: Boolean
   ): Collector = {
     val paths = reachSimplePath(sourcePort, targetPort, isRefined).getPaths
-      .flatMap(it => pathErrorRefine(it, sourcePort, sourceErrors, targetPort, targetErrors, None))
+      .flatMap(it => pathErrorRefine(it, sourcePort, sourceErrors, targetPort, targetErrors, None, isRefined))
       .toSet
-    Collector(
-      st,
-      paths.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
+    Collector(st, paths.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ paths.toVector,
       Some(ResultType.Error)
     )
@@ -487,10 +502,10 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
 
     val pathsConst = reformatedArgs.flatMap(
       e =>
-        reachSimplePath(e._1, e._3, isRefined).getPaths.flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5)))
+        reachSimplePath(e._1, e._3, isRefined).getPaths
+          .flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5), isRefined))
     )
-    Collector(st,
-      pathsConst.map(_.getGraphs).fold(isetEmpty[ResourceUri])((s, t) => s ++ t),
+    Collector(st, pathsConst.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 }

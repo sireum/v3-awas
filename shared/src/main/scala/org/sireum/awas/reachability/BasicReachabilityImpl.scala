@@ -119,40 +119,37 @@ class BasicReachabilityImpl(st: SymbolTable)
     var workList = ilistEmpty[FlowNode] ++ criteria
     var resEdges = isetEmpty[Edge]
     var resError = isetEmpty[Tag]
-    var resGraph = isetEmpty[ResourceUri]
+    var resGraph = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
 
     while (workList.nonEmpty) {
       val curr = workList.head
       if (!result.contains(curr)) {
-        if (curr.getSubGraph.isDefined) {
-          val allSubGraphs = getAllSubNode(curr)
-          result = result ++ allSubGraphs.flatMap(_.nodes).filterNot(_.getResourceType == NodeType.PORT)
-          resEdges = resEdges ++ allSubGraphs.flatMap(_.edges)
-          resGraph = resGraph ++ allSubGraphs.map(_.getUri)
-        }
         val (n, e, g) = if (isForward) nextNode(curr) else previousNode(curr)
         result += curr
         resEdges = resEdges ++ e
-        resGraph = resGraph ++ g.map(_.getUri)
+        resGraph = resGraph ++ g
         n.foreach(nn => workList = workList :+ nn)
       }
       workList = workList.tail
     }
+    val subGraphs = getAllSubGraphs(result)
+    resEdges = resEdges ++ subGraphs.flatMap(_.edges)
+    resGraph = resGraph ++ subGraphs
+    result = result ++ subGraphs.flatMap(_.nodes)
     collector.Collector(st, resGraph, result, resEdges, isForward,
       criteria.map(_.getUri), resError)
   }
 
-  private def getAllSubNode(given: FlowNode): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
+  private def getAllSubGraphs(given: ISet[FlowNode]): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
     var result = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
     var workList = ilistEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
-    if (given.getSubGraph.isDefined) {
-      workList = workList :+ given.getSubGraph.get
-    }
+    workList = workList ++ given.flatMap(_.getSubGraph)
+
 
     while (workList.nonEmpty) {
       val current = workList.head
       result = result + current
-      workList = workList ++ current.nodes.filterNot(_.getResourceType == NodeType.PORT).flatMap(_.getSubGraph)
+      workList = workList ++ current.nodes.flatMap(_.getSubGraph)
       workList = workList.tail
     }
     result
@@ -205,7 +202,7 @@ class BasicReachabilityImpl(st: SymbolTable)
     common = common.dropRight(1)
     val relaventGraph = srcAn.toSet ++ dstAn.toSet -- common.toSet
 
-    relaventGraph ++ relaventGraph.flatMap(_.nodes.toSet).flatMap(getAllSubNode)
+    relaventGraph ++ relaventGraph.flatMap(it => getAllSubGraphs(it.nodes.toSet))
   }
 
   case class NodeReachPath(graphs: ISet[Graph],
@@ -280,7 +277,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
     val pathColls = result.map(r =>
       collector.Collector(st,
-        graphs = r.graphs.map(_.getUri),
+        graphs = r.graphs,
         nodes = r.nodes.toSet,
         ports = isetEmpty[ResourceUri],
         resType = ResultType.Node,
@@ -289,7 +286,7 @@ class BasicReachabilityImpl(st: SymbolTable)
         criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri, false,
         error = isetEmpty[Tag]))
 
-    val allGraphs = result.flatMap(_.graphs.map(_.getUri)).toSet
+    val allGraphs = result.flatMap(_.graphs).toSet
     collector.Collector(st, allGraphs, ilinkedSetEmpty ++ pathColls, Some(ResultType.Node))
   }
 
@@ -309,7 +306,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
       val pathNodes = simpleReachPath(source, target)
 
-      val scc = pathNodes.getGraphs.flatMap(FlowNode.getGraph).flatMap(_.getCycles).toSet
+      val scc = pathNodes.getGraphs.flatMap(_.getCycles).toSet
 
       val pathCycleMap = pathNodes.getPaths.map(x => (x,
         scc.flatMap(c =>
@@ -338,7 +335,7 @@ class BasicReachabilityImpl(st: SymbolTable)
         .filter(_.contains(source)).map {
         c =>
           collector.Collector(st,
-            isetEmpty + source.getOwner.getUri,
+            isetEmpty + source.getOwner,
             c.toSet,
             isetEmpty[ResourceUri],
             ResultType.Node,
@@ -347,7 +344,7 @@ class BasicReachabilityImpl(st: SymbolTable)
             isetEmpty[Tag])
       }.toSet
 
-      collector.Collector(st, isetEmpty + source.getOwner.getUri, ilinkedSetEmpty ++ paths, Some(ResultType.Node))
+      collector.Collector(st, isetEmpty + source.getOwner, ilinkedSetEmpty ++ paths, Some(ResultType.Node))
     }
   }
 

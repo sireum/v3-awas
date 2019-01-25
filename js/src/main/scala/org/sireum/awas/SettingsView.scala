@@ -3,7 +3,7 @@ import facades.QuickView
 import org.scalajs.dom.html.{Anchor, Div, Input}
 import org.sireum.awas.witness.{JSON, RankDir, SvgGenConfig}
 import org.scalajs.dom
-import org.scalajs.dom.raw.MouseEvent
+import org.scalajs.dom.raw.{MouseEvent, UIEvent}
 import org.sireum.{B, T}
 import org.sireum.common.JSutil.$
 
@@ -51,23 +51,27 @@ object SettingsView {
     if (currentConfig.bindings) bind.checked = true
 
     apply.onclick = (_: MouseEvent) => {
-      val config = SvgGenConfig(
-        if (tdNode.checked) RankDir.TB else RankDir.LR,
-        B(conn.checked),
-        T,
-        B(errors.checked),
-        B(flows.checked),
-        B(bind.checked)
-      )
+      apply.classList.add("is-loading")
+      scalajs.js.timers.setTimeout(0)({
 
-      if (currentConfig != config) {
-        currentConfig = config
-        setStoredSettings(currentConfig)
-        Util.reDrawGraphs(currentConfig)
-      }
+        val config = SvgGenConfig(
+          if (tdNode.checked) RankDir.TB else RankDir.LR,
+          B(conn.checked),
+          T,
+          B(errors.checked),
+          B(flows.checked),
+          B(bind.checked)
+        )
 
+        if (currentConfig != config) {
+          currentConfig = config
+          setStoredSettings(currentConfig)
+          Util.reDrawGraphs(currentConfig)
+        }
+        apply.classList.remove("is-loading")
+
+      })
     }
-
   }
 
   def setStoredSettings(cfg: SvgGenConfig): Unit = {

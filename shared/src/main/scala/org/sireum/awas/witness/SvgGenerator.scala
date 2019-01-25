@@ -29,14 +29,14 @@ package org.sireum.awas.witness
 
 import org.sireum.awas.witness._
 import org.sireum.awas.fptc._
+import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.SymbolTableHelper
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.ops.ISZOps
 import org.sireum.util._
-import org.sireum.{$Slang, ISZ, ST, $internal}
+import org.sireum.{$Slang, $internal, ISZ, ST}
 import scalatags.Text.all._
-
-import org.sireum.{T, F}
+import org.sireum.{F, T}
 
 object SvgGenerator {
   var viewConfig = SvgGenConfig.defaultConfig
@@ -404,10 +404,16 @@ object SvgGenerator {
   }
 
   def removeBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+
     if (!edgesRemoved.contains(graph.getUri)) {
       val ports = graph.nodes.flatMap(_.ports)
 
-      val bindPorts = ports.filter(it => H.getUriType(it).endsWith(H.BIND_PORT_TYPE))
+      val bindPorts = ports.filter(
+        it =>
+          H.getUriType(it).endsWith(H.BIND_PORT_TYPE) ||
+        it.split(H.ID_SEPARATOR).last == Aadl2Awas.PROCESSOR_IN ||
+        it.split(H.ID_SEPARATOR).last == Aadl2Awas.PROCESSOR_OUT
+      )
 
       val bindEdges = bindPorts.flatMap(graph.getEdgeForPort)
       val edgePorts = bindEdges.map(it => it -> (it.sourcePort.get, it.targetPort.get)).toMap

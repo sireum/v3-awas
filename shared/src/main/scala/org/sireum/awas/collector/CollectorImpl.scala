@@ -40,7 +40,8 @@ import ujson.Js
 import upickle.default.{macroRW, ReadWriter => RW}
 
 //In future, even graph and symboltable may become maps where each graph points to a Collector
-case class CollectorImpl(symbolTable: SymbolTable,
+class CollectorImpl(
+  symbolTable: SymbolTable,
                          graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          resType: Option[ResultType] = None,
                          var resEdges: ISet[FlowEdge[FlowNode]] = isetEmpty[Edge],
@@ -105,7 +106,11 @@ case class CollectorImpl(symbolTable: SymbolTable,
         if (hasPath && resPorts.isEmpty) {
           resPorts = resPaths.flatMap(_.getPorts)
         }
-        resPorts.flatMap(FlowNode.getNode) ++ resPorts.flatMap(Resource.getParentUri).flatMap(FlowNode.getNode)
+
+        val nodes = resPorts.flatMap(FlowNode.getNode) ++
+          resPorts.flatMap(Resource.getParentUri).flatMap(FlowNode.getNode)
+        resNodes = nodes.map(_.getUri)
+        nodes
 //        graphs.flatMap(g => resPorts.flatMap(p => FlowGraph.graphs(g).getNode(p)))
       case Some(ResultType.Error) =>
         if (hasPath && resPortError.isEmpty) {
@@ -133,7 +138,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
 
   override def getSymbolTable: SymbolTable = symbolTable
 
-  override def getGraphs: ISet[ResourceUri] = graphs
+  override def getGraphs: ISet[FlowGraph[FlowNode, FlowNode.Edge]] = graphs.flatMap(FlowNode.getGraph)
 
   override def getResultType: Option[ResultType] = resType
 
@@ -273,7 +278,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
       }
       Collector(
         symbolTable,
-        graphs ++ c.getGraphs,
+        getGraphs ++ c.getGraphs,
         resT,
         getEdges union c.getEdges,
         Some(Operator.Union),
@@ -290,7 +295,10 @@ case class CollectorImpl(symbolTable: SymbolTable,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
     } else {
       //future allow collector to collect across systems
-      Collector(symbolTable, graphs, isetEmpty[Tag] +
+      Collector(
+        symbolTable,
+        getGraphs,
+        isetEmpty [Tag] +
         CollectorErrorHelper.errorMessageGen(
           CollectorErrorHelper.GRAPH_INCONSISTENT,
           "", CollectorErrorHelper.ReachAnalysisStage.Other)
@@ -309,7 +317,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
       }
       Collector(
         symbolTable,
-        graphs diff c.getGraphs,
+        getGraphs diff c.getGraphs,
         resT,
         getEdges diff c.getEdges,
         Some(Operator.Difference),
@@ -326,7 +334,10 @@ case class CollectorImpl(symbolTable: SymbolTable,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
     } else {
       //future allow collector to collect across systems
-      Collector(symbolTable, graphs, isetEmpty[Tag] +
+      Collector(
+        symbolTable,
+        getGraphs,
+        isetEmpty[Tag] +
         CollectorErrorHelper.errorMessageGen(
           CollectorErrorHelper.GRAPH_INCONSISTENT, "", CollectorErrorHelper.ReachAnalysisStage.Other)
       )
@@ -345,7 +356,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
       println(resT)
       Collector(
         symbolTable,
-        graphs intersect c.getGraphs,
+        getGraphs intersect c.getGraphs,
         resT,
         getEdges intersect c.getEdges,
         Some(Operator.Intersection),
@@ -363,7 +374,10 @@ case class CollectorImpl(symbolTable: SymbolTable,
 
     } else {
       //future allow collector to collect across systems
-      Collector(symbolTable, graphs, isetEmpty[Tag] +
+      Collector(
+        symbolTable,
+        getGraphs,
+        isetEmpty[Tag] +
         CollectorErrorHelper.errorMessageGen(
           CollectorErrorHelper.GRAPH_INCONSISTENT,
           "", CollectorErrorHelper.ReachAnalysisStage.Other))
@@ -425,11 +439,7 @@ case class CollectorImpl(symbolTable: SymbolTable,
   override def hasCycles: Boolean = containsCycle
 }
 
-object CollectorImpl {
-  implicit val rw: RW[CollectorImpl] = macroRW
 
-  implicit val rwTag: RW[Tag] = upickle.default.readwriter[String].bimap[Tag](tag => TagPickling.pickle(tag), str => TagPickling.unpickle[Tag](str))
-}
 
 //object Tag {
 //

@@ -64,7 +64,8 @@ public class CollectorImpl implements Collector {
 
     @Override
     public Set<String> getGraph() {
-        return toJavaSet(collector.getGraphs());
+        return toJavaSet(collector.getGraphs()).stream()
+                .map(FlowGraph::getUri).collect(Collectors.toSet());
     }
 
     @Override

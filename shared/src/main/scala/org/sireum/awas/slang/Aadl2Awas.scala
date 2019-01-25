@@ -37,34 +37,7 @@ import org.sireum.{B, Z}
 
 
 final class Aadl2Awas private() {
-  val ALLOWED_CONNECTION_BINDING = "Deployment_Properties::Allowed_Connection_Binding"
-  val ACTUAL_CONNECTION_BINDING = "Deployment_Properties::Actual_Connection_Binding"
-  val ACTUAL_PROCESSOR_BINDING = "Deployment_Properties::Actual_Processor_Binding"
-  val ALLOWED_PROCESSOR_BINDING = "Deployment_Properties::Allowed_Processor_Binding"
-  val ALLOWED_MEMORY_BINDING = "Deployment_Properties::Allowed_Memory_Binding"
-  val ACTUAL_MEMORY_BINDING = "Deployment_Properties::Actual_Memory_Binding"
-  val ACTUAL_FUNCTION_BINDING = "Deployment_Properties::Actual_Function_Binding"
-  val ALLOWED_SUBPROGRAM_CALL_BINDING = "Deployment_Properties::Allowed_Subprogram_Call_Binding"
-  val ACTUAL_SUBPROGRAM_CALL_BINDING = "Deployment_Properties::Actual_Subprogram_Call_Binding"
 
-  val PROCESSOR_IN = "processor_IN"
-  val PROCESSOR_OUT = "processor_OUT"
-  val BINDINGS_IN = "bindings_IN"
-  val BINDINGS_OUT = "bindings_OUT"
-  val CONNECTION_IN = "connection_IN"
-  val CONNECTION_OUT = "connection_OUT"
-
-  val BINDINGS = "bindings"
-  val PROCESSOR = "processor"
-  val CONNECTION = "connection"
-
-  val BUS_ACCESS = "_bus_access"
-  val BUS_ACCESS_IN = "_bus_access_IN"
-  val BUS_ACCESS_OUT = "_bus_access_OUT"
-
-  val ACCESS_PORT = "ACCESS"
-  val ACCESS_IN_PORT = "ACCESS_IN"
-  val ACCESS_OUT_PORT = "ACCESS_OUT"
 
 
   var typeDecls = Node.emptySeq[TypeDecl]
@@ -145,7 +118,7 @@ final class Aadl2Awas private() {
 
       val features = if (comp.category == ir.ComponentCategory.Bus) {
         comp.features.elements.flatMap(build).toVector :+
-          Port(true, buildId(ACCESS_IN_PORT), None) :+ Port(false, buildId(ACCESS_OUT_PORT), None)
+          Port(true, buildId(Aadl2Awas.ACCESS_IN_PORT), None) :+ Port(false, buildId(Aadl2Awas.ACCESS_OUT_PORT), None)
       } else { comp.features.elements.flatMap(build).toVector}
       val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
       val flows = getFlows(comp)
@@ -202,69 +175,77 @@ final class Aadl2Awas private() {
     subComps.foreach { subComp =>
       subComp.properties.elements.foreach { p =>
         p.name.name.elements.last.value match {
-          case ACTUAL_CONNECTION_BINDING => {
+          case Aadl2Awas.ACTUAL_CONNECTION_BINDING => {
             resPorts += (subComp.identifier ->
               (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
-                Port(true, Id(CONNECTION_IN), None)))
+                Port(true, Id(Aadl2Awas.CONNECTION_IN), None)))
             resPorts += (subComp.identifier ->
               (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
-                Port(false, Id(CONNECTION_OUT), None)))
+                Port(false, Id(Aadl2Awas.CONNECTION_OUT), None)))
             p.propertyValues.elements.foreach {
               case rp: ir.ReferenceProp => {
                 if (subComps.map(_.identifier).toSet.contains(rp.value)) {
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
-                      Port(true, Id(BINDINGS_IN), None)))
+                      Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
-                      Port(false, Id(BINDINGS_OUT), None)))
+                      Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
                   resDepl = resDepl + DeploymentDecl(
                     Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(CONNECTION_OUT)), Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(BINDINGS_IN)))
+                    Some(Id(Aadl2Awas.CONNECTION_OUT)),
+                    Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(Aadl2Awas.BINDINGS_IN))
+                  )
                   resDepl = resDepl + DeploymentDecl(Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(BINDINGS_OUT)), Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(CONNECTION_IN)))
+                    Some(Id(Aadl2Awas.BINDINGS_OUT)),
+                    Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(Aadl2Awas.CONNECTION_IN))
+                  )
                 }
               }
               case _ =>
             }
           }
-          case ACTUAL_FUNCTION_BINDING =>
-          case ACTUAL_MEMORY_BINDING =>
-          case ACTUAL_PROCESSOR_BINDING => {
+          case Aadl2Awas.ACTUAL_FUNCTION_BINDING =>
+          case Aadl2Awas.ACTUAL_MEMORY_BINDING =>
+          case Aadl2Awas.ACTUAL_PROCESSOR_BINDING => {
             resPorts += (subComp.identifier ->
               (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
-                Port(true, Id(PROCESSOR_IN), None)))
+                Port(true, Id(Aadl2Awas.PROCESSOR_IN), None)))
             resPorts += (subComp.identifier ->
               (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
-                Port(false, Id(PROCESSOR_OUT), None)))
+                Port(false, Id(Aadl2Awas.PROCESSOR_OUT), None)))
             p.propertyValues.elements.foreach {
               case rp: ir.ReferenceProp => {
                 if (subComps.map(_.identifier).toSet.contains(rp.value)) {
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
-                      Port(true, Id(BINDINGS_IN), None)))
+                      Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
-                      Port(false, Id(BINDINGS_OUT), None)))
+                      Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
                   resDepl = resDepl + DeploymentDecl(
                     Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(PROCESSOR_OUT)), Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(BINDINGS_IN)))
+                    Some(Id(Aadl2Awas.PROCESSOR_OUT)),
+                    Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(Aadl2Awas.BINDINGS_IN))
+                  )
                   resDepl = resDepl + DeploymentDecl(Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(BINDINGS_OUT)), Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
-                    Some(Id(PROCESSOR_IN)))
+                    Some(Id(Aadl2Awas.BINDINGS_OUT)),
+                    Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
+                    Some(Id(Aadl2Awas.PROCESSOR_IN))
+                  )
                 }
               }
               case _ =>
             }
           }
-          case ACTUAL_SUBPROGRAM_CALL_BINDING =>
-          case ALLOWED_CONNECTION_BINDING =>
-          case ALLOWED_MEMORY_BINDING =>
-          case ALLOWED_PROCESSOR_BINDING =>
-          case ALLOWED_SUBPROGRAM_CALL_BINDING =>
+          case Aadl2Awas.ACTUAL_SUBPROGRAM_CALL_BINDING =>
+          case Aadl2Awas.ALLOWED_CONNECTION_BINDING =>
+          case Aadl2Awas.ALLOWED_MEMORY_BINDING =>
+          case Aadl2Awas.ALLOWED_PROCESSOR_BINDING =>
+          case Aadl2Awas.ALLOWED_SUBPROGRAM_CALL_BINDING =>
           case _ =>
         }
 
@@ -273,16 +254,16 @@ final class Aadl2Awas private() {
     connInst.foreach { ci =>
       ci.properties.elements.foreach { p =>
         p.name.name.elements.last.value match {
-          case ACTUAL_CONNECTION_BINDING => {
+          case Aadl2Awas.ACTUAL_CONNECTION_BINDING => {
             p.propertyValues.elements.foreach {
               case rp: ir.ReferenceProp => {
                 if (subComps.map(_.identifier).toSet.contains(rp.value)) {
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
-                      Port(true, Id(BINDINGS_IN), None)))
+                      Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
                   resPorts += (rp.value ->
                     (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
-                      Port(false, Id(BINDINGS_OUT), None)))
+                      Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
                   val bus_parent = rp.value.name.elements.dropRight(1).last
                   val conn_ref = ci.connectionRefs.elements.filter(_.name.name.elements.dropRight(1).last == bus_parent)
                   if (conn_ref.nonEmpty) {
@@ -290,11 +271,11 @@ final class Aadl2Awas private() {
                       Name(conn_ref.head.name.name.elements.map(it => Id(it.value)).toVector),
                       None,
                       Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                      Some(Id(BINDINGS_IN))
+                      Some(Id(Aadl2Awas.BINDINGS_IN))
                     )
                     resDepl = resDepl + DeploymentDecl(
                       Name(rp.value.name.elements.map(it => Id(it.value)).toVector),
-                      Some(Id(BINDINGS_OUT)),
+                      Some(Id(Aadl2Awas.BINDINGS_OUT)),
                       Name(conn_ref.head.name.name.elements.map(it => Id(it.value)).toVector),
                       None
                     )
@@ -364,13 +345,13 @@ final class Aadl2Awas private() {
     val actualSrcPort = if (srcPort.isEmpty) {
       "ACCESS"
     } else {
-      if (kind == ConnectionKind.Access) { srcPort.get + BUS_ACCESS } else srcPort.get
+      if (kind == ConnectionKind.Access) { srcPort.get + Aadl2Awas.BUS_ACCESS } else srcPort.get
     }
 
     val actualSinkPort = if (sinkPort.isEmpty) {
       "ACCESS"
     } else {
-      if (kind == ConnectionKind.Access) { sinkPort.get + BUS_ACCESS} else sinkPort.get
+      if (kind == ConnectionKind.Access) { sinkPort.get + Aadl2Awas.BUS_ACCESS} else sinkPort.get
     }
 
     if (isBidirectional) {
@@ -479,7 +460,7 @@ final class Aadl2Awas private() {
   def build(featureAccess: FeatureAccess, isInverse: B, portId: String): Seq[Port] = {
     var pId = portId + featureAccess.identifier.name.elements.last.value
     if (featureAccess.category == ir.FeatureCategory.BusAccess) {
-      pId = pId + BUS_ACCESS
+      pId = pId + Aadl2Awas.BUS_ACCESS
     }
     Seq(Port(isIn = true, buildId(pId + "_IN"), None), Port(isIn = false, buildId(pId + "_OUT"), None))
   }
@@ -519,17 +500,17 @@ final class Aadl2Awas private() {
   def getPropagation(prop: ir.Emv2Propagation): Propagation = {
     val id = buildId(prop.propagationPoint.elements.last.value)
     val uid = id.value match {
-      case PROCESSOR => {
-        if (prop.direction == ir.PropagationDirection.In) buildId(PROCESSOR_IN)
-        else buildId(PROCESSOR_OUT)
+      case Aadl2Awas.PROCESSOR => {
+        if (prop.direction == ir.PropagationDirection.In) buildId(Aadl2Awas.PROCESSOR_IN)
+        else buildId(Aadl2Awas.PROCESSOR_OUT)
       }
-      case BINDINGS => {
-        if (prop.direction == ir.PropagationDirection.In) buildId(BINDINGS_IN)
-        else buildId(BINDINGS_OUT)
+      case Aadl2Awas.BINDINGS => {
+        if (prop.direction == ir.PropagationDirection.In) buildId(Aadl2Awas.BINDINGS_IN)
+        else buildId(Aadl2Awas.BINDINGS_OUT)
       }
-      case CONNECTION => {
-        if (prop.direction == ir.PropagationDirection.In) buildId(CONNECTION_IN)
-        else buildId(CONNECTION_OUT)
+      case Aadl2Awas.CONNECTION => {
+        if (prop.direction == ir.PropagationDirection.In) buildId(Aadl2Awas.CONNECTION_IN)
+        else buildId(Aadl2Awas.CONNECTION_OUT)
       }
       case _ => id
     }
@@ -619,6 +600,34 @@ final class Aadl2Awas private() {
 
 object Aadl2Awas {
 
+  val ALLOWED_CONNECTION_BINDING = "Deployment_Properties::Allowed_Connection_Binding"
+  val ACTUAL_CONNECTION_BINDING = "Deployment_Properties::Actual_Connection_Binding"
+  val ACTUAL_PROCESSOR_BINDING = "Deployment_Properties::Actual_Processor_Binding"
+  val ALLOWED_PROCESSOR_BINDING = "Deployment_Properties::Allowed_Processor_Binding"
+  val ALLOWED_MEMORY_BINDING = "Deployment_Properties::Allowed_Memory_Binding"
+  val ACTUAL_MEMORY_BINDING = "Deployment_Properties::Actual_Memory_Binding"
+  val ACTUAL_FUNCTION_BINDING = "Deployment_Properties::Actual_Function_Binding"
+  val ALLOWED_SUBPROGRAM_CALL_BINDING = "Deployment_Properties::Allowed_Subprogram_Call_Binding"
+  val ACTUAL_SUBPROGRAM_CALL_BINDING = "Deployment_Properties::Actual_Subprogram_Call_Binding"
+
+  val PROCESSOR_IN = "processor_IN"
+  val PROCESSOR_OUT = "processor_OUT"
+  val BINDINGS_IN = "bindings_IN"
+  val BINDINGS_OUT = "bindings_OUT"
+  val CONNECTION_IN = "connection_IN"
+  val CONNECTION_OUT = "connection_OUT"
+
+  val BINDINGS = "bindings"
+  val PROCESSOR = "processor"
+  val CONNECTION = "connection"
+
+  val BUS_ACCESS = "_bus_access"
+  val BUS_ACCESS_IN = "_bus_access_IN"
+  val BUS_ACCESS_OUT = "_bus_access_OUT"
+
+  val ACCESS_PORT = "ACCESS"
+  val ACCESS_IN_PORT = "ACCESS_IN"
+  val ACCESS_OUT_PORT = "ACCESS_OUT"
 
   def apply(aadlModel: ir.Aadl): Model = {
 

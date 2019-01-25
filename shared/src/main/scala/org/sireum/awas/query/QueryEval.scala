@@ -496,7 +496,7 @@ final class QueryEval(st: SymbolTable) {
 
       collector.Collector(
         st,
-        isetEmpty[ResourceUri],
+        isetEmpty[FlowGraph[FlowNode, Edge]],
         Some(ResultType.Error),
         Some(Operator.ID),
         uris.getPorts,
@@ -516,7 +516,7 @@ final class QueryEval(st: SymbolTable) {
         assert(FlowNode.getNode(uri.get).isDefined)
         collector.Collector(
           st,
-          isetEmpty + FlowNode.getNode(uri.get).get.getOwner.getUri,
+          isetEmpty + FlowNode.getNode(uri.get).get.getOwner,
           Some(ResultType.Node),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri] + uri.get, isetEmpty[ResourceUri],
@@ -532,7 +532,7 @@ final class QueryEval(st: SymbolTable) {
         }
         collector.Collector(
           st,
-          isetEmpty ++ gra.map(_.getUri),
+          isetEmpty ++ gra,
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] + uri.get,
@@ -541,7 +541,7 @@ final class QueryEval(st: SymbolTable) {
         val nodeUri = Resource.getParentUri(uri.get).get
         val gra = FlowNode.getNode(nodeUri).get.getOwner
         collector.Collector(st,
-          isetEmpty + gra.getUri,
+          isetEmpty + gra,
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
           isetEmpty[ResourceUri], isetEmpty[ResourceUri] ++ FlowNode.getNode(nodeUri).get.getPortsFromFlows(uri.get),
@@ -549,7 +549,7 @@ final class QueryEval(st: SymbolTable) {
       } else if (uri.get.startsWith(H.COMPONENT_TYPE) && uri.get == st.system) {
         collector.Collector(
           st,
-          FlowNode.getGraphs.map(_.getUri),
+          FlowNode.getGraphs,
           FlowNode.getGraphs.flatMap(_.nodes),
           isetEmpty[ResourceUri],
           ResultType.Node,

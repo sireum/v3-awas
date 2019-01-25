@@ -43,7 +43,7 @@ class BasicNodeImpl[G](uri: ResourceUri,
   //  var portList = isetEmpty[ResourceUri]
 
   //three types of nodes, components, connections, and ports
-  val portList: Iterable[ResourceUri] = getResourceType match {
+  def portList: Iterable[ResourceUri] = getResourceType match {
     case NodeType.COMPONENT => st.componentTable(uri).ports
     case NodeType.CONNECTION => {
       Resource.getParentUri(uri) match {
