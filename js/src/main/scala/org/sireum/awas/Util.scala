@@ -1,8 +1,8 @@
 package org.sireum.awas
-import facades.{GraphViz, SvgPanZoom}
-import org.scalajs.dom.Element
+import facades.{GraphViz, Options, SVGPanZoom}
+import org.scalajs.dom.{Element, Event}
 import org.scalajs.dom.html.{Anchor, Input}
-import org.scalajs.dom.raw.Node
+import org.scalajs.dom.raw.{Node, SVGElement}
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.Main._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
@@ -16,7 +16,7 @@ import scalatags.Text.all.raw
 import scala.scalajs.js
 
 object Util {
-  private var svgs: IMap[ResourceUri, Node] = imapEmpty[String, Node]
+  private var svgs: IMap[ResourceUri, SVGElement] = imapEmpty[String, SVGElement]
   private var graphNodeMap: IMap[String, ISet[SvgNode]] = imapEmpty[String, ISet[SvgNode]]
 
 //  def getAllSubGraphs(st: SymbolTable)
@@ -27,7 +27,11 @@ object Util {
 //    graphs
 //  }
 
-  def graph2Svg(graphUri: ResourceUri, viewConfig: SvgGenConfig = SettingsView.currentConfig, st: SymbolTable): Node = {
+  def graph2Svg(
+    graphUri: ResourceUri,
+    viewConfig: SvgGenConfig = SettingsView.currentConfig,
+    st: SymbolTable
+  ): SVGElement = {
     val dotGraph = SvgGenerator(
       FlowNode
         .getGraph(graphUri)
@@ -41,31 +45,39 @@ object Util {
       js.Dictionary(
         (
           "images",
-          js.Array(js.Dictionary(("path", "min/images/sub-graph-icon.png"), ("width", "45px"), ("height", "25px")))
-        )
+          js.Array(js.Dictionary(("path", "min/images/sub-graph-icon.png"), ("width", "45px"), ("height", "25px"))))
       )
     )
-    val result = templateContent(raw(svgString)).querySelectorAll("svg")(0)
-    val nodes = processSvg(result.asInstanceOf[Element], st)
+    val result = templateContent(raw(svgString)).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
+    val nodes = processSvg(result, st)
     graphNodeMap += (graphUri -> nodes)
     svgs = svgs + ((graphUri, result))
+
+    //SvgPanZoom.svgPanZoom(result)
+
     result
   }
 
   def reDrawGraphs(svgGenConfig: SvgGenConfig): Unit = {
+    if (gl.isDefined) {
+      gl.get
+    }
     svgs.keySet.foreach { gk =>
       val old_svg = svgs(gk)
       val new_svg = Util.graph2Svg(gk, svgGenConfig, st.get)
       old_svg.parentNode.replaceChild(new_svg, old_svg)
+      new SVGPanZoom(new_svg, Options())
       resetOrientationRadio()
     }
-    SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+
+    //SvgPanZoom.svgPanZoom("svg")
   }
 
-  def processSvg(svg: Element, st: SymbolTable): ISet[SvgNode] = {
+  def processSvg(svg: SVGElement, st: SymbolTable): ISet[SvgNode] = {
     svg.setAttribute("id", "awasgraph")
     svg.setAttribute("height", "100%")
     svg.setAttribute("width", "100%")
+  //    svg.setAttribute("viewBox", "0 0 100 100")
     jQuery(svg).removeAttr("xmlns")
     jQuery(svg).find("title").each((e: Element) => e.parentNode.removeChild(e))
     val allLinks = org.scalajs.dom.ext.PimpedNodeList(svg.querySelectorAll("[*|href='templink']"))

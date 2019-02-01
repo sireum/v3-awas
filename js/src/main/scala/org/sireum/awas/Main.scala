@@ -31,7 +31,7 @@ import facades._
 import org.scalajs.dom
 import org.scalajs.dom.ext._
 import org.scalajs.dom.html.{Anchor, Div, Input, Label, Table}
-import org.scalajs.dom.raw.Node
+import org.scalajs.dom.raw.{Node, SVGElement}
 import org.scalajs.dom.svg.SVG
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
@@ -81,6 +81,7 @@ object Main {
       val ancestors = H.getAllAncestors(uri, st)
       div(
         cls := "container is-fluid ",
+        height := "3%",
         nav(
           cls := "level",
           div(
@@ -126,9 +127,7 @@ object Main {
       } else {
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
-
-        SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options()))
       }
     }
     false
@@ -191,33 +190,33 @@ object Main {
               val breadCrumbs = render[Div](uriToBreadCrumbs(uri, st.get))
               $[Input](breadCrumbs, "#td").onclick = (_: MouseEvent) => toTopDown(uri)
               //              {
-            //                println(componentState.get("isTD").get)
-            //                if (componentState.get("isTD").isDefined &&
-            //                  !componentState.get("isTD").get.asInstanceOf[Boolean]) {
-            //                  //                  $[Input](breadCrumbs, ".td").checked = true
-            //                  container.getElement().children("svg").first().replaceWith(
-            //                    Util.graph2Svg(uri, SvgGenConfig(RankDir.TB,
-            //                      SettingsView.currentConfig.simpleConn,
-            //                      SettingsView.currentConfig.viewVirtualPorts, SettingsView.currentConfig.viewErrors,
-            //                      SettingsView.currentConfig.viewFlows, SettingsView.currentConfig.bindings), st.get))
-            //                  SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-            //                  componentState.update("isTD", true)
-            //                }
-            //              }
+              //                println(componentState.get("isTD").get)
+              //                if (componentState.get("isTD").isDefined &&
+              //                  !componentState.get("isTD").get.asInstanceOf[Boolean]) {
+              //                  //                  $[Input](breadCrumbs, ".td").checked = true
+              //                  container.getElement().children("svg").first().replaceWith(
+              //                    Util.graph2Svg(uri, SvgGenConfig(RankDir.TB,
+              //                      SettingsView.currentConfig.simpleConn,
+              //                      SettingsView.currentConfig.viewVirtualPorts, SettingsView.currentConfig.viewErrors,
+              //                      SettingsView.currentConfig.viewFlows, SettingsView.currentConfig.bindings), st.get))
+              //                  SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+              //                  componentState.update("isTD", true)
+              //                }
+              //              }
               $[Input](breadCrumbs, "#lr").onclick = (_: MouseEvent) => toLeftRight(uri)
-            //              {
-            //                if (componentState.get("isTD").isDefined &&
-            //                  componentState.get("isTD").get.asInstanceOf[Boolean]) {
-            //                  //                  $[Input](breadCrumbs, ".lr").checked = true
-            //                  container.getElement().children("svg").first().replaceWith(
-            //                    Util.graph2Svg(uri, SvgGenConfig(RankDir.LR,
-            //                      SettingsView.currentConfig.simpleConn,
-            //                      SettingsView.currentConfig.viewVirtualPorts, SettingsView.currentConfig.viewErrors,
-            //                      SettingsView.currentConfig.viewFlows, SettingsView.currentConfig.bindings), st.get))
-            //                  SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-            //                  componentState.update("isTD", false)
-            //                }
-            //              }
+              //              {
+              //                if (componentState.get("isTD").isDefined &&
+              //                  componentState.get("isTD").get.asInstanceOf[Boolean]) {
+              //                  //                  $[Input](breadCrumbs, ".lr").checked = true
+              //                  container.getElement().children("svg").first().replaceWith(
+              //                    Util.graph2Svg(uri, SvgGenConfig(RankDir.LR,
+              //                      SettingsView.currentConfig.simpleConn,
+              //                      SettingsView.currentConfig.viewVirtualPorts, SettingsView.currentConfig.viewErrors,
+              //                      SettingsView.currentConfig.viewFlows, SettingsView.currentConfig.bindings), st.get))
+              //                  SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+              //                  componentState.update("isTD", false)
+              //                }
+              //              }
 
               if (SettingsView.currentConfig.rankDir == RankDir.TB) {
                 $[Input](breadCrumbs, "#td").checked = true
@@ -228,24 +227,25 @@ object Main {
               }
 
               val asvg = Util.graph2Svg(uri, SettingsView.currentConfig, st.get)
-
-              container.getElement().append(breadCrumbs).append(asvg)
-              SvgPanZoom("svg").svgPanZoom(js.Dictionary())
-
-              }
-            container
+              val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
+              svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
+              container.getElement().append(breadCrumbs).append(svgDiv)
+              new SVGPanZoom(asvg, Options())
+            }
+            container.getElement().attr("display", "inline-block;")
+            //container.on("resize", {() => {SvgPanZoom.resizeAll()}}:js.Function)
           }
 
           }: js.Function)
           gl.get.init()
 
-          SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+        //          SvgPanZoom.svgPanZoom("svg")
           // gl.root.contentItems(0).addChild(childConfig)
 
           gl.get.root.setTitle(systemName)
 
           computeHeight(gl.get)
-
+//
           val queryButton = mainDiv.querySelector("#query-button")
           val clearButton = mainDiv.querySelector("#clear-button")
           val forwardButton = mainDiv.querySelector("#forward-button")
@@ -324,7 +324,7 @@ object Main {
             st.get
           )
         )
-        SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options()))
         compState.update("isTD", true)
       }
     }
@@ -352,7 +352,7 @@ object Main {
             st.get
           )
         )
-        SvgPanZoom("svg").svgPanZoom(js.Dictionary())
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options()))
         compState.update("isTD", false)
       }
     }
@@ -369,6 +369,7 @@ object Main {
     graph.style.height = s"${bodyHeight}px"
 //    val query = $[Div]("#query-box")
 //    query.style.height = s"${queryHeight}px"
+//SvgPanZoom.resizeAll()
     gl.updateSize(scalajs.js.undefined, scalajs.js.undefined)
   }
 

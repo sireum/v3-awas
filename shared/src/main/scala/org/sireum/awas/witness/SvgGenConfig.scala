@@ -24,6 +24,6 @@ import org.sireum._
 object SvgGenConfig {
 
   def defaultConfig: SvgGenConfig = {
-    SvgGenConfig(RankDir.TB, F, T, F, T, F)
+    SvgGenConfig(RankDir.TB, F, T, F, F, F)
   }
 }

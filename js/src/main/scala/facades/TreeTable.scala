@@ -50,7 +50,6 @@ trait TreeNode extends js.Object {
 object TreeTable {
   def apply(tag: String): TreeTable = {
     val x = org.scalajs.jquery.jQuery(tag)
-    println("table : " + x)
     x
   }
 

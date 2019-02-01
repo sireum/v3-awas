@@ -325,7 +325,7 @@ class CollectorImpl(
         (getNodes diff c.getNodes).map(_.getUri),
         if (resT.isDefined && resT.get >= ResultType.Port) getPorts diff c.getPorts else isetEmpty,
         if (resT.isDefined && resT.get >= ResultType.Error) diffErrors(getPortErrors, c.getPortErrors) else imapEmpty,
-        if(resT.isDefined && resT.get >= ResultType.Flow)getFlows diff c.getFlows else isetEmpty,
+        if (resT.isDefined && resT.get >= ResultType.Port) getFlows diff c.getFlows else isetEmpty,
         getModes diff c.getModes,
         getBehavior diff c.getBehavior,
         getEvents diff c.getEvents,
@@ -353,7 +353,6 @@ class CollectorImpl(
       } else {
         c.getResultType
       }
-      println(resT)
       Collector(
         symbolTable,
         getGraphs intersect c.getGraphs,
@@ -364,14 +363,13 @@ class CollectorImpl(
         (getNodes intersect c.getNodes).map(_.getUri),
         if (resT.isDefined && resT.get >= ResultType.Port) getPorts intersect c.getPorts else isetEmpty,
         if (resT.isDefined && resT.get >= ResultType.Error) intersectErrors(getPortErrors, c.getPortErrors) else imapEmpty,
-        if(resT.isDefined && resT.get >= ResultType.Flow) getFlows intersect c.getFlows else isetEmpty,
+        if (resT.isDefined && resT.get >= ResultType.Port) getFlows intersect c.getFlows else isetEmpty,
         getModes intersect c.getModes,
         getBehavior intersect c.getBehavior,
         getEvents intersect c.getEvents,
         getPaths intersect c.getPaths,
         hasCycles && c.hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
-
     } else {
       //future allow collector to collect across systems
       Collector(

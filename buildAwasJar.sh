@@ -17,5 +17,5 @@ rm -rf $DIR/jvm/src/main/resources/org/sireum/awas/AADLBridge/awas-web.zip
 cd $AWASWEBDIR/..
 zip -9r $DIR/jvm/src/main/resources/org/sireum/awas/AADLBridge/awas-web.zip ./awas-web
 rm -rf $AWASWEBDIR
-$DIR/../bin/sbt-launch.sh assembly
-echo 'Sireum.jar generated in '$( cd "$( dirname "$DIR" )"/bin/ && pwd)
+$DIR/../bin/sbt-launch.sh "project awasJar" assembly
+echo 'awas.jar generated at '$( cd "$( dirname "$DIR" )"/awasJar/target/scala-2.12/ && pwd)
