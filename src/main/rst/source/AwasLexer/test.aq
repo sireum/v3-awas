@@ -1,0 +1,43 @@
+x = y.z mmmm
+
+A = l.m.t
+
+test = reach
+
+test2 = reach forward
+
+test3 = reach forward x.y
+
+test4 = reach backward (reach forward x.y)
+
+test5 = reach from x.y to y.z
+
+test6 = reach from (reach forward x.y) to (reach backward m.n)
+
+test7 = x.y{l.m}
+
+test8 = x.y{l.m, n.o}
+
+test9 = x.y{a.b, b.c, d.e.f}
+
+test10 = reach forward x.y{m.n}
+
+test11 = reach paths from x.y to a.b
+
+test12 = reach simple paths from x.y{a.b, m.n} to a.b{c.d, k.l}
+
+test13 = reach refined paths from x.y{a} to a.b{c}
+
+test14 = reach refined simple paths from x.y{a} to a.b{c}
+
+test15 = x.y union a.b
+
+test16 = x.y - reach paths from x.y to a.b
+
+test17 = reach forward x.y:port
+
+test18 =  reach paths from x.y:node to a.b
+
+test19 = reach paths from x.y to l.m with none(a.b)
+
+test20 = reach paths from x.y to l.m with all(reach forward a.b)

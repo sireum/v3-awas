@@ -1,0 +1,27 @@
+Sireum Logika:
+A Program Verifier and A Natural Deduction Proof Checker
+... for Propositional, Predicate, and Programming Logics
+
+Usage: sireum logika [option] <filename-1> ... <filename-N>
+
+Options:
+-f, --formula    Formula/sequent matching the truth table/logic input file's
+    --server     Enable server mode
+-h, --help       Display usage information
+
+Programming Logic Options:
+-a, --auto        Enable auto mode
+-b, --bitwidth    Default integer bit-width for symbolic execution & translation
+                    Default: 0
+-l, --last        Check last program only
+-t, --timeout     Timeout for algebra and auto (in milliseconds)
+                    Default: 2000
+-x, --symexe      Enable symbolic execution
+    --c           File/directory path for C translation
+    --compare     Compare well-formed input program files (sans contracts/prints)
+    --run         Run input program file(s)
+    --sat         Enable sat checking of facts and contracts
+
+Symbol Conversion Options:
+    --ascii      Convert to ASCII
+    --unicode    Convert to Unicode

@@ -1,0 +1,7 @@
+setup.py
+AwasLexer/__init__.py
+Awas_Query_Pygments_Lexer.egg-info/PKG-INFO
+Awas_Query_Pygments_Lexer.egg-info/SOURCES.txt
+Awas_Query_Pygments_Lexer.egg-info/dependency_links.txt
+Awas_Query_Pygments_Lexer.egg-info/entry_points.txt
+Awas_Query_Pygments_Lexer.egg-info/top_level.txt

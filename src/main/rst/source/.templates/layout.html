@@ -1,0 +1,19 @@
+{# Import the theme's layout. #}
+{% extends "!layout.html" %}
+
+{% set bootswatch_css_custom = ['_static/sireum.css'] %}
+{%- block extrahead -%}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133922066-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-133922066-1');
+</script>
+{%- endblock -%}
+
+{# Add some extra stuff before and use existing with 'super()' call. #}
+{% block footer %}
+{% endblock %}
