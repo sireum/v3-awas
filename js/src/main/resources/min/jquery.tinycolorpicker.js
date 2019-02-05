@@ -113,7 +113,7 @@
             ,   backgroundUrl = $track.css("background-image").replace(/"/g, "").replace(/url\(|\)$/ig, "")
             ;
 
-            colorPicker.crossOrigin = "Anonymous";
+            //colorPicker.crossOrigin = "use-credentials";
             $track.css("background-image", "none");
 
             $(colorPicker).on('load', function() {
