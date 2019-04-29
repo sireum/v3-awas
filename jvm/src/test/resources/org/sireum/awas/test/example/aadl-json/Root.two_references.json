@@ -1,1236 +1,2025 @@
 {
-  "type": "Aadl",
-  "components": [
+  "type" : "Aadl",
+  "components" : [
     {
-      "type": "Component",
-      "identifier": {
-        "type": "Name",
-        "name": [
-          "Root_two_references_Instance"
-        ]
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : ["Root_two_references_Instance"],
+        "pos" : {
+          "type" : "Some",
+          "value" : {
+            "type" : "Position",
+            "uriOpt" : {
+              "type" : "Some",
+              "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+            },
+            "beginLine" : 72,
+            "beginColumn" : 2,
+            "endLine" : 79,
+            "endColumn" : 26,
+            "offset" : 2021,
+            "length" : 275
+          }
+        }
       },
-      "category": {
-        "type": "ComponentCategory",
-        "value": "System"
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "System"
       },
-      "classifier": {
-        "type": "None"
+      "classifier" : {
+        "type" : "None"
       },
-      "features": [
+      "features" : [
         {
-          "type": "FeatureEnd",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "root_in"
-            ]
+          "type" : "FeatureEnd",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "root_in"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 8,
+                "beginColumn" : 4,
+                "endLine" : 8,
+                "endColumn" : 25,
+                "offset" : 182,
+                "length" : 21
+              }
+            }
           },
-          "direction": {
-            "type": "Direction",
-            "value": "In"
+          "direction" : {
+            "type" : "Direction",
+            "value" : "In"
           },
-          "category": {
-            "type": "FeatureCategory",
-            "value": "AbstractFeature"
+          "category" : {
+            "type" : "FeatureCategory",
+            "value" : "AbstractFeature"
           },
-          "classifier": {
-            "type": "None"
+          "classifier" : {
+            "type" : "None"
           },
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "FeatureEnd",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "root_out"
-            ]
+          "type" : "FeatureEnd",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "root_out"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 9,
+                "beginColumn" : 4,
+                "endLine" : 9,
+                "endColumn" : 26,
+                "offset" : 207,
+                "length" : 22
+              }
+            }
           },
-          "direction": {
-            "type": "Direction",
-            "value": "Out"
+          "direction" : {
+            "type" : "Direction",
+            "value" : "Out"
           },
-          "category": {
-            "type": "FeatureCategory",
-            "value": "AbstractFeature"
+          "category" : {
+            "type" : "FeatureCategory",
+            "value" : "AbstractFeature"
           },
-          "classifier": {
-            "type": "None"
+          "classifier" : {
+            "type" : "None"
           },
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "subComponents": [
+      "subComponents" : [
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "Sub1"
-            ]
-          },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "System"
-          },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "Connection_Translation::SubSystem.withproc"
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "Sub1"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 75,
+                "beginColumn" : 4,
+                "endLine" : 75,
+                "endColumn" : 37,
+                "offset" : 2111,
+                "length" : 33
+              }
             }
           },
-          "features": [
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "System"
+          },
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "Connection_Translation::SubSystem.withproc"
+            }
+          },
+          "features" : [
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_in"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 14,
+                    "beginColumn" : 4,
+                    "endLine" : 14,
+                    "endColumn" : 23,
+                    "offset" : 275,
+                    "length" : 19
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "In"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "In"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "AbstractFeature"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "AbstractFeature"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_out"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 15,
+                    "beginColumn" : 4,
+                    "endLine" : 15,
+                    "endColumn" : 25,
+                    "offset" : 298,
+                    "length" : 21
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "Out"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "Out"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "AbstractFeature"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "AbstractFeature"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_port"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 16,
+                    "beginColumn" : 4,
+                    "endLine" : 16,
+                    "endColumn" : 37,
+                    "offset" : 323,
+                    "length" : 33
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "EventDataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "EventDataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
             {
-              "type": "Component",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_proc1"
-                ]
-              },
-              "category": {
-                "type": "ComponentCategory",
-                "value": "Process"
-              },
-              "classifier": {
-                "type": "Some",
-                "value": {
-                  "type": "Classifier",
-                  "name": "Connection_Translation::Sample_Process.impl"
+              "type" : "Component",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 64,
+                    "beginColumn" : 4,
+                    "endLine" : 64,
+                    "endColumn" : 44,
+                    "offset" : 1704,
+                    "length" : 40
+                  }
                 }
               },
-              "features": [
+              "category" : {
+                "type" : "ComponentCategory",
+                "value" : "Process"
+              },
+              "classifier" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Classifier",
+                  "name" : "Connection_Translation::Sample_Process.impl"
+                }
+              },
+              "features" : [
                 {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc1",
-                      "proc_in"
-                    ]
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_in"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 21,
+                        "beginColumn" : 4,
+                        "endLine" : 21,
+                        "endColumn" : 27,
+                        "offset" : 413,
+                        "length" : 23
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "In"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "In"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 },
                 {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc1",
-                      "proc_out"
-                    ]
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 22,
+                        "beginColumn" : 4,
+                        "endLine" : 22,
+                        "endColumn" : 29,
+                        "offset" : 440,
+                        "length" : 25
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "Out"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "Out"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 },
                 {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc1",
-                      "proc_in_out"
-                    ]
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_in_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 23,
+                        "beginColumn" : 4,
+                        "endLine" : 23,
+                        "endColumn" : 35,
+                        "offset" : 469,
+                        "length" : 31
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "EventPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "EventPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               ],
-              "subComponents": [
+              "subComponents" : [
               ],
-              "connections": [
+              "connections" : [
               ],
-              "connectionInstances": [
+              "connectionInstances" : [
               ],
-              "properties": [
+              "properties" : [
               ],
-              "flows": [
+              "flows" : [
               ],
-              "modes": [
+              "modes" : [
               ],
-              "annexes": [
+              "annexes" : [
                 {
-                  "type": "Annex",
-                  "name": "Emv2",
-                  "clause": {
-                    "type": "Emv2Clause",
-                    "libraries": [],
-                    "propagations": [
+                  "type" : "Annex",
+                  "name" : "Emv2",
+                  "clause" : {
+                    "type" : "Emv2Clause",
+                    "libraries" : [
                     ],
-                    "flows": [
-                    ]
-                  }
-                }
-              ]
-            },
-            {
-              "type": "Component",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_proc2"
-                ]
-              },
-              "category": {
-                "type": "ComponentCategory",
-                "value": "Process"
-              },
-              "classifier": {
-                "type": "Some",
-                "value": {
-                  "type": "Classifier",
-                  "name": "Connection_Translation::Sample_Process.impl"
-                }
-              },
-              "features": [
-                {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc2",
-                      "proc_in"
-                    ]
-                  },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "In"
-                  },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
-                  },
-                  "classifier": {
-                    "type": "None"
-                  },
-                  "properties": [
-                  ]
-                },
-                {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc2",
-                      "proc_out"
-                    ]
-                  },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "Out"
-                  },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
-                  },
-                  "classifier": {
-                    "type": "None"
-                  },
-                  "properties": [
-                  ]
-                },
-                {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc2",
-                      "proc_in_out"
-                    ]
-                  },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
-                  },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "EventPort"
-                  },
-                  "classifier": {
-                    "type": "None"
-                  },
-                  "properties": [
-                  ]
-                }
-              ],
-              "subComponents": [
-              ],
-              "connections": [
-              ],
-              "connectionInstances": [
-              ],
-              "properties": [
-              ],
-              "flows": [
-              ],
-              "modes": [
-              ],
-              "annexes": [
-                {
-                  "type": "Annex",
-                  "name": "Emv2",
-                  "clause": {
-                    "type": "Emv2Clause",
-                    "libraries": [],
-                    "propagations": [
+                    "propagations" : [
                     ],
-                    "flows": [
-                    ]
-                  }
-                }
-              ]
-            }
-          ],
-          "connections": [
-            {
-              "type": "Connection",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "parent_to_child_in"
-                ]
-              },
-              "src": [
-                {
-                  "type": "EndPoint",
-                  "component": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1"
-                    ]
-                  },
-                  "feature": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Name",
-                      "name": [
-                        "Root_two_references_Instance",
-                        "Sub1",
-                        "sub_in"
-                      ]
-                    }
-                  },
-                  "direction": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Direction",
-                      "value": "In"
+                    "flows" : [
+                    ],
+                    "componentBehavior" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2BehaviorSection",
+                        "events" : [
+                        ],
+                        "transitions" : [
+                        ],
+                        "propagations" : [
+                        ]
+                      }
                     }
                   }
                 }
-              ],
-              "dst": [
-                {
-                  "type": "EndPoint",
-                  "component": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc1"
-                    ]
-                  },
-                  "feature": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Name",
-                      "name": [
-                        "Root_two_references_Instance",
-                        "Sub1",
-                        "sub_proc1",
-                        "proc_in"
-                      ]
-                    }
-                  },
-                  "direction": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Direction",
-                      "value": "In"
-                    }
-                  }
-                }
-              ],
-              "kind": {
-                "type": "ConnectionKind",
-                "value": "Feature"
-              },
-              "isBiDirectional": false,
-              "connectionInstances": [
-                {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "root_in -> Sub1",
-                    "sub_proc1",
-                    "proc_in"
-                  ]
-                }
-              ],
-              "properties": [
               ]
             },
             {
-              "type": "Connection",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "child_to_parent_out"
-                ]
-              },
-              "src": [
-                {
-                  "type": "EndPoint",
-                  "component": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc2"
-                    ]
-                  },
-                  "feature": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Name",
-                      "name": [
-                        "Root_two_references_Instance",
-                        "Sub1",
-                        "sub_proc2",
-                        "proc_out"
-                      ]
-                    }
-                  },
-                  "direction": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Direction",
-                      "value": "Out"
-                    }
+              "type" : "Component",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 65,
+                    "beginColumn" : 4,
+                    "endLine" : 65,
+                    "endColumn" : 44,
+                    "offset" : 1748,
+                    "length" : 40
                   }
                 }
-              ],
-              "dst": [
-                {
-                  "type": "EndPoint",
-                  "component": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1"
-                    ]
-                  },
-                  "feature": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Name",
-                      "name": [
-                        "Root_two_references_Instance",
-                        "Sub1",
-                        "sub_out"
-                      ]
-                    }
-                  },
-                  "direction": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Direction",
-                      "value": "Out"
-                    }
-                  }
-                }
-              ],
-              "kind": {
-                "type": "ConnectionKind",
-                "value": "Feature"
               },
-              "isBiDirectional": false,
-              "connectionInstances": [
+              "category" : {
+                "type" : "ComponentCategory",
+                "value" : "Process"
+              },
+              "classifier" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Classifier",
+                  "name" : "Connection_Translation::Sample_Process.impl"
+                }
+              },
+              "features" : [
                 {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "Sub1",
-                    "sub_proc2",
-                    "proc_out -> root_out"
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_in"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 21,
+                        "beginColumn" : 4,
+                        "endLine" : 21,
+                        "endColumn" : 27,
+                        "offset" : 413,
+                        "length" : 23
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "In"
+                  },
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
+                  },
+                  "classifier" : {
+                    "type" : "None"
+                  },
+                  "properties" : [
+                  ]
+                },
+                {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 22,
+                        "beginColumn" : 4,
+                        "endLine" : 22,
+                        "endColumn" : 29,
+                        "offset" : 440,
+                        "length" : 25
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "Out"
+                  },
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
+                  },
+                  "classifier" : {
+                    "type" : "None"
+                  },
+                  "properties" : [
+                  ]
+                },
+                {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_in_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 23,
+                        "beginColumn" : 4,
+                        "endLine" : 23,
+                        "endColumn" : 35,
+                        "offset" : 469,
+                        "length" : 31
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
+                  },
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "EventPort"
+                  },
+                  "classifier" : {
+                    "type" : "None"
+                  },
+                  "properties" : [
                   ]
                 }
               ],
-              "properties": [
+              "subComponents" : [
+              ],
+              "connections" : [
+              ],
+              "connectionInstances" : [
+              ],
+              "properties" : [
+              ],
+              "flows" : [
+              ],
+              "modes" : [
+              ],
+              "annexes" : [
+                {
+                  "type" : "Annex",
+                  "name" : "Emv2",
+                  "clause" : {
+                    "type" : "Emv2Clause",
+                    "libraries" : [
+                    ],
+                    "propagations" : [
+                    ],
+                    "flows" : [
+                    ],
+                    "componentBehavior" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2BehaviorSection",
+                        "events" : [
+                        ],
+                        "transitions" : [
+                        ],
+                        "propagations" : [
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "connections" : [
+            {
+              "type" : "Connection",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "parent_to_child_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 67,
+                    "beginColumn" : 4,
+                    "endLine" : 67,
+                    "endColumn" : 61,
+                    "offset" : 1806,
+                    "length" : 57
+                  }
+                }
+              },
+              "src" : [
+                {
+                  "type" : "EndPoint",
+                  "component" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1"],
+                    "pos" : {
+                      "type" : "None"
+                    }
+                  },
+                  "feature" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Name",
+                      "name" : ["Root_two_references_Instance", "Sub1", "sub_in"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 14,
+                          "beginColumn" : 4,
+                          "endLine" : 14,
+                          "endColumn" : 23,
+                          "offset" : 275,
+                          "length" : 19
+                        }
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Direction",
+                      "value" : "In"
+                    }
+                  }
+                }
+              ],
+              "dst" : [
+                {
+                  "type" : "EndPoint",
+                  "component" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 64,
+                        "beginColumn" : 4,
+                        "endLine" : 64,
+                        "endColumn" : 44,
+                        "offset" : 1704,
+                        "length" : 40
+                      }
+                    }
+                  },
+                  "feature" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Name",
+                      "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_in"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 21,
+                          "beginColumn" : 4,
+                          "endLine" : 21,
+                          "endColumn" : 27,
+                          "offset" : 413,
+                          "length" : 23
+                        }
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Direction",
+                      "value" : "In"
+                    }
+                  }
+                }
+              ],
+              "kind" : {
+                "type" : "ConnectionKind",
+                "value" : "Feature"
+              },
+              "isBiDirectional" : false,
+              "connectionInstances" : [
+                {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "root_in -> Sub1", "sub_proc1", "proc_in"],
+                  "pos" : {
+                    "type" : "None"
+                  }
+                }
+              ],
+              "properties" : [
               ]
             },
             {
-              "type": "Connection",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "child_to_child"
-                ]
+              "type" : "Connection",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "child_to_parent_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 69,
+                    "beginColumn" : 4,
+                    "endLine" : 69,
+                    "endColumn" : 63,
+                    "offset" : 1933,
+                    "length" : 59
+                  }
+                }
               },
-              "src": [
+              "src" : [
                 {
-                  "type": "EndPoint",
-                  "component": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc1"
-                    ]
-                  },
-                  "feature": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Name",
-                      "name": [
-                        "Root_two_references_Instance",
-                        "Sub1",
-                        "sub_proc1",
-                        "proc_out"
-                      ]
+                  "type" : "EndPoint",
+                  "component" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 65,
+                        "beginColumn" : 4,
+                        "endLine" : 65,
+                        "endColumn" : 44,
+                        "offset" : 1748,
+                        "length" : 40
+                      }
                     }
                   },
-                  "direction": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Direction",
-                      "value": "Out"
+                  "feature" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Name",
+                      "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_out"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 22,
+                          "beginColumn" : 4,
+                          "endLine" : 22,
+                          "endColumn" : 29,
+                          "offset" : 440,
+                          "length" : 25
+                        }
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Direction",
+                      "value" : "Out"
                     }
                   }
                 }
               ],
-              "dst": [
+              "dst" : [
                 {
-                  "type": "EndPoint",
-                  "component": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc2"
-                    ]
-                  },
-                  "feature": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Name",
-                      "name": [
-                        "Root_two_references_Instance",
-                        "Sub1",
-                        "sub_proc2",
-                        "proc_in"
-                      ]
+                  "type" : "EndPoint",
+                  "component" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1"],
+                    "pos" : {
+                      "type" : "None"
                     }
                   },
-                  "direction": {
-                    "type": "Some",
-                    "value": {
-                      "type": "Direction",
-                      "value": "In"
+                  "feature" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Name",
+                      "name" : ["Root_two_references_Instance", "Sub1", "sub_out"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 15,
+                          "beginColumn" : 4,
+                          "endLine" : 15,
+                          "endColumn" : 25,
+                          "offset" : 298,
+                          "length" : 21
+                        }
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Direction",
+                      "value" : "Out"
                     }
                   }
                 }
               ],
-              "kind": {
-                "type": "ConnectionKind",
-                "value": "Port"
+              "kind" : {
+                "type" : "ConnectionKind",
+                "value" : "Feature"
               },
-              "isBiDirectional": false,
-              "connectionInstances": [
+              "isBiDirectional" : false,
+              "connectionInstances" : [
                 {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "Sub1",
-                    "sub_proc1",
-                    "proc_out -> sub_proc2",
-                    "proc_in"
-                  ]
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_out -> root_out"],
+                  "pos" : {
+                    "type" : "None"
+                  }
                 }
               ],
-              "properties": [
+              "properties" : [
+              ]
+            },
+            {
+              "type" : "Connection",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "child_to_child"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 68,
+                    "beginColumn" : 4,
+                    "endLine" : 68,
+                    "endColumn" : 66,
+                    "offset" : 1867,
+                    "length" : 62
+                  }
+                }
+              },
+              "src" : [
+                {
+                  "type" : "EndPoint",
+                  "component" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 64,
+                        "beginColumn" : 4,
+                        "endLine" : 64,
+                        "endColumn" : 44,
+                        "offset" : 1704,
+                        "length" : 40
+                      }
+                    }
+                  },
+                  "feature" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Name",
+                      "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_out"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 22,
+                          "beginColumn" : 4,
+                          "endLine" : 22,
+                          "endColumn" : 29,
+                          "offset" : 440,
+                          "length" : 25
+                        }
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Direction",
+                      "value" : "Out"
+                    }
+                  }
+                }
+              ],
+              "dst" : [
+                {
+                  "type" : "EndPoint",
+                  "component" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 65,
+                        "beginColumn" : 4,
+                        "endLine" : 65,
+                        "endColumn" : 44,
+                        "offset" : 1748,
+                        "length" : 40
+                      }
+                    }
+                  },
+                  "feature" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Name",
+                      "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_in"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 21,
+                          "beginColumn" : 4,
+                          "endLine" : 21,
+                          "endColumn" : 27,
+                          "offset" : 413,
+                          "length" : 23
+                        }
+                      }
+                    }
+                  },
+                  "direction" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Direction",
+                      "value" : "In"
+                    }
+                  }
+                }
+              ],
+              "kind" : {
+                "type" : "ConnectionKind",
+                "value" : "Port"
+              },
+              "isBiDirectional" : false,
+              "connectionInstances" : [
+                {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_out -> sub_proc2", "proc_in"],
+                  "pos" : {
+                    "type" : "None"
+                  }
+                }
+              ],
+              "properties" : [
               ]
             }
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
             {
-              "type": "ConnectionInstance",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_proc1.proc_out -> sub_proc2.proc_in"
-                ]
-              },
-              "src": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "Sub1",
-                    "sub_proc1"
-                  ]
-                },
-                "feature": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc1",
-                      "proc_out"
-                    ]
-                  }
-                },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "Out"
+              "type" : "ConnectionInstance",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1.proc_out -> sub_proc2.proc_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 68,
+                    "beginColumn" : 4,
+                    "endLine" : 68,
+                    "endColumn" : 66,
+                    "offset" : 1867,
+                    "length" : 62
                   }
                 }
               },
-              "dst": {
-                "type": "EndPoint",
-                "component": {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "Sub1",
-                    "sub_proc2"
-                  ]
-                },
-                "feature": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "sub_proc2",
-                      "proc_in"
-                    ]
+              "src" : {
+                "type" : "EndPoint",
+                "component" : {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 64,
+                      "beginColumn" : 4,
+                      "endLine" : 64,
+                      "endColumn" : 44,
+                      "offset" : 1704,
+                      "length" : 40
+                    }
                   }
                 },
-                "direction": {
-                  "type": "Some",
-                  "value": {
-                    "type": "Direction",
-                    "value": "In"
+                "feature" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 22,
+                        "beginColumn" : 4,
+                        "endLine" : 22,
+                        "endColumn" : 29,
+                        "offset" : 440,
+                        "length" : 25
+                      }
+                    }
+                  }
+                },
+                "direction" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Direction",
+                    "value" : "Out"
                   }
                 }
               },
-              "kind": {
-                "type": "ConnectionKind",
-                "value": "Port"
+              "dst" : {
+                "type" : "EndPoint",
+                "component" : {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 65,
+                      "beginColumn" : 4,
+                      "endLine" : 65,
+                      "endColumn" : 44,
+                      "offset" : 1748,
+                      "length" : 40
+                    }
+                  }
+                },
+                "feature" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_in"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 21,
+                        "beginColumn" : 4,
+                        "endLine" : 21,
+                        "endColumn" : 27,
+                        "offset" : 413,
+                        "length" : 23
+                      }
+                    }
+                  }
+                },
+                "direction" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Direction",
+                    "value" : "In"
+                  }
+                }
               },
-              "connectionRefs": [
+              "kind" : {
+                "type" : "ConnectionKind",
+                "value" : "Port"
+              },
+              "connectionRefs" : [
                 {
-                  "type": "ConnectionReference",
-                  "name": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1",
-                      "child_to_child"
-                    ]
+                  "type" : "ConnectionReference",
+                  "name" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1", "child_to_child"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 68,
+                        "beginColumn" : 4,
+                        "endLine" : 68,
+                        "endColumn" : 66,
+                        "offset" : 1867,
+                        "length" : 62
+                      }
+                    }
                   },
-                  "context": {
-                    "type": "Name",
-                    "name": [
-                      "Root_two_references_Instance",
-                      "Sub1"
-                    ]
+                  "context" : {
+                    "type" : "Name",
+                    "name" : ["Root_two_references_Instance", "Sub1"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 75,
+                        "beginColumn" : 4,
+                        "endLine" : 75,
+                        "endColumn" : 37,
+                        "offset" : 2111,
+                        "length" : 33
+                      }
+                    }
                   },
-                  "isParent": true
+                  "isParent" : true
                 }
               ],
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : [
                 ],
-                "flows": [
-                ]
+                "propagations" : [
+                ],
+                "flows" : [
+                ],
+                "componentBehavior" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2BehaviorSection",
+                    "events" : [
+                    ],
+                    "transitions" : [
+                    ],
+                    "propagations" : [
+                    ]
+                  }
+                }
               }
             }
           ]
         }
       ],
-      "connections": [
+      "connections" : [
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "system_to_comp_in"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "system_to_comp_in"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 77,
+                "beginColumn" : 4,
+                "endLine" : 77,
+                "endColumn" : 55,
+                "offset" : 2162,
+                "length" : 51
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "root_in"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance"],
+                "pos" : {
+                  "type" : "None"
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "In"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "root_in"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 8,
+                      "beginColumn" : 4,
+                      "endLine" : 8,
+                      "endColumn" : 25,
+                      "offset" : 182,
+                      "length" : 21
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "Sub1",
-                    "sub_in"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 75,
+                    "beginColumn" : 4,
+                    "endLine" : 75,
+                    "endColumn" : 37,
+                    "offset" : 2111,
+                    "length" : 33
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "In"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "Sub1", "sub_in"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 14,
+                      "beginColumn" : 4,
+                      "endLine" : 14,
+                      "endColumn" : 23,
+                      "offset" : 275,
+                      "length" : 19
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "In"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Root_two_references_Instance",
-                "root_in -> Sub1",
-                "sub_proc1",
-                "proc_in"
-              ]
+              "type" : "Name",
+              "name" : ["Root_two_references_Instance", "root_in -> Sub1", "sub_proc1", "proc_in"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "system_to_comp_out"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "system_to_comp_out"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 78,
+                "beginColumn" : 4,
+                "endLine" : 78,
+                "endColumn" : 57,
+                "offset" : 2217,
+                "length" : 53
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "Sub1",
-                    "sub_out"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 75,
+                    "beginColumn" : 4,
+                    "endLine" : 75,
+                    "endColumn" : 37,
+                    "offset" : 2111,
+                    "length" : 33
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "Out"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "Sub1", "sub_out"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 15,
+                      "beginColumn" : 4,
+                      "endLine" : 15,
+                      "endColumn" : 25,
+                      "offset" : 298,
+                      "length" : 21
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Root_two_references_Instance",
-                    "root_out"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance"],
+                "pos" : {
+                  "type" : "None"
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "Out"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Root_two_references_Instance", "root_out"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 9,
+                      "beginColumn" : 4,
+                      "endLine" : 9,
+                      "endColumn" : 26,
+                      "offset" : 207,
+                      "length" : 22
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "Out"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Root_two_references_Instance",
-                "Sub1",
-                "sub_proc2",
-                "proc_out -> root_out"
-              ]
+              "type" : "Name",
+              "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_out -> root_out"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "connectionInstances": [
+      "connectionInstances" : [
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "root_in -> Sub1.sub_proc1.proc_in"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_two_references_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "root_in"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "root_in -> Sub1.sub_proc1.proc_in"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 77,
+                "beginColumn" : 4,
+                "endLine" : 77,
+                "endColumn" : 55,
+                "offset" : 2162,
+                "length" : 51
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_two_references_Instance",
-                "Sub1",
-                "sub_proc1"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_proc1",
-                  "proc_in"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Root_two_references_Instance"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 72,
+                  "beginColumn" : 2,
+                  "endLine" : 79,
+                  "endColumn" : 26,
+                  "offset" : 2021,
+                  "length" : 275
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "In"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "root_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 8,
+                    "beginColumn" : 4,
+                    "endLine" : 8,
+                    "endColumn" : 25,
+                    "offset" : 182,
+                    "length" : 21
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 64,
+                  "beginColumn" : 4,
+                  "endLine" : 64,
+                  "endColumn" : 44,
+                  "offset" : 1704,
+                  "length" : 40
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_proc1", "proc_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 21,
+                    "beginColumn" : 4,
+                    "endLine" : 21,
+                    "endColumn" : 27,
+                    "offset" : 413,
+                    "length" : 23
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "In"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "system_to_comp_in"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "system_to_comp_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 77,
+                    "beginColumn" : 4,
+                    "endLine" : 77,
+                    "endColumn" : 55,
+                    "offset" : 2162,
+                    "length" : 51
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 72,
+                    "beginColumn" : 2,
+                    "endLine" : 79,
+                    "endColumn" : 26,
+                    "offset" : 2021,
+                    "length" : 275
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             },
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "parent_to_child_in"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "parent_to_child_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 67,
+                    "beginColumn" : 4,
+                    "endLine" : 67,
+                    "endColumn" : 61,
+                    "offset" : 1806,
+                    "length" : 57
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 75,
+                    "beginColumn" : 4,
+                    "endLine" : 75,
+                    "endColumn" : 37,
+                    "offset" : 2111,
+                    "length" : 33
+                  }
+                }
               },
-              "isParent": false
+              "isParent" : false
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Root_two_references_Instance",
-              "Sub1.sub_proc2.proc_out -> root_out"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_two_references_Instance",
-                "Sub1",
-                "sub_proc2"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "sub_proc2",
-                  "proc_out"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Root_two_references_Instance", "Sub1.sub_proc2.proc_out -> root_out"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 69,
+                "beginColumn" : 4,
+                "endLine" : 69,
+                "endColumn" : 63,
+                "offset" : 1933,
+                "length" : 59
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Root_two_references_Instance"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "root_out"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 65,
+                  "beginColumn" : 4,
+                  "endLine" : 65,
+                  "endColumn" : 44,
+                  "offset" : 1748,
+                  "length" : 40
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "Out"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "sub_proc2", "proc_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 22,
+                    "beginColumn" : 4,
+                    "endLine" : 22,
+                    "endColumn" : 29,
+                    "offset" : 440,
+                    "length" : 25
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Feature"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Root_two_references_Instance"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 72,
+                  "beginColumn" : 2,
+                  "endLine" : 79,
+                  "endColumn" : 26,
+                  "offset" : 2021,
+                  "length" : 275
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "root_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 9,
+                    "beginColumn" : 4,
+                    "endLine" : 9,
+                    "endColumn" : 26,
+                    "offset" : 207,
+                    "length" : 22
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "Out"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Feature"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1",
-                  "child_to_parent_out"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1", "child_to_parent_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 69,
+                    "beginColumn" : 4,
+                    "endLine" : 69,
+                    "endColumn" : 63,
+                    "offset" : 1933,
+                    "length" : 59
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "Sub1"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "Sub1"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 75,
+                    "beginColumn" : 4,
+                    "endLine" : 75,
+                    "endColumn" : 37,
+                    "offset" : 2111,
+                    "length" : 33
+                  }
+                }
               },
-              "isParent": false
+              "isParent" : false
             },
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance",
-                  "system_to_comp_out"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance", "system_to_comp_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 78,
+                    "beginColumn" : 4,
+                    "endLine" : 78,
+                    "endColumn" : 57,
+                    "offset" : 2217,
+                    "length" : 53
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Root_two_references_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Root_two_references_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 72,
+                    "beginColumn" : 2,
+                    "endLine" : 79,
+                    "endColumn" : 26,
+                    "offset" : 2021,
+                    "length" : 275
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "properties": [
+      "properties" : [
       ],
-      "flows": [
+      "flows" : [
       ],
-      "modes": [
+      "modes" : [
       ],
-      "annexes": [
+      "annexes" : [
         {
-          "type": "Annex",
-          "name": "Emv2",
-          "clause": {
-            "type": "Emv2Clause",
-            "libraries": [],
-            "propagations": [
+          "type" : "Annex",
+          "name" : "Emv2",
+          "clause" : {
+            "type" : "Emv2Clause",
+            "libraries" : [
             ],
-            "flows": [
-            ]
+            "propagations" : [
+            ],
+            "flows" : [
+            ],
+            "componentBehavior" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Emv2BehaviorSection",
+                "events" : [
+                ],
+                "transitions" : [
+                ],
+                "propagations" : [
+                ]
+              }
+            }
           }
         }
       ]
     }
   ],
-  "errorLib": [
+  "errorLib" : [
   ],
-  "dataComponents": [
+  "dataComponents" : [
   ]
 }

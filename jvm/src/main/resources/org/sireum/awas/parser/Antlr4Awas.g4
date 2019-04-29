@@ -119,7 +119,7 @@ transition
   ;
 
 transExpr
-  : fromState=idGroup ('-['(propCond=tuple | triggers=idGroup)']->') toState=idGroup
+  : id=ID ':' fromState=idGroup ('-['(propCond=tuple | triggers=idGroup)']->') toState=idGroup
   ;
 
 behaviour
@@ -127,7 +127,7 @@ behaviour
   ;
 
 expression
-  : (key=tuple | '*') ('->' | ('-[' st=idGroup ']->')) (value=tuple | '*')
+  : id=ID ':' (key=tuple | '*') ('->' | ('-[' st=idGroup ']->')) (value=tuple | '*')
   ;
 
 idGroup
@@ -141,7 +141,7 @@ tuple
   ;
 
 faultPort
-  : ID ':' one
+  : ID '{' one '}'
   ;
 
 one
@@ -150,7 +150,7 @@ one
 //    '_'                                              #WildCard
 //    ID                                               #variable
     fault                                            #FaultRef
-  | '{' fault (',' fault)+ '}'                       #FaultSet
+  | fault (',' fault)+                               #FaultSet
   ;
 
 fault

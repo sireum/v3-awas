@@ -67,7 +67,7 @@ class QueryParser(val input : ParserInput) extends Parser {
   }
 
   def expression_conjuctor: Rule[shapeless.::[QueryExpr, HNil], shapeless.::[QueryExpr, HNil]] = rule {
-    (capture(ch('-')) ~ (expr | (fail("a reach expression or a canonical aadl identifier")) ~> (() => {
+    (capture(atomic("-" ~ WSMust)) ~ (expr | (fail("a reach expression or a canonical aadl identifier")) ~> (() => {
       var t: QueryExpr = null
       t
     }))) ~> (BinaryExpr) | //~> ((x:QueryExpr, y:QueryExpr) => drop[QueryExpr]()) //|
@@ -153,12 +153,20 @@ class QueryParser(val input : ParserInput) extends Parser {
       capture(atomic("sink")) ~ WS ~> ((x: String) => FilterID.SINK)
   }
 
+  def nneOrQId(x : NodeNameError) : PrimaryExpr = {
+    if(x.errorSet.isEmpty && (x.nodeName.ids.size == 1)) {
+      QueryName(x.nodeName.ids(0))
+    } else {
+      x
+    }
+  }
+
   def pexpr : Rule1[PrimaryExpr] = rule {
-    nodeNameError ~ WS ~> ((x : NodeNameError) => x)|
+    nodeNameError ~ WS ~> ((x : NodeNameError) => nneOrQId(x)) |
     (ch('(') ~ expr ~ ch(')')) ~> ((x : QueryExpr) => Paren(x))|
     (ch('{') ~ oneOrMore(nodeNameError).separatedBy(ch(',') ~ WS) ~ ch('}')) ~> ((x : Seq[NodeNameError]) => NodeSet(x.toVector)) |
-    (capture('*') ~> ((x) => NodeEmpty())) |
-    (WS~ '\'' ~ ID ~WS) ~> ((x : Id) => QueryName(x))
+    (capture('*')) ~> ((x: String) => NodeEmpty())
+    //|(WS~ '\'' ~ ID ~WS) ~> ((x : Id) => QueryName(x))
   }
 
   def nodeNameError : Rule1[NodeNameError] = rule {
@@ -275,7 +283,9 @@ object QueryParser {
       "q2 = union test",
       "q2 = test intersect ",
       "q = reach paths to x",
-      "q = x:m"
+      "q = x:m",
+      "q = a intersect b",
+      "q = a - b"
     )
 
     input.foreach { query =>

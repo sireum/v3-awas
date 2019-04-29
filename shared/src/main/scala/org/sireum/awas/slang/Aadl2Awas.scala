@@ -33,12 +33,10 @@ import org.sireum.aadl.ir.Transformer.PrePost
 import org.sireum.aadl.ir.{EndPoint, Flow => _, Name => _, Property => _, _}
 import org.sireum.awas.ast._
 import org.sireum.util._
-import org.sireum.{B, Z}
+import org.sireum.{B, Z, ISZ}
 
 
 final class Aadl2Awas private() {
-
-
 
   var typeDecls = Node.emptySeq[TypeDecl]
 
@@ -56,31 +54,40 @@ final class Aadl2Awas private() {
 
   def build(errorLib: ir.Emv2Library): TypeDecl = {
     EnumDecl(buildId(errorLib.name.name.elements.last.value),
-      Node.emptySeq[Name],
-      errorLib.tokens.elements.map(_.value).map(buildId).toVector)
+      errorLib.useTypes.elements.map(buildName).toVector,
+      errorLib.errorTypeDef.elements.map(_.id).map(it =>
+        buildId(it.name.elements.last.value)).toVector)
   }
 
   def buildAlias(errorLibs: Seq[ir.Emv2Library]): ISeq[TypeDecl] = {
-    def getAlisedType(errorLibs: Seq[ir.Emv2Library],
-                      possibleLibs: Seq[String],
-                      errorType: String): Name = {
-      val lib = possibleLibs.filter(p => errorLibs.exists(el =>
-        (el.name.name.elements.head.value == p) &&
-          el.tokens.elements.map(_.value).toSet.contains(errorType)))
-      Name(ivectorEmpty[Id] :+ buildId(lib.head) :+ buildId(errorType))
-    }
+    errorLibs.toVector.flatMap { lib =>
+      lib.alias.elements.flatMap { als =>
+        val et = als.errorType.name
+        val at = als.aliseType.name
+        val uses = lib.useTypes.elements
+        val alibs = errorLibs.filter(it => uses.toSet.contains(it.name.name.elements.last))
+        if (at.elements.size >= 2) {
 
-    ivectorEmpty ++ errorLibs.flatMap(errorLib =>
-      errorLib.alias.entries.elements.map(e =>
-        AliasDecl(
-          Name(ivectorEmpty[Id] :+
-            buildId(errorLib.name.name.elements.last.value) :+
-              buildId(e._1.value)
-          ),
-          NamedTypeDecl(
-          getAlisedType(errorLibs, errorLib.useTypes.elements.map(_.value) :+
-            errorLib.name.name.elements.last.value,
-            e._2.value)))))
+          val ael = at.elements.head
+          val aet = at.elements.last
+
+          val al = alibs.find(it => it.name.name.elements.last == ael)
+          if (al.isDefined) {
+            al.get.errorTypeDef.elements.map(_.id.name.elements.last.value).find(_ == aet.value).map { a =>
+               AliasDecl(
+                Name(ivectorEmpty),
+                NamedTypeDecl(Name(ivectorEmpty[Id] :+ buildId(al.get.name.name.elements.last.value) :+ buildId(a)))
+              )
+
+            }
+          } else {
+            None
+          }
+        } else {
+          None
+        }
+      }
+    }
   }
 
   def buildName(name: org.sireum.String): Name = {
@@ -131,13 +138,11 @@ final class Aadl2Awas private() {
       val (deplDecls, addedPorts) = mineBindingProps(comp.subComponents.elements,
         comp.connectionInstances.elements)
 
-
-
       val UpdatedSubComp = subcomp.map { sc =>
-        if (addedPorts.contains(sc._1)) {
+        if (addedPorts.contains(sc._1.name)) {
           val usc = ComponentDecl(sc._2.compName,
             sc._2.withSM,
-            sc._2.ports ++ addedPorts(sc._1),
+            sc._2.ports ++ addedPorts(sc._1.name),
             sc._2.propagations,
             sc._2.flows,
             sc._2.transitions,
@@ -169,27 +174,27 @@ final class Aadl2Awas private() {
   }
 
   def mineBindingProps(subComps: Seq[ir.Component], connInst: Seq[ir.ConnectionInstance])
-  : (ISet[DeploymentDecl], IMap[ir.Name, ISet[Port]]) = {
+  : (ISet[DeploymentDecl], IMap[ISZ[org.sireum.String], ISet[Port]]) = {
     var resDepl = isetEmpty[DeploymentDecl]
-    var resPorts = imapEmpty[ir.Name, ISet[Port]]
+    var resPorts = imapEmpty[ISZ[org.sireum.String], ISet[Port]]
     subComps.foreach { subComp =>
       subComp.properties.elements.foreach { p =>
         p.name.name.elements.last.value match {
           case Aadl2Awas.ACTUAL_CONNECTION_BINDING => {
-            resPorts += (subComp.identifier ->
-              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+            resPorts += (subComp.identifier.name ->
+              (resPorts.getOrElse(subComp.identifier.name, isetEmpty[Port]) +
                 Port(true, Id(Aadl2Awas.CONNECTION_IN), None)))
-            resPorts += (subComp.identifier ->
-              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+            resPorts += (subComp.identifier.name ->
+              (resPorts.getOrElse(subComp.identifier.name, isetEmpty[Port]) +
                 Port(false, Id(Aadl2Awas.CONNECTION_OUT), None)))
             p.propertyValues.elements.foreach {
               case rp: ir.ReferenceProp => {
-                if (subComps.map(_.identifier).toSet.contains(rp.value)) {
-                  resPorts += (rp.value ->
-                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                if (subComps.map(_.identifier.name).toSet.contains(rp.value.name)) {
+                  resPorts += (rp.value.name ->
+                    (resPorts.getOrElse(rp.value.name, isetEmpty[Port]) +
                       Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
-                  resPorts += (rp.value ->
-                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                  resPorts += (rp.value.name ->
+                    (resPorts.getOrElse(rp.value.name, isetEmpty[Port]) +
                       Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
                   resDepl = resDepl + DeploymentDecl(
                     Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
@@ -210,20 +215,20 @@ final class Aadl2Awas private() {
           case Aadl2Awas.ACTUAL_FUNCTION_BINDING =>
           case Aadl2Awas.ACTUAL_MEMORY_BINDING =>
           case Aadl2Awas.ACTUAL_PROCESSOR_BINDING => {
-            resPorts += (subComp.identifier ->
-              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+            resPorts += (subComp.identifier.name ->
+              (resPorts.getOrElse(subComp.identifier.name, isetEmpty[Port]) +
                 Port(true, Id(Aadl2Awas.PROCESSOR_IN), None)))
-            resPorts += (subComp.identifier ->
-              (resPorts.getOrElse(subComp.identifier, isetEmpty[Port]) +
+            resPorts += (subComp.identifier.name ->
+              (resPorts.getOrElse(subComp.identifier.name, isetEmpty[Port]) +
                 Port(false, Id(Aadl2Awas.PROCESSOR_OUT), None)))
             p.propertyValues.elements.foreach {
               case rp: ir.ReferenceProp => {
-                if (subComps.map(_.identifier).toSet.contains(rp.value)) {
-                  resPorts += (rp.value ->
-                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                if (subComps.map(_.identifier.name).toSet.contains(rp.value.name)) {
+                  resPorts += (rp.value.name ->
+                    (resPorts.getOrElse(rp.value.name, isetEmpty[Port]) +
                       Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
-                  resPorts += (rp.value ->
-                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                  resPorts += (rp.value.name ->
+                    (resPorts.getOrElse(rp.value.name, isetEmpty[Port]) +
                       Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
                   resDepl = resDepl + DeploymentDecl(
                     Name(subComp.identifier.name.elements.map(it => Id(it.value)).toVector),
@@ -257,12 +262,12 @@ final class Aadl2Awas private() {
           case Aadl2Awas.ACTUAL_CONNECTION_BINDING => {
             p.propertyValues.elements.foreach {
               case rp: ir.ReferenceProp => {
-                if (subComps.map(_.identifier).toSet.contains(rp.value)) {
-                  resPorts += (rp.value ->
-                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                if (subComps.map(_.identifier.name).toSet.contains(rp.value.name)) {
+                  resPorts += (rp.value.name ->
+                    (resPorts.getOrElse(rp.value.name, isetEmpty[Port]) +
                       Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
-                  resPorts += (rp.value ->
-                    (resPorts.getOrElse(rp.value, isetEmpty[Port]) +
+                  resPorts += (rp.value.name ->
+                    (resPorts.getOrElse(rp.value.name, isetEmpty[Port]) +
                       Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
                   val bus_parent = rp.value.name.elements.dropRight(1).last
                   val conn_ref = ci.connectionRefs.elements.filter(_.name.name.elements.dropRight(1).last == bus_parent)
@@ -345,13 +350,13 @@ final class Aadl2Awas private() {
     val actualSrcPort = if (srcPort.isEmpty) {
       "ACCESS"
     } else {
-      if (kind == ConnectionKind.Access) { srcPort.get + Aadl2Awas.BUS_ACCESS } else srcPort.get
+      if (kind == ConnectionKind.Access) { srcPort.get} else srcPort.get
     }
 
     val actualSinkPort = if (sinkPort.isEmpty) {
       "ACCESS"
     } else {
-      if (kind == ConnectionKind.Access) { sinkPort.get + Aadl2Awas.BUS_ACCESS} else sinkPort.get
+      if (kind == ConnectionKind.Access) { sinkPort.get} else sinkPort.get
     }
 
     if (isBidirectional) {
@@ -438,7 +443,7 @@ final class Aadl2Awas private() {
     annexs.foreach { annex =>
       if (annex.name.value == "Emv2") {
         val clause = annex.clause.asInstanceOf[Emv2Clause]
-        withs = withs ++ clause.libraries.elements.map(buildName)
+        withs = withs ++ clause.libraries.elements.map(it => buildName(it.name.elements.last))
       }
     }
     withs
@@ -459,9 +464,9 @@ final class Aadl2Awas private() {
 
   def build(featureAccess: FeatureAccess, isInverse: B, portId: String): Seq[Port] = {
     var pId = portId + featureAccess.identifier.name.elements.last.value
-    if (featureAccess.category == ir.FeatureCategory.BusAccess) {
-      pId = pId + Aadl2Awas.BUS_ACCESS
-    }
+//    if (featureAccess.category == ir.FeatureCategory.BusAccess) {
+//      pId = pId + Aadl2Awas.BUS_ACCESS
+//    }
     Seq(Port(isIn = true, buildId(pId + "_IN"), None), Port(isIn = false, buildId(pId + "_OUT"), None))
   }
 
@@ -498,7 +503,7 @@ final class Aadl2Awas private() {
   }
 
   def getPropagation(prop: ir.Emv2Propagation): Propagation = {
-    val id = buildId(prop.propagationPoint.elements.last.value)
+    val id = buildId(prop.propagationPoint.name.elements.last.value)
     val uid = id.value match {
       case Aadl2Awas.PROCESSOR => {
         if (prop.direction == ir.PropagationDirection.In) buildId(Aadl2Awas.PROCESSOR_IN)
@@ -516,7 +521,7 @@ final class Aadl2Awas private() {
     }
 
     val errors = prop.errorTokens.elements.map { et =>
-      Fault(buildName(et.value))
+      Fault(buildName(et.name.elements.last.value))
     }
     val resProp = Propagation(uid, errors.toVector)
     prop.propagationPoint

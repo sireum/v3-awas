@@ -13,7 +13,7 @@ patient_reach_2 =  reach forward PCAModel.Patient
 patient_to_App = reach from PCAModel.Patient to PCAModel.App
 
 //use the tick(') to use the result of another query
-patient_to_App2 = 'patient_reach intersect 'app_backreach
+patient_to_App2 = patient_reach intersect app_backreach
 
 //----------------------------------------------------------------------
 //flow reachability

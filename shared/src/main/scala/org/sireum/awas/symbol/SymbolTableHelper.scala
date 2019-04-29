@@ -78,6 +78,8 @@ object SymbolTableHelper {
   val PORT_IN_BIND_TYPE = "port-in-bind"
   val PORT_OUT_BIND_TYPE = "port-out-bind"
   val FLOW_TYPE = "flow"
+  val BEHAVIOR_TYPE = "behavior"
+  val TRANSITION_TYPE = "transition"
   val CONNECTION_TYPE = "connection"
 
   def isType(r: Resource): Boolean = r.uriType == TYPE_TYPE

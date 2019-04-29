@@ -208,7 +208,7 @@ object Virtual {
 
 //-----------------------Behaviour---------------------------//
 
-final case class Behaviour(exprs : Node.Seq[Expression]) extends Node
+final case class Behaviour(exprs : Node.Seq[BehaveExpr]) extends Node
 object Behaviour {
   implicit def rw : RW[Behaviour] = macroRW
 }
@@ -218,25 +218,48 @@ object Transition {
   implicit def rw : RW[Transition] = macroRW
 }
 
-final case class TransExpr(lhs: Node.Seq[Id],
-                            rhs: Node.Seq[Id],
-                            propCond: Option[Tuple],
-                            trigger: Node.Seq[Id]) extends Node
+final case class TransExpr(id : Id,
+                           lhs: Node.Seq[Id],
+                           rhs: Node.Seq[Id],
+                           propCond: Option[Tuple],
+                           trigger: Node.Seq[Id]) extends Node
 object TransExpr {
   implicit def rw : RW[TransExpr] = macroRW
 }
 
-final case class Expression(lhs: Option[Tuple], rhs: Option[Tuple], states: Node.Seq[Id])
-object Expression {
-  implicit def rw : RW[Expression] = macroRW
+final case class BehaveExpr(id : Id,
+                            lhs: Option[Tuple],
+                            rhs: Option[Tuple],
+                            states: Node.Seq[Id]) extends Node
+object BehaveExpr {
+  implicit def rw : RW[BehaveExpr] = macroRW
 }
 
-final case class Tuple(tokens : IList[(Id, One)]) extends Node
+sealed trait ConditionTuple extends Node
+
+final case class And(lhs : ConditionTuple,
+                     rhs: ConditionTuple) extends ConditionTuple
+
+final case class Or(lhs: ConditionTuple,
+                    rhs: ConditionTuple) extends ConditionTuple
+
+final case class OrMode(value: Int,
+                        conds: Node.Seq[ConditionTuple]) extends ConditionTuple
+
+final case class OrLess(value: Int,
+                        conds: Node.Seq[ConditionTuple]) extends ConditionTuple
+
+final case class All(conds: Node.Seq[ConditionTuple]) extends ConditionTuple
+
+sealed trait PrimaryCondition extends ConditionTuple
+
+final case class EventRef(event : Name) extends PrimaryCondition
+
+final case class Tuple(tokens : IList[(Id, One)]) extends PrimaryCondition
 
 object Tuple {
   implicit def rw : RW[Tuple] = macroRW
 }
-
 
 sealed trait One extends Node
 object One {

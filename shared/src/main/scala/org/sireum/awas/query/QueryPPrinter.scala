@@ -109,7 +109,7 @@ object QueryPPrinter {
   }
 
   def qRes(id: ST): ST = {
-    st"""'$id"""
+    st"""$id"""
   }
 
   def nnError(nn: ST, errorSet: org.sireum.ISZ[ST]): ST = {

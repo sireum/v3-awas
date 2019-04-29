@@ -300,7 +300,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         val smUri = stp.compStateMachine(r.toUri)
         if (ttUri.nonEmpty) {
           val typeTable = ttUri.map(stp.typeTable)
-          comp.behaviour.get.exprs.foreach(exprMiner(m, _, r, typeTable, smUri))
+          comp.behaviour.get.exprs.foreach(exprMiner(m, _, r, typeTable, smUri, ctp))
         }
       }
 
@@ -395,37 +395,61 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
 
-  def exprMiner(m: Model, expr: Expression, r: Resource, tt: ISet[TypeTable], smUri: Option[ResourceUri])(
+  def exprMiner(m: Model,
+                expr: BehaveExpr,
+                r: Resource,
+                tt: ISet[TypeTable],
+                smUri: Option[ResourceUri],
+                ctp : CompSTProducer)(
     implicit reporter: AccumulatingTagReporter): Unit = {
-    if (expr.lhs.isDefined) {
-      tupleMiner(m, expr.lhs.get, r, tt)
-    }
-    if (expr.rhs.isDefined) {
-      tupleMiner(m, expr.rhs.get, r, tt)
-    }
-    if (smUri.isDefined) {
-      val smt = stp.smTable(smUri.get)
-      expr.states.foreach {
-        s =>
+
+    val br = Resource(H.BEHAVIOR_TYPE, r, expr.id.value, Some(true), expr)
+
+    ctp.tables.symbol2Uri(expr.id.value) = br.toUri
+    if (!ctp.tables.behaviorTable.contains(br.toUri)) {
+
+      ctp.tables.behaviorTable(br.toUri) = expr
+
+      if (expr.lhs.isDefined) {
+        tupleMiner(m, expr.lhs.get, r, tt, ctp)
+      }
+
+      if (expr.rhs.isDefined) {
+        tupleMiner(m, expr.rhs.get, r, tt, ctp)
+      }
+
+      if (smUri.isDefined) {
+        val smt = stp.smTable(smUri.get)
+        expr.states.foreach { s =>
           val sUri = smt.states.find(_.endsWith(s.value))
           if (sUri.isDefined) {
             Resource.useDefResolve(s, smt.state(sUri.get))
           } else {
-            reporter.report(errorMessageGen(MISSING_STATE_DECL,
-              s,
-              m, s.value))
+            reporter.report(errorMessageGen(MISSING_STATE_DECL, s, m, s.value))
           }
+        }
       }
+
+
+
+    } else {
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
+        expr.id,
+        m, expr.id.value))
     }
   }
 
-  def tupleMiner(m: Model, tup: Tuple, r: Resource, tt: ISet[TypeTable])(
+  def tupleMiner(m: Model,
+                 tup: Tuple,
+                 r: Resource,
+                 tt: ISet[TypeTable],
+                 ctp: CompSTProducer)(
     implicit reporter: AccumulatingTagReporter): Unit = {
     tup.tokens.foreach {
       t =>
-        val port = stp.componentTable(r.toUri).ports.find(_.endsWith(t._1.value))
+        val port = ctp.ports.find(_.endsWith(t._1.value))
         if (port.isDefined) {
-          Resource.useDefResolve(t._1, stp.componentTable(r.toUri).port(port.get).get)
+          Resource.useDefResolve(t._1, ctp.port(port.get).get)
         } else {
           reporter.report(errorMessageGen(MISSING_PORT_DECL,
             t._1,

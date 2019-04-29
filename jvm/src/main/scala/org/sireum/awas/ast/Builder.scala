@@ -176,7 +176,9 @@ final class Builder private() {
   }
 
   def build(ctx: TransExprContext): TransExpr = {
-    TransExpr(ctx.fromState.ids.map(buildId),
+    TransExpr(
+      buildId(ctx.id),
+      ctx.fromState.ids.map(buildId),
       ctx.toState.ids.map(buildId),
       if (ctx.propCond != null) Some(build(ctx.propCond)) else None,
       if (ctx.propCond != null) Node.emptySeq[Id] else ctx.triggers.ids.map(buildId)
@@ -187,8 +189,9 @@ final class Builder private() {
     Behaviour(ctx.expression().map(build)) at ctx
   }
 
-  def build(ctx: ExpressionContext): Expression = {
-    Expression(
+  def build(ctx: ExpressionContext): BehaveExpr = {
+    BehaveExpr(
+      buildId(ctx.id),
       if(ctx.key != null) Some(build(ctx.key)) else None,
       if(ctx.value != null) Some(build(ctx.value)) else None,
       if(ctx.st != null) ctx.st.ids.map(buildId) else Node.emptySeq[Id]

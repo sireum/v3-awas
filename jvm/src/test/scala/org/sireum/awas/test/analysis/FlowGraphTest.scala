@@ -44,7 +44,7 @@ final class FlowGraphTest(name: String, td: TestDef) {
 }
 
 object FlowGraphTest {
-  val provider = new FptcGraphTestDefProvider(JUnitTestFramework)
+  val provider = new FlowGraphTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")
   def parameters: util.ArrayList[Array[Object]] = {

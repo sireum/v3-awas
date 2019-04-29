@@ -53,6 +53,9 @@ object SymbolTableMessage {
   val DUPLICATE_PORT =
     "Port '%s' already declared in '%s' component"
 
+  val DUPLICATE_BEHAVIOR_NAME =
+    "Behavior Name '%s' already declared"
+
   val DUPLICATE_COMPONENT =
     "Component declaration '%s' has already been defined"
 

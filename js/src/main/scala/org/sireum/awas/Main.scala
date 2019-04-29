@@ -127,7 +127,7 @@ object Main {
       } else {
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options()))
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
       }
     }
     false
@@ -230,7 +230,7 @@ object Main {
               val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
               svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
               container.getElement().append(breadCrumbs).append(svgDiv)
-              new SVGPanZoom(asvg, Options())
+              new SVGPanZoom(asvg, Options(svgDiv))
             }
             container.getElement().attr("display", "inline-block;")
             //container.on("resize", {() => {SvgPanZoom.resizeAll()}}:js.Function)
@@ -324,7 +324,7 @@ object Main {
             st.get
           )
         )
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options()))
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
         compState.update("isTD", true)
       }
     }
@@ -352,7 +352,7 @@ object Main {
             st.get
           )
         )
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options()))
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
         compState.update("isTD", false)
       }
     }
@@ -441,6 +441,9 @@ object Main {
       })
     } else {
       if (timer.isDefined) {
+        uriNodeMap.get(tempUri).foreach{ n =>
+
+        }
         scalajs.js.timers.clearTimeout(timer.get)
         //do dbl click
         if (tempUri.startsWith(H.COMPONENT_TYPE) &&
@@ -798,7 +801,9 @@ if (id.contains(":")) {
       terminal = Some(
         Terminal("#term1").terminal({
           (cmd: String, term: Terminal) => {
-
+            val temp = qI.get.evalCmd(cmd)
+            temp._2.printMessages()
+            temp._1.values.foreach(c => println(c.getErrors.mkString("\n")))
             val res = Future(qI.get.evalCmd(cmd))
 
             res.onComplete(
@@ -813,13 +818,14 @@ if (id.contains(":")) {
                       highlight(collectorToUris(r.get._1.last._2), RandomColor())
                       term.echo(
                         "Results found in graph(s): {" +
-                          r.get._1.last._2.getGraphs.map(_.getUri).map(_.split("\\$\\$AWAS").last).mkString(", ") + "}"
+                          r.get._1.last._2.getGraphs.map(_.getUri).map(_.split("\\$\\$AWAS")
+                            .last.tail.replace("#", ".").replace("$", ".")).mkString(", ") + "}"
                       )
                       updateTable(qI.get.getQueries, qI.get.getResults)
 
                     }
                   } else {
-                    term.echo(
+                    term.error(
                       "Parse Error :" + ISZOps(r.get._2.messages)
                         .foldLeft[String]((r: String, m: Message) => m.text.value + "\n" + r, "")
                     )

@@ -51,7 +51,7 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
     //equals test by excluding some
     val filesEqual = files.filter { p =>
       true
-//          p.toLowerCase.contains("root")
+//          p.toLowerCase.contains("impl3")
     }
 
     filesEqual.toVector.map { x =>

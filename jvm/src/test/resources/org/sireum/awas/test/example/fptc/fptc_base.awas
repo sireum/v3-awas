@@ -6,25 +6,35 @@ behavior
     states = [operational, fail]
     events = {failure, recovery}
 
-components
-  A
-  with Fault
-    ports
-      in aIn
-      out aOut
-    behavior
-      aIn:late -> aOut:late
-      * -> aOut:value
+system fptc_base
 
-  B
-  with Fault
-    ports
-      in bIn
-      out bOut
-    behavior
-      bIn:value -> *
-      * -> bOut:late
+  sub-components {
+    A
+      with Fault
+      ports
+        in aIn
+        out aOut
+      propagations
+        aIn = {late}
+        aOut = {late, value}
+      behavior
+        b1 : aIn{late} -> aOut{late}
+        b2 : * -> aOut{value}
 
+    B
+      with Fault
+      ports
+        in bIn
+        in bIn2
+        out bOut
+      propagations
+        bIn = {value, late}
+        bOut = {late}
+      behavior
+        b3 : bIn{value} -> *
+        b4 : (bIn{late} and bIn2{late}) -> bOut{late}
+        b5 : * -> bOut{late}
+  }
 connections
   A2B : A.aOut -> B.bIn
 

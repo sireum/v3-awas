@@ -56,6 +56,12 @@ object PrettyPrinter {
       case f: Flow =>
         new PrettyPrinter(sb).print(f, 0)
         false
+      case be: BehaveExpr =>
+        new PrettyPrinter(sb).print(be)
+        false
+      case te: TransExpr =>
+        new PrettyPrinter(sb).print(te)
+        false
     })(n)
     sb.toString().trim
   }
@@ -377,6 +383,8 @@ final class PrettyPrinter(sb: StringBuilder) {
   }
 
   def print(te: TransExpr) : Unit = {
+    print(te.id)
+    sb.append(" : ")
     printIdGroup(te.lhs)
     sb.append(" -[")
     te.propCond match {
@@ -411,7 +419,9 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
   }
 
-  def print(expr: Expression) : Unit = {
+  def print(expr: BehaveExpr) : Unit = {
+    print(expr.id)
+    sb.append(" : ")
     print(expr.lhs)
     if(expr.states.nonEmpty) {
       sb.append(" -[")
@@ -434,19 +444,22 @@ final class PrettyPrinter(sb: StringBuilder) {
     if (t.tokens.size > 1) {
       sb.append("(")
       print(t.tokens.head._1)
-      sb.append(":")
+      sb.append("{")
       print(t.tokens.head._2)
+      sb.append("}")
       for(tt <- t.tokens.tail) {
         sb.append(", ")
         print(tt._1)
-        sb.append(":")
+        sb.append("{")
         print(tt._2)
+        sb.append("}")
       }
       sb.append(")")
     } else {
       print(t.tokens.head._1)
-      sb.append(":")
+      sb.append("{")
       print(t.tokens.head._2)
+      sb.append("}")
     }
   }
 
@@ -458,13 +471,11 @@ final class PrettyPrinter(sb: StringBuilder) {
       case o : Fault =>
         print(o)
       case o : FaultSet =>
-        sb.append("{")
         print(o.value.head)
         for(vt <- o.value.tail) {
           sb.append(", ")
           print(vt)
         }
-        sb.append("}")
     }
   }
 

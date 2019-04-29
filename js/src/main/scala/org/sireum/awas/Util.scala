@@ -66,7 +66,7 @@ object Util {
       val old_svg = svgs(gk)
       val new_svg = Util.graph2Svg(gk, svgGenConfig, st.get)
       old_svg.parentNode.replaceChild(new_svg, old_svg)
-      new SVGPanZoom(new_svg, Options())
+      new SVGPanZoom(new_svg, Options(new_svg.parentNode.asInstanceOf[Element]))
       resetOrientationRadio()
     }
 

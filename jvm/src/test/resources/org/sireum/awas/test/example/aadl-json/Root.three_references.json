@@ -5,7 +5,23 @@
       "type" : "Component",
       "identifier" : {
         "type" : "Name",
-        "name" : ["Root_three_references_Instance"]
+        "name" : ["Root_three_references_Instance"],
+        "pos" : {
+          "type" : "Some",
+          "value" : {
+            "type" : "Position",
+            "uriOpt" : {
+              "type" : "Some",
+              "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+            },
+            "beginLine" : 105,
+            "beginColumn" : 2,
+            "endLine" : 112,
+            "endColumn" : 28,
+            "offset" : 3099,
+            "length" : 336
+          }
+        }
       },
       "category" : {
         "type" : "ComponentCategory",
@@ -19,7 +35,23 @@
           "type" : "FeatureEnd",
           "identifier" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "root_in"]
+            "name" : ["Root_three_references_Instance", "root_in"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 8,
+                "beginColumn" : 4,
+                "endLine" : 8,
+                "endColumn" : 25,
+                "offset" : 182,
+                "length" : 21
+              }
+            }
           },
           "direction" : {
             "type" : "Direction",
@@ -39,7 +71,23 @@
           "type" : "FeatureEnd",
           "identifier" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "root_out"]
+            "name" : ["Root_three_references_Instance", "root_out"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 9,
+                "beginColumn" : 4,
+                "endLine" : 9,
+                "endColumn" : 26,
+                "offset" : 207,
+                "length" : 22
+              }
+            }
           },
           "direction" : {
             "type" : "Direction",
@@ -61,7 +109,23 @@
           "type" : "Component",
           "identifier" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "sub"]
+            "name" : ["Root_three_references_Instance", "sub"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 108,
+                "beginColumn" : 4,
+                "endLine" : 108,
+                "endColumn" : 47,
+                "offset" : 3237,
+                "length" : 43
+              }
+            }
           },
           "category" : {
             "type" : "ComponentCategory",
@@ -79,7 +143,23 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub_in"]
+                "name" : ["Root_three_references_Instance", "sub", "sub_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 14,
+                    "beginColumn" : 4,
+                    "endLine" : 14,
+                    "endColumn" : 23,
+                    "offset" : 275,
+                    "length" : 19
+                  }
+                }
               },
               "direction" : {
                 "type" : "Direction",
@@ -99,7 +179,23 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub_out"]
+                "name" : ["Root_three_references_Instance", "sub", "sub_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 15,
+                    "beginColumn" : 4,
+                    "endLine" : 15,
+                    "endColumn" : 25,
+                    "offset" : 298,
+                    "length" : 21
+                  }
+                }
               },
               "direction" : {
                 "type" : "Direction",
@@ -119,7 +215,23 @@
               "type" : "FeatureEnd",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub_port"]
+                "name" : ["Root_three_references_Instance", "sub", "sub_port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 16,
+                    "beginColumn" : 4,
+                    "endLine" : 16,
+                    "endColumn" : 37,
+                    "offset" : 323,
+                    "length" : 33
+                  }
+                }
               },
               "direction" : {
                 "type" : "Direction",
@@ -141,7 +253,23 @@
               "type" : "Component",
               "identifier" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub"]
+                "name" : ["Root_three_references_Instance", "sub", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 99,
+                    "beginColumn" : 4,
+                    "endLine" : 99,
+                    "endColumn" : 45,
+                    "offset" : 2890,
+                    "length" : 41
+                  }
+                }
               },
               "category" : {
                 "type" : "ComponentCategory",
@@ -159,7 +287,23 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 21,
+                        "beginColumn" : 4,
+                        "endLine" : 21,
+                        "endColumn" : 27,
+                        "offset" : 413,
+                        "length" : 23
+                      }
+                    }
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -179,7 +323,23 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_out"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 22,
+                        "beginColumn" : 4,
+                        "endLine" : 22,
+                        "endColumn" : 29,
+                        "offset" : 440,
+                        "length" : 25
+                      }
+                    }
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -199,7 +359,23 @@
                   "type" : "FeatureEnd",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 23,
+                        "beginColumn" : 4,
+                        "endLine" : 23,
+                        "endColumn" : 35,
+                        "offset" : 469,
+                        "length" : 31
+                      }
+                    }
                   },
                   "direction" : {
                     "type" : "Direction",
@@ -221,7 +397,23 @@
                   "type" : "Component",
                   "identifier" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 92,
+                        "beginColumn" : 4,
+                        "endLine" : 92,
+                        "endColumn" : 39,
+                        "offset" : 2670,
+                        "length" : 35
+                      }
+                    }
                   },
                   "category" : {
                     "type" : "ComponentCategory",
@@ -239,7 +431,23 @@
                       "type" : "FeatureEnd",
                       "identifier" : {
                         "type" : "Name",
-                        "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"]
+                        "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"],
+                        "pos" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Position",
+                            "uriOpt" : {
+                              "type" : "Some",
+                              "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                            },
+                            "beginLine" : 28,
+                            "beginColumn" : 4,
+                            "endLine" : 28,
+                            "endColumn" : 36,
+                            "offset" : 560,
+                            "length" : 32
+                          }
+                        }
                       },
                       "direction" : {
                         "type" : "Direction",
@@ -274,11 +482,24 @@
                       "name" : "Emv2",
                       "clause" : {
                         "type" : "Emv2Clause",
-                        "libraries" : [],
+                        "libraries" : [
+                        ],
                         "propagations" : [
                         ],
                         "flows" : [
-                        ]
+                        ],
+                        "componentBehavior" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Emv2BehaviorSection",
+                            "events" : [
+                            ],
+                            "transitions" : [
+                            ],
+                            "propagations" : [
+                            ]
+                          }
+                        }
                       }
                     }
                   ]
@@ -289,20 +510,55 @@
                   "type" : "Connection",
                   "name" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_to_thread"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub", "proc_to_thread"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 94,
+                        "beginColumn" : 4,
+                        "endLine" : 94,
+                        "endColumn" : 63,
+                        "offset" : 2723,
+                        "length" : 59
+                      }
+                    }
                   },
                   "src" : [
                     {
                       "type" : "EndPoint",
                       "component" : {
                         "type" : "Name",
-                        "name" : ["Root_three_references_Instance", "sub", "sub"]
+                        "name" : ["Root_three_references_Instance", "sub", "sub"],
+                        "pos" : {
+                          "type" : "None"
+                        }
                       },
                       "feature" : {
                         "type" : "Some",
                         "value" : {
                           "type" : "Name",
-                          "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"]
+                          "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"],
+                          "pos" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Position",
+                              "uriOpt" : {
+                                "type" : "Some",
+                                "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                              },
+                              "beginLine" : 23,
+                              "beginColumn" : 4,
+                              "endLine" : 23,
+                              "endColumn" : 35,
+                              "offset" : 469,
+                              "length" : 31
+                            }
+                          }
                         }
                       },
                       "direction" : {
@@ -319,13 +575,45 @@
                       "type" : "EndPoint",
                       "component" : {
                         "type" : "Name",
-                        "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"]
+                        "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"],
+                        "pos" : {
+                          "type" : "Some",
+                          "value" : {
+                            "type" : "Position",
+                            "uriOpt" : {
+                              "type" : "Some",
+                              "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                            },
+                            "beginLine" : 92,
+                            "beginColumn" : 4,
+                            "endLine" : 92,
+                            "endColumn" : 39,
+                            "offset" : 2670,
+                            "length" : 35
+                          }
+                        }
                       },
                       "feature" : {
                         "type" : "Some",
                         "value" : {
                           "type" : "Name",
-                          "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"]
+                          "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"],
+                          "pos" : {
+                            "type" : "Some",
+                            "value" : {
+                              "type" : "Position",
+                              "uriOpt" : {
+                                "type" : "Some",
+                                "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                              },
+                              "beginLine" : 28,
+                              "beginColumn" : 4,
+                              "endLine" : 28,
+                              "endColumn" : 36,
+                              "offset" : 560,
+                              "length" : 32
+                            }
+                          }
                         }
                       },
                       "direction" : {
@@ -345,11 +633,17 @@
                   "connectionInstances" : [
                     {
                       "type" : "Name",
-                      "name" : ["Root_three_references_Instance", "root_in -> sub", "sub", "thread1", "access_point"]
+                      "name" : ["Root_three_references_Instance", "root_in -> sub", "sub", "thread1", "access_point"],
+                      "pos" : {
+                        "type" : "None"
+                      }
                     },
                     {
                       "type" : "Name",
-                      "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point -> root_out"]
+                      "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point -> root_out"],
+                      "pos" : {
+                        "type" : "None"
+                      }
                     }
                   ],
                   "properties" : [
@@ -370,11 +664,24 @@
                   "name" : "Emv2",
                   "clause" : {
                     "type" : "Emv2Clause",
-                    "libraries" : [],
+                    "libraries" : [
+                    ],
                     "propagations" : [
                     ],
                     "flows" : [
-                    ]
+                    ],
+                    "componentBehavior" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Emv2BehaviorSection",
+                        "events" : [
+                        ],
+                        "transitions" : [
+                        ],
+                        "propagations" : [
+                        ]
+                      }
+                    }
                   }
                 }
               ]
@@ -385,20 +692,55 @@
               "type" : "Connection",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "parent_to_child"]
+                "name" : ["Root_three_references_Instance", "sub", "parent_to_child"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 101,
+                    "beginColumn" : 4,
+                    "endLine" : 101,
+                    "endColumn" : 58,
+                    "offset" : 2949,
+                    "length" : 54
+                  }
+                }
               },
               "src" : [
                 {
                   "type" : "EndPoint",
                   "component" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub"]
+                    "name" : ["Root_three_references_Instance", "sub"],
+                    "pos" : {
+                      "type" : "None"
+                    }
                   },
                   "feature" : {
                     "type" : "Some",
                     "value" : {
                       "type" : "Name",
-                      "name" : ["Root_three_references_Instance", "sub", "sub_port"]
+                      "name" : ["Root_three_references_Instance", "sub", "sub_port"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 16,
+                          "beginColumn" : 4,
+                          "endLine" : 16,
+                          "endColumn" : 37,
+                          "offset" : 323,
+                          "length" : 33
+                        }
+                      }
                     }
                   },
                   "direction" : {
@@ -415,13 +757,45 @@
                   "type" : "EndPoint",
                   "component" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 99,
+                        "beginColumn" : 4,
+                        "endLine" : 99,
+                        "endColumn" : 45,
+                        "offset" : 2890,
+                        "length" : 41
+                      }
+                    }
                   },
                   "feature" : {
                     "type" : "Some",
                     "value" : {
                       "type" : "Name",
-                      "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"]
+                      "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 23,
+                          "beginColumn" : 4,
+                          "endLine" : 23,
+                          "endColumn" : 35,
+                          "offset" : 469,
+                          "length" : 31
+                        }
+                      }
                     }
                   },
                   "direction" : {
@@ -441,7 +815,10 @@
               "connectionInstances" : [
                 {
                   "type" : "Name",
-                  "name" : ["Root_three_references_Instance", "root_in -> sub", "sub", "thread1", "access_point"]
+                  "name" : ["Root_three_references_Instance", "root_in -> sub", "sub", "thread1", "access_point"],
+                  "pos" : {
+                    "type" : "None"
+                  }
                 }
               ],
               "properties" : [
@@ -451,20 +828,68 @@
               "type" : "Connection",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "child_to_parent"]
+                "name" : ["Root_three_references_Instance", "sub", "child_to_parent"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 102,
+                    "beginColumn" : 4,
+                    "endLine" : 102,
+                    "endColumn" : 57,
+                    "offset" : 3007,
+                    "length" : 53
+                  }
+                }
               },
               "src" : [
                 {
                   "type" : "EndPoint",
                   "component" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub", "sub"]
+                    "name" : ["Root_three_references_Instance", "sub", "sub"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                        },
+                        "beginLine" : 99,
+                        "beginColumn" : 4,
+                        "endLine" : 99,
+                        "endColumn" : 45,
+                        "offset" : 2890,
+                        "length" : 41
+                      }
+                    }
                   },
                   "feature" : {
                     "type" : "Some",
                     "value" : {
                       "type" : "Name",
-                      "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"]
+                      "name" : ["Root_three_references_Instance", "sub", "sub", "proc_in_out"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 23,
+                          "beginColumn" : 4,
+                          "endLine" : 23,
+                          "endColumn" : 35,
+                          "offset" : 469,
+                          "length" : 31
+                        }
+                      }
                     }
                   },
                   "direction" : {
@@ -481,13 +906,32 @@
                   "type" : "EndPoint",
                   "component" : {
                     "type" : "Name",
-                    "name" : ["Root_three_references_Instance", "sub"]
+                    "name" : ["Root_three_references_Instance", "sub"],
+                    "pos" : {
+                      "type" : "None"
+                    }
                   },
                   "feature" : {
                     "type" : "Some",
                     "value" : {
                       "type" : "Name",
-                      "name" : ["Root_three_references_Instance", "sub", "sub_port"]
+                      "name" : ["Root_three_references_Instance", "sub", "sub_port"],
+                      "pos" : {
+                        "type" : "Some",
+                        "value" : {
+                          "type" : "Position",
+                          "uriOpt" : {
+                            "type" : "Some",
+                            "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                          },
+                          "beginLine" : 16,
+                          "beginColumn" : 4,
+                          "endLine" : 16,
+                          "endColumn" : 37,
+                          "offset" : 323,
+                          "length" : 33
+                        }
+                      }
                     }
                   },
                   "direction" : {
@@ -507,7 +951,10 @@
               "connectionInstances" : [
                 {
                   "type" : "Name",
-                  "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point -> root_out"]
+                  "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point -> root_out"],
+                  "pos" : {
+                    "type" : "None"
+                  }
                 }
               ],
               "properties" : [
@@ -528,11 +975,24 @@
               "name" : "Emv2",
               "clause" : {
                 "type" : "Emv2Clause",
-                "libraries" : [],
+                "libraries" : [
+                ],
                 "propagations" : [
                 ],
                 "flows" : [
-                ]
+                ],
+                "componentBehavior" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2BehaviorSection",
+                    "events" : [
+                    ],
+                    "transitions" : [
+                    ],
+                    "propagations" : [
+                    ]
+                  }
+                }
               }
             }
           ]
@@ -543,20 +1003,55 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "system_to_comp_in"]
+            "name" : ["Root_three_references_Instance", "system_to_comp_in"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 110,
+                "beginColumn" : 4,
+                "endLine" : 110,
+                "endColumn" : 56,
+                "offset" : 3298,
+                "length" : 52
+              }
+            }
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance"]
+                "name" : ["Root_three_references_Instance"],
+                "pos" : {
+                  "type" : "None"
+                }
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["Root_three_references_Instance", "root_in"]
+                  "name" : ["Root_three_references_Instance", "root_in"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 8,
+                      "beginColumn" : 4,
+                      "endLine" : 8,
+                      "endColumn" : 25,
+                      "offset" : 182,
+                      "length" : 21
+                    }
+                  }
                 }
               },
               "direction" : {
@@ -573,13 +1068,45 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub"]
+                "name" : ["Root_three_references_Instance", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 108,
+                    "beginColumn" : 4,
+                    "endLine" : 108,
+                    "endColumn" : 47,
+                    "offset" : 3237,
+                    "length" : 43
+                  }
+                }
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["Root_three_references_Instance", "sub", "sub_port"]
+                  "name" : ["Root_three_references_Instance", "sub", "sub_port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 16,
+                      "beginColumn" : 4,
+                      "endLine" : 16,
+                      "endColumn" : 37,
+                      "offset" : 323,
+                      "length" : 33
+                    }
+                  }
                 }
               },
               "direction" : {
@@ -599,7 +1126,10 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["Root_three_references_Instance", "root_in -> sub", "sub", "thread1", "access_point"]
+              "name" : ["Root_three_references_Instance", "root_in -> sub", "sub", "thread1", "access_point"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
           "properties" : [
@@ -609,20 +1139,68 @@
           "type" : "Connection",
           "name" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "system_to_comp_out"]
+            "name" : ["Root_three_references_Instance", "system_to_comp_out"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 111,
+                "beginColumn" : 4,
+                "endLine" : 111,
+                "endColumn" : 57,
+                "offset" : 3354,
+                "length" : 53
+              }
+            }
           },
           "src" : [
             {
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub"]
+                "name" : ["Root_three_references_Instance", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 108,
+                    "beginColumn" : 4,
+                    "endLine" : 108,
+                    "endColumn" : 47,
+                    "offset" : 3237,
+                    "length" : 43
+                  }
+                }
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["Root_three_references_Instance", "sub", "sub_port"]
+                  "name" : ["Root_three_references_Instance", "sub", "sub_port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 16,
+                      "beginColumn" : 4,
+                      "endLine" : 16,
+                      "endColumn" : 37,
+                      "offset" : 323,
+                      "length" : 33
+                    }
+                  }
                 }
               },
               "direction" : {
@@ -639,13 +1217,32 @@
               "type" : "EndPoint",
               "component" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance"]
+                "name" : ["Root_three_references_Instance"],
+                "pos" : {
+                  "type" : "None"
+                }
               },
               "feature" : {
                 "type" : "Some",
                 "value" : {
                   "type" : "Name",
-                  "name" : ["Root_three_references_Instance", "root_out"]
+                  "name" : ["Root_three_references_Instance", "root_out"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                      },
+                      "beginLine" : 9,
+                      "beginColumn" : 4,
+                      "endLine" : 9,
+                      "endColumn" : 26,
+                      "offset" : 207,
+                      "length" : 22
+                    }
+                  }
                 }
               },
               "direction" : {
@@ -665,7 +1262,10 @@
           "connectionInstances" : [
             {
               "type" : "Name",
-              "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point -> root_out"]
+              "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point -> root_out"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
           "properties" : [
@@ -677,19 +1277,67 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "root_in -> sub.sub.thread1.access_point"]
+            "name" : ["Root_three_references_Instance", "root_in -> sub.sub.thread1.access_point"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 110,
+                "beginColumn" : 4,
+                "endLine" : 110,
+                "endColumn" : 56,
+                "offset" : 3298,
+                "length" : 52
+              }
+            }
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["Root_three_references_Instance"]
+              "name" : ["Root_three_references_Instance"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 105,
+                  "beginColumn" : 2,
+                  "endLine" : 112,
+                  "endColumn" : 28,
+                  "offset" : 3099,
+                  "length" : 336
+                }
+              }
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "root_in"]
+                "name" : ["Root_three_references_Instance", "root_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 8,
+                    "beginColumn" : 4,
+                    "endLine" : 8,
+                    "endColumn" : 25,
+                    "offset" : 182,
+                    "length" : 21
+                  }
+                }
               }
             },
             "direction" : {
@@ -704,13 +1352,45 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"]
+              "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 92,
+                  "beginColumn" : 4,
+                  "endLine" : 92,
+                  "endColumn" : 39,
+                  "offset" : 2670,
+                  "length" : 35
+                }
+              }
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"]
+                "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 28,
+                    "beginColumn" : 4,
+                    "endLine" : 28,
+                    "endColumn" : 36,
+                    "offset" : 560,
+                    "length" : 32
+                  }
+                }
               }
             },
             "direction" : {
@@ -730,11 +1410,43 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "system_to_comp_in"]
+                "name" : ["Root_three_references_Instance", "system_to_comp_in"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 110,
+                    "beginColumn" : 4,
+                    "endLine" : 110,
+                    "endColumn" : 56,
+                    "offset" : 3298,
+                    "length" : 52
+                  }
+                }
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance"]
+                "name" : ["Root_three_references_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 105,
+                    "beginColumn" : 2,
+                    "endLine" : 112,
+                    "endColumn" : 28,
+                    "offset" : 3099,
+                    "length" : 336
+                  }
+                }
               },
               "isParent" : true
             },
@@ -742,11 +1454,43 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "parent_to_child"]
+                "name" : ["Root_three_references_Instance", "sub", "parent_to_child"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 101,
+                    "beginColumn" : 4,
+                    "endLine" : 101,
+                    "endColumn" : 58,
+                    "offset" : 2949,
+                    "length" : 54
+                  }
+                }
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub"]
+                "name" : ["Root_three_references_Instance", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 108,
+                    "beginColumn" : 4,
+                    "endLine" : 108,
+                    "endColumn" : 47,
+                    "offset" : 3237,
+                    "length" : 43
+                  }
+                }
               },
               "isParent" : false
             },
@@ -754,11 +1498,43 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub", "proc_to_thread"]
+                "name" : ["Root_three_references_Instance", "sub", "sub", "proc_to_thread"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 94,
+                    "beginColumn" : 4,
+                    "endLine" : 94,
+                    "endColumn" : 63,
+                    "offset" : 2723,
+                    "length" : 59
+                  }
+                }
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub"]
+                "name" : ["Root_three_references_Instance", "sub", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 99,
+                    "beginColumn" : 4,
+                    "endLine" : 99,
+                    "endColumn" : 45,
+                    "offset" : 2890,
+                    "length" : 41
+                  }
+                }
               },
               "isParent" : false
             }
@@ -770,19 +1546,67 @@
           "type" : "ConnectionInstance",
           "name" : {
             "type" : "Name",
-            "name" : ["Root_three_references_Instance", "sub.sub.thread1.access_point -> root_out"]
+            "name" : ["Root_three_references_Instance", "sub.sub.thread1.access_point -> root_out"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                },
+                "beginLine" : 94,
+                "beginColumn" : 4,
+                "endLine" : 94,
+                "endColumn" : 63,
+                "offset" : 2723,
+                "length" : 59
+              }
+            }
           },
           "src" : {
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"]
+              "name" : ["Root_three_references_Instance", "sub", "sub", "thread1"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 92,
+                  "beginColumn" : 4,
+                  "endLine" : 92,
+                  "endColumn" : 39,
+                  "offset" : 2670,
+                  "length" : 35
+                }
+              }
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"]
+                "name" : ["Root_three_references_Instance", "sub", "sub", "thread1", "access_point"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 28,
+                    "beginColumn" : 4,
+                    "endLine" : 28,
+                    "endColumn" : 36,
+                    "offset" : 560,
+                    "length" : 32
+                  }
+                }
               }
             },
             "direction" : {
@@ -797,13 +1621,45 @@
             "type" : "EndPoint",
             "component" : {
               "type" : "Name",
-              "name" : ["Root_three_references_Instance"]
+              "name" : ["Root_three_references_Instance"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                  },
+                  "beginLine" : 105,
+                  "beginColumn" : 2,
+                  "endLine" : 112,
+                  "endColumn" : 28,
+                  "offset" : 3099,
+                  "length" : 336
+                }
+              }
             },
             "feature" : {
               "type" : "Some",
               "value" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "root_out"]
+                "name" : ["Root_three_references_Instance", "root_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 9,
+                    "beginColumn" : 4,
+                    "endLine" : 9,
+                    "endColumn" : 26,
+                    "offset" : 207,
+                    "length" : 22
+                  }
+                }
               }
             },
             "direction" : {
@@ -823,11 +1679,43 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub", "proc_to_thread"]
+                "name" : ["Root_three_references_Instance", "sub", "sub", "proc_to_thread"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 94,
+                    "beginColumn" : 4,
+                    "endLine" : 94,
+                    "endColumn" : 63,
+                    "offset" : 2723,
+                    "length" : 59
+                  }
+                }
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "sub"]
+                "name" : ["Root_three_references_Instance", "sub", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 99,
+                    "beginColumn" : 4,
+                    "endLine" : 99,
+                    "endColumn" : 45,
+                    "offset" : 2890,
+                    "length" : 41
+                  }
+                }
               },
               "isParent" : false
             },
@@ -835,11 +1723,43 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub", "child_to_parent"]
+                "name" : ["Root_three_references_Instance", "sub", "child_to_parent"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 102,
+                    "beginColumn" : 4,
+                    "endLine" : 102,
+                    "endColumn" : 57,
+                    "offset" : 3007,
+                    "length" : 53
+                  }
+                }
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "sub"]
+                "name" : ["Root_three_references_Instance", "sub"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 108,
+                    "beginColumn" : 4,
+                    "endLine" : 108,
+                    "endColumn" : 47,
+                    "offset" : 3237,
+                    "length" : 43
+                  }
+                }
               },
               "isParent" : false
             },
@@ -847,11 +1767,43 @@
               "type" : "ConnectionReference",
               "name" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance", "system_to_comp_out"]
+                "name" : ["Root_three_references_Instance", "system_to_comp_out"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 111,
+                    "beginColumn" : 4,
+                    "endLine" : 111,
+                    "endColumn" : 57,
+                    "offset" : 3354,
+                    "length" : 53
+                  }
+                }
               },
               "context" : {
                 "type" : "Name",
-                "name" : ["Root_three_references_Instance"]
+                "name" : ["Root_three_references_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "AADL_Translation_Testcases\/Connection_Translation.aadl"
+                    },
+                    "beginLine" : 105,
+                    "beginColumn" : 2,
+                    "endLine" : 112,
+                    "endColumn" : 28,
+                    "offset" : 3099,
+                    "length" : 336
+                  }
+                }
               },
               "isParent" : true
             }
@@ -872,11 +1824,24 @@
           "name" : "Emv2",
           "clause" : {
             "type" : "Emv2Clause",
-            "libraries" : [],
+            "libraries" : [
+            ],
             "propagations" : [
             ],
             "flows" : [
-            ]
+            ],
+            "componentBehavior" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Emv2BehaviorSection",
+                "events" : [
+                ],
+                "transitions" : [
+                ],
+                "propagations" : [
+                ]
+              }
+            }
           }
         }
       ]
@@ -884,6 +1849,6 @@
   ],
   "errorLib" : [
   ],
-  "dataComponents": [
+  "dataComponents" : [
   ]
 }

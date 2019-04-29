@@ -3,18 +3,18 @@ system  Dual_Processor_PowerPC_Instance
     sub-components {
       Left
         ports
-          in Card_Connector_bus_access_IN
-          out Card_Connector_bus_access_OUT
+          in Card_Connector_IN
+          out Card_Connector_OUT
 
       Right
         ports
-          in Card_Connector_bus_access_IN
-          out Card_Connector_bus_access_OUT
+          in Card_Connector_IN
+          out Card_Connector_OUT
 
       Shared_Memory
         ports
-          in Card_Connector_bus_access_IN
-          out Card_Connector_bus_access_OUT
+          in Card_Connector_IN
+          out Card_Connector_OUT
 
       System_Bus
         ports
@@ -22,14 +22,14 @@ system  Dual_Processor_PowerPC_Instance
           out ACCESS_OUT
     }
     connections
-      LCConn_FORWARD : System_Bus.ACCESS_OUT -> Left.Card_Connector_bus_access_IN
+      LCConn_FORWARD : System_Bus.ACCESS_OUT -> Left.Card_Connector_IN
 
-      LCConn_BACKWARD : Left.Card_Connector_bus_access_OUT -> System_Bus.ACCESS_IN
+      LCConn_BACKWARD : Left.Card_Connector_OUT -> System_Bus.ACCESS_IN
 
-      RCConn_FORWARD : System_Bus.ACCESS_OUT -> Right.Card_Connector_bus_access_IN
+      RCConn_FORWARD : System_Bus.ACCESS_OUT -> Right.Card_Connector_IN
 
-      RCConn_BACKWARD : Right.Card_Connector_bus_access_OUT -> System_Bus.ACCESS_IN
+      RCConn_BACKWARD : Right.Card_Connector_OUT -> System_Bus.ACCESS_IN
 
-      SMConn_FORWARD : System_Bus.ACCESS_OUT -> Shared_Memory.Card_Connector_bus_access_IN
+      SMConn_FORWARD : System_Bus.ACCESS_OUT -> Shared_Memory.Card_Connector_IN
 
-      SMConn_BACKWARD : Shared_Memory.Card_Connector_bus_access_OUT -> System_Bus.ACCESS_IN
+      SMConn_BACKWARD : Shared_Memory.Card_Connector_OUT -> System_Bus.ACCESS_IN

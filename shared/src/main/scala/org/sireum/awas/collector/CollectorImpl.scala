@@ -504,4 +504,21 @@ case class FlowErrorPathCollector(path: ISeq[(ResourceUri, ResourceUri)],
   }
 }
 
+case class BehaviorCollector(tuples: ISet[(ResourceUri, ResourceUri)],
+                             edges: ISet[Edge],
+                             flows: ISet[ResourceUri],
+                             behaviors: ISet[ResourceUri],
+                             states: ISet[ResourceUri],
+                             errors: ISet[Tag]) {
+  def union(bc : BehaviorCollector) : BehaviorCollector = {
+    BehaviorCollector(tuples ++ bc.tuples,
+      edges ++ bc.edges,
+      flows ++ bc.flows,
+      behaviors ++ bc.behaviors,
+      states ++ bc.states,
+      errors ++ bc.errors
+    )
+  }
+}
+
 

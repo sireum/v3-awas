@@ -30,7 +30,7 @@ package org.sireum.awas
 import org.sireum.awas.collector.Collector
 import org.sireum.awas.query.{QueryEval, QueryPPrinter, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
-import org.sireum.message.Reporter
+import org.sireum.message.{Position, Reporter}
 import org.sireum.util._
 
 class QueryInter(st: SymbolTable) {
@@ -40,15 +40,31 @@ class QueryInter(st: SymbolTable) {
   val qe = new QueryEval(st)
 
   def evalCmd(cmd: String): (QueryEval.Result, Reporter) = {
+    println(cmd)
     reporter = new Reporter(org.sireum.ISZ())
-    QueryParser(cmd, reporter) match {
-      case Some(m) => {
-        result = qe.eval(m.queryStmt.head, result)
-        m.queryStmt.foreach(it =>
-          queries = queries + (QueryPPrinter(it.qName) -> QueryPPrinter(it.qExpr)))
+    try {
+      QueryParser(cmd, reporter) match {
+        case Some(m) => {
+//          result.foreach(it => println(it._1))
+          if(m.queryStmt.forall(qs => qs.qName.value == st.systemDecl.compName.value)) {
+            reporter.error(org.sireum.None[Position],
+              org.sireum.String("Parse Error"),
+              org.sireum.String("Query name "+
+                m.queryStmt.find(qs => qs.qName.value == st.systemDecl.compName.value).get.qName.value
+                +" cannot be equal to system name"))
+          } else {
+            result = result ++ qe.eval(m, result)
+            m.queryStmt.foreach(it => queries = queries + (QueryPPrinter(it.qName) -> QueryPPrinter(it.qExpr)))
+          }
+          (result, reporter)
+        }
+        case None => (result, reporter)
+      }
+    } catch {
+      case e : Throwable => {
+        reporter.error(org.sireum.None[Position], "Exception", e.getMessage)
         (result, reporter)
       }
-      case None => (result, reporter)
     }
   }
 
@@ -57,8 +73,7 @@ class QueryInter(st: SymbolTable) {
     QueryParser(queryIns, reporter) match {
       case Some(m) => {
         result = result ++ qe.eval(m)
-        m.queryStmt.foreach(it =>
-          queries = queries + (QueryPPrinter(it.qName) -> QueryPPrinter(it.qExpr)))
+        m.queryStmt.foreach(it => queries = queries + (QueryPPrinter(it.qName) -> QueryPPrinter(it.qExpr)))
         (result, reporter)
       }
       case None => (result, reporter)
@@ -73,7 +88,7 @@ class QueryInter(st: SymbolTable) {
     result
   }
 
-  def removeQueries(qName : String) : Unit = {
+  def removeQueries(qName: String): Unit = {
     if (queries.contains(qName) && result.contains(qName)) {
       queries = queries - qName
       result = result - qName

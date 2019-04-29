@@ -1,0 +1,158 @@
+types
+  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
+
+  enum PCA_Error extends EMV2 {MessageLeak, WithMitMLeak, WithOutMitMLeak, UnlikelyLeak, NetworkDelay, MessageCorruption, UnauthorizedCommission, UnlikelyUnauthorizedCommission, MessageDuplicate}
+
+  enum pump_errors extends EMV2 {start_commission, start_omission, stop_commission, stop_omission}
+
+system  PCA_PulseOx_scenario_secure_Instance
+
+    sub-components {
+      App
+        with pump_errors, ErrorLibrary, PCA_Error
+          ports
+            in SpO2
+            out command
+          propagations
+            SpO2 = {MessageCorruption, ItemValueError, ItemOmission, UnauthorizedCommission, NetworkDelay, MessageDuplicate, MessageLeak, UnlikelyUnauthorizedCommission}
+            command = {start_omission, MessageCorruption, ItemOmission, UnauthorizedCommission, NetworkDelay, MessageDuplicate, stop_omission, MessageLeak, start_commission, stop_commission}
+          flows
+            Check_Status : SpO2 -> command
+            inappropriate_ticket_provided : SpO2{ItemValueError, UnlikelyUnauthorizedCommission} -> command{stop_commission, stop_omission, start_commission, start_omission}
+            sinking_corruption : SpO2{UnauthorizedCommission, MessageDuplicate, MessageCorruption} -> *
+            communicating : * -> command{ItemOmission, UnauthorizedCommission, NetworkDelay, MessageLeak, MessageDuplicate, MessageCorruption}
+            command_leak : * -> command{MessageLeak}
+            sinking_leaks : SpO2{MessageLeak} -> *
+            mitigation1 : SpO2{ItemOmission, NetworkDelay, AboveRange} -> *
+            stop_fault : * -> command{stop_omission, stop_commission}
+
+      PCA_Pump
+        with pump_errors, ErrorLibrary, PCA_Error
+          ports
+            out IV_infuse
+            in control
+          propagations
+            control = {start_omission, MessageCorruption, ItemOmission, UnauthorizedCommission, NetworkDelay, MessageDuplicate, stop_omission, MessageLeak, UnlikelyUnauthorizedCommission, start_commission, stop_commission}
+            IV_infuse = {EarlyServiceTermination, LateServiceTermination, LateServiceStart, EarlyServiceStart}
+          flows
+            incorrect_start : control{start_commission} -> IV_infuse{EarlyServiceStart}
+            Pump : control -> infuse
+            missed_stop : control{stop_omission} -> IV_infuse{LateServiceTermination}
+            missing_command : control{ItemOmission, NetworkDelay} -> IV_infuse{LateServiceTermination, LateServiceStart}
+            adversary_actions : control{UnauthorizedCommission, UnlikelyUnauthorizedCommission, MessageDuplicate, MessageCorruption} -> IV_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+            unexpected_stop : control{stop_commission} -> IV_infuse{EarlyServiceTermination, LateServiceTermination}
+            missing_start : control{start_omission} -> IV_infuse{LateServiceStart}
+            sinking_leaks : control{MessageLeak} -> *
+
+      Patient
+        with ErrorLibrary
+          ports
+            in Vein_infuse
+            out BloodSat_Saturation
+          propagations
+            Vein_infuse = {EarlyServiceTermination, LateServiceTermination, LateServiceStart, EarlyServiceStart}
+          flows
+            Absorb : infuse -> *
+            BloodSaturation : * -> Saturation
+            accident : Vein_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart} -> *
+
+      PulseOx
+        with ErrorLibrary, pump_errors, PCA_Error
+          ports
+            in FingerClip_Saturation
+            out SpO2
+          propagations
+            SpO2 = {MessageCorruption, ItemValueError, ItemOmission, UnauthorizedCommission, NetworkDelay, MessageDuplicate, MessageLeak}
+          flows
+            Read_SpO2 : Saturation -> SpO2
+            numerical_failure : * -> SpO2{ItemValueError}
+            communicating_out : * -> SpO2{ItemOmission, UnauthorizedCommission, NetworkDelay, MessageLeak, MessageDuplicate, MessageCorruption}
+
+      authenticate
+        with PCA_Error, ErrorLibrary
+          ports
+            in bindings_IN
+            out bindings_OUT
+            in connection_IN
+            out connection_OUT
+          propagations
+            connection_IN = {MessageCorruption, ItemOmission, NetworkDelay, UnauthorizedCommission, MessageDuplicate}
+            bindings_IN = {MessageCorruption, ItemOmission, NetworkDelay, UnauthorizedCommission, MessageDuplicate, UnlikelyLeak, WithMitMLeak}
+            connection_OUT = {MessageCorruption, ItemOmission, NetworkDelay, UnauthorizedCommission, MessageDuplicate, UnlikelyLeak}
+            bindings_OUT = {ItemOmission, NetworkDelay, UnlikelyUnauthorizedCommission}
+          flows
+            Pass_MessageDuplicate : bindings_IN{MessageDuplicate} -> connection_OUT{MessageDuplicate}
+            pass_after_check : connection_IN{ItemOmission} -> bindings_OUT{ItemOmission}
+            Pass_ItemOmission : bindings_IN{ItemOmission} -> connection_OUT{ItemOmission}
+            Pass_NetworkDelay : bindings_IN{NetworkDelay} -> connection_OUT{NetworkDelay}
+            pass_after_check_NetworkDelay : connection_IN{NetworkDelay} -> bindings_OUT{NetworkDelay}
+            Pass_UnauthorizedCommission : bindings_IN{UnauthorizedCommission} -> connection_OUT{UnauthorizedCommission}
+            DetectReplay : connection_IN{MessageDuplicate} -> bindings_OUT{ItemOmission}
+            Authenticate : connection_IN{MessageCorruption, UnauthorizedCommission} -> bindings_OUT{ItemOmission, UnlikelyUnauthorizedCommission}
+            Authenticate_MitM : bindings_IN{WithMitMLeak, UnlikelyLeak} -> connection_OUT{UnlikelyLeak}
+            pass_MessageCorruption : bindings_IN{MessageCorruption} -> connection_OUT{MessageCorruption}
+
+      encrypt
+        with PCA_Error, ErrorLibrary
+          ports
+            in connection_IN
+            out connection_OUT
+            in bindings_IN
+            out bindings_OUT
+          propagations
+            connection_IN = {ItemOmission, NetworkDelay, UnlikelyUnauthorizedCommission}
+            bindings_IN = {MessageCorruption, UnauthorizedCommission, ItemOmission, NetworkDelay, MessageDuplicate, MessageLeak}
+            connection_OUT = {MessageCorruption, UnauthorizedCommission, ItemOmission, NetworkDelay, MessageDuplicate, UnlikelyLeak, WithMitMLeak}
+            bindings_OUT = {ItemOmission, NetworkDelay, UnlikelyUnauthorizedCommission}
+          flows
+            Pass_MessageDuplicate : bindings_IN{MessageDuplicate} -> connection_OUT{MessageDuplicate}
+            Pass_ItemOmission : bindings_IN{ItemOmission} -> connection_OUT{ItemOmission}
+            Pass_NetworkDelay : bindings_IN{NetworkDelay} -> connection_OUT{NetworkDelay}
+            pass_after_decrypt_unlikely : connection_IN{UnlikelyUnauthorizedCommission} -> bindings_OUT{UnlikelyUnauthorizedCommission}
+            Pass_MessageCorruption : bindings_IN{MessageCorruption} -> connection_OUT{MessageCorruption}
+            Pass_UnauthorizedCommission : bindings_IN{UnauthorizedCommission} -> connection_OUT{UnauthorizedCommission}
+            pass_after_decrypt_ItemOmission : connection_IN{ItemOmission} -> bindings_OUT{ItemOmission}
+            pass_after_decrypt_NetworkDelay : connection_IN{NetworkDelay} -> bindings_OUT{NetworkDelay}
+            ConfidentialityProtection : bindings_IN{MessageLeak} -> connection_OUT{WithMitMLeak, UnlikelyLeak}
+
+      wifi
+        with ErrorLibrary, PCA_Error
+          ports
+            in ACCESS_IN
+            out ACCESS_OUT
+            in bindings_IN
+            out bindings_OUT
+          propagations
+            bindings_IN = {MessageCorruption, ItemOmission, NetworkDelay, UnauthorizedCommission, MessageDuplicate, UnlikelyLeak}
+            bindings_OUT = {MessageCorruption, ItemOmission, NetworkDelay, UnauthorizedCommission, MessageDuplicate}
+          flows
+            dolev_nw_pass_MessageCorruption : bindings_IN{MessageCorruption} -> bindings_OUT{MessageCorruption}
+            dolev_nw_pass_MessageDuplicate : bindings_IN{MessageDuplicate} -> bindings_OUT{MessageDuplicate}
+            accessable : bindings_IN{UnlikelyLeak} -> *
+            dolev_nw_pass_ItemOmission : bindings_IN{ItemOmission} -> bindings_OUT{ItemOmission}
+            dolev_nw_pass_NetworkDelay : bindings_IN{NetworkDelay} -> bindings_OUT{NetworkDelay}
+            dolev_nw_pass_UnauthorizedCommission : bindings_IN{UnauthorizedCommission} -> bindings_OUT{UnauthorizedCommission}
+    }
+    connections
+      administer : PCA_Pump.IV_infuse -> Patient.Vein_infuse
+
+      spo2 : PulseOx.SpO2 -> App.SpO2
+
+      activate : App.command -> PCA_Pump.control
+
+    deployment
+      PCA_PulseOx_scenario_secure_Instance::encrypt.bindings_OUT -> PCA_PulseOx_scenario_secure_Instance::spo2
+
+      PCA_PulseOx_scenario_secure_Instance::activate -> PCA_PulseOx_scenario_secure_Instance::encrypt.bindings_IN
+
+      PCA_PulseOx_scenario_secure_Instance::encrypt.connection_OUT -> PCA_PulseOx_scenario_secure_Instance::authenticate.bindings_IN
+
+      PCA_PulseOx_scenario_secure_Instance::authenticate.bindings_OUT -> PCA_PulseOx_scenario_secure_Instance::encrypt.connection_IN
+
+      PCA_PulseOx_scenario_secure_Instance::encrypt.bindings_OUT -> PCA_PulseOx_scenario_secure_Instance::activate
+
+      PCA_PulseOx_scenario_secure_Instance::authenticate.connection_OUT -> PCA_PulseOx_scenario_secure_Instance::wifi.bindings_IN
+
+      PCA_PulseOx_scenario_secure_Instance::spo2 -> PCA_PulseOx_scenario_secure_Instance::encrypt.bindings_IN
+
+      PCA_PulseOx_scenario_secure_Instance::wifi.bindings_OUT -> PCA_PulseOx_scenario_secure_Instance::authenticate.connection_IN

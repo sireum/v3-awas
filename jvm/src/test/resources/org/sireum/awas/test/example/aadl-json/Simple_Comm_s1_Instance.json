@@ -1,1767 +1,3026 @@
 {
-  "type": "Aadl",
-  "components": [
+  "type" : "Aadl",
+  "components" : [
     {
-      "type": "Component",
-      "identifier": {
-        "type": "Name",
-        "name": [
-          "Simple_Comm_s1_Instance"
-        ]
+      "type" : "Component",
+      "identifier" : {
+        "type" : "Name",
+        "name" : ["Simple_Comm_s1_Instance"],
+        "pos" : {
+          "type" : "Some",
+          "value" : {
+            "type" : "Position",
+            "uriOpt" : {
+              "type" : "Some",
+              "value" : "flow_demo\/simple_flow_demo.aadl"
+            },
+            "beginLine" : 6,
+            "beginColumn" : 2,
+            "endLine" : 23,
+            "endColumn" : 21,
+            "offset" : 73,
+            "length" : 593
+          }
+        }
       },
-      "category": {
-        "type": "ComponentCategory",
-        "value": "System"
+      "category" : {
+        "type" : "ComponentCategory",
+        "value" : "System"
       },
-      "classifier": {
-        "type": "None"
+      "classifier" : {
+        "type" : "None"
       },
-      "features": [
+      "features" : [
       ],
-      "subComponents": [
+      "subComponents" : [
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "alice"
-            ]
-          },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "Device"
-          },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "Simple_Flow_Demo::Sender.impl"
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "alice"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 8,
+                "beginColumn" : 4,
+                "endLine" : 8,
+                "endColumn" : 31,
+                "offset" : 129,
+                "length" : 27
+              }
             }
           },
-          "features": [
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "Device"
+          },
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "Simple_Flow_Demo::Sender.impl"
+            }
+          },
+          "features" : [
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice",
-                  "send_port"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice", "send_port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 48,
+                    "beginColumn" : 4,
+                    "endLine" : 48,
+                    "endColumn" : 32,
+                    "offset" : 1458,
+                    "length" : 28
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
             {
-              "type": "Flow",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice",
-                  "receive_ack"
-                ]
+              "type" : "Flow",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice", "receive_ack"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 50,
+                    "beginColumn" : 4,
+                    "endLine" : 50,
+                    "endColumn" : 38,
+                    "offset" : 1499,
+                    "length" : 34
+                  }
+                }
               },
-              "kind": {
-                "type": "FlowKind",
-                "value": "Sink"
+              "kind" : {
+                "type" : "FlowKind",
+                "value" : "Sink"
               },
-              "source": {
-                "type": "Some",
-                "value": {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Simple_Comm_s1_Instance",
-                      "alice",
-                      "receive_ack",
-                      "send_port"
-                    ]
+              "source" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Simple_Comm_s1_Instance", "alice", "receive_ack", "send_port"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "flow_demo\/simple_flow_demo.aadl"
+                        },
+                        "beginLine" : 48,
+                        "beginColumn" : 4,
+                        "endLine" : 48,
+                        "endColumn" : 32,
+                        "offset" : 1458,
+                        "length" : 28
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               },
-              "sink": {
-                "type": "None"
+              "sink" : {
+                "type" : "None"
               }
             },
             {
-              "type": "Flow",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice",
-                  "send_msg"
-                ]
+              "type" : "Flow",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice", "send_msg"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 51,
+                    "beginColumn" : 4,
+                    "endLine" : 51,
+                    "endColumn" : 36,
+                    "offset" : 1537,
+                    "length" : 32
+                  }
+                }
               },
-              "kind": {
-                "type": "FlowKind",
-                "value": "Source"
+              "kind" : {
+                "type" : "FlowKind",
+                "value" : "Source"
               },
-              "source": {
-                "type": "None"
+              "source" : {
+                "type" : "None"
               },
-              "sink": {
-                "type": "Some",
-                "value": {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Simple_Comm_s1_Instance",
-                      "alice",
-                      "send_msg",
-                      "send_port"
-                    ]
+              "sink" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Simple_Comm_s1_Instance", "alice", "send_msg", "send_port"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "flow_demo\/simple_flow_demo.aadl"
+                        },
+                        "beginLine" : 48,
+                        "beginColumn" : 4,
+                        "endLine" : 48,
+                        "endColumn" : 32,
+                        "offset" : 1458,
+                        "length" : 28
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               }
             }
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : [
                 ],
-                "flows": [
-                ]
+                "propagations" : [
+                ],
+                "flows" : [
+                ],
+                "componentBehavior" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2BehaviorSection",
+                    "events" : [
+                    ],
+                    "transitions" : [
+                    ],
+                    "propagations" : [
+                    ]
+                  }
+                }
               }
             }
           ]
         },
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "bob"
-            ]
-          },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "Device"
-          },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "Simple_Flow_Demo::Receiver.s1"
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "bob"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 9,
+                "beginColumn" : 4,
+                "endLine" : 9,
+                "endColumn" : 28,
+                "offset" : 160,
+                "length" : 24
+              }
             }
           },
-          "features": [
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "Device"
+          },
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "Simple_Flow_Demo::Receiver.s1"
+            }
+          },
+          "features" : [
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob",
-                  "receive_Port"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob", "receive_Port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 60,
+                    "beginColumn" : 4,
+                    "endLine" : 60,
+                    "endColumn" : 35,
+                    "offset" : 1674,
+                    "length" : 31
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
             {
-              "type": "Flow",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob",
-                  "receive_msg"
-                ]
+              "type" : "Flow",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob", "receive_msg"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 62,
+                    "beginColumn" : 4,
+                    "endLine" : 62,
+                    "endColumn" : 41,
+                    "offset" : 1718,
+                    "length" : 37
+                  }
+                }
               },
-              "kind": {
-                "type": "FlowKind",
-                "value": "Sink"
+              "kind" : {
+                "type" : "FlowKind",
+                "value" : "Sink"
               },
-              "source": {
-                "type": "Some",
-                "value": {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Simple_Comm_s1_Instance",
-                      "bob",
-                      "receive_msg",
-                      "receive_Port"
-                    ]
+              "source" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Simple_Comm_s1_Instance", "bob", "receive_msg", "receive_Port"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "flow_demo\/simple_flow_demo.aadl"
+                        },
+                        "beginLine" : 60,
+                        "beginColumn" : 4,
+                        "endLine" : 60,
+                        "endColumn" : 35,
+                        "offset" : 1674,
+                        "length" : 31
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               },
-              "sink": {
-                "type": "None"
+              "sink" : {
+                "type" : "None"
               }
             },
             {
-              "type": "Flow",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob",
-                  "send_ack"
-                ]
+              "type" : "Flow",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob", "send_ack"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 63,
+                    "beginColumn" : 4,
+                    "endLine" : 63,
+                    "endColumn" : 39,
+                    "offset" : 1759,
+                    "length" : 35
+                  }
+                }
               },
-              "kind": {
-                "type": "FlowKind",
-                "value": "Source"
+              "kind" : {
+                "type" : "FlowKind",
+                "value" : "Source"
               },
-              "source": {
-                "type": "None"
+              "source" : {
+                "type" : "None"
               },
-              "sink": {
-                "type": "Some",
-                "value": {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Simple_Comm_s1_Instance",
-                      "bob",
-                      "send_ack",
-                      "receive_Port"
-                    ]
+              "sink" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Simple_Comm_s1_Instance", "bob", "send_ack", "receive_Port"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "flow_demo\/simple_flow_demo.aadl"
+                        },
+                        "beginLine" : 60,
+                        "beginColumn" : 4,
+                        "endLine" : 60,
+                        "endColumn" : 35,
+                        "offset" : 1674,
+                        "length" : 31
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               }
             }
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : [
                 ],
-                "flows": [
-                ]
+                "propagations" : [
+                ],
+                "flows" : [
+                ],
+                "componentBehavior" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2BehaviorSection",
+                    "events" : [
+                    ],
+                    "transitions" : [
+                    ],
+                    "propagations" : [
+                    ]
+                  }
+                }
               }
             }
           ]
         },
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "mallory"
-            ]
-          },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "Device"
-          },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "Simple_Flow_Demo::Receiver.s1"
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "mallory"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 10,
+                "beginColumn" : 4,
+                "endLine" : 10,
+                "endColumn" : 32,
+                "offset" : 188,
+                "length" : 28
+              }
             }
           },
-          "features": [
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "Device"
+          },
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "Simple_Flow_Demo::Receiver.s1"
+            }
+          },
+          "features" : [
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory",
-                  "receive_Port"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_Port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 60,
+                    "beginColumn" : 4,
+                    "endLine" : 60,
+                    "endColumn" : 35,
+                    "offset" : 1674,
+                    "length" : 31
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
             {
-              "type": "Flow",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory",
-                  "receive_msg"
-                ]
+              "type" : "Flow",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_msg"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 62,
+                    "beginColumn" : 4,
+                    "endLine" : 62,
+                    "endColumn" : 41,
+                    "offset" : 1718,
+                    "length" : 37
+                  }
+                }
               },
-              "kind": {
-                "type": "FlowKind",
-                "value": "Sink"
+              "kind" : {
+                "type" : "FlowKind",
+                "value" : "Sink"
               },
-              "source": {
-                "type": "Some",
-                "value": {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Simple_Comm_s1_Instance",
-                      "mallory",
-                      "receive_msg",
-                      "receive_Port"
-                    ]
+              "source" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_msg", "receive_Port"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "flow_demo\/simple_flow_demo.aadl"
+                        },
+                        "beginLine" : 60,
+                        "beginColumn" : 4,
+                        "endLine" : 60,
+                        "endColumn" : 35,
+                        "offset" : 1674,
+                        "length" : 31
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               },
-              "sink": {
-                "type": "None"
+              "sink" : {
+                "type" : "None"
               }
             },
             {
-              "type": "Flow",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory",
-                  "send_ack"
-                ]
+              "type" : "Flow",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory", "send_ack"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 63,
+                    "beginColumn" : 4,
+                    "endLine" : 63,
+                    "endColumn" : 39,
+                    "offset" : 1759,
+                    "length" : 35
+                  }
+                }
               },
-              "kind": {
-                "type": "FlowKind",
-                "value": "Source"
+              "kind" : {
+                "type" : "FlowKind",
+                "value" : "Source"
               },
-              "source": {
-                "type": "None"
+              "source" : {
+                "type" : "None"
               },
-              "sink": {
-                "type": "Some",
-                "value": {
-                  "type": "FeatureEnd",
-                  "identifier": {
-                    "type": "Name",
-                    "name": [
-                      "Simple_Comm_s1_Instance",
-                      "mallory",
-                      "send_ack",
-                      "receive_Port"
-                    ]
+              "sink" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "FeatureEnd",
+                  "identifier" : {
+                    "type" : "Name",
+                    "name" : ["Simple_Comm_s1_Instance", "mallory", "send_ack", "receive_Port"],
+                    "pos" : {
+                      "type" : "Some",
+                      "value" : {
+                        "type" : "Position",
+                        "uriOpt" : {
+                          "type" : "Some",
+                          "value" : "flow_demo\/simple_flow_demo.aadl"
+                        },
+                        "beginLine" : 60,
+                        "beginColumn" : 4,
+                        "endLine" : 60,
+                        "endColumn" : 35,
+                        "offset" : 1674,
+                        "length" : 31
+                      }
+                    }
                   },
-                  "direction": {
-                    "type": "Direction",
-                    "value": "InOut"
+                  "direction" : {
+                    "type" : "Direction",
+                    "value" : "InOut"
                   },
-                  "category": {
-                    "type": "FeatureCategory",
-                    "value": "DataPort"
+                  "category" : {
+                    "type" : "FeatureCategory",
+                    "value" : "DataPort"
                   },
-                  "classifier": {
-                    "type": "None"
+                  "classifier" : {
+                    "type" : "None"
                   },
-                  "properties": [
+                  "properties" : [
                   ]
                 }
               }
             }
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : [
                 ],
-                "flows": [
-                ]
+                "propagations" : [
+                ],
+                "flows" : [
+                ],
+                "componentBehavior" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2BehaviorSection",
+                    "events" : [
+                    ],
+                    "transitions" : [
+                    ],
+                    "propagations" : [
+                    ]
+                  }
+                }
               }
             }
           ]
         },
         {
-          "type": "Component",
-          "identifier": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "router"
-            ]
-          },
-          "category": {
-            "type": "ComponentCategory",
-            "value": "Device"
-          },
-          "classifier": {
-            "type": "Some",
-            "value": {
-              "type": "Classifier",
-              "name": "Simple_Flow_Demo::Switch.s1"
+          "type" : "Component",
+          "identifier" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "router"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 11,
+                "beginColumn" : 4,
+                "endLine" : 11,
+                "endColumn" : 30,
+                "offset" : 220,
+                "length" : 26
+              }
             }
           },
-          "features": [
+          "category" : {
+            "type" : "ComponentCategory",
+            "value" : "Device"
+          },
+          "classifier" : {
+            "type" : "Some",
+            "value" : {
+              "type" : "Classifier",
+              "name" : "Simple_Flow_Demo::Switch.s1"
+            }
+          },
+          "features" : [
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "alice_skt"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "alice_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 72,
+                    "beginColumn" : 4,
+                    "endLine" : 72,
+                    "endColumn" : 32,
+                    "offset" : 1900,
+                    "length" : 28
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "bob_skt"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "bob_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 73,
+                    "beginColumn" : 4,
+                    "endLine" : 73,
+                    "endColumn" : 30,
+                    "offset" : 1932,
+                    "length" : 26
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "mallory_skt"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "mallory_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 74,
+                    "beginColumn" : 4,
+                    "endLine" : 74,
+                    "endColumn" : 34,
+                    "offset" : 1962,
+                    "length" : 30
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             },
             {
-              "type": "FeatureEnd",
-              "identifier": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "eve_skt"
-                ]
+              "type" : "FeatureEnd",
+              "identifier" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "eve_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 75,
+                    "beginColumn" : 4,
+                    "endLine" : 75,
+                    "endColumn" : 30,
+                    "offset" : 1996,
+                    "length" : 26
+                  }
+                }
               },
-              "direction": {
-                "type": "Direction",
-                "value": "InOut"
+              "direction" : {
+                "type" : "Direction",
+                "value" : "InOut"
               },
-              "category": {
-                "type": "FeatureCategory",
-                "value": "DataPort"
+              "category" : {
+                "type" : "FeatureCategory",
+                "value" : "DataPort"
               },
-              "classifier": {
-                "type": "None"
+              "classifier" : {
+                "type" : "None"
               },
-              "properties": [
+              "properties" : [
               ]
             }
           ],
-          "subComponents": [
+          "subComponents" : [
           ],
-          "connections": [
+          "connections" : [
           ],
-          "connectionInstances": [
+          "connectionInstances" : [
           ],
-          "properties": [
+          "properties" : [
           ],
-          "flows": [
+          "flows" : [
           ],
-          "modes": [
+          "modes" : [
           ],
-          "annexes": [
+          "annexes" : [
             {
-              "type": "Annex",
-              "name": "Emv2",
-              "clause": {
-                "type": "Emv2Clause",
-                "libraries": [],
-                "propagations": [
+              "type" : "Annex",
+              "name" : "Emv2",
+              "clause" : {
+                "type" : "Emv2Clause",
+                "libraries" : [
                 ],
-                "flows": [
-                ]
+                "propagations" : [
+                ],
+                "flows" : [
+                ],
+                "componentBehavior" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Emv2BehaviorSection",
+                    "events" : [
+                    ],
+                    "transitions" : [
+                    ],
+                    "propagations" : [
+                    ]
+                  }
+                }
               }
             }
           ]
         }
       ],
-      "connections": [
+      "connections" : [
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "alice_send"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "alice_send"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 13,
+                "beginColumn" : 4,
+                "endLine" : 13,
+                "endColumn" : 58,
+                "offset" : 264,
+                "length" : 54
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "alice",
-                    "send_port"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 8,
+                    "beginColumn" : 4,
+                    "endLine" : 8,
+                    "endColumn" : 31,
+                    "offset" : 129,
+                    "length" : 27
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "alice", "send_port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 48,
+                      "beginColumn" : 4,
+                      "endLine" : 48,
+                      "endColumn" : 32,
+                      "offset" : 1458,
+                      "length" : 28
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "router",
-                    "alice_skt"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 11,
+                    "beginColumn" : 4,
+                    "endLine" : 11,
+                    "endColumn" : 30,
+                    "offset" : 220,
+                    "length" : 26
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "router", "alice_skt"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 72,
+                      "beginColumn" : 4,
+                      "endLine" : 72,
+                      "endColumn" : 32,
+                      "offset" : 1900,
+                      "length" : 28
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "alice",
-                "send_port -> router",
-                "alice_skt"
-              ]
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "alice", "send_port -> router", "alice_skt"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "bob_send"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "bob_send"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 16,
+                "beginColumn" : 4,
+                "endLine" : 16,
+                "endColumn" : 55,
+                "offset" : 388,
+                "length" : 51
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "bob",
-                    "receive_Port"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 9,
+                    "beginColumn" : 4,
+                    "endLine" : 9,
+                    "endColumn" : 28,
+                    "offset" : 160,
+                    "length" : 24
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "bob", "receive_Port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 60,
+                      "beginColumn" : 4,
+                      "endLine" : 60,
+                      "endColumn" : 35,
+                      "offset" : 1674,
+                      "length" : 31
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "router",
-                    "bob_skt"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 11,
+                    "beginColumn" : 4,
+                    "endLine" : 11,
+                    "endColumn" : 30,
+                    "offset" : 220,
+                    "length" : 26
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "router", "bob_skt"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 73,
+                      "beginColumn" : 4,
+                      "endLine" : 73,
+                      "endColumn" : 30,
+                      "offset" : 1932,
+                      "length" : 26
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "bob",
-                "receive_Port -> router",
-                "bob_skt"
-              ]
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "bob", "receive_Port -> router", "bob_skt"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "mallory_send"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "mallory_send"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 19,
+                "beginColumn" : 4,
+                "endLine" : 19,
+                "endColumn" : 67,
+                "offset" : 506,
+                "length" : 63
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "mallory",
-                    "receive_Port"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 10,
+                    "beginColumn" : 4,
+                    "endLine" : 10,
+                    "endColumn" : 32,
+                    "offset" : 188,
+                    "length" : 28
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_Port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 60,
+                      "beginColumn" : 4,
+                      "endLine" : 60,
+                      "endColumn" : 35,
+                      "offset" : 1674,
+                      "length" : 31
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "router",
-                    "mallory_skt"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 11,
+                    "beginColumn" : 4,
+                    "endLine" : 11,
+                    "endColumn" : 30,
+                    "offset" : 220,
+                    "length" : 26
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "router", "mallory_skt"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 74,
+                      "beginColumn" : 4,
+                      "endLine" : 74,
+                      "endColumn" : 34,
+                      "offset" : 1962,
+                      "length" : 30
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "mallory",
-                "receive_Port -> router",
-                "mallory_skt"
-              ]
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_Port -> router", "mallory_skt"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "alice_receive"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "alice_receive"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 14,
+                "beginColumn" : 4,
+                "endLine" : 14,
+                "endColumn" : 61,
+                "offset" : 323,
+                "length" : 57
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "router",
-                    "alice_skt"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 11,
+                    "beginColumn" : 4,
+                    "endLine" : 11,
+                    "endColumn" : 30,
+                    "offset" : 220,
+                    "length" : 26
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "router", "alice_skt"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 72,
+                      "beginColumn" : 4,
+                      "endLine" : 72,
+                      "endColumn" : 32,
+                      "offset" : 1900,
+                      "length" : 28
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "alice",
-                    "send_port"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 8,
+                    "beginColumn" : 4,
+                    "endLine" : 8,
+                    "endColumn" : 31,
+                    "offset" : 129,
+                    "length" : 27
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "alice", "send_port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 48,
+                      "beginColumn" : 4,
+                      "endLine" : 48,
+                      "endColumn" : 32,
+                      "offset" : 1458,
+                      "length" : 28
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router",
-                "alice_skt -> alice",
-                "send_port"
-              ]
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router", "alice_skt -> alice", "send_port"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "bob_receive"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "bob_receive"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 17,
+                "beginColumn" : 4,
+                "endLine" : 17,
+                "endColumn" : 58,
+                "offset" : 444,
+                "length" : 54
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "router",
-                    "bob_skt"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 11,
+                    "beginColumn" : 4,
+                    "endLine" : 11,
+                    "endColumn" : 30,
+                    "offset" : 220,
+                    "length" : 26
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "router", "bob_skt"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 73,
+                      "beginColumn" : 4,
+                      "endLine" : 73,
+                      "endColumn" : 30,
+                      "offset" : 1932,
+                      "length" : 26
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "bob",
-                    "receive_Port"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 9,
+                    "beginColumn" : 4,
+                    "endLine" : 9,
+                    "endColumn" : 28,
+                    "offset" : 160,
+                    "length" : 24
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "bob", "receive_Port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 60,
+                      "beginColumn" : 4,
+                      "endLine" : 60,
+                      "endColumn" : 35,
+                      "offset" : 1674,
+                      "length" : 31
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router",
-                "bob_skt -> bob",
-                "receive_Port"
-              ]
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router", "bob_skt -> bob", "receive_Port"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "Connection",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "mallory_receive"
-            ]
+          "type" : "Connection",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "mallory_receive"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 20,
+                "beginColumn" : 4,
+                "endLine" : 20,
+                "endColumn" : 70,
+                "offset" : 574,
+                "length" : 66
+              }
+            }
           },
-          "src": [
+          "src" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "router",
-                    "mallory_skt"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 11,
+                    "beginColumn" : 4,
+                    "endLine" : 11,
+                    "endColumn" : 30,
+                    "offset" : 220,
+                    "length" : 26
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "router", "mallory_skt"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 74,
+                      "beginColumn" : 4,
+                      "endLine" : 74,
+                      "endColumn" : 34,
+                      "offset" : 1962,
+                      "length" : 30
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "dst": [
+          "dst" : [
             {
-              "type": "EndPoint",
-              "component": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory"
-                ]
-              },
-              "feature": {
-                "type": "Some",
-                "value": {
-                  "type": "Name",
-                  "name": [
-                    "Simple_Comm_s1_Instance",
-                    "mallory",
-                    "receive_Port"
-                  ]
+              "type" : "EndPoint",
+              "component" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 10,
+                    "beginColumn" : 4,
+                    "endLine" : 10,
+                    "endColumn" : 32,
+                    "offset" : 188,
+                    "length" : 28
+                  }
                 }
               },
-              "direction": {
-                "type": "Some",
-                "value": {
-                  "type": "Direction",
-                  "value": "InOut"
+              "feature" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Name",
+                  "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_Port"],
+                  "pos" : {
+                    "type" : "Some",
+                    "value" : {
+                      "type" : "Position",
+                      "uriOpt" : {
+                        "type" : "Some",
+                        "value" : "flow_demo\/simple_flow_demo.aadl"
+                      },
+                      "beginLine" : 60,
+                      "beginColumn" : 4,
+                      "endLine" : 60,
+                      "endColumn" : 35,
+                      "offset" : 1674,
+                      "length" : 31
+                    }
+                  }
+                }
+              },
+              "direction" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Direction",
+                  "value" : "InOut"
                 }
               }
             }
           ],
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
           },
-          "isBiDirectional": false,
-          "connectionInstances": [
+          "isBiDirectional" : false,
+          "connectionInstances" : [
             {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router",
-                "mallory_skt -> mallory",
-                "receive_Port"
-              ]
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router", "mallory_skt -> mallory", "receive_Port"],
+              "pos" : {
+                "type" : "None"
+              }
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "connectionInstances": [
+      "connectionInstances" : [
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "alice.send_port -> router.alice_skt"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "alice"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice",
-                  "send_port"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "alice.send_port -> router.alice_skt"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 13,
+                "beginColumn" : 4,
+                "endLine" : 13,
+                "endColumn" : 58,
+                "offset" : 264,
+                "length" : 54
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "alice_skt"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "alice"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 8,
+                  "beginColumn" : 4,
+                  "endLine" : 8,
+                  "endColumn" : 31,
+                  "offset" : 129,
+                  "length" : 27
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice", "send_port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 48,
+                    "beginColumn" : 4,
+                    "endLine" : 48,
+                    "endColumn" : 32,
+                    "offset" : 1458,
+                    "length" : 28
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 11,
+                  "beginColumn" : 4,
+                  "endLine" : 11,
+                  "endColumn" : 30,
+                  "offset" : 220,
+                  "length" : 26
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "alice_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 72,
+                    "beginColumn" : 4,
+                    "endLine" : 72,
+                    "endColumn" : 32,
+                    "offset" : 1900,
+                    "length" : 28
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice_send"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice_send"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 13,
+                    "beginColumn" : 4,
+                    "endLine" : 13,
+                    "endColumn" : 58,
+                    "offset" : 264,
+                    "length" : 54
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 6,
+                    "beginColumn" : 2,
+                    "endLine" : 23,
+                    "endColumn" : 21,
+                    "offset" : 73,
+                    "length" : 593
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "bob.receive_Port -> router.bob_skt"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "bob"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob",
-                  "receive_Port"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "bob.receive_Port -> router.bob_skt"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 16,
+                "beginColumn" : 4,
+                "endLine" : 16,
+                "endColumn" : 55,
+                "offset" : 388,
+                "length" : 51
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "bob_skt"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "bob"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 9,
+                  "beginColumn" : 4,
+                  "endLine" : 9,
+                  "endColumn" : 28,
+                  "offset" : 160,
+                  "length" : 24
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob", "receive_Port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 60,
+                    "beginColumn" : 4,
+                    "endLine" : 60,
+                    "endColumn" : 35,
+                    "offset" : 1674,
+                    "length" : 31
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 11,
+                  "beginColumn" : 4,
+                  "endLine" : 11,
+                  "endColumn" : 30,
+                  "offset" : 220,
+                  "length" : 26
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "bob_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 73,
+                    "beginColumn" : 4,
+                    "endLine" : 73,
+                    "endColumn" : 30,
+                    "offset" : 1932,
+                    "length" : 26
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob_send"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob_send"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 16,
+                    "beginColumn" : 4,
+                    "endLine" : 16,
+                    "endColumn" : 55,
+                    "offset" : 388,
+                    "length" : 51
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 6,
+                    "beginColumn" : 2,
+                    "endLine" : 23,
+                    "endColumn" : 21,
+                    "offset" : 73,
+                    "length" : 593
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "mallory.receive_Port -> router.mallory_skt"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "mallory"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory",
-                  "receive_Port"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "mallory.receive_Port -> router.mallory_skt"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 19,
+                "beginColumn" : 4,
+                "endLine" : 19,
+                "endColumn" : 67,
+                "offset" : 506,
+                "length" : 63
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "mallory_skt"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "mallory"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 10,
+                  "beginColumn" : 4,
+                  "endLine" : 10,
+                  "endColumn" : 32,
+                  "offset" : 188,
+                  "length" : 28
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_Port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 60,
+                    "beginColumn" : 4,
+                    "endLine" : 60,
+                    "endColumn" : 35,
+                    "offset" : 1674,
+                    "length" : 31
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 11,
+                  "beginColumn" : 4,
+                  "endLine" : 11,
+                  "endColumn" : 30,
+                  "offset" : 220,
+                  "length" : 26
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "mallory_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 74,
+                    "beginColumn" : 4,
+                    "endLine" : 74,
+                    "endColumn" : 34,
+                    "offset" : 1962,
+                    "length" : 30
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory_send"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory_send"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 19,
+                    "beginColumn" : 4,
+                    "endLine" : 19,
+                    "endColumn" : 67,
+                    "offset" : 506,
+                    "length" : 63
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 6,
+                    "beginColumn" : 2,
+                    "endLine" : 23,
+                    "endColumn" : 21,
+                    "offset" : 73,
+                    "length" : 593
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "router.alice_skt -> alice.send_port"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "alice_skt"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "router.alice_skt -> alice.send_port"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 14,
+                "beginColumn" : 4,
+                "endLine" : 14,
+                "endColumn" : 61,
+                "offset" : 323,
+                "length" : 57
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "alice"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice",
-                  "send_port"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 11,
+                  "beginColumn" : 4,
+                  "endLine" : 11,
+                  "endColumn" : 30,
+                  "offset" : 220,
+                  "length" : 26
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "alice_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 72,
+                    "beginColumn" : 4,
+                    "endLine" : 72,
+                    "endColumn" : 32,
+                    "offset" : 1900,
+                    "length" : 28
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "alice"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 8,
+                  "beginColumn" : 4,
+                  "endLine" : 8,
+                  "endColumn" : 31,
+                  "offset" : 129,
+                  "length" : 27
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice", "send_port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 48,
+                    "beginColumn" : 4,
+                    "endLine" : 48,
+                    "endColumn" : 32,
+                    "offset" : 1458,
+                    "length" : 28
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "alice_receive"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "alice_receive"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 14,
+                    "beginColumn" : 4,
+                    "endLine" : 14,
+                    "endColumn" : 61,
+                    "offset" : 323,
+                    "length" : 57
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 6,
+                    "beginColumn" : 2,
+                    "endLine" : 23,
+                    "endColumn" : 21,
+                    "offset" : 73,
+                    "length" : 593
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "router.bob_skt -> bob.receive_Port"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "bob_skt"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "router.bob_skt -> bob.receive_Port"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 17,
+                "beginColumn" : 4,
+                "endLine" : 17,
+                "endColumn" : 58,
+                "offset" : 444,
+                "length" : 54
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "bob"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob",
-                  "receive_Port"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 11,
+                  "beginColumn" : 4,
+                  "endLine" : 11,
+                  "endColumn" : 30,
+                  "offset" : 220,
+                  "length" : 26
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "bob_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 73,
+                    "beginColumn" : 4,
+                    "endLine" : 73,
+                    "endColumn" : 30,
+                    "offset" : 1932,
+                    "length" : 26
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "bob"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 9,
+                  "beginColumn" : 4,
+                  "endLine" : 9,
+                  "endColumn" : 28,
+                  "offset" : 160,
+                  "length" : 24
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob", "receive_Port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 60,
+                    "beginColumn" : 4,
+                    "endLine" : 60,
+                    "endColumn" : 35,
+                    "offset" : 1674,
+                    "length" : 31
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "bob_receive"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "bob_receive"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 17,
+                    "beginColumn" : 4,
+                    "endLine" : 17,
+                    "endColumn" : 58,
+                    "offset" : 444,
+                    "length" : 54
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 6,
+                    "beginColumn" : 2,
+                    "endLine" : 23,
+                    "endColumn" : 21,
+                    "offset" : 73,
+                    "length" : 593
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         },
         {
-          "type": "ConnectionInstance",
-          "name": {
-            "type": "Name",
-            "name": [
-              "Simple_Comm_s1_Instance",
-              "router.mallory_skt -> mallory.receive_Port"
-            ]
-          },
-          "src": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "router"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "router",
-                  "mallory_skt"
-                ]
-              }
-            },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+          "type" : "ConnectionInstance",
+          "name" : {
+            "type" : "Name",
+            "name" : ["Simple_Comm_s1_Instance", "router.mallory_skt -> mallory.receive_Port"],
+            "pos" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Position",
+                "uriOpt" : {
+                  "type" : "Some",
+                  "value" : "flow_demo\/simple_flow_demo.aadl"
+                },
+                "beginLine" : 20,
+                "beginColumn" : 4,
+                "endLine" : 20,
+                "endColumn" : 70,
+                "offset" : 574,
+                "length" : 66
               }
             }
           },
-          "dst": {
-            "type": "EndPoint",
-            "component": {
-              "type": "Name",
-              "name": [
-                "Simple_Comm_s1_Instance",
-                "mallory"
-              ]
-            },
-            "feature": {
-              "type": "Some",
-              "value": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory",
-                  "receive_Port"
-                ]
+          "src" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "router"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 11,
+                  "beginColumn" : 4,
+                  "endLine" : 11,
+                  "endColumn" : 30,
+                  "offset" : 220,
+                  "length" : 26
+                }
               }
             },
-            "direction": {
-              "type": "Some",
-              "value": {
-                "type": "Direction",
-                "value": "InOut"
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "router", "mallory_skt"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 74,
+                    "beginColumn" : 4,
+                    "endLine" : 74,
+                    "endColumn" : 34,
+                    "offset" : 1962,
+                    "length" : 30
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
               }
             }
           },
-          "kind": {
-            "type": "ConnectionKind",
-            "value": "Port"
+          "dst" : {
+            "type" : "EndPoint",
+            "component" : {
+              "type" : "Name",
+              "name" : ["Simple_Comm_s1_Instance", "mallory"],
+              "pos" : {
+                "type" : "Some",
+                "value" : {
+                  "type" : "Position",
+                  "uriOpt" : {
+                    "type" : "Some",
+                    "value" : "flow_demo\/simple_flow_demo.aadl"
+                  },
+                  "beginLine" : 10,
+                  "beginColumn" : 4,
+                  "endLine" : 10,
+                  "endColumn" : 32,
+                  "offset" : 188,
+                  "length" : 28
+                }
+              }
+            },
+            "feature" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory", "receive_Port"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 60,
+                    "beginColumn" : 4,
+                    "endLine" : 60,
+                    "endColumn" : 35,
+                    "offset" : 1674,
+                    "length" : 31
+                  }
+                }
+              }
+            },
+            "direction" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Direction",
+                "value" : "InOut"
+              }
+            }
           },
-          "connectionRefs": [
+          "kind" : {
+            "type" : "ConnectionKind",
+            "value" : "Port"
+          },
+          "connectionRefs" : [
             {
-              "type": "ConnectionReference",
-              "name": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance",
-                  "mallory_receive"
-                ]
+              "type" : "ConnectionReference",
+              "name" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance", "mallory_receive"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 20,
+                    "beginColumn" : 4,
+                    "endLine" : 20,
+                    "endColumn" : 70,
+                    "offset" : 574,
+                    "length" : 66
+                  }
+                }
               },
-              "context": {
-                "type": "Name",
-                "name": [
-                  "Simple_Comm_s1_Instance"
-                ]
+              "context" : {
+                "type" : "Name",
+                "name" : ["Simple_Comm_s1_Instance"],
+                "pos" : {
+                  "type" : "Some",
+                  "value" : {
+                    "type" : "Position",
+                    "uriOpt" : {
+                      "type" : "Some",
+                      "value" : "flow_demo\/simple_flow_demo.aadl"
+                    },
+                    "beginLine" : 6,
+                    "beginColumn" : 2,
+                    "endLine" : 23,
+                    "endColumn" : 21,
+                    "offset" : 73,
+                    "length" : 593
+                  }
+                }
               },
-              "isParent": true
+              "isParent" : true
             }
           ],
-          "properties": [
+          "properties" : [
           ]
         }
       ],
-      "properties": [
+      "properties" : [
       ],
-      "flows": [
+      "flows" : [
       ],
-      "modes": [
+      "modes" : [
       ],
-      "annexes": [
+      "annexes" : [
         {
-          "type": "Annex",
-          "name": "Emv2",
-          "clause": {
-            "type": "Emv2Clause",
-            "libraries": [],
-            "propagations": [
+          "type" : "Annex",
+          "name" : "Emv2",
+          "clause" : {
+            "type" : "Emv2Clause",
+            "libraries" : [
             ],
-            "flows": [
-            ]
+            "propagations" : [
+            ],
+            "flows" : [
+            ],
+            "componentBehavior" : {
+              "type" : "Some",
+              "value" : {
+                "type" : "Emv2BehaviorSection",
+                "events" : [
+                ],
+                "transitions" : [
+                ],
+                "propagations" : [
+                ]
+              }
+            }
           }
         }
       ]
     }
   ],
-  "errorLib": [
+  "errorLib" : [
   ],
-  "dataComponents": [
+  "dataComponents" : [
   ]
 }

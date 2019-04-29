@@ -54,6 +54,10 @@ trait ComponentTable {
 
   def flow(flowUri: ResourceUri): FlowTableData
 
+  def behaviors: Iterable[ResourceUri]
+
+  def behavior(behaviorUri: ResourceUri): BehaveExpr
+
   def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
 
   def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
@@ -82,6 +86,8 @@ sealed case class ComponentTableData
  flowTable: MMap[ResourceUri, FlowTableData] = mmapEmpty,
  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ behaviorTable: MMap[ResourceUri, BehaveExpr] = mmapEmpty,
+ transitionTable: MMap[ResourceUri, TransExpr] = mmapEmpty,
  subComponentsDecl: MMap[ResourceUri, ComponentDecl] = mmapEmpty,
  subComponentsTable: MMap[ResourceUri, ComponentTable] = mmapEmpty,
  types: MSet[ResourceUri] = msetEmpty,
@@ -169,6 +175,9 @@ class CompSTProducer(val compUri: ResourceUri,
   //    assert(tables.connectionTable.keySet.contains(curi))
   //    connMap.getOrElseUpdate(curi, new ConnST(curi))
   //  }
+override def behaviors: Iterable[ResourceUri] = tables.behaviorTable.keys
+
+override def behavior(behaviorUri:  ResourceUri): BehaveExpr = tables.behaviorTable(behaviorUri)
 }
 
 sealed case class FlowTableData

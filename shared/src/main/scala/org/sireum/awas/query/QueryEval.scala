@@ -49,10 +49,10 @@ object QueryEval {
     new QueryEval(st).eval(qExpr)
   }
 
-  def apply(qs: QueryStmt, env: ILinkedMap[String, Collector],
-            st: SymbolTable): Result = {
-    new QueryEval(st).eval(qs, env)
-  }
+//  def apply(qs: QueryStmt, env: ILinkedMap[String, Collector],
+//            st: SymbolTable): Result = {
+//    new QueryEval(st).eval(qs, env)
+//  }
 }
 
 object ConstraintKind extends Enumeration {
@@ -76,10 +76,19 @@ final class QueryEval(st: SymbolTable) {
   var queries: ILinkedMap[String, QueryExpr] = ilinkedMapEmpty[String, QueryExpr]
 
   def eval(m: Model): QueryEval.Result = {
+    eval(m, ilinkedMapEmpty[String, Collector])
+  }
+
+  def eval(m : Model, env: ILinkedMap[String, Collector]): QueryEval.Result = {
+    result = env
     m.queryStmt.foreach {
       q =>
-        if (!queries.keySet.contains(q.qName.value)) {
+        if (q.qName.value != st.systemDecl.compName.value) {
           queries += (q.qName.value -> q.qExpr)
+        } else {
+          result = result + (q.qName.value -> Collector(st, isetEmpty,
+            isetEmpty[Tag] + errorMessageGen("Query name cannot be equal to system name",
+              QueryPPrinter(q.qName), ReachAnalysisStage.Query)) )
         }
     }
     queries.foreach {
@@ -88,11 +97,11 @@ final class QueryEval(st: SymbolTable) {
     result
   }
 
-  def eval(queryStmt: QueryStmt, env: ILinkedMap[String, Collector]): QueryEval.Result = {
-    result = env
-    result = result + (queryStmt.qName.value -> eval(queryStmt.qExpr))
-    result
-  }
+//  def eval(queryStmt: QueryStmt, env: ILinkedMap[String, Collector]): QueryEval.Result = {
+//    result = env
+//    result = result + (queryStmt.qName.value -> eval(queryStmt.qExpr))
+//    result
+//  }
 
   def eval(qexp: QueryExpr): Collector = {
     qexp match {
@@ -477,9 +486,16 @@ final class QueryEval(st: SymbolTable) {
 
       case NodeEmpty() => Collector(st)
 
-      case QueryName(id) => result.getOrElse(id.value, Collector(st, isetEmpty,
-        isetEmpty[Tag] + errorMessageGen(MISSING_RESULT,
-          id.value, ReachAnalysisStage.Query)))
+      case QueryName(id) => {
+        if(id.value == st.systemDecl.compName.value) {
+          eval(NodeName(QueryNode.emptySeq.+:(id)))
+        } else {
+          result.getOrElse(
+            id.value,
+            Collector(st, isetEmpty, isetEmpty[Tag] + errorMessageGen(MISSING_RESULT, id.value, ReachAnalysisStage.Query))
+          )
+        }
+      }
 
       case nn: NodeName => eval(nn, ivectorEmpty[ISeq[Id]])
     }

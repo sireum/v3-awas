@@ -1,51 +1,9 @@
 types
   enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
 
-  enum GPSErrorLibrary {SensorFailure, CPUFailure, PowerSupplyFailure, NetworkFailure, LowPrecisionData, IncorrectData, NoSignal, LowSignal}
+  enum GPSErrorLibrary extends EMV2 {SensorFailure, CPUFailure, PowerSupplyFailure, NetworkFailure, LowPrecisionData, IncorrectData, NoSignal, LowSignal}
 
-  enum AFGErrorLibrary {NoValue, NoService, ErraticBehavior, NoPilotInput, ErraticPilotInput, ErraticValue, FlightSystemfailure}
-
-  alias ErrorLibrary::TimingError = ErrorLibrary::ItemTimingError
-
-  alias ErrorLibrary::BadValue = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::InconsistentValue = ErrorLibrary::AsymmetricValue
-
-  alias ErrorLibrary::RateError = ErrorLibrary::SequenceTimingError
-
-  alias ErrorLibrary::InconsistentItemOmission = ErrorLibrary::AsymmetricItemOmission
-
-  alias ErrorLibrary::ValueError = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::LateData = ErrorLibrary::LowRate
-
-  alias ErrorLibrary::AsymmetricTransmissive = ErrorLibrary::AsymmetricValue
-
-  alias ErrorLibrary::SequenceError = ErrorLibrary::SequenceValueError
-
-  alias ErrorLibrary::IncorrectValue = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::InconsistentOmission = ErrorLibrary::AsymmetricOmission
-
-  alias ErrorLibrary::ServiceTimeShift = ErrorLibrary::ServiceTimingError
-
-  alias ErrorLibrary::SubtleValueCorruption = ErrorLibrary::DetectableValueError
-
-  alias ErrorLibrary::EarlyData = ErrorLibrary::HighRate
-
-  alias ErrorLibrary::InconsistentServiceOmission = ErrorLibrary::AsymmetricServiceOmission
-
-  alias ErrorLibrary::BenignValueError = ErrorLibrary::DetectableValueError
-
-  alias ErrorLibrary::ValueCorruption = ErrorLibrary::ItemValueError
-
-  alias ErrorLibrary::SubtleValueError = ErrorLibrary::UndetectableValueError
-
-  alias ErrorLibrary::InconsistentTiming = ErrorLibrary::AsymmetricTiming
-
-  alias AFGErrorLibrary::NoValue = ErrorLibrary::ServiceOmission
-
-  alias AFGErrorLibrary::NoService = ErrorLibrary::ServiceOmission
+  enum AFGErrorLibrary extends EMV2 {NoValue, NoService, ErraticBehavior, NoPilotInput, ErraticPilotInput, ErraticValue, FlightSystemfailure}
 
 system  FlightSystem_TwoSensorGPS_Instance
     with ErrorLibrary, GPSErrorLibrary, AFGErrorLibrary
@@ -73,7 +31,7 @@ system  FlightSystem_TwoSensorGPS_Instance
               in operatorCommand
               out AFGOutput
             propagations
-              position = {ServiceOmission, LowPrecisionData, IncorrectData}
+              position = {IncorrectData, ServiceOmission, LowPrecisionData}
               operatorCommand = {NoPilotInput, ErraticPilotInput}
               powersupply = {NoService}
               AFGOutput = {NoService, ErraticValue}
@@ -118,7 +76,7 @@ system  FlightSystem_TwoSensorGPS_Instance
               out location
             propagations
               satelliteSignal = {NoSignal, LowSignal}
-              location = {ServiceOmission, LowPrecisionData, IncorrectData}
+              location = {IncorrectData, ServiceOmission, LowPrecisionData}
             flows
               GPSAsErrorSource : * -> location{ServiceOmission, LowPrecisionData, IncorrectData}
               SatelliteError : satelliteSignal{NoSignal} -> location{ServiceOmission}
@@ -131,8 +89,8 @@ system  FlightSystem_TwoSensorGPS_Instance
                     in satelliteSignal
                     in powersource
                     out sensedData
-                    in networkaccess_bus_access_IN
-                    out networkaccess_bus_access_OUT
+                    in networkaccess_IN
+                    out networkaccess_OUT
                   propagations
                     satelliteSignal = {NoSignal, LowSignal}
                     powersource = {ServiceOmission}
@@ -150,8 +108,8 @@ system  FlightSystem_TwoSensorGPS_Instance
                     in satelliteSignal
                     in powersource
                     out sensedData
-                    in networkaccess_bus_access_IN
-                    out networkaccess_bus_access_OUT
+                    in networkaccess_IN
+                    out networkaccess_OUT
                   propagations
                     satelliteSignal = {NoSignal, LowSignal}
                     powersource = {ServiceOmission}
@@ -167,8 +125,8 @@ system  FlightSystem_TwoSensorGPS_Instance
                 with ErrorLibrary, GPSErrorLibrary
                   ports
                     in powersource
-                    in networkaccess_bus_access_IN
-                    out networkaccess_bus_access_OUT
+                    in networkaccess_IN
+                    out networkaccess_OUT
                   propagations
                     powersource = {ServiceOmission}
                     networkaccess_IN = {ServiceOmission}
@@ -212,7 +170,7 @@ system  FlightSystem_TwoSensorGPS_Instance
                     inSensor1 = {ServiceOmission}
                     inSensor2 = {ServiceOmission}
                     processor_IN = {ServiceOmission, ValueError}
-                    location = {ServiceOmission, LowPrecisionData, IncorrectData}
+                    location = {IncorrectData, ServiceOmission, LowPrecisionData}
                   flows
                     gpssrc : * -> location{LowPrecisionData, IncorrectData}
                     s1toloc : inSensor1{ServiceOmission} -> location{ServiceOmission}
@@ -227,17 +185,17 @@ system  FlightSystem_TwoSensorGPS_Instance
 
               proctoext : processing.location -> location
 
-              s1tonetwork_FORWARD : network.ACCESS_OUT -> SatelliteSignalReceiver1.networkaccess_bus_access_IN
+              s1tonetwork_FORWARD : network.ACCESS_OUT -> SatelliteSignalReceiver1.networkaccess_IN
 
-              s1tonetwork_BACKWARD : SatelliteSignalReceiver1.networkaccess_bus_access_OUT -> network.ACCESS_IN
+              s1tonetwork_BACKWARD : SatelliteSignalReceiver1.networkaccess_OUT -> network.ACCESS_IN
 
-              s2tonetwork_FORWARD : network.ACCESS_OUT -> SatelliteSignalReceiver2.networkaccess_bus_access_IN
+              s2tonetwork_FORWARD : network.ACCESS_OUT -> SatelliteSignalReceiver2.networkaccess_IN
 
-              s2tonetwork_BACKWARD : SatelliteSignalReceiver2.networkaccess_bus_access_OUT -> network.ACCESS_IN
+              s2tonetwork_BACKWARD : SatelliteSignalReceiver2.networkaccess_OUT -> network.ACCESS_IN
 
-              cputonetwork_FORWARD : cpu1.networkaccess_bus_access_OUT -> network.ACCESS_IN
+              cputonetwork_FORWARD : cpu1.networkaccess_OUT -> network.ACCESS_IN
 
-              cputonetwork_BACKWARD : network.ACCESS_OUT -> cpu1.networkaccess_bus_access_IN
+              cputonetwork_BACKWARD : network.ACCESS_OUT -> cpu1.networkaccess_IN
 
               s1toproc : SatelliteSignalReceiver1.sensedData -> processing.inSensor1
 

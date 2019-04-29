@@ -51,13 +51,17 @@ final class PrettyPrinterTestDefProvider(tf: TestFramework)
     //equals test by excluding some
     val filesEqual = files.filterNot { p =>
       p.toLowerCase.contains("abcloop") ||
-        p.toLowerCase.contains("pcashutoff.awas")
+        p.toLowerCase.contains("pcashutoff.awas") ||
+        p.toLowerCase.contains("behavior") ||
+        p.toLowerCase.contains("transition")
     }
 
     //conditional test by filter
     val filesConditional = files.filterNot { f =>
       f.toLowerCase.contains("abnested") ||
-      filename(f).equals("pcashutoff.awas")
+      filename(f).equals("pcashutoff.awas") ||
+        f.toLowerCase.contains("behavior") ||
+        f.toLowerCase.contains("transition")
     }
 
     filesEqual.toVector.map { x =>

@@ -7,7 +7,23 @@
         "type": "Name",
         "name": [
           "Concrete_Sys_impl_Instance"
-        ]
+        ],
+        "pos": {
+          "type": "Some",
+          "value": {
+            "type": "Position",
+            "uriOpt": {
+              "type": "Some",
+              "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+            },
+            "beginLine": 27,
+            "beginColumn": 2,
+            "endLine": 32,
+            "endColumn": 24,
+            "offset": 490,
+            "length": 174
+          }
+        }
       },
       "category": {
         "type": "ComponentCategory",
@@ -24,7 +40,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "feat"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 20,
+                "beginColumn": 4,
+                "endLine": 20,
+                "endColumn": 35,
+                "offset": 334,
+                "length": 31
+              }
+            }
           },
           "features": [
             {
@@ -35,7 +67,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "f_in"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 6,
+                    "beginColumn": 4,
+                    "endLine": 6,
+                    "endColumn": 25,
+                    "offset": 73,
+                    "length": 21
+                  }
+                }
               },
               "direction": {
                 "type": "Direction",
@@ -59,7 +107,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "f_out"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 7,
+                    "beginColumn": 4,
+                    "endLine": 7,
+                    "endColumn": 27,
+                    "offset": 98,
+                    "length": 23
+                  }
+                }
               },
               "direction": {
                 "type": "Direction",
@@ -83,7 +147,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "cf_in"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 12,
+                    "beginColumn": 4,
+                    "endLine": 12,
+                    "endColumn": 26,
+                    "offset": 184,
+                    "length": 22
+                  }
+                }
               },
               "direction": {
                 "type": "Direction",
@@ -107,7 +187,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "cf_out"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 28,
+                    "offset": 210,
+                    "length": 24
+                  }
+                }
               },
               "direction": {
                 "type": "Direction",
@@ -141,7 +237,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "sub_comp"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 29,
+                "beginColumn": 4,
+                "endLine": 29,
+                "endColumn": 35,
+                "offset": 549,
+                "length": 31
+              }
+            }
           },
           "category": {
             "type": "ComponentCategory",
@@ -163,7 +275,23 @@
                   "Concrete_Sys_impl_Instance",
                   "sub_comp",
                   "dst"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 36,
+                    "beginColumn": 4,
+                    "endLine": 36,
+                    "endColumn": 33,
+                    "offset": 697,
+                    "length": 29
+                  }
+                }
               },
               "features": [
                 {
@@ -175,7 +303,23 @@
                       "sub_comp",
                       "dst",
                       "f_in"
-                    ]
+                    ],
+                    "pos": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Position",
+                        "uriOpt": {
+                          "type": "Some",
+                          "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                        },
+                        "beginLine": 6,
+                        "beginColumn": 4,
+                        "endLine": 6,
+                        "endColumn": 25,
+                        "offset": 73,
+                        "length": 21
+                      }
+                    }
                   },
                   "direction": {
                     "type": "Direction",
@@ -200,7 +344,23 @@
                       "sub_comp",
                       "dst",
                       "f_out"
-                    ]
+                    ],
+                    "pos": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Position",
+                        "uriOpt": {
+                          "type": "Some",
+                          "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                        },
+                        "beginLine": 7,
+                        "beginColumn": 4,
+                        "endLine": 7,
+                        "endColumn": 27,
+                        "offset": 98,
+                        "length": 23
+                      }
+                    }
                   },
                   "direction": {
                     "type": "Direction",
@@ -225,7 +385,23 @@
                       "sub_comp",
                       "dst",
                       "cf_in"
-                    ]
+                    ],
+                    "pos": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Position",
+                        "uriOpt": {
+                          "type": "Some",
+                          "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                        },
+                        "beginLine": 12,
+                        "beginColumn": 4,
+                        "endLine": 12,
+                        "endColumn": 26,
+                        "offset": 184,
+                        "length": 22
+                      }
+                    }
                   },
                   "direction": {
                     "type": "Direction",
@@ -250,7 +426,23 @@
                       "sub_comp",
                       "dst",
                       "cf_out"
-                    ]
+                    ],
+                    "pos": {
+                      "type": "Some",
+                      "value": {
+                        "type": "Position",
+                        "uriOpt": {
+                          "type": "Some",
+                          "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                        },
+                        "beginLine": 13,
+                        "beginColumn": 4,
+                        "endLine": 13,
+                        "endColumn": 28,
+                        "offset": 210,
+                        "length": 24
+                      }
+                    }
                   },
                   "direction": {
                     "type": "Direction",
@@ -294,11 +486,24 @@
               "name": "Emv2",
               "clause": {
                 "type": "Emv2Clause",
-                "libraries": [],
+                "libraries": [
+                ],
                 "propagations": [
                 ],
                 "flows": [
-                ]
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                }
               }
             }
           ]
@@ -312,7 +517,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "con"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 31,
+                "beginColumn": 4,
+                "endLine": 31,
+                "endColumn": 46,
+                "offset": 598,
+                "length": 42
+              }
+            }
           },
           "src": [
             {
@@ -321,7 +542,10 @@
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -330,7 +554,23 @@
                   "name": [
                     "Concrete_Sys_impl_Instance",
                     "feat_f_in"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 6,
+                      "beginColumn": 4,
+                      "endLine": 6,
+                      "endColumn": 25,
+                      "offset": 73,
+                      "length": 21
+                    }
+                  }
                 }
               },
               "direction": {
@@ -347,7 +587,10 @@
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -356,7 +599,23 @@
                   "name": [
                     "Concrete_Sys_impl_Instance",
                     "feat_f_out"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 7,
+                      "beginColumn": 4,
+                      "endLine": 7,
+                      "endColumn": 27,
+                      "offset": 98,
+                      "length": 23
+                    }
+                  }
                 }
               },
               "direction": {
@@ -373,7 +632,10 @@
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -382,7 +644,23 @@
                   "name": [
                     "Concrete_Sys_impl_Instance",
                     "feat_cf_in"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 12,
+                      "beginColumn": 4,
+                      "endLine": 12,
+                      "endColumn": 26,
+                      "offset": 184,
+                      "length": 22
+                    }
+                  }
                 }
               },
               "direction": {
@@ -399,7 +677,10 @@
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -408,7 +689,23 @@
                   "name": [
                     "Concrete_Sys_impl_Instance",
                     "feat_cf_out"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 13,
+                      "beginColumn": 4,
+                      "endLine": 13,
+                      "endColumn": 28,
+                      "offset": 210,
+                      "length": 24
+                    }
+                  }
                 }
               },
               "direction": {
@@ -428,7 +725,10 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "sub_comp"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -438,7 +738,23 @@
                     "Concrete_Sys_impl_Instance",
                     "sub_comp",
                     "dst_f_in"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 6,
+                      "beginColumn": 4,
+                      "endLine": 6,
+                      "endColumn": 25,
+                      "offset": 73,
+                      "length": 21
+                    }
+                  }
                 }
               },
               "direction": {
@@ -456,7 +772,10 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "sub_comp"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -466,7 +785,23 @@
                     "Concrete_Sys_impl_Instance",
                     "sub_comp",
                     "dst_f_out"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 7,
+                      "beginColumn": 4,
+                      "endLine": 7,
+                      "endColumn": 27,
+                      "offset": 98,
+                      "length": 23
+                    }
+                  }
                 }
               },
               "direction": {
@@ -484,7 +819,10 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "sub_comp"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -494,7 +832,23 @@
                     "Concrete_Sys_impl_Instance",
                     "sub_comp",
                     "dst_cf_in"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 12,
+                      "beginColumn": 4,
+                      "endLine": 12,
+                      "endColumn": 26,
+                      "offset": 184,
+                      "length": 22
+                    }
+                  }
                 }
               },
               "direction": {
@@ -512,7 +866,10 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "sub_comp"
-                ]
+                ],
+                "pos": {
+                  "type": "None"
+                }
               },
               "feature": {
                 "type": "Some",
@@ -522,7 +879,23 @@
                     "Concrete_Sys_impl_Instance",
                     "sub_comp",
                     "dst_cf_out"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                      },
+                      "beginLine": 13,
+                      "beginColumn": 4,
+                      "endLine": 13,
+                      "endColumn": 28,
+                      "offset": 210,
+                      "length": 24
+                    }
+                  }
                 }
               },
               "direction": {
@@ -548,7 +921,10 @@
                 "f_in -> sub_comp",
                 "dst",
                 "f_in"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             },
             {
               "type": "Name",
@@ -558,7 +934,10 @@
                 "cf_in -> sub_comp",
                 "dst",
                 "cf_in"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             },
             {
               "type": "Name",
@@ -568,7 +947,10 @@
                 "dst",
                 "f_out -> feat",
                 "f_out"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             },
             {
               "type": "Name",
@@ -578,7 +960,10 @@
                 "dst",
                 "cf_out -> feat",
                 "cf_out"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             }
           ],
           "properties": [
@@ -593,7 +978,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "feat.f_in -> sub_comp.dst.f_in"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 31,
+                "beginColumn": 4,
+                "endLine": 31,
+                "endColumn": 46,
+                "offset": 598,
+                "length": 42
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -601,7 +1002,23 @@
               "type": "Name",
               "name": [
                 "Concrete_Sys_impl_Instance"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 27,
+                  "beginColumn": 2,
+                  "endLine": 32,
+                  "endColumn": 24,
+                  "offset": 490,
+                  "length": 174
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -611,7 +1028,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "f_in"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 6,
+                    "beginColumn": 4,
+                    "endLine": 6,
+                    "endColumn": 25,
+                    "offset": 73,
+                    "length": 21
+                  }
+                }
               }
             },
             "direction": {
@@ -629,7 +1062,23 @@
               "name": [
                 "Concrete_Sys_impl_Instance",
                 "sub_comp"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 29,
+                  "beginColumn": 4,
+                  "endLine": 29,
+                  "endColumn": 35,
+                  "offset": 549,
+                  "length": 31
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -640,7 +1089,23 @@
                   "sub_comp",
                   "dst",
                   "f_in"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 6,
+                    "beginColumn": 4,
+                    "endLine": 6,
+                    "endColumn": 25,
+                    "offset": 73,
+                    "length": 21
+                  }
+                }
               }
             },
             "direction": {
@@ -663,13 +1128,45 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "con"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 31,
+                    "beginColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 46,
+                    "offset": 598,
+                    "length": 42
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 27,
+                    "beginColumn": 2,
+                    "endLine": 32,
+                    "endColumn": 24,
+                    "offset": 490,
+                    "length": 174
+                  }
+                }
               },
               "isParent": true
             }
@@ -684,7 +1181,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "feat.cf_in -> sub_comp.dst.cf_in"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 31,
+                "beginColumn": 4,
+                "endLine": 31,
+                "endColumn": 46,
+                "offset": 598,
+                "length": 42
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -692,7 +1205,23 @@
               "type": "Name",
               "name": [
                 "Concrete_Sys_impl_Instance"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 27,
+                  "beginColumn": 2,
+                  "endLine": 32,
+                  "endColumn": 24,
+                  "offset": 490,
+                  "length": 174
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -702,7 +1231,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "cf_in"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 12,
+                    "beginColumn": 4,
+                    "endLine": 12,
+                    "endColumn": 26,
+                    "offset": 184,
+                    "length": 22
+                  }
+                }
               }
             },
             "direction": {
@@ -720,7 +1265,23 @@
               "name": [
                 "Concrete_Sys_impl_Instance",
                 "sub_comp"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 29,
+                  "beginColumn": 4,
+                  "endLine": 29,
+                  "endColumn": 35,
+                  "offset": 549,
+                  "length": 31
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -731,7 +1292,23 @@
                   "sub_comp",
                   "dst",
                   "cf_in"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 12,
+                    "beginColumn": 4,
+                    "endLine": 12,
+                    "endColumn": 26,
+                    "offset": 184,
+                    "length": 22
+                  }
+                }
               }
             },
             "direction": {
@@ -754,13 +1331,45 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "con"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 31,
+                    "beginColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 46,
+                    "offset": 598,
+                    "length": 42
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 27,
+                    "beginColumn": 2,
+                    "endLine": 32,
+                    "endColumn": 24,
+                    "offset": 490,
+                    "length": 174
+                  }
+                }
               },
               "isParent": true
             }
@@ -775,7 +1384,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "sub_comp.dst.f_out -> feat.f_out"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 31,
+                "beginColumn": 4,
+                "endLine": 31,
+                "endColumn": 46,
+                "offset": 598,
+                "length": 42
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -784,7 +1409,23 @@
               "name": [
                 "Concrete_Sys_impl_Instance",
                 "sub_comp"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 29,
+                  "beginColumn": 4,
+                  "endLine": 29,
+                  "endColumn": 35,
+                  "offset": 549,
+                  "length": 31
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -795,7 +1436,23 @@
                   "sub_comp",
                   "dst",
                   "f_out"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 7,
+                    "beginColumn": 4,
+                    "endLine": 7,
+                    "endColumn": 27,
+                    "offset": 98,
+                    "length": 23
+                  }
+                }
               }
             },
             "direction": {
@@ -812,7 +1469,23 @@
               "type": "Name",
               "name": [
                 "Concrete_Sys_impl_Instance"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 27,
+                  "beginColumn": 2,
+                  "endLine": 32,
+                  "endColumn": 24,
+                  "offset": 490,
+                  "length": 174
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -822,7 +1495,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "f_out"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 7,
+                    "beginColumn": 4,
+                    "endLine": 7,
+                    "endColumn": 27,
+                    "offset": 98,
+                    "length": 23
+                  }
+                }
               }
             },
             "direction": {
@@ -845,13 +1534,45 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "con"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 31,
+                    "beginColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 46,
+                    "offset": 598,
+                    "length": 42
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 27,
+                    "beginColumn": 2,
+                    "endLine": 32,
+                    "endColumn": 24,
+                    "offset": 490,
+                    "length": 174
+                  }
+                }
               },
               "isParent": true
             }
@@ -866,7 +1587,23 @@
             "name": [
               "Concrete_Sys_impl_Instance",
               "sub_comp.dst.cf_out -> feat.cf_out"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                },
+                "beginLine": 31,
+                "beginColumn": 4,
+                "endLine": 31,
+                "endColumn": 46,
+                "offset": 598,
+                "length": 42
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -875,7 +1612,23 @@
               "name": [
                 "Concrete_Sys_impl_Instance",
                 "sub_comp"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 29,
+                  "beginColumn": 4,
+                  "endLine": 29,
+                  "endColumn": 35,
+                  "offset": 549,
+                  "length": 31
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -886,7 +1639,23 @@
                   "sub_comp",
                   "dst",
                   "cf_out"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 28,
+                    "offset": 210,
+                    "length": 24
+                  }
+                }
               }
             },
             "direction": {
@@ -903,7 +1672,23 @@
               "type": "Name",
               "name": [
                 "Concrete_Sys_impl_Instance"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                  },
+                  "beginLine": 27,
+                  "beginColumn": 2,
+                  "endLine": 32,
+                  "endColumn": 24,
+                  "offset": 490,
+                  "length": 174
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -913,7 +1698,23 @@
                   "Concrete_Sys_impl_Instance",
                   "feat",
                   "cf_out"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 28,
+                    "offset": 210,
+                    "length": 24
+                  }
+                }
               }
             },
             "direction": {
@@ -936,13 +1737,45 @@
                 "name": [
                   "Concrete_Sys_impl_Instance",
                   "con"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 31,
+                    "beginColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 46,
+                    "offset": 598,
+                    "length": 42
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Concrete_Sys_impl_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "feature_groups_testcases\/Feature_Group_TestCase.aadl"
+                    },
+                    "beginLine": 27,
+                    "beginColumn": 2,
+                    "endLine": 32,
+                    "endColumn": 24,
+                    "offset": 490,
+                    "length": 174
+                  }
+                }
               },
               "isParent": true
             }
@@ -963,11 +1796,24 @@
           "name": "Emv2",
           "clause": {
             "type": "Emv2Clause",
-            "libraries": [],
+            "libraries": [
+            ],
             "propagations": [
             ],
             "flows": [
-            ]
+            ],
+            "componentBehavior": {
+              "type": "Some",
+              "value": {
+                "type": "Emv2BehaviorSection",
+                "events": [
+                ],
+                "transitions": [
+                ],
+                "propagations": [
+                ]
+              }
+            }
           }
         }
       ]

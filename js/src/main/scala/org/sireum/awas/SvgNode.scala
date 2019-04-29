@@ -32,6 +32,8 @@ import org.scalajs.dom.html.Anchor
 import org.sireum.awas.SvgNodeType.SvgNodeType
 import org.sireum.awas.fptc.FlowNode
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
+
+import scala.scalajs.js
 //TODO
 // convert this to SvgNode factory and SvgNode as a case class
 // add the following methods in the case class
@@ -184,9 +186,11 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
   private def processNode(): Unit = {
     getNodeType
     node.onclick = (_: MouseEvent) => Main.cellClicked(getUri, st)
-    //    node.addEventListener("click touchstart", {(_: MouseEvent) =>
-    //      Main.cellClicked(getUri)
-    //    }:js.Function1[MouseEvent, _])
+
+    node.addEventListener("touchstart", {(e: MouseEvent) =>
+      e.preventDefault()
+      Main.cellClicked(getUri, st)
+    }:js.Function1[MouseEvent, _])
     if (!SettingsView.currentConfig.simpleConn &&
       getUri.startsWith(H.CONNECTION_TYPE) &&
       FlowNode.getNode(getUri).isDefined &&

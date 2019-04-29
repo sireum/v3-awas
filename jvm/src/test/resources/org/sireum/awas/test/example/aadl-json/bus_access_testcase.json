@@ -7,7 +7,23 @@
         "type": "Name",
         "name": [
           "Dual_Processor_PowerPC_Instance"
-        ]
+        ],
+        "pos": {
+          "type": "Some",
+          "value": {
+            "type": "Position",
+            "uriOpt": {
+              "type": "Some",
+              "value": "bus_access_Testcase\/Bus_Access.aadl"
+            },
+            "beginLine": 21,
+            "beginColumn": 2,
+            "endLine": 31,
+            "endColumn": 29,
+            "offset": 350,
+            "length": 421
+          }
+        }
       },
       "category": {
         "type": "ComponentCategory",
@@ -26,7 +42,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "System_Bus"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 23,
+                "beginColumn": 4,
+                "endLine": 23,
+                "endColumn": 24,
+                "offset": 415,
+                "length": 20
+              }
+            }
           },
           "category": {
             "type": "ComponentCategory",
@@ -59,11 +91,24 @@
               "name": "Emv2",
               "clause": {
                 "type": "Emv2Clause",
-                "libraries": [],
+                "libraries": [
+                ],
                 "propagations": [
                 ],
                 "flows": [
-                ]
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                }
               }
             }
           ]
@@ -75,7 +120,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "Shared_Memory"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 26,
+                "beginColumn": 4,
+                "endLine": 26,
+                "endColumn": 38,
+                "offset": 509,
+                "length": 34
+              }
+            }
           },
           "category": {
             "type": "ComponentCategory",
@@ -97,7 +158,23 @@
                   "Dual_Processor_PowerPC_Instance",
                   "Shared_Memory",
                   "Card_Connector"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 8,
+                    "beginColumn": 4,
+                    "endLine": 8,
+                    "endColumn": 45,
+                    "offset": 82,
+                    "length": 41
+                  }
+                }
               },
               "category": {
                 "type": "FeatureCategory",
@@ -140,11 +217,24 @@
               "name": "Emv2",
               "clause": {
                 "type": "Emv2Clause",
-                "libraries": [],
+                "libraries": [
+                ],
                 "propagations": [
                 ],
                 "flows": [
-                ]
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                }
               }
             }
           ]
@@ -156,7 +246,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "Left"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 24,
+                "beginColumn": 4,
+                "endLine": 24,
+                "endColumn": 34,
+                "offset": 439,
+                "length": 30
+              }
+            }
           },
           "category": {
             "type": "ComponentCategory",
@@ -178,7 +284,23 @@
                   "Dual_Processor_PowerPC_Instance",
                   "Left",
                   "Card_Connector"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 45,
+                    "offset": 181,
+                    "length": 41
+                  }
+                }
               },
               "category": {
                 "type": "FeatureCategory",
@@ -221,11 +343,24 @@
               "name": "Emv2",
               "clause": {
                 "type": "Emv2Clause",
-                "libraries": [],
+                "libraries": [
+                ],
                 "propagations": [
                 ],
                 "flows": [
-                ]
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                }
               }
             }
           ]
@@ -237,7 +372,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "Right"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 25,
+                "beginColumn": 4,
+                "endLine": 25,
+                "endColumn": 35,
+                "offset": 474,
+                "length": 31
+              }
+            }
           },
           "category": {
             "type": "ComponentCategory",
@@ -259,7 +410,23 @@
                   "Dual_Processor_PowerPC_Instance",
                   "Right",
                   "Card_Connector"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 45,
+                    "offset": 181,
+                    "length": 41
+                  }
+                }
               },
               "category": {
                 "type": "FeatureCategory",
@@ -302,11 +469,24 @@
               "name": "Emv2",
               "clause": {
                 "type": "Emv2Clause",
-                "libraries": [],
+                "libraries": [
+                ],
                 "propagations": [
                 ],
                 "flows": [
-                ]
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                }
               }
             }
           ]
@@ -320,7 +500,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "LCConn"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 28,
+                "beginColumn": 4,
+                "endLine": 28,
+                "endColumn": 58,
+                "offset": 561,
+                "length": 54
+              }
+            }
           },
           "src": [
             {
@@ -330,7 +526,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "System_Bus"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 23,
+                    "beginColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 24,
+                    "offset": 415,
+                    "length": 20
+                  }
+                }
               },
               "feature": {
                 "type": "None"
@@ -352,7 +564,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "Left"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 24,
+                    "beginColumn": 4,
+                    "endLine": 24,
+                    "endColumn": 34,
+                    "offset": 439,
+                    "length": 30
+                  }
+                }
               },
               "feature": {
                 "type": "Some",
@@ -362,7 +590,23 @@
                     "Dual_Processor_PowerPC_Instance",
                     "Left",
                     "Card_Connector"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "bus_access_Testcase\/Bus_Access.aadl"
+                      },
+                      "beginLine": 13,
+                      "beginColumn": 4,
+                      "endLine": 13,
+                      "endColumn": 45,
+                      "offset": 181,
+                      "length": 41
+                    }
+                  }
                 }
               },
               "direction": {
@@ -386,7 +630,10 @@
                 "Dual_Processor_PowerPC_Instance",
                 "System_Bus <-> Left",
                 "Card_Connector"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             }
           ],
           "properties": [
@@ -399,7 +646,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "RCConn"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 29,
+                "beginColumn": 4,
+                "endLine": 29,
+                "endColumn": 59,
+                "offset": 619,
+                "length": 55
+              }
+            }
           },
           "src": [
             {
@@ -409,7 +672,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "System_Bus"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 23,
+                    "beginColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 24,
+                    "offset": 415,
+                    "length": 20
+                  }
+                }
               },
               "feature": {
                 "type": "None"
@@ -431,7 +710,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "Right"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 25,
+                    "beginColumn": 4,
+                    "endLine": 25,
+                    "endColumn": 35,
+                    "offset": 474,
+                    "length": 31
+                  }
+                }
               },
               "feature": {
                 "type": "Some",
@@ -441,7 +736,23 @@
                     "Dual_Processor_PowerPC_Instance",
                     "Right",
                     "Card_Connector"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "bus_access_Testcase\/Bus_Access.aadl"
+                      },
+                      "beginLine": 13,
+                      "beginColumn": 4,
+                      "endLine": 13,
+                      "endColumn": 45,
+                      "offset": 181,
+                      "length": 41
+                    }
+                  }
                 }
               },
               "direction": {
@@ -465,7 +776,10 @@
                 "Dual_Processor_PowerPC_Instance",
                 "System_Bus <-> Right",
                 "Card_Connector"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             }
           ],
           "properties": [
@@ -478,7 +792,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "SMConn"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 30,
+                "beginColumn": 4,
+                "endLine": 30,
+                "endColumn": 67,
+                "offset": 679,
+                "length": 63
+              }
+            }
           },
           "src": [
             {
@@ -488,7 +818,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "System_Bus"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 23,
+                    "beginColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 24,
+                    "offset": 415,
+                    "length": 20
+                  }
+                }
               },
               "feature": {
                 "type": "None"
@@ -510,7 +856,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "Shared_Memory"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 26,
+                    "beginColumn": 4,
+                    "endLine": 26,
+                    "endColumn": 38,
+                    "offset": 509,
+                    "length": 34
+                  }
+                }
               },
               "feature": {
                 "type": "Some",
@@ -520,7 +882,23 @@
                     "Dual_Processor_PowerPC_Instance",
                     "Shared_Memory",
                     "Card_Connector"
-                  ]
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "bus_access_Testcase\/Bus_Access.aadl"
+                      },
+                      "beginLine": 8,
+                      "beginColumn": 4,
+                      "endLine": 8,
+                      "endColumn": 45,
+                      "offset": 82,
+                      "length": 41
+                    }
+                  }
                 }
               },
               "direction": {
@@ -544,7 +922,10 @@
                 "Dual_Processor_PowerPC_Instance",
                 "System_Bus <-> Shared_Memory",
                 "Card_Connector"
-              ]
+              ],
+              "pos": {
+                "type": "None"
+              }
             }
           ],
           "properties": [
@@ -559,7 +940,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "System_Bus <-> Left.Card_Connector"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 28,
+                "beginColumn": 4,
+                "endLine": 28,
+                "endColumn": 58,
+                "offset": 561,
+                "length": 54
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -568,7 +965,23 @@
               "name": [
                 "Dual_Processor_PowerPC_Instance",
                 "System_Bus"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "bus_access_Testcase\/Bus_Access.aadl"
+                  },
+                  "beginLine": 23,
+                  "beginColumn": 4,
+                  "endLine": 23,
+                  "endColumn": 24,
+                  "offset": 415,
+                  "length": 20
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -577,7 +990,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "System_Bus"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 23,
+                    "beginColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 24,
+                    "offset": 415,
+                    "length": 20
+                  }
+                }
               }
             },
             "direction": {
@@ -591,7 +1020,23 @@
               "name": [
                 "Dual_Processor_PowerPC_Instance",
                 "Left"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "bus_access_Testcase\/Bus_Access.aadl"
+                  },
+                  "beginLine": 24,
+                  "beginColumn": 4,
+                  "endLine": 24,
+                  "endColumn": 34,
+                  "offset": 439,
+                  "length": 30
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -601,7 +1046,23 @@
                   "Dual_Processor_PowerPC_Instance",
                   "Left",
                   "Card_Connector"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 45,
+                    "offset": 181,
+                    "length": 41
+                  }
+                }
               }
             },
             "direction": {
@@ -624,13 +1085,45 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "LCConn"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 28,
+                    "beginColumn": 4,
+                    "endLine": 28,
+                    "endColumn": 58,
+                    "offset": 561,
+                    "length": 54
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Dual_Processor_PowerPC_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 21,
+                    "beginColumn": 2,
+                    "endLine": 31,
+                    "endColumn": 29,
+                    "offset": 350,
+                    "length": 421
+                  }
+                }
               },
               "isParent": true
             }
@@ -645,7 +1138,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "System_Bus <-> Right.Card_Connector"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 29,
+                "beginColumn": 4,
+                "endLine": 29,
+                "endColumn": 59,
+                "offset": 619,
+                "length": 55
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -654,7 +1163,23 @@
               "name": [
                 "Dual_Processor_PowerPC_Instance",
                 "System_Bus"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "bus_access_Testcase\/Bus_Access.aadl"
+                  },
+                  "beginLine": 23,
+                  "beginColumn": 4,
+                  "endLine": 23,
+                  "endColumn": 24,
+                  "offset": 415,
+                  "length": 20
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -663,7 +1188,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "System_Bus"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 23,
+                    "beginColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 24,
+                    "offset": 415,
+                    "length": 20
+                  }
+                }
               }
             },
             "direction": {
@@ -677,7 +1218,23 @@
               "name": [
                 "Dual_Processor_PowerPC_Instance",
                 "Right"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "bus_access_Testcase\/Bus_Access.aadl"
+                  },
+                  "beginLine": 25,
+                  "beginColumn": 4,
+                  "endLine": 25,
+                  "endColumn": 35,
+                  "offset": 474,
+                  "length": 31
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -687,7 +1244,23 @@
                   "Dual_Processor_PowerPC_Instance",
                   "Right",
                   "Card_Connector"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 13,
+                    "beginColumn": 4,
+                    "endLine": 13,
+                    "endColumn": 45,
+                    "offset": 181,
+                    "length": 41
+                  }
+                }
               }
             },
             "direction": {
@@ -710,13 +1283,45 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "RCConn"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 29,
+                    "beginColumn": 4,
+                    "endLine": 29,
+                    "endColumn": 59,
+                    "offset": 619,
+                    "length": 55
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Dual_Processor_PowerPC_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 21,
+                    "beginColumn": 2,
+                    "endLine": 31,
+                    "endColumn": 29,
+                    "offset": 350,
+                    "length": 421
+                  }
+                }
               },
               "isParent": true
             }
@@ -731,7 +1336,23 @@
             "name": [
               "Dual_Processor_PowerPC_Instance",
               "System_Bus <-> Shared_Memory.Card_Connector"
-            ]
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "bus_access_Testcase\/Bus_Access.aadl"
+                },
+                "beginLine": 30,
+                "beginColumn": 4,
+                "endLine": 30,
+                "endColumn": 67,
+                "offset": 679,
+                "length": 63
+              }
+            }
           },
           "src": {
             "type": "EndPoint",
@@ -740,7 +1361,23 @@
               "name": [
                 "Dual_Processor_PowerPC_Instance",
                 "System_Bus"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "bus_access_Testcase\/Bus_Access.aadl"
+                  },
+                  "beginLine": 23,
+                  "beginColumn": 4,
+                  "endLine": 23,
+                  "endColumn": 24,
+                  "offset": 415,
+                  "length": 20
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -749,7 +1386,23 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "System_Bus"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 23,
+                    "beginColumn": 4,
+                    "endLine": 23,
+                    "endColumn": 24,
+                    "offset": 415,
+                    "length": 20
+                  }
+                }
               }
             },
             "direction": {
@@ -763,7 +1416,23 @@
               "name": [
                 "Dual_Processor_PowerPC_Instance",
                 "Shared_Memory"
-              ]
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "bus_access_Testcase\/Bus_Access.aadl"
+                  },
+                  "beginLine": 26,
+                  "beginColumn": 4,
+                  "endLine": 26,
+                  "endColumn": 38,
+                  "offset": 509,
+                  "length": 34
+                }
+              }
             },
             "feature": {
               "type": "Some",
@@ -773,7 +1442,23 @@
                   "Dual_Processor_PowerPC_Instance",
                   "Shared_Memory",
                   "Card_Connector"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 8,
+                    "beginColumn": 4,
+                    "endLine": 8,
+                    "endColumn": 45,
+                    "offset": 82,
+                    "length": 41
+                  }
+                }
               }
             },
             "direction": {
@@ -796,13 +1481,45 @@
                 "name": [
                   "Dual_Processor_PowerPC_Instance",
                   "SMConn"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 30,
+                    "beginColumn": 4,
+                    "endLine": 30,
+                    "endColumn": 67,
+                    "offset": 679,
+                    "length": 63
+                  }
+                }
               },
               "context": {
                 "type": "Name",
                 "name": [
                   "Dual_Processor_PowerPC_Instance"
-                ]
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "bus_access_Testcase\/Bus_Access.aadl"
+                    },
+                    "beginLine": 21,
+                    "beginColumn": 2,
+                    "endLine": 31,
+                    "endColumn": 29,
+                    "offset": 350,
+                    "length": 421
+                  }
+                }
               },
               "isParent": true
             }
@@ -823,11 +1540,24 @@
           "name": "Emv2",
           "clause": {
             "type": "Emv2Clause",
-            "libraries": [],
+            "libraries": [
+            ],
             "propagations": [
             ],
             "flows": [
-            ]
+            ],
+            "componentBehavior": {
+              "type": "Some",
+              "value": {
+                "type": "Emv2BehaviorSection",
+                "events": [
+                ],
+                "transitions": [
+                ],
+                "propagations": [
+                ]
+              }
+            }
           }
         }
       ]
