@@ -2,9 +2,13 @@ jdk:
   - openjdk9
 env:
   SIREUM_HOME: "/home/jitpack/build/sireum-v3"
+  PATH: $PATH:"/home/jitpack/build/bc-1.06.95/bc/"
 before_install:
-  - uname -a 
-  - apt-get install bc
+  - wget http://alpha.gnu.org/gnu/bc/bc-1.06.95.tar.bz2
+  - tar -xjvf bc-1.06.95.tar.bz2
+  - cd ./bc-1.06.95
+  - ./configure --prefix=/usr --with-readline &&
+  - make
   - git clone --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
