@@ -1,10 +1,10 @@
 jdk:
   - openjdk9
 before_install:
-  - wget http://central.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.8/sbt-launch-1.2.8.jar
   - git clone --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
+  - wget http://central.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.8/sbt-launch-1.2.8.jar
   - ln -s ../ ./awas
 env:
   SIREUM_HOME: "/home/jitpack/build/sireum-v3"
