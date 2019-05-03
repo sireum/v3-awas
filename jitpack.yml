@@ -1,14 +1,11 @@
 jdk:
   - openjdk9
-
 env:
   SIREUM_HOME: "/home/jitpack/build/sireum-v3"
-
 before_install:
-- git clone --recursive https://github.com/sireum/v3.git sireum-v3
+  - git clone --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
   - ln -s ../ ./awas
-
 install:
   - sbt "project awasPub" publishM2
