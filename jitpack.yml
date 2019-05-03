@@ -8,4 +8,4 @@ before_install:
   - cd sireum-v3
   - ln -s ../ ./awas
 install:
-  - sbt "project awasPub" publishM2
+  - ./bin/sbt-launch.sh "project awasPub" publishM2
