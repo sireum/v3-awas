@@ -9,4 +9,4 @@ before_install:
 env:
   SIREUM_HOME: "/home/jitpack/build/sireum-v3"
 install:
-  - java -jar sbt-launch-1.2.8.jar "project awasPub" publishM2
+  - sbt sbtVersion
