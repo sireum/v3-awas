@@ -1,10 +1,9 @@
 jdk:
-  - openjdk9
+  - oraclejdk8
 before_install:
   - rm -rf ~/.ivy2
   - rm -rf ~/.sbt
   - ls -liag
-  - rm -rf ./*
   - git clone --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
