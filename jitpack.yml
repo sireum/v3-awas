@@ -3,6 +3,8 @@ jdk:
 env:
   SIREUM_HOME: "/home/jitpack/build/sireum-v3"
 before_install:
+  - uname -a 
+  - apt-get install bc
   - git clone --recursive https://github.com/sireum/v3.git sireum-v3
   - git clone https://github.com/sireum/air.git sireum-v3/aadl/ir
   - cd sireum-v3
