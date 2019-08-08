@@ -49,7 +49,7 @@ class BasicNodeImpl[G](uri: ResourceUri,
       Resource.getParentUri(uri) match {
         case Some(puri) => st.componentTable(puri).connectionTable(uri).ports
         case None => {
-          assert(false, "Connection's parent not found")
+          assert(false, "Connection " + uri + " parent not found")
           ilistEmpty
         }
       }

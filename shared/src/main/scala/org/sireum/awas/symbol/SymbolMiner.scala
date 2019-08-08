@@ -195,28 +195,28 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
         sm.states.foreach {
           s => {
-            val sr = Resource(H.STATE_TYPE, parentRes, s.value, Some(true), s)
-            smt.tables.symbol2Uri(s.value) = sr.toUri
+            val sr = Resource(H.STATE_TYPE, parentRes, s.value.last.value, Some(true), s)
+            smt.tables.symbol2Uri(s.value.last.value) = sr.toUri
             if (!smt.tables.statesTable.keySet.contains(sr.toUri))
               smt.tables.statesTable(sr.toUri) = s
             else {
               reporter.report(errorMessageGen(
                 DUPLICATE_STATE,
                 s,
-                m, s.value))
+                m, s.value.last.value))
             }
           }
         }
         sm.events.foreach {
           e => {
-            val se = Resource(H.EVENT_TYPE, parentRes, e.value, Some(true), e)
-            smt.tables.symbol2Uri(e.value) = se.toUri
+            val se = Resource(H.EVENT_TYPE, parentRes, e.value.last.value, Some(true), e)
+            smt.tables.symbol2Uri(e.value.last.value) = se.toUri
             if (!smt.tables.eventsTable.keySet.contains(se.toUri))
               smt.tables.eventsTable(se.toUri) = e
             else {
               reporter.report(errorMessageGen(DUPLICATE_EVENT,
                 e,
-                m, e.value)
+                m, e.value.last.value)
               )
             }
           }
@@ -300,7 +300,21 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         val smUri = stp.compStateMachine(r.toUri)
         if (ttUri.nonEmpty) {
           val typeTable = ttUri.map(stp.typeTable)
-          comp.behaviour.get.exprs.foreach(exprMiner(m, _, r, typeTable, smUri, ctp))
+          comp.behaviour.get.exprs.foreach { be =>
+            //          println("failing xx:"+PrettyPrinter.print(be))
+            exprMiner(m, be, r, typeTable, smUri, ctp)
+          }
+        }
+      }
+
+      if (comp.transitions.isDefined) {
+        val ttUri = stp.compTypeDecl(r.toUri)
+        val smUri = stp.compStateMachine(r.toUri)
+        if (ttUri.nonEmpty) {
+          val typeTable = ttUri.map(stp.typeTable)
+          comp.transitions.get.exprs.foreach { it =>
+            transMiner(m, it, r, typeTable, smUri, ctp)
+          }
         }
       }
 
@@ -395,6 +409,32 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
 
+  def transMiner(m: Model,
+                 expr: TransExpr,
+                 r: Resource,
+                 tt: ISet[TypeTable],
+                 smUri: Option[ResourceUri],
+                 ctp: CompSTProducer)(
+                  implicit reporter: AccumulatingTagReporter): Unit = {
+    val tr = Resource(H.TRANSITION_TYPE, r, expr.id.value, Some(true), expr)
+
+    ctp.tables.symbol2Uri(expr.id.value) = tr.toUri
+    if (!ctp.tables.behaviorTable.contains(tr.toUri)) {
+      ctp.tables.transitionTable(tr.toUri) = expr
+      stateRefMiner(m, expr.lhs, r, smUri.get)
+      stateRefMiner(m, expr.rhs, r, smUri.get)
+      if (expr.propCond.isDefined && smUri.isDefined) {
+        condMiner(m, expr.propCond.get, r, tt, smUri, ctp)
+      }
+
+    } else {
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
+        expr.id,
+        m, expr.id.value))
+    }
+  }
+
+
   def exprMiner(m: Model,
                 expr: BehaveExpr,
                 r: Resource,
@@ -411,7 +451,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       ctp.tables.behaviorTable(br.toUri) = expr
 
       if (expr.lhs.isDefined) {
-        tupleMiner(m, expr.lhs.get, r, tt, ctp)
+        condMiner(m, expr.lhs.get, r, tt, smUri, ctp)
       }
 
       if (expr.rhs.isDefined) {
@@ -439,6 +479,71 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
   }
 
+  def condMiner(m: Model,
+                conditionTuple: ConditionTuple,
+                r: Resource,
+                tt: ISet[TypeTable],
+                smtUri: Option[ResourceUri],
+                ctp: CompSTProducer)(
+                 implicit reporter: AccumulatingTagReporter): Unit = {
+    conditionTuple match {
+      case and: And => {
+        condMiner(m, and.lhs, r, tt, smtUri, ctp)
+        condMiner(m, and.rhs, r, tt, smtUri, ctp)
+      }
+      case or: Or => {
+        condMiner(m, or.lhs, r, tt, smtUri, ctp)
+        condMiner(m, or.rhs, r, tt, smtUri, ctp)
+      }
+
+      case ormore: OrMore => {
+        ormore.conds.foreach(it => condMiner(m, it, r, tt, smtUri, ctp))
+      }
+      case orLess: OrLess => {
+        orLess.conds.foreach(it => condMiner(m, it, r, tt, smtUri, ctp))
+      }
+      case all: All => {
+        all.conds.foreach(it => condMiner(m, it, r, tt, smtUri, ctp))
+      }
+      case p: PrimaryCondition => {
+        p match {
+          case ef: EventRef => eventRefMiner(m, ef, r, smtUri)
+          case t: Tuple => tupleMiner(m, t, r, tt, ctp)
+        }
+      }
+    }
+  }
+
+  def eventRefMiner(m: Model, ef: EventRef, r: Resource, smtUri: Option[ResourceUri])(
+    implicit reporter: AccumulatingTagReporter): Unit = {
+    val smt = st.stateMachineTable.get(smtUri.get)
+    if (smt.nonEmpty) {
+      val eventUri = smt.get.events.find(it => H.uri2IdString(it) == ef.event.last.value)
+      if (eventUri.isDefined) {
+        Resource.useDefResolve(ef, smt.get.event(eventUri.get))
+      } else {
+        reporter.report(errorMessageGen(MISSING_EVENT_DECL, ef, m, ef.event.last.value, r.toUri))
+      }
+    } else {
+
+    }
+  }
+
+  def stateRefMiner(m: Model, state: Node.Seq[Id], r: Resource, smUri: ResourceUri)(
+    implicit reporter: AccumulatingTagReporter): Unit = {
+    val smt = st.stateMachineTable.get(smUri)
+    if (smt.nonEmpty) {
+      val stateUri = smt.get.states.find(it => H.uri2IdString(it) == state.last.value)
+      if (stateUri.isDefined) {
+        Resource.useDefResolve(state.last, smt.get.state(stateUri.get))
+      } else {
+        reporter.report(errorMessageGen(MISSING_STATE_DECL, state.last, m, state.last.value, r.toUri))
+      }
+    } else {
+
+    }
+  }
+
   def tupleMiner(m: Model,
                  tup: Tuple,
                  r: Resource,
@@ -451,6 +556,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         if (port.isDefined) {
           Resource.useDefResolve(t._1, ctp.port(port.get).get)
         } else {
+          println("failed :" + t._1.value)
           reporter.report(errorMessageGen(MISSING_PORT_DECL,
             t._1,
             m, t._1.value, r.toUri))
@@ -464,29 +570,47 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
   def mineFault(m: Model, f: Fault, r: Resource, tt: ISet[TypeTable])(
     implicit reporter: AccumulatingTagReporter): Unit = {
-    val fif = f.enum.value.map(_.value).mkString("/")
-    val elem = tt.flatMap(x => x.getUriFromSymbol(fif))
-    //    val elem = tt.flatMap(x => x.enumElements.find(_.endsWith(fif)))
-    if (elem.nonEmpty) {
-      if (elem.size > 1) {
-        reporter.report(errorMessageGen(TYPE_RESOLUTION_FAILURE,
-          f,
-          m, fif))
-      } else {
-        if (Resource.getParentUri(elem.head).isDefined) {
-          Resource.useDefResolve(f, st.typeTable(Resource.getParentUri(elem.head).get).enumElement(elem.head))
+    val fif = f.enum.value.map(_.value)
+    if (fif.size > 1) {
+      val updated = fif.takeRight(2)
+      val updatedtt = tt.find(t => H.uri2IdString(t.uri) == updated.head)
+      if (updatedtt.isDefined) {
+        val eUri = updatedtt.get.getUriFromSymbol(updated.last)
+        if (eUri.isDefined) {
+          Resource.useDefResolve(f, updatedtt.get.enumElement(eUri.get))
         } else {
-          //should never hit
           reporter.report(errorMessageGen(MISSING_TYPE_DECL,
             f,
-            m, fif))
+            m, updated.last))
         }
+      } else {
+        reporter.report(errorMessageGen(MiSSING_TYPE_OR_STATE_MACHINE,
+          f,
+          m, updated.head))
       }
     } else {
-      reporter.report(errorMessageGen(MISSING_TYPE_DECL,
-        f,
-        m, fif))
-
+      val elem = tt.flatMap(x => x.getUriFromSymbol(fif.last))
+      //    val elem = tt.flatMap(x => x.enumElements.find(_.endsWith(fif)))
+      if (elem.nonEmpty) {
+        if (elem.size > 1) {
+          reporter.report(errorMessageGen(TYPE_RESOLUTION_FAILURE,
+            f,
+            m, fif.last))
+        } else {
+          if (Resource.getParentUri(elem.head).isDefined) {
+            Resource.useDefResolve(f, st.typeTable(Resource.getParentUri(elem.head).get).enumElement(elem.head))
+          } else {
+            //should never hit
+            reporter.report(errorMessageGen(MISSING_TYPE_DECL,
+              f,
+              m, fif.last))
+          }
+        }
+      } else {
+        reporter.report(errorMessageGen(MISSING_TYPE_DECL,
+          f,
+          m, fif.last))
+      }
     }
   }
 

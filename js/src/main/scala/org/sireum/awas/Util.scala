@@ -32,12 +32,12 @@ object Util {
     viewConfig: SvgGenConfig = SettingsView.currentConfig,
     st: SymbolTable
   ): SVGElement = {
-    val dotGraph = SvgGenerator(
+    val dotGraph = SvgGenerator(st: SymbolTable,
       FlowNode
         .getGraph(graphUri)
         .get
         .asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]],
-      viewConfig
+      viewConfig, None
     )
     //    println(dotGraph)
     val svgString = GraphViz.Viz(

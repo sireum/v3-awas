@@ -2,7 +2,7 @@
 // @formatter:off
 
 /*
- Copyright (c) 2018, Robby, Kansas State University
+ Copyright (c) 2019, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,8 @@ object MsgPack {
       writer.writeB(o.viewErrors)
       writer.writeB(o.viewFlows)
       writer.writeB(o.bindings)
+      writer.writeB(o.behaviors)
+      writer.writeB(o.states)
     }
 
     def writeRankDirType(o: RankDir.Type): Unit = {
@@ -99,7 +101,9 @@ object MsgPack {
       val viewErrors = reader.readB()
       val viewFlows = reader.readB()
       val bindings = reader.readB()
-      return SvgGenConfig(rankDir, simpleConn, viewVirtualPorts, viewErrors, viewFlows, bindings)
+      val behaviors = reader.readB()
+      val states = reader.readB()
+      return SvgGenConfig(rankDir, simpleConn, viewVirtualPorts, viewErrors, viewFlows, bindings, behaviors, states)
     }
 
     def readRankDirType(): RankDir.Type = {

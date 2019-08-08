@@ -4,7 +4,7 @@ import org.scalajs.dom.html.{Anchor, Div, Input}
 import org.sireum.awas.witness.{JSON, RankDir, SvgGenConfig}
 import org.scalajs.dom
 import org.scalajs.dom.raw.{MouseEvent, UIEvent}
-import org.sireum.{B, T}
+import org.sireum.{B, F, T}
 import org.sireum.common.JSutil.$
 
 object SettingsView {
@@ -60,7 +60,9 @@ object SettingsView {
           T,
           B(errors.checked),
           B(flows.checked),
-          B(bind.checked)
+          B(bind.checked),
+          F,
+          F
         )
 
         if (currentConfig != config) {

@@ -2,7 +2,7 @@
 // @formatter:off
 
 /*
- Copyright (c) 2018, Robby, Kansas State University
+ Copyright (c) 2019, Robby, Kansas State University
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,9 @@ object JSON {
         ("viewVirtualPorts", printB(o.viewVirtualPorts)),
         ("viewErrors", printB(o.viewErrors)),
         ("viewFlows", printB(o.viewFlows)),
-        ("bindings", printB(o.bindings))
+        ("bindings", printB(o.bindings)),
+        ("behaviors", printB(o.behaviors)),
+        ("states", printB(o.states))
       ))
     }
 
@@ -98,7 +100,13 @@ object JSON {
       parser.parseObjectKey("bindings")
       val bindings = parser.parseB()
       parser.parseObjectNext()
-      return SvgGenConfig(rankDir, simpleConn, viewVirtualPorts, viewErrors, viewFlows, bindings)
+      parser.parseObjectKey("behaviors")
+      val behaviors = parser.parseB()
+      parser.parseObjectNext()
+      parser.parseObjectKey("states")
+      val states = parser.parseB()
+      parser.parseObjectNext()
+      return SvgGenConfig(rankDir, simpleConn, viewVirtualPorts, viewErrors, viewFlows, bindings, behaviors, states)
     }
 
     def parseRankDirType(): RankDir.Type = {

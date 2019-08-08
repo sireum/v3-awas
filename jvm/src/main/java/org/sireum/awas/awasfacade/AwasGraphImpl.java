@@ -152,6 +152,7 @@ public class AwasGraphImpl implements AwasGraph {
         for (String error : errors) {
             String errorUri = toJavaOptional(SymbolTableHelper.
                     getErrorUri(st, error)).orElse("");
+            errorsUri.add(errorUri);
         }
         scala.collection.immutable.Map<String, scala.collection.immutable.Set<String>> temp = er.backwardErrorReach(
                 portUri, scala.collection.JavaConverters.asScalaSet(errorsUri).toSet()).getPortErrors();
@@ -161,8 +162,8 @@ public class AwasGraphImpl implements AwasGraph {
 
     public Map<String, Collector> queryEvaluator(String query) {
         Optional<Model> queryModel = JavaConverters.toJavaOptional(QueryBuilder$.MODULE$.apply(query,
-                QueryBuilder.apply$default$2(),
-                QueryBuilder.apply$default$3()));
+                0,
+                QueryBuilder.ConsoleReporter$.MODULE$));
 
         return queryModel.map(model -> toJavaMap(QueryEval.apply(model, st)).entrySet()
                 .stream()

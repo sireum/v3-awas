@@ -104,7 +104,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
         }
         workList = workList.tail
       }
-    collector.Collector(st,
+    collector.Collector(
       resGraph,
       result.map(v => (v._1, v._2.toSet)).toMap,
       resFlows, resEdges, isForward, isetEmpty[ResourceUri] + port, resError)
@@ -205,7 +205,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     val paths = reachPath(sourcePort, targetPort, isRefined).getPaths
       .flatMap(it => pathErrorRefine(it, sourcePort, sourceErrors, targetPort, targetErrors, None, isRefined))
       .toSet
-    Collector(st, paths.flatMap(_.getGraphs),
+    Collector(paths.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ paths.toVector, Some(ResultType.Error))
   }
 
@@ -225,7 +225,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
         reachPath(e._1, e._3, isRefined).getPaths
           .flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5), isRefined))
     )
-    Collector(st, pathsConst.flatMap(_.getGraphs),
+    Collector(pathsConst.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 
@@ -418,7 +418,6 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     result = result ++ tempPaths.map(
       it =>
         collector.Collector(
-          st,
           it.graph,
           it.tuples.map(x => (x._1, isetEmpty[ResourceUri] + x._2)).toMap,
       ResultType.Error, it.edges, it.flows, isetEmpty[ResourceUri] + sourcePort + targetPort, it.errors))
@@ -450,12 +449,25 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
       .groupBy(_._1).mapValues(_.map(_._2))
   }
 
+  override def getPredDetailed(currentPort: ResourceUri,
+                               currentError: ResourceUri)
+  : ISet[FlowErrorNextCollector] = {
+    previousError((currentPort, currentError))
+  }
+
   override def getSuccessor(currentPort: ResourceUri,
                             currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]] = {
     nextError((currentPort, currentError)).flatMap(_.tuples)
       .groupBy(_._1).mapValues(_.map(_._2))
   }
+
+  def getSuccDetailed(currentPort: ResourceUri,
+                      currentError: ResourceUri)
+  : ISet[FlowErrorNextCollector] = {
+    nextError((currentPort, currentError))
+  }
+
   override def errorSimplePathReach(
     sourcePort: ResourceUri,
     sourceErrors: ISet[ResourceUri],
@@ -466,7 +478,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     val paths = reachSimplePath(sourcePort, targetPort, isRefined).getPaths
       .flatMap(it => pathErrorRefine(it, sourcePort, sourceErrors, targetPort, targetErrors, None, isRefined))
       .toSet
-    Collector(st, paths.flatMap(_.getGraphs),
+    Collector(paths.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ paths.toVector,
       Some(ResultType.Error)
     )
@@ -505,7 +517,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
         reachSimplePath(e._1, e._3, isRefined).getPaths
           .flatMap(it => pathErrorRefine(it, e._1, e._2, e._3, e._4, Some(e._5), isRefined))
     )
-    Collector(st, pathsConst.flatMap(_.getGraphs),
+    Collector(pathsConst.flatMap(_.getGraphs),
       ilinkedSetEmpty ++ pathsConst.toVector, Some(ResultType.Error))
   }
 }

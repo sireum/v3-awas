@@ -57,10 +57,10 @@ public class CollectorImpl implements Collector {
         return toJavaSet(collector.getEdges());
     }
 
-    @Override
-    public SymbolTable getSymbolTable() {
-        return collector.getSymbolTable();
-    }
+//    @Override
+//    public SymbolTable getSymbolTable() {
+//        return collector.getSymbolTable();
+//    }
 
     @Override
     public Set<String> getGraph() {

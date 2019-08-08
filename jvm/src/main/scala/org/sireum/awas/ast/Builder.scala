@@ -64,8 +64,8 @@ final class Builder private() {
 
   def build(ctx: BehaviorDeclContext): StateMachineDecl = {
     StateMachineDecl(buildId(ctx.smName),
-      ctx.states().state.map(buildId),
-      ctx.events().event.map(buildId)) at ctx
+      Node.emptySeq ++ ctx.states().state.map(it => Name(Node.emptySeq[Id] :+ buildId(it))),
+      Node.emptySeq ++ ctx.events().event.map(it => Name(Node.emptySeq[Id] :+ buildId(it)))) at ctx
   }
 
   def build(ctx: ConstantDeclContext): ConstantDecl = {
@@ -167,8 +167,10 @@ final class Builder private() {
   }
 
   def build(ctx: PropertyContext): Property = {
-    Property(buildId(ctx.ID()), build(ctx.`type`()),
-      if (ctx.init() != null) Some(build(ctx.init())) else None) at ctx
+    Property(buildId(ctx.ID()),
+      //      build(ctx.`type`()),
+      if (ctx.init() != null) Some(build(ctx.init())) else None,
+      imapEmpty) at ctx
   }
 
   def build(ctx: TransitionContext): Transition = {
@@ -180,8 +182,7 @@ final class Builder private() {
       buildId(ctx.id),
       ctx.fromState.ids.map(buildId),
       ctx.toState.ids.map(buildId),
-      if (ctx.propCond != null) Some(build(ctx.propCond)) else None,
-      if (ctx.propCond != null) Node.emptySeq[Id] else ctx.triggers.ids.map(buildId)
+      if (ctx.propCond != null) Some(build(ctx.propCond)) else None
     )
   }
 
@@ -196,6 +197,42 @@ final class Builder private() {
       if(ctx.value != null) Some(build(ctx.value)) else None,
       if(ctx.st != null) ctx.st.ids.map(buildId) else Node.emptySeq[Id]
     ) at ctx
+  }
+
+  def build(ctx: ConditionContext): ConditionTuple = {
+    ctx match {
+      case andor: AndOrContext => build(andor)
+      case ormoreless: OrMoreLessContext => build(ormoreless)
+      case all: AllContext => build(all)
+      case primary: PrimaryCondContext => build(primary.primaryCondition())
+    }
+  }
+
+  def build(ctx: AndOrContext): ConditionTuple = {
+    if (ctx.op.getText == "and") {
+      And(build(ctx.lhs), build(ctx.rhs))
+    } else {
+      Or(build(ctx.lhs), build(ctx.rhs))
+    }
+  }
+
+  def build(ctx: OrMoreLessContext): ConditionTuple = {
+    if (ctx.op.getText == "or more") {
+      OrMore(ctx.`val`.getText.toInt, ctx.cond.map(build))
+    } else {
+      OrLess(ctx.`val`.getText.toInt, ctx.cond.map(build))
+    }
+  }
+
+  def build(ctx: AllContext): All = {
+    All(ctx.cond.map(build))
+  }
+
+  def build(ctx: PrimaryConditionContext): PrimaryCondition = {
+    ctx match {
+      case er: EventRefContext => EventRef(er.idGroup().ids.map(buildId))
+      case t: TupContext => build(t.tuple())
+    }
   }
 
   def build(ctx: TupleContext): Tuple = {

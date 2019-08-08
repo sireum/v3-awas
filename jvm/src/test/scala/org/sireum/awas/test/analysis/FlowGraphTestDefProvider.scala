@@ -92,9 +92,9 @@ extends TestDefProvider {
       case Some(m) =>
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
         var st = SymbolTable(m)
-        val updatedModel = ContextInSensitiveGen(m, st)
-        Resource.reset()
-        st = SymbolTable(updatedModel)
+        //        val updatedModel = ContextInSensitiveGen(m, st)
+        //        Resource.reset()
+        //        st = SymbolTable(updatedModel)
         val graph = FlowGraph(m, st)
         Some(graph.getDot)
     }

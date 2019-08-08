@@ -6,18 +6,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import org.sireum.test._
+import org.sireum.test.{JUnitTestFramework, TestDef}
 
 @RunWith(value = classOf[Parameterized])
-final class FPTCAnalysisTest(name: String, td: TestDef) {
+final class StateReachAnalysisTest(name: String, td: TestDef) {
+
   @Test
   def test(): Unit = {
     td.test(JUnitTestFramework)
   }
 }
 
-object FPTCAnalysisTest {
-  val provider = new FPTCAnalysisTestDefProvider(JUnitTestFramework)
+object StateReachAnalysisTest {
+  val provider = new StateReachAnalysisTestDefProvider(JUnitTestFramework)
 
   @Parameters(name = "{0}")
   def parameters: util.ArrayList[Array[Object]] = {
@@ -29,6 +30,3 @@ object FPTCAnalysisTest {
     r
   }
 }
-
-///Users/hariharan/Documents/workspace/sireum-v3/awas/jvm/target/scala-2.12/test-classes/org/sireum/awas/test/example/fptc/fptc_base.aq
-///Users/hariharan/Documents/workspace/sireum-v3/awas/jvm/target/scala-212/test-classes/org/sireum/awas/test/example/fptc/fptc_base.aq

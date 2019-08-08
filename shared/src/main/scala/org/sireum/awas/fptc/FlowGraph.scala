@@ -36,6 +36,7 @@ import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{ComponentTable, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
+import upickle.default.{ReadWriter => RW, macroRW}
 
 
 trait FlowGraph[Node, Edge <: AwasEdge[Node]] extends AwasGraph[Node, Edge] {
@@ -100,6 +101,12 @@ trait FlowEdge[Node] extends AwasEdge[Node] {
   def sourcePort: Option[ResourceUri]
 
   def targetPort: Option[ResourceUri]
+}
+
+object FlowEdge {
+  implicit def rw: RW[FlowEdge[FlowNode]] = RW.merge(
+    FlowEdgeImpl.rw
+  )
 }
 
 

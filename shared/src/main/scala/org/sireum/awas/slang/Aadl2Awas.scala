@@ -46,7 +46,7 @@ final class Aadl2Awas private() {
       buildAlias(aadl.errorLib.elements)
 
     val r = Model(typeDecls,
-      Node.emptySeq[StateMachineDecl],
+      Node.emptySeq[StateMachineDecl] ++ aadl.errorLib.elements.flatMap(buildSM),
       Node.emptySeq[ConstantDecl],
       build(aadl.components.elements.head))
     r
@@ -90,6 +90,37 @@ final class Aadl2Awas private() {
     }
   }
 
+  def build(name: ir.Name): Name = {
+    Name(Node.emptySeq ++ name.name.elements.map(it => buildId(it.value)))
+  }
+
+  def buildSM(errorLib: ir.Emv2Library): Seq[StateMachineDecl] = {
+    errorLib.behaveStateMachine.elements.map(build)
+  }
+
+  def build(stateMachine: ir.BehaveStateMachine): StateMachineDecl = {
+    StateMachineDecl(buildId(stateMachine.id.name.elements.mkString(".")),
+      buildStates(stateMachine.states),
+      buildEvents(stateMachine.events)
+    )
+  }
+
+  def buildEvents(events: ISZ[ErrorEvent]): Node.Seq[Name] = {
+    Node.emptySeq ++ events.elements.map(it => build(it.id))
+  }
+
+  def buildStates(states: ISZ[ErrorState]): Node.Seq[Name] = {
+    var res = Node.emptySeq[Name]
+    states.elements.foreach { s =>
+      if (s.isInitial) {
+        res = res.+:(build(s.id))
+      } else {
+        res = res :+ build(s.id)
+      }
+    }
+    res
+  }
+
   def buildName(name: org.sireum.String): Name = {
     Name(name.value.split("\\.").map(buildId).toVector)
   }
@@ -129,6 +160,9 @@ final class Aadl2Awas private() {
       } else { comp.features.elements.flatMap(build).toVector}
       val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
       val flows = getFlows(comp)
+      val transistions = getTrans(comp)
+      val behavior = getBehave(comp)
+      val properties = getProperties(comp)
       val subcomp = comp.subComponents.elements.flatMap { sc =>
         build(sc).map((sc.identifier, _))
       }.toMap
@@ -164,13 +198,99 @@ final class Aadl2Awas private() {
         features,
         propagations,
         flows,
-        None,
-        None,
+        transistions,
+        behavior,
         UpdatedSubComp.values.toVector,
         conns,
         deployments,
-        Node.emptySeq[Property]))
+        properties))
     } else None
+  }
+
+  def buildInit(pval: ir.PropertyValue): Init = {
+    pval match {
+      case cp: ClassifierProp => StringInit(cp.name.value)
+      case rp: RangeProp => {
+        RecordInit(buildName(Aadl2Awas.RANGE_PROP),
+          imapEmpty[Id, Init]
+            + (buildId(Aadl2Awas.RANGE_PROP_LOW) -> buildInit(rp.low))
+            + (buildId(Aadl2Awas.RANGE_PROP_HIGH) -> buildInit(rp.high))
+        )
+      }
+      case rec: RecordProp => {
+        val res = rec.properties.elements.map { p =>
+          p.name.name.elements.last.value
+          (buildName(p.name.name.elements.last.value).value.last,
+            p.propertyValues.elements.map(buildInit))
+        }
+        RecordInit(buildName(Aadl2Awas.RECORD_PROP), res.map { r =>
+          if (r._2.size > 1) {
+            (r._1, SeqInit(NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)), Node.seq(r._2)))
+          } else {
+            (r._1, r._2.head)
+          }
+        }.toMap)
+      }
+      case ref: ReferenceProp => NameRefInit(build(ref.value), None)
+      case unit: UnitProp => {
+        RecordInit(buildName(Aadl2Awas.UNIT_PROP), imapEmpty[Id, Init]
+          + (buildId(Aadl2Awas.UNIT_PROP_VAL) -> StringInit(unit.value.value))
+          + (buildId(Aadl2Awas.UNIT_PROP_UNIT) -> (if (unit.unit.nonEmpty) {
+          SomeInit(NamedTypeDecl(buildName(Aadl2Awas.STRING_PROP)), StringInit(unit.unit.get.value))
+        } else {
+          NoneInit(NamedTypeDecl(buildName(Aadl2Awas.STRING_PROP)))
+        })))
+      }
+      case vp: ValueProp => StringInit(vp.value.value)
+    }
+  }
+
+  def getProperties(comp: ir.Component): Node.Seq[Property] = {
+    var props = comp.properties.elements
+    comp.annexes.foreach { annex =>
+      if (annex.name.value == "Emv2") {
+        val clause = annex.clause.asInstanceOf[Emv2Clause]
+        props = props ++ clause.properties.elements
+      }
+    }
+    val res = props.flatMap { prop =>
+      val bindingPropSet = Set(Aadl2Awas.ACTUAL_CONNECTION_BINDING,
+        Aadl2Awas.ACTUAL_FUNCTION_BINDING,
+        Aadl2Awas.ACTUAL_MEMORY_BINDING,
+        Aadl2Awas.ACTUAL_PROCESSOR_BINDING,
+        Aadl2Awas.ACTUAL_SUBPROGRAM_CALL_BINDING,
+        Aadl2Awas.ALLOWED_CONNECTION_BINDING,
+        Aadl2Awas.ALLOWED_MEMORY_BINDING,
+        Aadl2Awas.ALLOWED_PROCESSOR_BINDING,
+        Aadl2Awas.ALLOWED_SUBPROGRAM_CALL_BINDING)
+
+      if (!bindingPropSet.contains(prop.name.name.elements.last.value)) {
+        val id = buildId(prop.name.name.elements.last.value)
+        val value = if (prop.propertyValues.nonEmpty) {
+          if (prop.propertyValues.elements.size > 1) {
+            Some(SeqInit(NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)),
+              Node.emptySeq ++ prop.propertyValues.elements.map(buildInit)))
+          } else {
+            Some(buildInit(prop.propertyValues.elements.head))
+          }
+        } else {
+          None
+        }
+        val at = prop.appliesTo.elements.flatMap { it =>
+          it match {
+            case eer: Emv2ElementRef => {
+              val errRefs = eer.errorTypes.elements.map(_.name.elements.mkString("."))
+              Some(eer.name.name.elements.mkString(".") -> errRefs.toSet)
+            }
+            case aer: AadlElementRef => None
+          }
+        }
+        Some(Property(id, value, at.toMap))
+      } else {
+        None
+      }
+    }
+    Node.seq(res)
   }
 
   def mineBindingProps(subComps: Seq[ir.Component], connInst: Seq[ir.ConnectionInstance])
@@ -521,7 +641,7 @@ final class Aadl2Awas private() {
     }
 
     val errors = prop.errorTokens.elements.map { et =>
-      Fault(buildName(et.name.elements.last.value))
+      Fault(build(et))
     }
     val resProp = Propagation(uid, errors.toVector)
     prop.propagationPoint
@@ -570,6 +690,84 @@ final class Aadl2Awas private() {
       }
     }
     flows.toVector
+  }
+
+  def getTrans(comp: ir.Component): Option[Transition] = {
+    var transCount = 0
+    val defaultName = "T"
+    var transExpr = Node.emptySeq[TransExpr]
+    comp.annexes.foreach { annex =>
+      val clause = annex.clause.asInstanceOf[Emv2Clause]
+      if (clause.componentBehavior.nonEmpty) {
+        clause.componentBehavior.get.transitions.elements.foreach { trans =>
+          transExpr = transExpr :+ TransExpr(if (trans.id.nonEmpty) {
+            buildId(trans.id.get.name.elements.last.value)
+          } else {
+            transCount = transCount + 1
+            buildId(defaultName + transCount)
+          }, Node.emptySeq :+ buildId(trans.sourceState.name.elements.last.value),
+            Node.emptySeq :+ buildId(trans.targetState.name.elements.last.value),
+            Some(build(trans.condition)))
+        }
+      }
+    }
+    if (transExpr.nonEmpty) Some(Transition(transExpr)) else None
+  }
+
+  def getBehave(component: ir.Component): Option[Behaviour] = {
+    var behaveCount = 0
+    val defaultName = "B"
+    var behaveExpr = Node.emptySeq[BehaveExpr]
+    component.annexes.foreach { annex =>
+      val clause = annex.clause.asInstanceOf[Emv2Clause]
+      if (clause.componentBehavior.nonEmpty) {
+        clause.componentBehavior.get.propagations.elements.foreach { prop =>
+          behaveExpr = behaveExpr :+ BehaveExpr(
+            if (prop.id.nonEmpty) buildId(prop.id.get.name.elements.last.value) else {
+              behaveCount = behaveCount + 1
+              buildId(defaultName + behaveCount)
+            }, if (prop.condition.nonEmpty) {
+              Some(build(prop.condition.get))
+            } else {
+              None
+            }, if (prop.target.nonEmpty) Some(buildTuple(prop.target)) else None,
+            Node.seq(prop.source.elements.map(it => buildId(it.name.elements.last.value)))
+          )
+        }
+      }
+    }
+    if (behaveExpr.nonEmpty) Some(Behaviour(behaveExpr)) else None
+  }
+
+  def build(errorCond: ir.ErrorCondition): ConditionTuple = {
+    errorCond match {
+      case and: ir.AndCondition => And(build(and.op.elements.head), build(and.op.elements.last))
+      case or: ir.OrCondition => Or(build(or.op.elements.head), build(or.op.elements.last))
+      case all: ir.AllCondition => All(Node.emptySeq ++ all.op.elements.map(build))
+      case orMore: ir.OrMoreCondition => {
+        OrMore(orMore.number.toInt, Node.emptySeq ++ orMore.conditions.elements.map(build))
+      }
+      case orLess: ir.OrLessCondition => {
+        OrLess(orLess.number.toInt, Node.emptySeq ++ orLess.conditions.elements.map(build))
+      }
+      case pc: ir.ConditionTrigger => {
+        if (pc.events.nonEmpty) {
+          EventRef(Node.seq(pc.events.elements.map(it => buildId(it.name.elements.last.value))))
+        } else {
+          buildTuple(pc.propagationPoints)
+        }
+      }
+    }
+  }
+
+  def buildTuple(props: ISZ[Emv2Propagation]): Tuple = {
+    val tokens = props.elements.map { pp =>
+      val id = buildId(pp.propagationPoint.name.elements.last.value)
+      val faults = pp.errorTokens.elements.map { et => Fault(build(et)) }
+      val errors = if (faults.size > 1) FaultSet(ilinkedSetEmpty ++ faults) else faults.head
+      (id, errors)
+    }
+    Tuple(tokens.toList)
   }
 
 
@@ -633,6 +831,18 @@ object Aadl2Awas {
   val ACCESS_PORT = "ACCESS"
   val ACCESS_IN_PORT = "ACCESS_IN"
   val ACCESS_OUT_PORT = "ACCESS_OUT"
+
+  val RANGE_PROP = "RANGE_PROP"
+  val RANGE_PROP_LOW = "RANGE_PROP_LOW"
+  val RANGE_PROP_HIGH = "RANGE_PROP_HIGH"
+  val RECORD_PROP = "RECORD_PROP"
+  val LIST_PROP = "LIST_PROP"
+  val UNIT_PROP = "UNIT_PROP"
+  val UNIT_PROP_VAL = "UNIT_PROP_VAL"
+  val UNIT_PROP_UNIT = "UNIT_PROP_UNIT"
+  val STRING_PROP = "STRING_PROP"
+
+
 
   def apply(aadlModel: ir.Aadl): Model = {
 

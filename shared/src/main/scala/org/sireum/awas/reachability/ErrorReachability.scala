@@ -27,7 +27,7 @@
 
 package org.sireum.awas.reachability
 
-import org.sireum.awas.collector.Collector
+import org.sireum.awas.collector.{Collector, FlowErrorNextCollector}
 import org.sireum.awas.fptc.FlowNode
 import org.sireum.awas.query.ConstraintExpr
 import org.sireum.awas.symbol.SymbolTable
@@ -83,10 +83,18 @@ trait ErrorReachability[Node] extends PortReachability[Node] {
                      currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]]
 
+  def getPredDetailed(currentPort: ResourceUri,
+                      currentError: ResourceUri)
+  : ISet[FlowErrorNextCollector]
+
 
   def getSuccessor(currentPort: ResourceUri,
                    currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]]
+
+  def getSuccDetailed(currentPort: ResourceUri,
+                      currentError: ResourceUri)
+  : ISet[FlowErrorNextCollector]
 }
 
 object ErrorReachability {

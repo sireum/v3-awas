@@ -389,7 +389,7 @@ final class PrettyPrinter(sb: StringBuilder) {
     sb.append(" -[")
     te.propCond match {
       case Some(e) => print(e)
-      case None => printIdGroup(te.trigger)
+      case None => sb.append("*")
     }
     sb.append("]-> ")
     printIdGroup(te.rhs)
@@ -422,7 +422,11 @@ final class PrettyPrinter(sb: StringBuilder) {
   def print(expr: BehaveExpr) : Unit = {
     print(expr.id)
     sb.append(" : ")
-    print(expr.lhs)
+    if (expr.lhs.nonEmpty) {
+      print(expr.lhs.get)
+    } else {
+      sb.append("*")
+    }
     if(expr.states.nonEmpty) {
       sb.append(" -[")
       printIdGroup(expr.states)
@@ -431,6 +435,64 @@ final class PrettyPrinter(sb: StringBuilder) {
       sb.append(" -> ")
     }
     print(expr.rhs)
+  }
+
+  def print(cond: ConditionTuple): Unit = {
+    cond match {
+      case and: And => {
+        print(and.lhs)
+        sb.append(" and ")
+        print(and.rhs)
+      }
+      case or: Or => {
+        print(or.lhs)
+        sb.append(" or ")
+        print(or.rhs)
+      }
+      case ormore: OrMore => {
+        sb.append(ormore.value)
+        sb.append(" or more (")
+        print(ormore.conds.head)
+        for (c <- ormore.conds.tail) {
+          sb.append(", ")
+          print(c)
+        }
+        sb.append(")")
+      }
+      case ormore: OrLess => {
+        sb.append(ormore.value)
+        sb.append(" or more (")
+        print(ormore.conds.head)
+        for (c <- ormore.conds.tail) {
+          sb.append(", ")
+          print(c)
+        }
+        sb.append(")")
+      }
+      case all: All => {
+        sb.append("all (")
+        print(all.conds.head)
+        for (c <- all.conds.tail) {
+          sb.append(", ")
+          print(c)
+        }
+        sb.append(")")
+      }
+      case primary: PrimaryCondition => {
+        primary match {
+          case ef: EventRef => {
+            print(ef.event.head)
+            for (e <- ef.event.tail) {
+              sb.append(", ")
+              print(e)
+            }
+          }
+          case t: Tuple => {
+            print(t)
+          }
+        }
+      }
+    }
   }
 
   def print(ot : Option[Tuple]) : Unit = {
@@ -645,8 +707,8 @@ final class PrettyPrinter(sb: StringBuilder) {
   def print(p : Property, indent: Natural) : Unit={
     printIndent(indent)
     print(p.id)
-    sb.append(" : ")
-    print(p.propType)
+    //    sb.append(" : ")
+    //    print(p.propType)
     p.value match {
       case None =>
       case _ =>

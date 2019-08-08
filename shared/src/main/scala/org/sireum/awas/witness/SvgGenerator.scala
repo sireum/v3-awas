@@ -27,10 +27,12 @@
 
 package org.sireum.awas.witness
 
+import org.sireum.awas.ast.PrettyPrinter
+import org.sireum.awas.collector.Collector
 import org.sireum.awas.witness._
 import org.sireum.awas.fptc._
 import org.sireum.awas.slang.Aadl2Awas
-import org.sireum.awas.symbol.SymbolTableHelper
+import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.ops.ISZOps
 import org.sireum.util._
@@ -51,9 +53,9 @@ object SvgGenerator {
 //      bindings = true)
   private var edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
 
-  def apply(
-    graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge],
-    viewConfig: SvgGenConfig
+  def apply(st: SymbolTable,
+            graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge],
+            viewConfig: SvgGenConfig, collector: Option[Collector]
   ): String = {
     this.viewConfig = viewConfig
     //    graph.setNodeAttProvider(attProvider)
@@ -71,10 +73,10 @@ object SvgGenerator {
       }
     }
 
-    graph.setNodeToST(nodeToST)
+    graph.setNodeToST(nodeToST(_, st))
     graph.setEdgeToST(edgeToST)
     graph.setGraphAttributes(graphAttributes)
-    val res = getDot(graph, this.viewConfig)
+    val res = getDot(graph, this.viewConfig, st)
       .replaceAll("label=\"<<", "label=<<")
       .replaceAll(">>\"", ">>")
     res
@@ -84,8 +86,9 @@ object SvgGenerator {
 
   val H = SymbolTableHelper
 
-  private def nodeToST(node: FlowNode): ST = {
-    st""" "${node.getUri}" [label="${getNodeLabel(node)}" ${if (H.isInPort(node.getUri)) "rank=max"
+  private def nodeToST(node: FlowNode, st: SymbolTable): ST = {
+    st""" "${node.getUri}" [label="${getNodeLabel(node, st)}" ${
+      if (H.isInPort(node.getUri)) "rank=max"
     else if (H.isOutPort(node.getUri)) "rank=min"
     else ""} shape=plaintext]"""
   }
@@ -98,11 +101,12 @@ object SvgGenerator {
 
   private val attributeTB = st"""rankdir=TB"""
 
-  private def graphAttributes =
+  private def graphAttributes = {
     ivectorEmpty[ST] :+
-      (if (viewConfig.rankDir == RankDir.LR) attributeLR else attributeTB)
+      (if (viewConfig.rankDir == RankDir.LR) attributeLR else attributeTB) //:+ st"""graph [splines=ortho]"""
+  }
 
-  def getDot(graph: FlowGraph[FlowNode, FlowNode.Edge], viewConfig: SvgGenConfig): String = {
+  def getDot(graph: FlowGraph[FlowNode, FlowNode.Edge], viewConfig: SvgGenConfig, st: SymbolTable): String = {
     var nST: ISZ[ST] = ISZ[ST]()
     var eST: ISZ[ST] = ISZ[ST]()
     if (!viewConfig.simpleConn.value) {
@@ -113,7 +117,7 @@ object SvgGenerator {
       )
 
       val simpleEdges = simpleConn.flatMap(n => graph.getIncomingEdges(n) ++ graph.getOutgoingEdges(n))
-      nST = nST ++ ISZ((for (e <- (graph.nodes.toSet -- simpleConn).toSeq) yield st"""${nodeToST(e)}"""): _*)
+      nST = nST ++ ISZ((for (e <- (graph.nodes.toSet -- simpleConn).toSeq) yield st"""${nodeToST(e, st)}"""): _*)
       eST = eST ++ ISZ[ST]((for (e <- (graph.edges.toSet -- simpleEdges).toSeq) yield edgeToST(e)): _*)
       eST = eST ++ ISZ[ST](
         (for (e <- simpleConn.toSeq)
@@ -125,7 +129,7 @@ object SvgGenerator {
       )
 
     } else {
-      nST = nST ++ ISZ((for (e <- graph.nodes) yield st"""${nodeToST(e)}""").toSeq: _*)
+      nST = nST ++ ISZ((for (e <- graph.nodes) yield st"""${nodeToST(e, st)}""").toSeq: _*)
       eST = eST ++ ISZ[ST]((for (e <- graph.edges.toSeq) yield edgeToST(e)): _*)
     }
     val r =
@@ -169,7 +173,7 @@ object SvgGenerator {
     }, "")
   }
 
-  def getNodeLabel(vertex: FlowNode): String = {
+  def getNodeLabel(vertex: FlowNode, st: SymbolTable): String = {
     val inPorts = vertex.inPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
     val outPorts = vertex.outPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
 
@@ -185,6 +189,19 @@ object SvgGenerator {
             .toSeq
         }
       else ilistEmpty
+
+    val states = if (vertex.isComponent && st.componentTable(vertex.getUri).stateMachine.isDefined) {
+      st.stateMachine(st.componentTable(vertex.getUri).stateMachine.get).states.map { s =>
+        (Resource.getResource(s).get.toUri, s.value.last.value)
+      }.toList
+    } else ilistEmpty[(ResourceUri, String)]
+
+    val behaviour = if (vertex.isComponent && st.componentTable(vertex.getUri).behaviors.nonEmpty) {
+      st.componentTable(vertex.getUri).behaviors.map { behave =>
+        (behave, PrettyPrinter.print(st.componentTable(vertex.getUri).behavior(behave)))
+      }.toList
+    } else ilistEmpty
+
     val subGraphIcon = "min/images/sub-graph-icon.png"
     val label =
       if ((vertex.getResourceType == NodeType.COMPONENT) ||
@@ -237,7 +254,27 @@ object SvgGenerator {
               ),
             if (flows.nonEmpty && vertex.isComponent)
               tr(portContent(inPorts, errors), flowContent(flows), portContent(outPorts, errors))
-            else tr(portContent(inPorts, errors), portContent(outPorts, errors))
+            else tr(portContent(inPorts, errors), portContent(outPorts, errors)),
+            if (states.nonEmpty)
+              tr(
+                td(if (vertex.isFlowDefined) colspan := 3 else colspan := 2, attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("States"))
+              )
+            else
+              StringFrag(""),
+            if (states.nonEmpty)
+              tr(stateContent(states, vertex.isFlowDefined))
+            else
+              StringFrag(""),
+            if (behaviour.nonEmpty)
+              tr(
+                td(if (vertex.isFlowDefined) colspan := 3 else colspan := 2, attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Behaviors"))
+              )
+            else
+              StringFrag(""),
+            if (behaviour.nonEmpty)
+              tr(behaveContent(behaviour, vertex.isFlowDefined))
+            else
+              StringFrag("")
           )
         ).render
         } else {
@@ -304,6 +341,76 @@ object SvgGenerator {
             )
       )
     )
+
+  private def stateContent(states: List[(ResourceUri, String)], isFlow: Boolean) =
+    td(if (isFlow) colspan := 3 else colspan := 2,
+      attr("cellpadding") := 0,
+      table(
+        attr("border") := 0,
+        attr("cellspacing") := 0,
+        attr("cellpadding") := 0,
+        for ((uri, text) <- states)
+          yield
+            tr(
+              td(
+                attr("cellpadding") := 0,
+                table(
+                  attr("border") := 0,
+                  attr("cellspacing") := 0,
+                  attr("cellpadding") := 0,
+                  tr(
+                    td(
+                      attr("border") := 0,
+                      attr("href") := "templink",
+                      attr("title") := "state",
+                      attr("target") := uri,
+                      attr("cellpadding") := 0,
+                      id := "badlink",
+                      attr("cellspacing") := 0,
+                      tabledata(text, false)
+                    )
+                  )
+                )
+              )
+            )
+      )
+    )
+
+  private def behaveContent(behave: List[(ResourceUri, String)], isFlow: Boolean) =
+    td(if (isFlow) colspan := 3 else colspan := 2,
+      attr("cellpadding") := 0,
+      table(
+        attr("border") := 0,
+        attr("cellspacing") := 0,
+        attr("cellpadding") := 0,
+        for ((uri, text) <- behave)
+          yield
+            tr(
+              td(
+                attr("cellpadding") := 0,
+                table(
+                  attr("border") := 0,
+                  attr("cellspacing") := 0,
+                  attr("cellpadding") := 0,
+                  tr(
+                    td(
+                      attr("border") := 0,
+                      attr("href") := "templink",
+                      attr("title") := "behavior",
+                      attr("target") := uri,
+                      attr("cellpadding") := 0,
+                      id := "badlink",
+                      attr("cellspacing") := 0,
+                      tabledata(text, false)
+                    )
+                  )
+                )
+              )
+            )
+      )
+    )
+
+
 
   private def portContent(inPorts: Seq[(String, ResourceUri, String)], errors: IMap[String, Seq[String]]) =
     if (inPorts.nonEmpty)

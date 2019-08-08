@@ -45,7 +45,7 @@ import scala.scalajs.js
 
 object SvgNodeType extends Enumeration {
   type SvgNodeType = Value
-  val Node, Port, Error, Flow, Edge = Value
+  val Node, Port, Error, Flow, Edge, State, Behavior = Value
 }
 
 trait SvgNode {
@@ -241,6 +241,14 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
         node.firstElementChild.setAttribute("stroke", _edgeColor)
         node.firstElementChild.setAttribute("opacity", ".2")
       }
+      case SvgNodeType.State => {
+        node.firstElementChild.setAttribute("fill", _portColor)
+        node.firstElementChild.setAttribute("fill-opacity", "1")
+      }
+      case SvgNodeType.Behavior => {
+        node.firstElementChild.setAttribute("fill", _portColor)
+        node.firstElementChild.setAttribute("fill-opacity", "1")
+      }
     }
   }
 
@@ -268,6 +276,14 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
           node.firstElementChild.nextElementSibling.setAttribute("fill-opacity", ".8")
           node.firstElementChild.setAttribute("stroke", _edgeSelectionColor)
           node.firstElementChild.setAttribute("opacity", ".8")
+        }
+        case SvgNodeType.State => {
+          node.firstElementChild.setAttribute("fill", "#1878c0")
+          node.firstElementChild.setAttribute("fill-opacity", ".8")
+        }
+        case SvgNodeType.Behavior => {
+          node.firstElementChild.setAttribute("fill", "#1878c0")
+          node.firstElementChild.setAttribute("fill-opacity", ".8")
         }
       }
     } else {
@@ -306,6 +322,14 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
           node.firstElementChild.setAttribute("stroke", _edgeSelectionColor)
           node.firstElementChild.setAttribute("opacity", ".8")
         }
+        case SvgNodeType.State => {
+          node.firstElementChild.setAttribute("fill", color)
+          node.firstElementChild.setAttribute("fill-opacity", ".6")
+        }
+        case SvgNodeType.Behavior => {
+          node.firstElementChild.setAttribute("fill", color)
+          node.firstElementChild.setAttribute("fill-opacity", ".6")
+        }
       }
     }
   }
@@ -334,6 +358,10 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
           nodeType = Some(SvgNodeType.Flow)
         } else if (title == "error") {
           nodeType = Some(SvgNodeType.Error)
+        } else if (title == "state") {
+          nodeType = Some(SvgNodeType.State)
+        } else if (title == "behavior") {
+          nodeType = Some(SvgNodeType.Behavior)
         } else {
           nodeType = Some(SvgNodeType.Edge)
         }

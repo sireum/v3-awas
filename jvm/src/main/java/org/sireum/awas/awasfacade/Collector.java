@@ -45,7 +45,7 @@ public interface Collector {
 
     Set<FlowEdge<FlowNode>> getEdges();
 
-    SymbolTable getSymbolTable();
+//    SymbolTable getSymbolTable();
 
     Set<String> getGraph();
 

@@ -34,9 +34,24 @@ import upickle.default.{macroRW, ReadWriter => RW}
 
 object SymbolTable {
 
+  private var symbolTable: Option[SymbolTable] = None
+  private var currModel: Option[Model] = None
+
   def apply(n: Model)(
-    implicit reporter: AccumulatingTagReporter): SymbolTable =
-    buildSymbolTable(n)
+    implicit reporter: AccumulatingTagReporter): SymbolTable = {
+    if (symbolTable.isDefined && currModel.isDefined && currModel.get == n) {
+      symbolTable.get
+    } else {
+      val st = buildSymbolTable(n)
+      symbolTable = Some(st)
+      currModel = Some(n)
+      st
+    }
+  }
+
+  def getTable: Option[SymbolTable] = symbolTable
+
+
 
   def buildSymbolTable(m: Model)(
     implicit reporter: AccumulatingTagReporter): SymbolTable = {
@@ -44,7 +59,7 @@ object SymbolTable {
     stp.toSymbolTable
   }
 
-  implicit def rw: RW[SymbolTable] = RW.merge(STProducer.rw)
+  //  implicit def rw: RW[SymbolTable] = RW.merge(STProducer.rw)
 
 }
 
@@ -103,6 +118,7 @@ sealed case class SymbolTableData
  constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty,
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
+
 
 case class STProducer(var systemUri: Option[ResourceUri] = None,
                  var systemD: Option[ComponentDecl] = None) extends SymbolTable {

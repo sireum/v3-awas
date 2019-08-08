@@ -119,7 +119,7 @@ transition
   ;
 
 transExpr
-  : id=ID ':' fromState=idGroup ('-['(propCond=tuple | triggers=idGroup)']->') toState=idGroup
+  : id=ID ':' fromState=idGroup ('-['(propCond=condition)']->') toState=idGroup
   ;
 
 behaviour
@@ -127,8 +127,21 @@ behaviour
   ;
 
 expression
-  : id=ID ':' (key=tuple | '*') ('->' | ('-[' st=idGroup ']->')) (value=tuple | '*')
+  : id=ID ':' (key=condition | '*') ('->' | ('-[' st=idGroup ']->')) (value=tuple | '*')
   ;
+
+condition
+  : lhs=condition op=('and' | 'or') rhs=condition                                              #AndOr
+  | val=INTEGER op=('or more' | 'or less') '(' cond+=condition (',' cond+=condition)* ')'     #OrMoreLess
+  | 'all' '(' cond+=condition (',' cond+=condition)* ')'                                   #All
+  | primaryCondition                                                                        #PrimaryCond
+  ;
+
+primaryCondition
+  : idGroup                       #EventRef
+  | tuple                         #Tup
+  ;
+
 
 idGroup
   : ids+=ID

@@ -35,6 +35,7 @@ import org.scalajs.dom.raw.{Node, SVGElement}
 import org.scalajs.dom.svg.SVG
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
+import org.sireum.awas
 import org.sireum.awas.Notification.Kind
 import org.sireum.awas.analysis.FaultImpactAnalysis
 import org.sireum.awas.ast.AwasSerializer
@@ -61,6 +62,7 @@ import scala.scalajs.js.timers.SetTimeoutHandle
 
 @JSExportTopLevel("Main")
 object Main {
+  //  val Amaran: Nothing = $.amaran
   val H = SymbolTableHelper
 
   var uriNodeMap: IMap[String, ISet[SvgNode]] = imapEmpty[String, ISet[SvgNode]]
@@ -131,6 +133,7 @@ object Main {
       }
     }
     false
+
   }
 
   //def openChildGraph()
@@ -319,7 +322,9 @@ object Main {
               SettingsView.currentConfig.viewVirtualPorts,
               SettingsView.currentConfig.viewErrors,
               SettingsView.currentConfig.viewFlows,
-              SettingsView.currentConfig.bindings
+              SettingsView.currentConfig.bindings,
+              SettingsView.currentConfig.behaviors,
+              SettingsView.currentConfig.states
             ),
             st.get
           )
@@ -347,7 +352,9 @@ object Main {
               SettingsView.currentConfig.viewVirtualPorts,
               SettingsView.currentConfig.viewErrors,
               SettingsView.currentConfig.viewFlows,
-              SettingsView.currentConfig.bindings
+              SettingsView.currentConfig.bindings,
+              SettingsView.currentConfig.behaviors,
+              SettingsView.currentConfig.states
             ),
             st.get
           )
@@ -527,7 +534,7 @@ object Main {
             }
           }
           col.getPortErrors.flatMap(pe => isetEmpty + pe._1 ++ pe._2.map(e => "Error:" + pe._1 + ":" + e)) ++
-          col.getFlows ++ connUri
+            col.getFlows ++ connUri ++ col.getBehavior ++ col.getModes
         }
       }
       res = res ++ (edges ++ ans).map(s => (s, false)).toMap

@@ -39,10 +39,9 @@ import org.sireum.util.{IMap, ISeq, ISet, Tag, _}
 import ujson.Js
 import upickle.default.{macroRW, ReadWriter => RW}
 
+
 //In future, even graph and symboltable may become maps where each graph points to a Collector
-class CollectorImpl(
-  symbolTable: SymbolTable,
-                         graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
+case class CollectorImpl(graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          resType: Option[ResultType] = None,
                          var resEdges: ISet[FlowEdge[FlowNode]] = isetEmpty[Edge],
                          operator: Option[Operator] = None,
@@ -55,7 +54,7 @@ class CollectorImpl(
                          var resBehav: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          var resEvents: ISet[ResourceUri] = isetEmpty[ResourceUri],
                          resPaths: ILinkedSet[Collector] = ilinkedSetEmpty[Collector],
-                         containsCycle : Boolean = false,
+                         containsCycle: Boolean = false,
                          var error: ISet[Tag] = isetEmpty[Tag]
                         ) extends Collector with Serializable {
 
@@ -136,7 +135,7 @@ class CollectorImpl(
     resEdges
   }
 
-  override def getSymbolTable: SymbolTable = symbolTable
+  //  override def getSymbolTable: SymbolTable = symbolTable
 
   override def getGraphs: ISet[FlowGraph[FlowNode, FlowNode.Edge]] = graphs.flatMap(FlowNode.getGraph)
 
@@ -268,7 +267,7 @@ class CollectorImpl(
   def union(c: Collector): Collector = {
     if (c.getGraphs.isEmpty) {
       this
-    } else if (symbolTable == c.getSymbolTable) {
+    } else {
       val resT = if (resType.isDefined && c.getResultType.isDefined) {
         if (resType.get < c.getResultType.get) resType else c.getResultType
       } else if (resType.isDefined) {
@@ -277,7 +276,6 @@ class CollectorImpl(
         c.getResultType
       }
       Collector(
-        symbolTable,
         getGraphs ++ c.getGraphs,
         resT,
         getEdges union c.getEdges,
@@ -293,21 +291,11 @@ class CollectorImpl(
         ilinkedSetEmpty ++ getPaths union c.getPaths,
         c.hasCycles || hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
-    } else {
-      //future allow collector to collect across systems
-      Collector(
-        symbolTable,
-        getGraphs,
-        isetEmpty [Tag] +
-        CollectorErrorHelper.errorMessageGen(
-          CollectorErrorHelper.GRAPH_INCONSISTENT,
-          "", CollectorErrorHelper.ReachAnalysisStage.Other)
-      )
     }
   }
 
   def diff(c: Collector): Collector = {
-    if (symbolTable == c.getSymbolTable) {
+
       val resT = if (resType.isDefined && c.getResultType.isDefined) {
         if (resType.get < c.getResultType.get) resType else c.getResultType
       } else if (resType.isDefined) {
@@ -316,7 +304,7 @@ class CollectorImpl(
         c.getResultType
       }
       Collector(
-        symbolTable,
+
         getGraphs diff c.getGraphs,
         resT,
         getEdges diff c.getEdges,
@@ -332,20 +320,11 @@ class CollectorImpl(
         getPaths diff c.getPaths,
         hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
-    } else {
-      //future allow collector to collect across systems
-      Collector(
-        symbolTable,
-        getGraphs,
-        isetEmpty[Tag] +
-        CollectorErrorHelper.errorMessageGen(
-          CollectorErrorHelper.GRAPH_INCONSISTENT, "", CollectorErrorHelper.ReachAnalysisStage.Other)
-      )
-    }
+
   }
 
   def intersect(c: Collector): Collector = {
-    if (symbolTable == c.getSymbolTable) {
+
       val resT = if (resType.isDefined && c.getResultType.isDefined) {
         if (resType.get < c.getResultType.get) resType else c.getResultType
       } else if (resType.isDefined) {
@@ -354,7 +333,6 @@ class CollectorImpl(
         c.getResultType
       }
       Collector(
-        symbolTable,
         getGraphs intersect c.getGraphs,
         resT,
         getEdges intersect c.getEdges,
@@ -370,16 +348,7 @@ class CollectorImpl(
         getPaths intersect c.getPaths,
         hasCycles && c.hasCycles,
         getErrors ++ getWarnings union c.getErrors ++ c.getWarnings)
-    } else {
-      //future allow collector to collect across systems
-      Collector(
-        symbolTable,
-        getGraphs,
-        isetEmpty[Tag] +
-        CollectorErrorHelper.errorMessageGen(
-          CollectorErrorHelper.GRAPH_INCONSISTENT,
-          "", CollectorErrorHelper.ReachAnalysisStage.Other))
-    }
+
   }
 
   private def portErrorsUnion(p1: IMap[ResourceUri, ISet[ResourceUri]],
@@ -421,23 +390,33 @@ class CollectorImpl(
 
   override def getNextNode(currentNode: FlowNode): ISet[FlowNode] = {
     var res = isetEmpty[FlowNode]
-    ErrorReachability(symbolTable).getSuccessor(currentNode).intersect(getNodes)
+    if (SymbolTable.getTable.isDefined)
+      ErrorReachability(SymbolTable.getTable.get).getSuccessor(currentNode).intersect(getNodes)
+    else
+      res
   }
 
   override def getNextPort(currentPort: ResourceUri): ISet[ResourceUri] = {
-    ErrorReachability(symbolTable).getSuccessor(currentPort).intersect(getPorts)
+    if (SymbolTable.getTable.isDefined)
+      ErrorReachability(SymbolTable.getTable.get).getSuccessor(currentPort).intersect(getPorts)
+    else
+      isetEmpty
   }
 
   override def getNextPortError(currentPort: ResourceUri,
                                 currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]] = {
-    intersectErrors(ErrorReachability(symbolTable).getSuccessor(currentPort, currentError),
-      getPortErrors)
+    if (SymbolTable.getTable.isDefined)
+      intersectErrors(ErrorReachability(SymbolTable.getTable.get).getSuccessor(currentPort, currentError), getPortErrors)
+    else
+      imapEmpty
   }
   override def hasCycles: Boolean = containsCycle
 }
 
-
+//object CollectorImpl{
+//  implicit def rw: RW[CollectorImpl] = macroRW
+//}
 
 //object Tag {
 //

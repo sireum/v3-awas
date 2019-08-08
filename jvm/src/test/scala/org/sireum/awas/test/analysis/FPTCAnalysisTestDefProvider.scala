@@ -29,7 +29,7 @@ package org.sireum.awas.test.analysis
 
 import java.nio.file.Paths
 
-import org.sireum.awas.analysis.{FPTCAnalysis, FPTCNode}
+import org.sireum.awas.analysis.{FPTCAnalysis, FPTCNode, StateReachAnalysis}
 import org.sireum.awas.ast.{Builder, PrettyPrinter}
 import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.fptc.FlowGraph
@@ -40,13 +40,13 @@ import org.sireum.util.jvm.FileUtil._
 
 final class FPTCAnalysisTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
-    val testDirs = Seq(s"../example/awas-lang"
-      ,s"../example/fptc"
+  val testDirs = Seq(s"../example/awas-lang"
+    , s"../example/fptc"
     )
-    val resultsDir = toFilePath(fileUri(this.getClass,s"../results/fptc"))
-    val expectedDir = toFilePath(fileUri(this.getClass,s"../expected/fptc"))
+  val resultsDir = toFilePath(fileUri(this.getClass, s"../results/fptc"))
+  val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/fptc"))
 
-    val generateExpected = true
+  val generateExpected = true
 
     override def testDefs: ISeq[TestDef] = {
       val files = testDirs.flatMap { d =>
@@ -93,13 +93,15 @@ final class FPTCAnalysisTestDefProvider(tf: TestFramework)
         case Some(m) =>
           implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
           var st = SymbolTable(m)
-          val updatedModel = ContextInSensitiveGen(m, st)
-          Resource.reset
-          st = SymbolTable(updatedModel)
-          val graph = FlowGraph(updatedModel, st)
-          val fg = FPTCAnalysis(graph.getUri, st)
-          fg.toList.sortBy(_._1).map(it =>
-            SymbolTableHelper.uri2IdString(it._1) + "\n" + fptcNodeWriter(it._2, st)).mkString("\n")
+          //          val updatedModel = ContextInSensitiveGen(m, st)
+          //          Resource.reset
+          //          st = SymbolTable(updatedModel)
+          val graph = FlowGraph(m, st)
+          val res = StateReachAnalysis.fptcAnalysis(st)
+          //          val fg = FPTCAnalysis(graph.getUri, st)
+          //          fg.toList.sortBy(_._1).map(it =>
+          //            SymbolTableHelper.uri2IdString(it._1) + "\n" + fptcNodeWriter(it._2, st)).mkString("\n")
+          res.toString + "\n States : \n" + res.getModes.mkString("\n") + "\n Behaviors: \n" + res.getBehavior.mkString("\n")
       }
     }
 
@@ -123,5 +125,5 @@ final class FPTCAnalysisTestDefProvider(tf: TestFramework)
     }
 
 
-  }
+}
 

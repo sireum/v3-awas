@@ -63,86 +63,88 @@ object ContextInSensitiveGen {
   //  }
 
   def mineBehaviorProp(behaviour: Behaviour): IMap[Id, IVector[Fault]] = {
-    var res = imapEmpty[Id, MSet[Fault]]
-    behaviour.exprs.foreach {
-      expr => {
-        if (expr.lhs.isDefined) {
-          expr.lhs.get.tokens.foreach {
-            f =>
-              val (id, et) = mineTokens(f._1, f._2)
-              if (res.keySet.contains(id))
-                res(id) ++ et
-              else
-                res = res + (id -> et)
-          }
-        }
-        if (expr.rhs.isDefined) {
-          expr.rhs.get.tokens.foreach {
-            f =>
-              val (id, et) = mineTokens(f._1, f._2)
-              if (res.keySet.contains(id))
-                res(id) ++= et
-              else
-                res = res + (id -> et)
-          }
-        }
-      }
-    }
-    res.map { f => f._1 -> f._2.toVector }
+    //    var res = imapEmpty[Id, MSet[Fault]]
+    //    behaviour.exprs.foreach {
+    //      expr => {
+    //        if (expr.lhs.isDefined) {
+    //          expr.lhs.get.tokens.foreach {
+    //            f =>
+    //              val (id, et) = mineTokens(f._1, f._2)
+    //              if (res.keySet.contains(id))
+    //                res(id) ++ et
+    //              else
+    //                res = res + (id -> et)
+    //          }
+    //        }
+    //        if (expr.rhs.isDefined) {
+    //          expr.rhs.get.tokens.foreach {
+    //            f =>
+    //              val (id, et) = mineTokens(f._1, f._2)
+    //              if (res.keySet.contains(id))
+    //                res(id) ++= et
+    //              else
+    //                res = res + (id -> et)
+    //          }
+    //        }
+    //      }
+    //    }
+    //    res.map { f => f._1 -> f._2.toVector }
+    ???
   }
 
   //TODO : Refactor this function - function for each case
   def mineBehaviorFlow(behaviour: Behaviour): IVector[Flow] = {
-    var res = ivectorEmpty[Flow]
-    behaviour.exprs.foreach {
-      expr => {
-        if (expr.lhs.isEmpty) {
-
-          if (expr.rhs.isDefined) {
-            expr.rhs.get.tokens.foreach {
-              rt =>
-                val rtinfo = mineTokens(rt._1, rt._2)
-                res :+= Flow(buildNewId("flow"),
-                  None,
-                  ivectorEmpty[Fault],
-                  Some(rtinfo._1), rtinfo._2.toVector)
-            }
-          }
-        }
-        if (expr.rhs.isEmpty) {
-
-          if (expr.lhs.isDefined) {
-            expr.lhs.get.tokens.foreach {
-              lt =>
-                val ltinfo = mineTokens(lt._1, lt._2)
-                res :+= Flow(buildNewId("flow"),
-                  Some(ltinfo._1), ltinfo._2.toVector,
-                  None,
-                  ivectorEmpty[Fault])
-            }
-          }
-
-        }
-
-        if(expr.lhs.isDefined && expr.rhs.isDefined) {
-          expr.lhs.get.tokens.foreach{
-            ltup =>
-              val linfo = mineTokens(ltup._1, ltup._2)
-              expr.rhs.get.tokens.foreach{
-                rtup =>
-                  val rinfo = mineTokens(rtup._1, rtup._2)
-                  res :+= Flow(buildNewId("flow"),
-                    Some(linfo._1),
-                    linfo._2.toVector,
-                    Some(rinfo._1),
-                    rinfo._2.toVector
-                  )
-              }
-          }
-        }
-      }
-    }
-    res.sortBy(_.id.value)
+    //    var res = ivectorEmpty[Flow]
+    //    behaviour.exprs.foreach {
+    //      expr => {
+    //        if (expr.lhs.isEmpty) {
+    //
+    //          if (expr.rhs.isDefined) {
+    //            expr.rhs.get.tokens.foreach {
+    //              rt =>
+    //                val rtinfo = mineTokens(rt._1, rt._2)
+    //                res :+= Flow(buildNewId("flow"),
+    //                  None,
+    //                  ivectorEmpty[Fault],
+    //                  Some(rtinfo._1), rtinfo._2.toVector)
+    //            }
+    //          }
+    //        }
+    //        if (expr.rhs.isEmpty) {
+    //
+    //          if (expr.lhs.isDefined) {
+    //            expr.lhs.get.tokens.foreach {
+    //              lt =>
+    //                val ltinfo = mineTokens(lt._1, lt._2)
+    //                res :+= Flow(buildNewId("flow"),
+    //                  Some(ltinfo._1), ltinfo._2.toVector,
+    //                  None,
+    //                  ivectorEmpty[Fault])
+    //            }
+    //          }
+    //
+    //        }
+    //
+    //        if(expr.lhs.isDefined && expr.rhs.isDefined) {
+    //          expr.lhs.get.tokens.foreach{
+    //            ltup =>
+    //              val linfo = mineTokens(ltup._1, ltup._2)
+    //              expr.rhs.get.tokens.foreach{
+    //                rtup =>
+    //                  val rinfo = mineTokens(rtup._1, rtup._2)
+    //                  res :+= Flow(buildNewId("flow"),
+    //                    Some(linfo._1),
+    //                    linfo._2.toVector,
+    //                    Some(rinfo._1),
+    //                    rinfo._2.toVector
+    //                  )
+    //              }
+    //          }
+    //        }
+    //      }
+    //    }
+    //    res.sortBy(_.id.value)
+    ???
   }
 
   def mineTokens(id: Id, one: One): (Id, MSet[Fault]) = {

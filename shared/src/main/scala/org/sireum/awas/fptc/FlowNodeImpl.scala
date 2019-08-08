@@ -34,6 +34,8 @@ import org.sireum.awas.graph.{AwasEdgeFactory, AwasGraph}
 import org.sireum.awas.symbol.{FlowTableData, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
+import upickle.default.{ReadWriter => RW, macroRW}
+
 
 
 final class FlowNodeImpl(uri: ResourceUri,
@@ -412,6 +414,10 @@ object FlowEdgeFactory extends AwasEdgeFactory[FlowNode, FlowEdge[FlowNode]] {
       assert(target.isDefined, "if edge exists, then source and target nodes are defined")
       target.get
     }
+  }
+
+  object FlowEdgeImpl {
+    implicit def rw: RW[FlowEdgeImpl] = macroRW
   }
 
   override def createEdge(owner: AwasGraph[FlowNode, FlowEdge[FlowNode]],

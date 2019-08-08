@@ -58,6 +58,10 @@ trait ComponentTable {
 
   def behavior(behaviorUri: ResourceUri): BehaveExpr
 
+  def transitions: Iterable[ResourceUri]
+
+  def transition(transUri: ResourceUri): TransExpr
+
   def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
 
   def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
@@ -95,6 +99,7 @@ sealed case class ComponentTableData
  connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,
  connectionSymbolTabel: MMap[ResourceUri, ConnSTProducer] = mmapEmpty,
  deploymentDeclTable: MMap[(ResourceUri, ResourceUri), DeploymentDecl] = mmapEmpty,
+ propertyDecl: MMap[ResourceUri, Property] = mmapEmpty,
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
@@ -175,9 +180,13 @@ class CompSTProducer(val compUri: ResourceUri,
   //    assert(tables.connectionTable.keySet.contains(curi))
   //    connMap.getOrElseUpdate(curi, new ConnST(curi))
   //  }
-override def behaviors: Iterable[ResourceUri] = tables.behaviorTable.keys
+  override def behaviors: Iterable[ResourceUri] = tables.behaviorTable.keys
 
-override def behavior(behaviorUri:  ResourceUri): BehaveExpr = tables.behaviorTable(behaviorUri)
+  override def behavior(behaviorUri: ResourceUri): BehaveExpr = tables.behaviorTable(behaviorUri)
+
+  override def transitions: Iterable[ResourceUri] = tables.transitionTable.keys
+
+  override def transition(transUri: ResourceUri): TransExpr = tables.transitionTable(transUri)
 }
 
 sealed case class FlowTableData

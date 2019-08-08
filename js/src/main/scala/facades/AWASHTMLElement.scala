@@ -33,5 +33,5 @@ import scala.scalajs.js
 
 @js.native
 trait AWASHTMLElement extends Element {
-  def dataset: js.Dictionary[String] = js.native
+  override def dataset: js.Dictionary[String] = js.native
 }

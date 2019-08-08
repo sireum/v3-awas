@@ -86,7 +86,7 @@ final class QueryEval(st: SymbolTable) {
         if (q.qName.value != st.systemDecl.compName.value) {
           queries += (q.qName.value -> q.qExpr)
         } else {
-          result = result + (q.qName.value -> Collector(st, isetEmpty,
+          result = result + (q.qName.value -> Collector(isetEmpty,
             isetEmpty[Tag] + errorMessageGen("Query name cannot be equal to system name",
               QueryPPrinter(q.qName), ReachAnalysisStage.Query)) )
         }
@@ -116,31 +116,31 @@ final class QueryEval(st: SymbolTable) {
     val lhs: Collector = eval(fexp.lhs)
     fexp.op match {
       case FilterID.NODE => {
-        collector.Collector(st, lhs.getGraphs, Some(ResultType.Node), lhs.getEdges, lhs.getOperator,
+        collector.Collector(lhs.getGraphs, Some(ResultType.Node), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, lhs.getNodes.map(_.getUri), isetEmpty[ResourceUri],
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.PORT => {
-        collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
+        collector.Collector(lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts,
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.IN => {
-        collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
+        collector.Collector(lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts.filter(H.isInPort),
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.OUT => {
-        collector.Collector(st, lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
+        collector.Collector(lhs.getGraphs, Some(ResultType.Port), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], lhs.getPorts.filter(H.isOutPort),
           imapEmpty[ResourceUri, ISet[ResourceUri]], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
       }
       case FilterID.PORTERROR => {
-        collector.Collector(st, lhs.getGraphs, Some(ResultType.Error), lhs.getEdges, lhs.getOperator,
+        collector.Collector(lhs.getGraphs, Some(ResultType.Error), lhs.getEdges, lhs.getOperator,
           lhs.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           lhs.getPortErrors, isetEmpty[ResourceUri], isetEmpty[ResourceUri],
           isetEmpty[ResourceUri], isetEmpty[ResourceUri], ilinkedSetEmpty[Collector], lhs.hasCycles, lhs.getErrors ++ lhs.getWarnings)
@@ -174,7 +174,7 @@ final class QueryEval(st: SymbolTable) {
         }
       }
     }
-    collector.Collector(st, c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
+    collector.Collector(c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
       c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
       isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
       ilinkedSetEmpty[Collector], false, c.getErrors ++ c.getWarnings)
@@ -198,7 +198,7 @@ final class QueryEval(st: SymbolTable) {
         }
       }
     }
-    collector.Collector(st, c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
+    collector.Collector(c.getGraphs, Some(ResultType.Error), isetEmpty[Edge], c.getOperator,
       c.getCriteria, isetEmpty[ResourceUri], isetEmpty[ResourceUri], portE, flows,
       isetEmpty[ResourceUri], isetEmpty[ResourceUri], isetEmpty[ResourceUri],
       ilinkedSetEmpty[Collector], false, c.getErrors ++ c.getWarnings)
@@ -317,7 +317,7 @@ final class QueryEval(st: SymbolTable) {
             er.errorSimplePathReachMap(source.getPortErrors, target.getPortErrors, isRefined)
           }
         }
-        case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
+        case _ => Collector(isetEmpty, source.getErrors ++ target.getErrors +
           errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query)
           )
       }
@@ -345,7 +345,6 @@ final class QueryEval(st: SymbolTable) {
     }
 
     Collector(
-      st,
       filteredPaths.foldLeft(Collector(st))(_.union(_)).getGraphs,
       ilinkedSetEmpty[Collector] ++ filteredPaths,
       input.getResultType
@@ -392,7 +391,7 @@ final class QueryEval(st: SymbolTable) {
             er.errorPathReachMap(source.getPortErrors, target.getPortErrors, isRefined)
           }
         }
-        case _ => Collector(st, isetEmpty, source.getErrors ++ target.getErrors +
+        case _ => Collector(isetEmpty, source.getErrors ++ target.getErrors +
           errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query)
           )
       }
@@ -452,7 +451,7 @@ final class QueryEval(st: SymbolTable) {
           }
         }
       } else {
-        Collector(st, isetEmpty, criterion.getErrors +
+        Collector(isetEmpty, criterion.getErrors +
           errorMessageGen(TYPE_UNKNOWN, "", ReachAnalysisStage.Query))
       }
     }
@@ -492,7 +491,7 @@ final class QueryEval(st: SymbolTable) {
         } else {
           result.getOrElse(
             id.value,
-            Collector(st, isetEmpty, isetEmpty[Tag] + errorMessageGen(MISSING_RESULT, id.value, ReachAnalysisStage.Query))
+            Collector(isetEmpty, isetEmpty[Tag] + errorMessageGen(MISSING_RESULT, id.value, ReachAnalysisStage.Query))
           )
         }
       }
@@ -511,7 +510,6 @@ final class QueryEval(st: SymbolTable) {
         SymbolTableHelper.getErrorUri(st, es.map(_.value).mkString("."))).toSet
 
       collector.Collector(
-        st,
         isetEmpty[FlowGraph[FlowNode, Edge]],
         Some(ResultType.Error),
         Some(Operator.ID),
@@ -531,7 +529,6 @@ final class QueryEval(st: SymbolTable) {
         FlowNode.getNode(uri.get).isDefined) {
         assert(FlowNode.getNode(uri.get).isDefined)
         collector.Collector(
-          st,
           isetEmpty + FlowNode.getNode(uri.get).get.getOwner,
           Some(ResultType.Node),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
@@ -547,7 +544,6 @@ final class QueryEval(st: SymbolTable) {
           gra += FlowNode.getNode(nodeUri).get.getOwner
         }
         collector.Collector(
-          st,
           isetEmpty ++ gra,
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
@@ -556,7 +552,7 @@ final class QueryEval(st: SymbolTable) {
       } else if (H.isFlow(uri.get)) {
         val nodeUri = Resource.getParentUri(uri.get).get
         val gra = FlowNode.getNode(nodeUri).get.getOwner
-        collector.Collector(st,
+        collector.Collector(
           isetEmpty + gra,
           Some(ResultType.Port),
           Some(Operator.ID), isetEmpty[ResourceUri] + uri.get,
@@ -564,7 +560,6 @@ final class QueryEval(st: SymbolTable) {
           imapEmpty[ResourceUri, ISet[ResourceUri]])
       } else if (uri.get.startsWith(H.COMPONENT_TYPE) && uri.get == st.system) {
         collector.Collector(
-          st,
           FlowNode.getGraphs,
           FlowNode.getGraphs.flatMap(_.nodes),
           isetEmpty[ResourceUri],
@@ -574,13 +569,13 @@ final class QueryEval(st: SymbolTable) {
           isetEmpty[ResourceUri] + uri.get, false,
           isetEmpty[Tag])
       } else {
-        Collector(st, isetEmpty,
+        Collector(isetEmpty,
           isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA,
             QueryPPrinter(n), ReachAnalysisStage.Query))
       }
 
     } else {
-      Collector(st, isetEmpty,
+      Collector(isetEmpty,
         isetEmpty[Tag] + errorMessageGen(MISSING_CRITERIA,
           QueryPPrinter(n), ReachAnalysisStage.Query))
     }

@@ -1,0 +1,123 @@
+types
+  enum Simple_PCA_Errors {TooMuchAnalgesic, TicketTooLong, TicketTooShort, NoTicket, EarlyTicket, LateTicket, SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2}
+
+behavior
+  Simple_PCA_Errors.AppStatus:
+    states = [Simple_PCA_Errors::AppStatus::Normal, Simple_PCA_Errors::AppStatus::DetectedError, Simple_PCA_Errors::AppStatus::UndetectedError]
+    events = {Simple_PCA_Errors::AppStatus::SoftwareFailure}
+
+  Simple_PCA_Errors.PatientStatus:
+    states = [Simple_PCA_Errors::PatientStatus::Healthy, Simple_PCA_Errors::PatientStatus::Overdosed]
+
+  Simple_PCA_Errors.PulseOxStatus:
+    states = [Simple_PCA_Errors::PulseOxStatus::Normal, Simple_PCA_Errors::PulseOxStatus::Failed]
+    events = {Simple_PCA_Errors::PulseOxStatus::InternalFailure}
+
+  Simple_PCA_Errors.PumpStatus:
+    states = [Simple_PCA_Errors::PumpStatus::Normal, Simple_PCA_Errors::PumpStatus::DetectableFailure, Simple_PCA_Errors::PumpStatus::SafeOperation]
+    events = {Simple_PCA_Errors::PumpStatus::PumpDeteriorates, Simple_PCA_Errors::PumpStatus::OverHeating}
+
+system  PCA_Shutoff_System_imp_Instance
+
+    sub-components {
+      appLogic
+        with Simple_PCA_Errors, Simple_PCA_Errors::AppStatus
+          ports
+            in SpO2
+            out CmdPumpNorm
+          propagations
+            SpO2 = {Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2Early, Simple_PCA_Errors::SpO2Late, Simple_PCA_Errors::NoSpO2, Simple_PCA_Errors::SpO2ValueLow}
+            CmdPumpNorm = {Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+          flows
+            UndetectedErrorSource : * -> CmdPumpNorm{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+            DetectedErrorSource : * -> CmdPumpNorm{Simple_PCA_Errors::LateTicket}
+            EarlySpO2LeadsToLate : SpO2{Simple_PCA_Errors::SpO2Early} -> CmdPumpNorm{Simple_PCA_Errors::LateTicket}
+            HighSpO2LeadsToOD : SpO2{Simple_PCA_Errors::SpO2ValueHigh} -> CmdPumpNorm{Simple_PCA_Errors::TicketTooLong}
+            spo2_flow : SpO2 -> CmdPumpNorm
+          transitions
+            T1 : Normal -[SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2Early, Simple_PCA_Errors::SpO2Late, Simple_PCA_Errors::NoSpO2, Simple_PCA_Errors::SpO2ValueLow}]-> Normal
+            T2 : Normal -[SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2Early, Simple_PCA_Errors::SpO2Late, Simple_PCA_Errors::NoSpO2, Simple_PCA_Errors::SpO2ValueLow}]-> DetectedError
+            T3 : Normal -[SoftwareFailure]-> UndetectedError
+          behavior
+            InadvertantPump : SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2Early, Simple_PCA_Errors::SpO2Late, Simple_PCA_Errors::NoSpO2, Simple_PCA_Errors::SpO2ValueLow} -[Normal]-> CmdPumpNorm{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+            MissingInfo : SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2Early, Simple_PCA_Errors::SpO2Late, Simple_PCA_Errors::NoSpO2, Simple_PCA_Errors::SpO2ValueLow} -[Normal]-> CmdPumpNorm{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+            EarlyInfo : * -[DetectedError]-> CmdPumpNorm{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+            SoftwareIssues : * -[UndetectedError]-> CmdPumpNorm{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+          properties
+            STPA::ComponentRoles = RECORD_PROP(Description = "Application controls the infusion of the drug", ControlLoop = RECORD_PROP(ID = "CL1", Description = "PCA safety shutoff control structure"), Role = "Controller")
+            STPA::Hazards = RECORD_PROP(ID = "Haz4", Description = "App produces a ticket value higher than the actual value")
+            STPA::Hazards = RECORD_PROP(ID = "Haz5", Description = "App produces the ticket earlier than it is supposed to")
+            STPA::Hazards = RECORD_PROP(ID = "Haz6", Description = "App produces the ticket latter than it is supposed to")
+
+      patient
+        with Simple_PCA_Errors, Simple_PCA_Errors::PatientStatus
+          ports
+            in vein
+            out fingerclip
+          propagations
+            vein = {Simple_PCA_Errors::TooMuchAnalgesic}
+          flows
+            PatientAbsorbsDrug : vein{Simple_PCA_Errors::TooMuchAnalgesic} -> *
+          transitions
+            T1 : Healthy -[vein{Simple_PCA_Errors::TooMuchAnalgesic}]-> Overdosed
+          properties
+            STPA::ComponentRoles = RECORD_PROP(Description = "The drug infused into the patient affects the patient's vitals", ControlLoop = RECORD_PROP(ID = "CL1", Description = "PCA safety shutoff control structure"), Role = "ControlledProcess")
+            STPA::SystemHazards = RECORD_PROP(ID = "SH1", ControlLoop = RECORD_PROP(ID = "CL1", Description = "PCA safety shutoff control structure"), ViolatingConstraints = RECORD_PROP(ID = "SC1", Constraint = "Pump infuses only the required amount of opioid"), Contribution = RECORD_PROP(accident = RECORD_PROP(ID = "A1", Description = "Patient is harmed", Severity = RECORD_PROP(ID = "AL1", Section = "1", Description = "Loss of life or serious injury to the patient")), environment_condition = RECORD_PROP(ID = "EC1", Description = "Patient's respiratory health is unstable")), Description = "Medication infused at rate or amount greater than high limit")
+
+      pcaPump
+        with Simple_PCA_Errors, Simple_PCA_Errors::PumpStatus
+          ports
+            out DrugFlow
+            in TicketInput
+          propagations
+            TicketInput = {Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::TicketTooShort, Simple_PCA_Errors::NoTicket, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}
+            DrugFlow = {Simple_PCA_Errors::TooMuchAnalgesic}
+          flows
+            LateTicketLeadsSafe : TicketInput{Simple_PCA_Errors::LateTicket} -> *
+            LowTicketValueIsntUnsafe : TicketInput{Simple_PCA_Errors::TicketTooShort} -> *
+            LongTicketLeadsToOD : TicketInput{Simple_PCA_Errors::TicketTooLong} -> DrugFlow{Simple_PCA_Errors::TooMuchAnalgesic}
+            EarlyTicketLeadsToOD : TicketInput{Simple_PCA_Errors::EarlyTicket} -> DrugFlow{Simple_PCA_Errors::TooMuchAnalgesic}
+            NoTicketsArentUnsafe : TicketInput{Simple_PCA_Errors::NoTicket} -> *
+          transitions
+            T1 : Normal -[OverHeating]-> DetectableFailure
+            T2 : Normal -[PumpDeteriorates]-> DetectableFailure
+          behavior
+            OverDose : TicketInput{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::TicketTooShort, Simple_PCA_Errors::NoTicket, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket} -[Normal]-> DrugFlow{Simple_PCA_Errors::TooMuchAnalgesic}
+            NoInputNoError : TicketInput{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::TicketTooShort, Simple_PCA_Errors::NoTicket, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket} -[Normal]-> DrugFlow{Simple_PCA_Errors::TooMuchAnalgesic}
+            PKVO_Causes_NoHarm : all (TicketInput{Simple_PCA_Errors::TicketTooLong, Simple_PCA_Errors::TicketTooShort, Simple_PCA_Errors::NoTicket, Simple_PCA_Errors::EarlyTicket, Simple_PCA_Errors::LateTicket}) -[SafeOperation]-> DrugFlow{Simple_PCA_Errors::TooMuchAnalgesic}
+          properties
+            STPA::ComponentRoles = RECORD_PROP(Description = "pump infuse the drug into the patient", ControlLoop = RECORD_PROP(ID = "CL1", Description = "PCA safety shutoff control structure"), Role = "Actuator")
+            STPA::Hazards = RECORD_PROP(ID = "Haz7", Description = "Pump infuses higher dosage of drug")
+
+      pulseOx
+        with Simple_PCA_Errors, Simple_PCA_Errors::PulseOxStatus
+          ports
+            in RefractedLight
+            out SpO2
+          propagations
+            SpO2 = {Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2ValueLow, Simple_PCA_Errors::NoSpO2}
+          flows
+            spo2_flow : * -> SpO2
+            SpO2UnDetectableHighValueFlowSource : * -> SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2ValueLow, Simple_PCA_Errors::NoSpO2}
+          transitions
+            T1 : Normal -[InternalFailure]-> Failed
+          behavior
+            HighReading_to_HighSpO2 : * -[Normal]-> SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2ValueLow, Simple_PCA_Errors::NoSpO2}
+            Failed_HighSpO2 : * -[Failed]-> SpO2{Simple_PCA_Errors::SpO2ValueHigh, Simple_PCA_Errors::SpO2ValueLow, Simple_PCA_Errors::NoSpO2}
+          properties
+            STPA::ComponentRoles = RECORD_PROP(Description = "Pulse ox senses patient's vitals'", ControlLoop = RECORD_PROP(ID = "CL1", Description = "PCA safety shutoff control structure"), Role = "Sensor")
+            STPA::Hazards = RECORD_PROP(ID = "Haz1", Description = "Measured SpO2 value higher than the actual value", ViolatingConstraints = RECORD_PROP(ID = "SC2", Constraint = "measured SpO2 represents patient's blood oxygen saturation level"))
+            STPA::Hazards = RECORD_PROP(ID = "Haz2", Description = "Measured SpO2 value lower than the actual value")
+            STPA::Hazards = RECORD_PROP(ID = "Haz3", Description = "PulseOx failed to produce SpO2 value")
+    }
+    connections
+      pulseOx_measurement : patient.fingerclip -> pulseOx.RefractedLight
+
+      spo2_logic : pulseOx.SpO2 -> appLogic.SpO2
+
+      IVLine : pcaPump.DrugFlow -> patient.vein
+
+      pumpcommand_logic : appLogic.CmdPumpNorm -> pcaPump.TicketInput
+
+    properties
+      STPA::SystemInfo = RECORD_PROP(name = "Pca_Shutoff", Description = "Patient status aware PCA Pump", control_loops = RECORD_PROP(ID = "CL1", Description = "PCA safety shutoff control structure"))

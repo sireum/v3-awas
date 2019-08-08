@@ -5,13 +5,15 @@ package org.sireum.awas.witness
 import org.sireum._
 
 @datatype class SvgGenConfig(
-  rankDir: RankDir.Type,
-  simpleConn: B,
-  //complexConn: B,
-  viewVirtualPorts: B,
-  viewErrors: B,
-  viewFlows: B,
-  bindings: B
+                              rankDir: RankDir.Type,
+                              simpleConn: B,
+                              //complexConn: B,
+                              viewVirtualPorts: B,
+                              viewErrors: B,
+                              viewFlows: B,
+                              bindings: B,
+                              behaviors: B,
+                              states: B
 )
 
 @enum object RankDir {
@@ -24,6 +26,6 @@ import org.sireum._
 object SvgGenConfig {
 
   def defaultConfig: SvgGenConfig = {
-    SvgGenConfig(RankDir.TB, F, T, F, F, F)
+    SvgGenConfig(RankDir.TB, F, T, T, T, F, F, F)
   }
 }

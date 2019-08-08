@@ -40,7 +40,7 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "slang")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "slang")))
 
-  val generateExpected = false
+  val generateExpected = true
 
   val outputExtension = ".awas"
 
@@ -80,10 +80,11 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
 //                        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
 //                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
 //        AwasSerializer(x)
-        PrettyPrinter(x)
+val rr = PrettyPrinter(x)
 //        FaultImpactAnalysis.generateFIAQueries(x, false) + "\n \n" + FaultImpactAnalysis.generateFIAQueries(x, true)
+        rr
       }
-      case None => ""
+      case None => "unable to translate"
     }
   }
 }

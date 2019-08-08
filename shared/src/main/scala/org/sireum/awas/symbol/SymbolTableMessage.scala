@@ -77,6 +77,9 @@ object SymbolTableMessage {
   val MISSING_STATE_DECL =
     "STATE '%s' not found in the associated state machine declaration"
 
+  val MISSING_EVENT_DECL =
+    "EVENT '%s' not found in the associated state machine declaration"
+
   val MISSING_TYPE_ASSOCIATION =
     "Type association missing for '%s' component"
 

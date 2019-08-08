@@ -204,6 +204,42 @@ object Views {
     )
   }
 
+  def stpaMain(): Frag = {
+    div(
+      id := "stpa",
+      cls := "container",
+      tag("section")(cls := "hero is-light is-fullheight",
+        div(cls := "hero-head", id := "header",
+          nav(cls := "level",
+            div(cls := "level-item has-text-centered",
+              paddingTop := "2%",
+              h1(
+                cls := "title is-1",
+                id := "title",
+                textAlign := "center",
+                "STPA Report"
+              )
+            )
+
+          )
+        ),
+        hr(cls := "hr", backgroundColor := "black"),
+        div(cls := "hero-body", alignItems := "flex-start",
+          div(id := "body")
+        ),
+        hr(cls := "hr", backgroundColor := "black"),
+        div(cls := "hero-foot",
+          nav(id := "foot", cls := "level", p(
+            cls := "level-item has-text-centered",
+            span("SAnToS Laboratory, Kansas State University")
+          )
+          )
+        )
+      )
+
+    )
+  }
+
   def queryBox(): Frag = {
     div(
       id := "query-box",

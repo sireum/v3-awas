@@ -18,6 +18,7 @@ trait WeakestPreCondition {
 
 object WeakestPreCondition {
   def apply(st : SymbolTable): WeakestPreCondition = {
-    new WeakestPreConditionImpl(st)
+    //    new WeakestPreConditionImpl(st)
+    ???
   }
 }

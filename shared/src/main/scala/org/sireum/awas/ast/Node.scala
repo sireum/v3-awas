@@ -69,8 +69,8 @@ object Model {
 }
 
 final case class StateMachineDecl(smName: Id,
-                                  states: Node.Seq[Id],
-                                  events: Node.Seq[Id]) extends Node
+                                  states: Node.Seq[Name],
+                                  events: Node.Seq[Name]) extends Node
 object StateMachineDecl {
   implicit def rw : RW[StateMachineDecl] = macroRW
 }
@@ -140,7 +140,10 @@ object CFlow {
   implicit def rw : RW[CFlow] = macroRW
 }
 
-final case class Property(id: Id, propType: Type, value: Option[Init]) extends Node
+final case class Property(id: Id,
+                          //                          propType: Type,
+                          value: Option[Init],
+                          appliesTo: Map[String, ISet[String]]) extends Node
 object Property {
   implicit def rw : RW[Property] = macroRW
 }
@@ -221,14 +224,13 @@ object Transition {
 final case class TransExpr(id : Id,
                            lhs: Node.Seq[Id],
                            rhs: Node.Seq[Id],
-                           propCond: Option[Tuple],
-                           trigger: Node.Seq[Id]) extends Node
+                           propCond: Option[ConditionTuple]) extends Node
 object TransExpr {
   implicit def rw : RW[TransExpr] = macroRW
 }
 
 final case class BehaveExpr(id : Id,
-                            lhs: Option[Tuple],
+                            lhs: Option[ConditionTuple],
                             rhs: Option[Tuple],
                             states: Node.Seq[Id]) extends Node
 object BehaveExpr {
@@ -237,26 +239,58 @@ object BehaveExpr {
 
 sealed trait ConditionTuple extends Node
 
+object ConditionTuple {
+  implicit def rw: RW[ConditionTuple] = RW.merge(And.rw, Or.rw, OrLess.rw, OrMore.rw, All.rw, PrimaryCondition.rw)
+}
+
+
 final case class And(lhs : ConditionTuple,
                      rhs: ConditionTuple) extends ConditionTuple
+
+object And {
+  implicit def rw: RW[And] = macroRW
+}
 
 final case class Or(lhs: ConditionTuple,
                     rhs: ConditionTuple) extends ConditionTuple
 
-final case class OrMode(value: Int,
+object Or {
+  implicit def rw: RW[Or] = macroRW
+}
+
+final case class OrMore(value: Int,
                         conds: Node.Seq[ConditionTuple]) extends ConditionTuple
+
+object OrMore {
+  implicit def rw: RW[OrMore] = macroRW
+}
 
 final case class OrLess(value: Int,
                         conds: Node.Seq[ConditionTuple]) extends ConditionTuple
 
+object OrLess {
+  implicit def rw: RW[OrLess] = macroRW
+}
+
 final case class All(conds: Node.Seq[ConditionTuple]) extends ConditionTuple
+
+object All {
+  implicit def rw: RW[All] = macroRW
+}
 
 sealed trait PrimaryCondition extends ConditionTuple
 
-final case class EventRef(event : Name) extends PrimaryCondition
+object PrimaryCondition {
+  implicit def rw: RW[PrimaryCondition] = RW.merge(EventRef.rw, Tuple.rw)
+}
+
+final case class EventRef(event: Node.Seq[Id]) extends PrimaryCondition
+
+object EventRef {
+  implicit def rw: RW[EventRef] = macroRW
+}
 
 final case class Tuple(tokens : IList[(Id, One)]) extends PrimaryCondition
-
 object Tuple {
   implicit def rw : RW[Tuple] = macroRW
 }
@@ -297,6 +331,7 @@ object Init {
     NameRefInit.rw,
     NoneInit.rw,
     SomeInit.rw,
+    SeqInit.rw,
     SetInit.rw,
     MapInit.rw
   )
@@ -426,7 +461,6 @@ sealed trait IntTypeDisc extends Node
 object IntTypeDisc {
   implicit def rw : RW[IntTypeDisc] = RW.merge(IntLit.rw, NamedIntType.rw, ArbitrartyIntType.rw)
 }
-
 
 final case class IntLit(value: Integer) extends IntTypeDisc
 object IntLit {

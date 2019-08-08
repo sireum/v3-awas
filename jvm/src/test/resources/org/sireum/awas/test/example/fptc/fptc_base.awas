@@ -1,5 +1,5 @@
 types
-  enum Fault {late, value}
+  enum Fault {late , value}
 
 behavior
   FailStop:
@@ -32,7 +32,7 @@ system fptc_base
         bOut = {late}
       behavior
         b3 : bIn{value} -> *
-        b4 : (bIn{late} and bIn2{late}) -> bOut{late}
+        b4 : bIn{late} and bIn2{late} -> bOut{late}
         b5 : * -> bOut{late}
   }
 connections
