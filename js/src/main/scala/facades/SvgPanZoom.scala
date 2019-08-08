@@ -86,7 +86,7 @@ class SVGPanZoom(svg: Element, options: Options) extends js.Object {
 
 object Options {
 
-  def apply(eventMagnet : Element): Options = {
+  def apply(eventMagnet: Element): Options = {
     js.Dynamic.literal(eventMagnet = eventMagnet).asInstanceOf[Options]
   }
 }
