@@ -95,7 +95,7 @@ extends TestDefProvider {
         //        val updatedModel = ContextInSensitiveGen(m, st)
         //        Resource.reset()
         //        st = SymbolTable(updatedModel)
-        val graph = FlowGraph(m, st)
+        val graph = FlowGraph(m, st, true)
         Some(graph.getDot)
     }
   }

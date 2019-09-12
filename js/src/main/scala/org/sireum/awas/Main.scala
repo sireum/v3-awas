@@ -41,6 +41,7 @@ import org.sireum.awas.analysis.FaultImpactAnalysis
 import org.sireum.awas.ast.AwasSerializer
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.fptc._
+import org.sireum.awas.query.QueryInter
 import org.sireum.awas.reachability.{ErrorReachabilityImpl, PortReachabilityImpl}
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
@@ -159,7 +160,7 @@ object Main {
       val reporter = new ConsoleTagReporter()
       st = Some(SymbolTable(model.get)(reporter))
 
-      val systemGraph = FlowGraph(model.get, st.get)
+      val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = true)
 
       //val systemSvg = graph2Svg(systemGraph)
 

@@ -27,20 +27,27 @@
 
 package org.sireum.awas.awasfacade;
 
+import org.sireum.$internal.PackageTrait;
+import org.sireum.IS;
+import org.sireum.Z;
 import org.sireum.awas.fptc.FlowEdge;
 import org.sireum.awas.fptc.FlowGraph;
 import org.sireum.awas.fptc.FlowNode;
-import org.sireum.awas.query.Model;
-import org.sireum.awas.query.QueryBuilder;
-import org.sireum.awas.query.QueryBuilder$;
-import org.sireum.awas.query.QueryEval;
+import org.sireum.awas.query.*;
 import org.sireum.awas.reachability.ErrorReachability;
 import org.sireum.awas.reachability.ErrorReachability$;
 import org.sireum.awas.reachability.PortReachability;
 import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTableHelper;
+import org.sireum.awas.util.AwasJvmUtil;
 import org.sireum.awas.util.JavaConverters;
+import org.sireum.message.Message;
+import org.sireum.message.Reporter;
+import scala.Tuple2;
+import scala.collection.Seq;
+import scala.collection.immutable.ListMap;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -160,18 +167,22 @@ public class AwasGraphImpl implements AwasGraph {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> toJavaSet(e.getValue())));
     }
 
-    public Map<String, Collector> queryEvaluator(String query) {
-        Optional<Model> queryModel = JavaConverters.toJavaOptional(QueryBuilder$.MODULE$.apply(query,
-                0,
-                QueryBuilder.ConsoleReporter$.MODULE$));
+    public Map<String, Collector> queryEvaluator(String query) throws Exception {
+        List<Message> jl = new ArrayList<Message>();
+        final IS<Z, Message> isz = AwasJvmUtil.isz(jl);
+        Reporter reporter = new Reporter(isz);
 
-        return queryModel.map(model -> toJavaMap(QueryEval.apply(model, st)).entrySet()
-                .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> {
-                    org.sireum.awas.collector.Collector c = e.getValue();
-                    Collector javac = new CollectorImpl(c);
-                    return javac;
-                }))).orElseGet(HashMap::new);
+        final Tuple2<ListMap<String, org.sireum.awas.collector.Collector>, Reporter> queryRes = new QueryInter(st).evalCmd(query);
+        if (queryRes._2.hasError()) {
+            Exception e = new Exception(queryRes._2.getMessages().elements().mkString("\n"));
+            throw e;
+        } else {
+            return toJavaMap(queryRes._1).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                org.sireum.awas.collector.Collector c = e.getValue();
+                Collector javac = new CollectorImpl(c);
+                return javac;
+            }));
+        }
     }
 
     @Override
@@ -183,4 +194,6 @@ public class AwasGraphImpl implements AwasGraph {
     public String getDotGraph() {
         return graph.getDot();
     }
+
+
 }

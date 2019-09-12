@@ -280,5 +280,29 @@ object SymbolTableHelper {
     }
   }
 
+  def getComponentsLevelOrder(st: SymbolTable): ISeq[ResourceUri] = {
+    var result = ilistEmpty[ResourceUri]
+    var worklist = ilistEmpty[ResourceUri]
+    worklist = worklist :+ st.system
+    while (worklist.nonEmpty) {
+      val current = worklist.head
+      result = result :+ current
+      worklist = worklist ++ st.componentTable(current).subComponents
+      worklist = worklist.tail
+    }
+    result
+  }
+
+  def sortCompLevelOrder(st: SymbolTable, components: ISeq[ResourceUri])
+  : ISeq[ResourceUri] = {
+    var result = ilistEmpty[ResourceUri]
+    if (components.forall(c => getUriType(c) == COMPONENT_TYPE)) {
+      result = getComponentsLevelOrder(st).toList
+      result.filter(c => components.contains(c))
+    } else {
+      result
+    }
+  }
+
 }
 

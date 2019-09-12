@@ -51,7 +51,6 @@ object SvgGenerator {
 //      viewErrors = true,
 //      viewFlows = true,
 //      bindings = true)
-  private var edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
 
   def apply(st: SymbolTable,
             graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge],
@@ -65,11 +64,11 @@ object SvgGenerator {
 
     if (!this.viewConfig.bindings) {
       FlowNode.getGraphs.foreach { gra =>
-        removeBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
+        FlowGraph.removeBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
       }
     } else {
       FlowNode.getGraphs.foreach { gra =>
-        addBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
+        FlowGraph.addBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
       }
     }
 
@@ -510,42 +509,7 @@ object SvgGenerator {
     }, "")
   }
 
-  def removeBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
 
-    if (!edgesRemoved.contains(graph.getUri)) {
-      val ports = graph.nodes.flatMap(_.ports)
-
-      val bindPorts = ports.filter(
-        it =>
-          H.getUriType(it).endsWith(H.BIND_PORT_TYPE) ||
-        it.split(H.ID_SEPARATOR).last == Aadl2Awas.PROCESSOR_IN ||
-        it.split(H.ID_SEPARATOR).last == Aadl2Awas.PROCESSOR_OUT
-      )
-
-      val bindEdges = bindPorts.flatMap(graph.getEdgeForPort)
-      val edgePorts = bindEdges.map(it => it -> (it.sourcePort.get, it.targetPort.get)).toMap
-
-      edgesRemoved = edgesRemoved +
-        (graph.getUri -> (edgesRemoved.getOrElse(graph.getUri, imapEmpty[FlowNode.Edge, (ResourceUri, ResourceUri)]) ++ edgePorts))
-      bindEdges.foreach(it => graph.removeEdge(it.source, it.target))
-      graph.reComputeCycles()
-    }
-  }
-
-  def addBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
-
-    if (edgesRemoved.keySet.contains(graph.getUri)) {
-      val edgePorts = edgesRemoved(graph.getUri)
-      edgePorts.keySet.foreach { e =>
-        graph.addEdge(e.source, e.target, e)
-        graph.addEdgePortRelation(e, edgePorts(e)._1, edgePorts(e)._2)
-        graph.addPortEdge(edgePorts(e)._1, e)
-        graph.addPortEdge(edgePorts(e)._2, e)
-      }
-      edgesRemoved = edgesRemoved - graph.getUri
-      graph.reComputeCycles()
-    }
-  }
 
   def getCurrentConfig(): SvgGenConfig = this.viewConfig
 

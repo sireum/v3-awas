@@ -66,7 +66,7 @@ final class StateReachAnalysisTestDefProvider(tf: TestFramework) extends TestDef
 //        val updatedModel = ContextInSensitiveGen(m, st)
 //        Resource.reset
 //        st = SymbolTable(updatedModel)
-        val graph = FlowGraph(m, st)
+val graph = FlowGraph(m, st, false)
         val lines = Source.fromFile(name).getLines
         lines.foreach { line =>
           val state = line2state(line, st)

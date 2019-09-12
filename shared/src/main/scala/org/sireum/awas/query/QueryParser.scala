@@ -264,6 +264,7 @@ object QueryParser {
 
   def main(args: Array[String]): Unit = {
     val input = Seq(
+      "RadioComm = reach paths from UAS_Impl_Instance.GND to UAS_Impl_Instance.UAV with none(UAS_Impl_Instance.RFB)",
       "none_constraint_test1 = reach refined simple paths from Capnography.ETCO2{Error.ETCO2Early} to Patient.Vein{Error.TooMuchAnalgesic}",
       "PatientVein = Patient.Vein",
       "Cap_to_Pump = reach from Capnography.ETCO2 to PCA.infuse",

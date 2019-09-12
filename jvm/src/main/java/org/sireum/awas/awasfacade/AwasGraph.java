@@ -51,7 +51,7 @@ public interface AwasGraph {
 
     Map<String, Set<String>> backwardErrorReachUsingNames(String port, String... errors);
 
-    Map<String, Collector> queryEvaluator(String query);
+    Map<String, Collector> queryEvaluator(String query) throws Exception;
 
     FlowGraph<FlowNode, FlowEdge<FlowNode>> getGraph();
 

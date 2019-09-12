@@ -68,7 +68,7 @@ public class ReachabilityExample {
                 SymbolTable st = SymbolTable$.MODULE$.apply(modelOpt.get(),
                         new ConsoleTagReporter());
                 //build graph
-                FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
+                FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st, false);
                 System.out.println("Constructed Graph: ");
                 System.out.println(graph.getDot());
 

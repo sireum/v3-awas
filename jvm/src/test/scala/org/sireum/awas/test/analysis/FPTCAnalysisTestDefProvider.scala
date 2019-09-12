@@ -37,6 +37,7 @@ import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
 import org.sireum.util.jvm.FileUtil._
+import upickle.default._
 
 final class FPTCAnalysisTestDefProvider(tf: TestFramework)
   extends TestDefProvider {
@@ -96,12 +97,12 @@ final class FPTCAnalysisTestDefProvider(tf: TestFramework)
           //          val updatedModel = ContextInSensitiveGen(m, st)
           //          Resource.reset
           //          st = SymbolTable(updatedModel)
-          val graph = FlowGraph(m, st)
+          val graph = FlowGraph(m, st, true)
           val res = StateReachAnalysis.fptcAnalysis(st)
           //          val fg = FPTCAnalysis(graph.getUri, st)
           //          fg.toList.sortBy(_._1).map(it =>
           //            SymbolTableHelper.uri2IdString(it._1) + "\n" + fptcNodeWriter(it._2, st)).mkString("\n")
-          res.toString + "\n States : \n" + res.getModes.mkString("\n") + "\n Behaviors: \n" + res.getBehavior.mkString("\n")
+          write(res) + res.toString + "\n States : \n" + res.getModes.mkString("\n") + "\n Behaviors: \n" + res.getBehavior.mkString("\n")
       }
     }
 

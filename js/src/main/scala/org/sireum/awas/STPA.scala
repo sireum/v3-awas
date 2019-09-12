@@ -7,7 +7,8 @@ import org.scalajs.dom.raw.MouseEvent
 import org.sireum.awas.Main.{H, clearAll, collectorToUris, highlight, st}
 import org.sireum.awas.analysis.StateReachAnalysis
 import org.sireum.awas.ast.{AwasSerializer, Id, Property, RecordInit, StringInit}
-import org.sireum.awas.fptc.FlowGraph
+import org.sireum.awas.collector.Collector
+import org.sireum.awas.fptc.{FlowGraph, NodeType}
 import org.sireum.awas.reachability.{ErrorReachabilityImpl, PortReachabilityImpl}
 import org.sireum.awas.report.StpaProperty
 import org.sireum.awas.slang.Aadl2Awas
@@ -38,7 +39,7 @@ object STPA {
       val reporter = new ConsoleTagReporter()
       st = Some(SymbolTable(model.get)(reporter))
 
-      val systemGraph = FlowGraph(model.get, st.get)
+      val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = false)
 
       val mainDiv = render[Div](Views.stpaMain())
       val body = mainDiv.querySelector("#body")
@@ -51,15 +52,18 @@ object STPA {
       body.appendChild(render[Div](getSystemHaz(st.get)))
 
       val asvg = Util.graph2Svg(systemGraph.getUri, SettingsView.currentConfig, st.get)
-      val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
+      val svgDiv = render[Div](div(height := "100%", div(cls := "tempSvg")))
       svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
       new SVGPanZoom(asvg, Options(svgDiv))
       body.appendChild(svgDiv)
+      body.appendChild(getCausalScenario(st.get, ""))
+
+
+
+
       document.onreadystatechange = (_: Event) => {
         document.body.appendChild(mainDiv)
       }
-      body.appendChild(getCausalScenario(st.get))
-
     }
   }
 
@@ -71,7 +75,7 @@ object STPA {
       val sysVal = sysProp.get.value.get.asInstanceOf[RecordInit]
       // we know system property val is a record type
       val sysName = sysVal.fields.get(Id(StpaProperty.SYSTEM_PROP_NAME))
-      val sysDesc = sysVal.fields.get(Id(StpaProperty.SYSTEM_PROP_Description))
+      val sysDesc = sysVal.fields.get(Id(StpaProperty.SYSTEM_PROP_DESC))
       println("testing2")
 
       val sname = if (sysName.isDefined) {
@@ -392,12 +396,45 @@ object STPA {
 
   }
 
-  def pss(criteria: IMap[ResourceUri, ISet[ResourceUri]], st: SymbolTable): Unit = {
-    clearAll(Main.selections.keySet)
-    highlight(collectorToUris(StateReachAnalysis.getReachability(criteria, st)), "#78c0a8")
+  def getControlStructure(st: SymbolTable): Frag = {
+    var controlStructs = imapEmpty[RecordInit, ISet[RecordInit]]
+    st.components.foreach { compUri =>
+      val props = st.componentTable(compUri).componentDecl.properties
+      if (props.nonEmpty) {
+        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+
+        sh.foreach { s =>
+          if (s.value.isDefined) {
+            val cl = s.value.get.asInstanceOf[RecordInit].fields.get(Id(StpaProperty.SYSTEM_HAZARD_CTRL))
+            //            controlStructs = controlStructs.+(cl.get -> isetEmpty[RecordInit])
+          }
+        }
+      }
+    }
+
+    st.components.foreach { compUri =>
+      val props = st.componentTable(compUri).componentDecl.properties
+      if (props.nonEmpty) {
+        val compRoles = props.filter(p => p.id.value == StpaProperty.COMPONENT_ROLES)
+        compRoles.foreach { cr =>
+          if (cr.value.isDefined) {
+
+          }
+        }
+
+      }
+    }
+
   }
 
-  def getCausalScenario(st: SymbolTable): Div = {
+  def pss(criteria: IMap[ResourceUri, ISet[ResourceUri]], st: SymbolTable): Collector = {
+    clearAll(Main.selections.keySet)
+    val res = StateReachAnalysis.getReachability(criteria, st)
+    highlight(collectorToUris(res), "#78c0a8")
+    res
+  }
+
+  def getCausalScenario(st: SymbolTable, cs: String): Div = {
     val H = SymbolTableHelper
     var systemHaz = imapEmpty[RecordInit, IMap[ResourceUri, ISet[ResourceUri]]]
     var envCond = ilistEmpty[RecordInit]
@@ -442,12 +479,13 @@ object STPA {
 //    }
 
     if (systemHaz.nonEmpty) {
+      var resColl: Option[Collector] = None
       val tableRows = systemHaz.map { sh =>
         val shid = sh._1.fields(Id(StpaProperty.SYSTEM_HAZARD_ID)).asInstanceOf[StringInit].value
         val an = a(id := "shid", shid)
         val ran = render[Anchor](an)
         ran.onclick = (_: MouseEvent) => {
-          pss(sh._2, st)
+          resColl = Some(pss(sh._2, st))
         }
 
         val td1 = render[TableCell](td())
@@ -457,12 +495,17 @@ object STPA {
         tr1
       }
 
-      val tab = render[Table](table(cls := "table", thead(tr(th(p("ID"))))))
+      val comps = resColl.get.getNodes.filter(_.getResourceType == NodeType.COMPONENT)
+
+      val tab = render[Table](table(cls := "table", thead(tr(
+        th(p("ID")),
+        th(p("Contributing Hazards")), for (c <- comps) th(p(H.uri2IdString(c.getUri)))
+      ))))
       for (r <- tableRows) {
         tab.appendChild(r)
       }
 
-      val temp = render[Div](div(cls := "content is-medium", h3("System Hazards")))
+      val temp = render[Div](div(cls := "content is-medium", h4("System Hazards")))
       temp.appendChild(tab)
       temp
     } else {

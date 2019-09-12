@@ -28,7 +28,7 @@ public class NeighbourhoodAnalysis {
         String modelPath = "/Users/hariharan/Documents/workspace/sireum-v3/awas/jvm/src/test/resources/org/sireum/awas/test/example/aadl-json/PulseOx_Forwarding.json";
         Model awasModel = Aadl2Awas$.MODULE$.apply(FileUtil.readFile(FileUtil.toUri(modelPath))._1).get();
         SymbolTable st = SymbolTable$.MODULE$.apply(awasModel, new ConsoleTagReporter()); //reporter is slightly changed in my version
-        FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(awasModel, st); //building all the graphs and returning only the top level graph
+        FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(awasModel, st, false); //building all the graphs and returning only the top level graph
         Optional<FlowNode> flowNode = toJavaOptional(FlowNode$.MODULE$.getNode(SymbolTableHelper$.MODULE$.getUriFromString(st, "patient").get()));
         Set<FlowNode> neighbourNodes = new HashSet<FlowNode>();
 

@@ -376,49 +376,6 @@ object FlowEdgeFactory extends AwasEdgeFactory[FlowNode, FlowEdge[FlowNode]] {
     FlowEdgeImpl(owner.getUri, source.getUri, target.getUri)
   }
 
-  case class FlowEdgeImpl(
-                           owner: ResourceUri,
-                           sourceNodeUri: ResourceUri,
-                           targetNodeUri: ResourceUri
-                         ) extends FlowEdge[FlowNode] {
-    self: FlowEdge[FlowNode] =>
-
-    //either source or target should be a connection
-  //    val conn: FlowNode =
-    //      if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
-    //        source
-    //      else target
-    //
-    //    val isSourceConn: Boolean = conn == source
-
-    override def sourcePort: Option[ResourceUri] = {
-      FlowNode.getGraph(owner).flatMap(_.getPortsFromEdge(this)) match {
-        case Some(x) => Some(x._1)
-        case None => None
-      }
-    }
-
-    override def targetPort: Option[ResourceUri] = {
-      FlowNode.getGraph(owner).flatMap(_.getPortsFromEdge(this)) match {
-        case Some(x) => Some(x._2)
-        case None => None
-      }
-    }
-    override def source: FlowNode = {
-      val source = FlowNode.getNode(sourceNodeUri)
-      assert(source.isDefined, "if edge exists, then source and target nodes are defined")
-      source.get
-    }
-    override def target: FlowNode = {
-      val target = FlowNode.getNode(targetNodeUri)
-      assert(target.isDefined, "if edge exists, then source and target nodes are defined")
-      target.get
-    }
-  }
-
-  object FlowEdgeImpl {
-    implicit def rw: RW[FlowEdgeImpl] = macroRW
-  }
 
   override def createEdge(owner: AwasGraph[FlowNode, FlowEdge[FlowNode]],
                           source: FlowNode, target: FlowNode)

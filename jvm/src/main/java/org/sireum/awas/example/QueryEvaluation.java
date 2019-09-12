@@ -32,6 +32,7 @@ import org.sireum.awas.awasfacade.AwasGraphBuilder;
 import org.sireum.awas.awasfacade.Collector;
 import org.sireum.util.jvm.FileUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,8 +50,13 @@ public class QueryEvaluation {
             Optional<AwasGraph> graph = AwasGraphBuilder.build(args[0]);
 
             if (graph.isPresent()) {
-                Map<String, Collector> res = graph.get().queryEvaluator(
-                        FileUtil.readFile(FileUtil.toUri(args[1]))._1());
+                Map<String, Collector> res = new HashMap();
+                try {
+                    res = graph.get().queryEvaluator(
+                            FileUtil.readFile(FileUtil.toUri(args[1]))._1());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 String result = res.entrySet()
                         .stream()
                         .map(entry -> "\n" + entry.getKey() + ":\n  " + entry.getValue() + "\n")

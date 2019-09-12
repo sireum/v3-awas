@@ -1,5 +1,5 @@
 grammar Antlr4AQ;
-
+//this is deprecated, kept just for understanding the grammar
 @header {
 // @formatter:off
 }

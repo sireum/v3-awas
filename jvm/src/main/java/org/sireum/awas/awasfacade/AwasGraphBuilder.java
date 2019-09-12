@@ -56,7 +56,7 @@ public class AwasGraphBuilder {
             SymbolTable st = SymbolTable$.MODULE$.apply(modelOpt.get(),
                     new ConsoleTagReporter());
             //build graph
-            FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st);
+            FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(modelOpt.get(), st, false);
 
             final AwasGraph ag = new AwasGraphImpl(graph, st);
             return Optional.of(ag);

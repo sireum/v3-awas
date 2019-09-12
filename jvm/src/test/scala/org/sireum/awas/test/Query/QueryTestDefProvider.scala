@@ -91,7 +91,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
       case Some(m) =>
         implicit val reporter: Reporter = new Reporter(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
-        val graph = FlowGraph(m, st)
+        val graph = FlowGraph(m, st, true)
         QueryParser(query, reporter) match {
           case None => {
             reporter.printMessages()

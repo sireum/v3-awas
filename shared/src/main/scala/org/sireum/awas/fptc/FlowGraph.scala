@@ -30,13 +30,13 @@ package org.sireum.awas.fptc
 import org.sireum.ST
 import org.sireum.awas.ast.Model
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
-import org.sireum.awas.fptc.FlowEdgeFactory.FlowEdgeImpl
 import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
+import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.Resource._
 import org.sireum.awas.symbol.{ComponentTable, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-import upickle.default.{ReadWriter => RW, macroRW}
+import upickle.default.{macroRW, ReadWriter => RW}
 
 
 trait FlowGraph[Node, Edge <: AwasEdge[Node]] extends AwasGraph[Node, Edge] {
@@ -97,7 +97,7 @@ trait FlowGraphUpdate[Node, Edge <: AwasEdge[Node]] extends AwasGraphUpdate[Node
   //  def setEdgeAttrProvider(edgeAtt: ComponentAttributeProvider[Edge])
 }
 
-trait FlowEdge[Node] extends AwasEdge[Node] {
+sealed trait FlowEdge[Node] extends AwasEdge[Node] {
   def sourcePort: Option[ResourceUri]
 
   def targetPort: Option[ResourceUri]
@@ -109,12 +109,62 @@ object FlowEdge {
   )
 }
 
+case class FlowEdgeImpl(
+                         owner: ResourceUri,
+                         sourceNodeUri: ResourceUri,
+                         targetNodeUri: ResourceUri
+                       ) extends FlowEdge[FlowNode] {
+  //    self: FlowEdge[FlowNode] =>
+
+  //either source or target should be a connection
+  //    val conn: FlowNode =
+  //      if (source.getUri.startsWith(SymbolTableHelper.CONNECTION_TYPE))
+  //        source
+  //      else target
+  //
+  //    val isSourceConn: Boolean = conn == source
+
+  override def sourcePort: Option[ResourceUri] = {
+    FlowNode.getGraph(owner).flatMap(_.getPortsFromEdge(this)) match {
+      case Some(x) => Some(x._1)
+      case None => None
+    }
+  }
+
+  override def targetPort: Option[ResourceUri] = {
+    FlowNode.getGraph(owner).flatMap(_.getPortsFromEdge(this)) match {
+      case Some(x) => Some(x._2)
+      case None => None
+    }
+  }
+
+  override def source: FlowNode = {
+    val source = FlowNode.getNode(sourceNodeUri)
+    assert(source.isDefined, "if edge exists, then source and target nodes are defined")
+    source.get
+  }
+
+  override def target: FlowNode = {
+    val target = FlowNode.getNode(targetNodeUri)
+    assert(target.isDefined, "if edge exists, then source and target nodes are defined")
+    target.get
+  }
+}
+
+object FlowEdgeImpl {
+  implicit def rw: RW[FlowEdgeImpl] = macroRW
+}
+
+
 
 /**
   * Factory Methods to build graph
   */
 object FlowGraph {
   val H = SymbolTableHelper
+
+  private var edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
+
 
   //  def apply(modelFile: FileResourceUri): Option[FlowGraph[FlowNode, FlowEdge[FlowNode]]] = {
   //    import org.sireum.util.jvm.FileUtil._
@@ -129,11 +179,10 @@ object FlowGraph {
   //  }
 
 
-
-  def apply(m: Model): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
+  def apply(m: Model, includeBindingEdges: Boolean): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
     val st = SymbolTable(m)
-    apply(m, st)
+    apply(m, st, includeBindingEdges)
   }
 
   def buildGraph(cst: ComponentTable, st: SymbolTable)
@@ -222,10 +271,18 @@ object FlowGraph {
     result
   }
 
-  def apply(m: Model, st: SymbolTable): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
+  def apply(m: Model, st: SymbolTable, includeBindingEdges: Boolean): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     FlowNode.newPool()
+    edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
     val systemST = st.componentTable(st.system)
-    buildGraph(systemST, st)
+    val result = buildGraph(systemST, st)
+    if (includeBindingEdges) {
+      //TODO: safly type casting here as it is inside FlowGraph, but have to rework to avoid this casting
+      FlowNode.getGraphs.foreach(it => addBindings(it.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]]))
+    } else {
+      FlowNode.getGraphs.foreach(it => removeBindings(it.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]]))
+    }
+    FlowNode.getGraph(st.system).get
   }
 
   private def toFptcNode(node: org.sireum.awas.ast.Node): Option[FlowNode] = {
@@ -236,4 +293,43 @@ object FlowGraph {
       None
     }
   }
+
+  def removeBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+
+    if (!edgesRemoved.contains(graph.getUri)) {
+      val ports = graph.nodes.flatMap(_.ports)
+
+      val bindPorts = ports.filter(
+        it =>
+          H.getUriType(it).endsWith(H.BIND_PORT_TYPE) ||
+            it.split(H.ID_SEPARATOR).last == Aadl2Awas.PROCESSOR_IN ||
+            it.split(H.ID_SEPARATOR).last == Aadl2Awas.PROCESSOR_OUT
+      )
+
+      val bindEdges = bindPorts.flatMap(graph.getEdgeForPort)
+      val edgePorts = bindEdges.map(it => it -> (it.sourcePort.get, it.targetPort.get)).toMap
+
+      edgesRemoved = edgesRemoved +
+        (graph.getUri -> (edgesRemoved.getOrElse(graph.getUri, imapEmpty[FlowNode.Edge, (ResourceUri, ResourceUri)]) ++ edgePorts))
+      bindEdges.foreach(it => graph.removeEdge(it.source, it.target))
+      graph.reComputeCycles()
+    }
+
+  }
+
+  def addBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+
+    if (edgesRemoved.keySet.contains(graph.getUri)) {
+      val edgePorts = edgesRemoved(graph.getUri)
+      edgePorts.keySet.foreach { e =>
+        graph.addEdge(e.source, e.target, e)
+        graph.addEdgePortRelation(e, edgePorts(e)._1, edgePorts(e)._2)
+        graph.addPortEdge(edgePorts(e)._1, e)
+        graph.addPortEdge(edgePorts(e)._2, e)
+      }
+      edgesRemoved = edgesRemoved - graph.getUri
+      graph.reComputeCycles()
+    }
+  }
+
 }

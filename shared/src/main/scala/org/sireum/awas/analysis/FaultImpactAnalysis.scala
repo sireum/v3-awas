@@ -52,7 +52,7 @@ class FaultImpactAnalysis {
 
     implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
     val st = SymbolTable(model)
-    val graph = FlowGraph(model, st)
+    val graph = FlowGraph(model, st, true)
 
 //    if(reporter.hasError) {
 //      throw new Exception(reporter.tags.map(TagPickling.pickle).mkString("\n"));
@@ -78,7 +78,7 @@ class FaultImpactAnalysis {
     var result_ex = ilistEmpty[IList[String]]
     implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
     val st = SymbolTable(model)
-    val graph = FlowGraph(model, st)
+    val graph = FlowGraph(model, st, true)
     val queries = generateFIAQueries(st, graph, isSource = true).split("\n")
 
     queries.foreach{ qry =>

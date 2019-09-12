@@ -25,10 +25,9 @@
  *
  */
 
-package org.sireum.awas
+package org.sireum.awas.query
 
 import org.sireum.awas.collector.Collector
-import org.sireum.awas.query.{QueryEval, QueryPPrinter, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.message.{Position, Reporter}
 import org.sireum.util._
