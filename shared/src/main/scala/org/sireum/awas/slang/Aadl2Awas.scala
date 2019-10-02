@@ -28,9 +28,9 @@
 package org.sireum.awas.slang
 
 
-import org.sireum.aadl._
-import org.sireum.aadl.ir.Transformer.PrePost
-import org.sireum.aadl.ir.{EndPoint, Flow => _, Name => _, Property => _, _}
+import org.sireum.hamr._
+import org.sireum.hamr.ir.Transformer.PrePost
+import org.sireum.hamr.ir.{EndPoint, Flow => _, Name => _, Property => _, _}
 import org.sireum.awas.ast._
 import org.sireum.util._
 import org.sireum.{B, Z, ISZ}
@@ -850,7 +850,7 @@ object Aadl2Awas {
   }
 
   def apply(json: String): Option[Model] = {
-    val aadl = org.sireum.aadl.ir.JSON.toAadl(json)
+    val aadl = org.sireum.hamr.ir.JSON.toAadl(json)
     if(aadl.leftOpt.nonEmpty) {
       Some(new Aadl2Awas().build(aadl.left))
     } else None

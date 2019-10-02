@@ -28,7 +28,7 @@
 package org.sireum.awas.AADLBridge;
 
 import org.sireum.None;
-import org.sireum.aadl.ir.Aadl;
+import org.sireum.hamr.ir.Aadl;
 import org.sireum.awas.analysis.FaultImpactAnalysis;
 import org.sireum.awas.ast.AwasSerializer$;
 import org.sireum.awas.ast.Builder$;
