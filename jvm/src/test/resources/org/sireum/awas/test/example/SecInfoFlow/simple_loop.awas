@@ -1,0 +1,36 @@
+types
+  lattice Low
+  lattice High extends Low
+
+system SecInfoFlow
+
+  sub-components {
+  A
+    ports
+      in aIn
+      out aOut
+    security
+      aOut = Low
+    flows
+      f1 : aIn -> aOut
+
+  B
+    ports
+      in bIn // expecting the algorithm to derive : High <= bIn <= T
+      out bOut
+    flows
+      f2 : bIn -> bOut
+
+  C
+    ports
+      in cIn
+      out cOut
+    security
+      cIn = High
+    flows
+      f3 : cIn -> cOut
+  }
+  connections
+    c1 : A.aOut -> B.bIn
+    c2 : B.bOut -> C.cIn
+    c4 : C.cOut -> B.bIn

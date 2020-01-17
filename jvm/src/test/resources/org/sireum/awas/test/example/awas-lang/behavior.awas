@@ -3,10 +3,9 @@ system  BehaveTest
     sub-components {
       compA
         behavior
-          in1:High -> out1:Low
-          (in2:High, in3:Low) -> (out4:High, out5:Low)
-          * -> out6:High
-          in7:High -> *
-          in8:High -[s1]-> out9:Low
-          in10:Low -[(s2, s3, s4)]-> out11:High
+          b1 : in1{High} -> out1{Low}
+          b2 : * -> out6{High}
+          b3 : in7{High} -> *
+          b4 : in8{High} -[s1]-> out9{Low}
+          b5 : in10{Low} -[(s2, s3, s4)]-> out11{High}
     }

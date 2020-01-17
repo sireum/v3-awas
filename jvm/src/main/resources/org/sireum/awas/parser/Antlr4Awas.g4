@@ -32,7 +32,9 @@ componentDecl
       ( 'with' with+=name (',' with+=name)*)?
       ( 'ports' port* )?
       ( 'propagations' propagation*)?
+      ( 'security' secDomin*)?
       ( 'flows' flow* )?
+      ( 'declassifications' declass*)?
       ( 'transitions' transition)?
       ( 'behavior' behaviour)?
       ( 'sub-components''{' componentDecl* '}')?
@@ -92,6 +94,10 @@ propagation
   : id=ID '=' '{' errorT+=fault (',' errorT+= fault)*'}'
   ;
 
+secDomin
+  : id = ID '=' domain = ID
+  ;
+
 flow
   : id=ID ':'
      (from=ID ('{' fromE+=fault ( ',' fromE+=fault )* '}')? | '*')
@@ -104,6 +110,10 @@ flowc
   ( fromE+=fault | ('{' fromE+=fault ( ',' fromE+=fault )* '}') | '*')
   '->'
   (  toE+=fault |('{' toE+=fault ( ',' toE+=fault )* '}') | '*')
+  ;
+
+declass
+  : flowId = ID ':' (fromD = ID | '*') '->' toD = ID
   ;
 
 property

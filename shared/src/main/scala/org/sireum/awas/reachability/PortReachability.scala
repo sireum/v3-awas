@@ -27,7 +27,7 @@
 
 package org.sireum.awas.reachability
 
-import org.sireum.awas.collector.Collector
+import org.sireum.awas.collector.{Collector, FlowCollector}
 import org.sireum.awas.fptc.FlowNode
 import org.sireum.awas.query.ConstraintExpr
 import org.sireum.awas.symbol.SymbolTable
@@ -80,7 +80,11 @@ trait PortReachability[Node] extends BasicReachability[Node]{
 
   def getSuccessor(currentPort: ResourceUri): ISet[ResourceUri]
 
+  def getSuccDetailed(currentPort: ResourceUri): ISet[FlowCollector]
+
   def getPredecessor(currentPort: ResourceUri): ISet[ResourceUri]
+
+  def getPredDetailed(currentPort: ResourceUri): ISet[FlowCollector]
 }
 
 object PortReachability {

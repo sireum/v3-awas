@@ -52,8 +52,7 @@ object SymbolTable {
   def getTable: Option[SymbolTable] = symbolTable
 
 
-
-  def buildSymbolTable(m: Model)(
+  private def buildSymbolTable(m: Model)(
     implicit reporter: AccumulatingTagReporter): SymbolTable = {
     val stp = SymbolMiner(m, new STProducer())
     stp.toSymbolTable
@@ -104,7 +103,7 @@ trait SymbolTable {
 
 sealed case class SymbolTableData
 (declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
- typeDeclTable: MMap[ResourceUri, TypeDecl] = mmapEmpty,
+ typeDeclTable: MLinkedMap[ResourceUri, TypeDecl] = mlinkedMapEmpty,
  typeTable: MMap[ResourceUri, TypeTable] = mmapEmpty,
  aliasTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  stateMachineDeclTable: MMap[ResourceUri, StateMachineDecl] = mmapEmpty,
@@ -216,9 +215,18 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
     override def enumElement(enumElemUri: ResourceUri): Id =
       tables.enumTable(typeDeclUri)(enumElemUri)
 
+    override def latticeElements: Set[ResourceUri] = tables.latticeTable.keySet.toSet
+
+    override def latticeElement(latticeElemUri: ResourceUri): Id =
+      tables.latticeTable(latticeElemUri).id
+
+    override def latticeParents(latticeElemUri: ResourceUri): ISet[ResourceUri] =
+      tables.latticeTable(latticeElemUri).parents.toSet
+
     override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
       tables.symbol2Uri.get(symbol)
     }
+
   }
 
   class SMT(val smDeclUri: ResourceUri) extends StateMachineTable {
@@ -257,13 +265,24 @@ trait TypeTable {
 
   def enumElement(enumElemUri: ResourceUri): Id
 
+  def latticeElements: Set[ResourceUri]
+
+  def latticeElement(latticeElemUri: ResourceUri): Id
+
+  def latticeParents(latticeElemUri: ResourceUri): ISet[ResourceUri]
+
   def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
 sealed case class TypeTableData
 (enumTable: MMap[ResourceUri, MMap[ResourceUri, Id]] = mmapEmpty,
 
+ latticeTable: MMap[ResourceUri, LatticeTableData] = mmapEmpty,
+
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty)
+
+sealed case class LatticeTableData
+(id: Id, parents: MSet[ResourceUri])
 
 trait StateMachineTable {
   def symbolTable: SymbolTable

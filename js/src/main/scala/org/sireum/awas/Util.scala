@@ -1,16 +1,42 @@
+/*
+ *
+ * Copyright (c) 2020, Hariharan Thiagarajan, Kansas State University
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package org.sireum.awas
 import facades.{GraphViz, Options, SVGPanZoom}
-import org.scalajs.dom.{Element, Event}
+import org.scalajs.dom.Element
 import org.scalajs.dom.html.{Anchor, Input}
-import org.scalajs.dom.raw.{Node, SVGElement}
+import org.scalajs.dom.raw.SVGElement
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.Main._
 import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.awas.witness.{RankDir, SvgGenConfig, SvgGenerator}
+import org.sireum.awas.witness.{Errors, RankDir, SvgGenConfig, SvgGenerator}
 import org.sireum.common.JSutil.templateContent
-import org.sireum.util.{IMap, ISet, ilistEmpty, imapEmpty, isetEmpty}
+import org.sireum.util.{IMap, ISet, imapEmpty, isetEmpty}
 import scalatags.Text.all.raw
 
 import scala.scalajs.js
@@ -48,15 +74,49 @@ object Util {
           js.Array(js.Dictionary(("path", "min/images/sub-graph-icon.png"), ("width", "45px"), ("height", "25px"))))
       )
     )
-    val result = templateContent(raw(svgString)).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
+    var result = templateContent(raw(svgString)).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
+
+    if (viewConfig.viewErrors == Errors.Types) {
+      SecViolations().getColorDefs.foreach(result.appendChild(_))
+      //      result = templateContent(raw(result.outerHTML)).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
+    }
+
     val nodes = processSvg(result, st)
     graphNodeMap += (graphUri -> nodes)
     svgs = svgs + ((graphUri, result))
+
+    if (viewConfig.viewErrors == Errors.Types) {
+      val errorNodes = nodes.filter(_.getNodeType == SvgNodeType.Error)
+      val types = errorNodes.map(_.getUri.split(SvgGenerator.URI_GLUE).last).toList.sorted
+
+
+      errorNodes.foreach { en =>
+        val typeUri = en.getUri.split(SvgGenerator.URI_GLUE).last
+        val pUri = en.getUri.split(SvgGenerator.URI_GLUE)(1)
+        var color = if (SecViolations().getSecInfoFlow.getViolations().contains(pUri)) {
+          SecViolations().getViolationColor(typeUri)
+        } else if (SecViolations().getSecInfoFlow.getProvidedSecType().keySet.contains(pUri)) {
+          SecViolations().getProvidedColor(typeUri)
+        } else {
+          SecViolations().getTypeColor(typeUri)
+        }
+
+        // val pNode = uriNodeMap(pUri).map(_.asInstanceOf[SvgNodeUpdateColors])
+        val tNode = uriNodeMap(en.getUri).map(_.asInstanceOf[SvgNodeUpdateColors])
+
+        //pNode.foreach(_.portColor_=(color))
+
+        tNode.foreach(_.errorColor_=(color))
+        uriNodeMap(pUri).foreach(_.reset())
+        uriNodeMap(en.getUri).foreach(_.reset())
+      }
+    }
 
     //SvgPanZoom.svgPanZoom(result)
 
     result
   }
+
 
   def reDrawGraphs(svgGenConfig: SvgGenConfig): Unit = {
     if (gl.isDefined) {
@@ -89,7 +149,6 @@ object Util {
     }
 
     if ((allUri intersect selections.keySet).nonEmpty) {
-
       selections.filter(s => allUri.contains(s._1)).foreach(s => highlight(imapEmpty + (s._1 -> s._2._1), s._2._2))
     }
     svgNodes.toSet

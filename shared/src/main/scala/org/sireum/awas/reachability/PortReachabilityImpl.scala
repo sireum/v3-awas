@@ -29,7 +29,6 @@ package org.sireum.awas.reachability
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
-import org.sireum.awas.collector.ResultType.ResultType
 import org.sireum.awas.collector.{Collector, CollectorErrorHelper, FlowCollector, ResultType}
 import org.sireum.awas.fptc.FlowNode.Edge
 import org.sireum.awas.fptc.{FlowGraph, FlowNode, NodeType}
@@ -899,8 +898,16 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
     nextPorts(currentPort).flatMap(_.ports)
   }
 
+  override def getSuccDetailed(currentPort: ResourceUri): ISet[FlowCollector] = {
+    nextPorts(currentPort)
+  }
+
   override def getPredecessor(currentPort: ResourceUri): ISet[ResourceUri] = {
     previousPorts(currentPort).flatMap(_.ports)
+  }
+
+  override def getPredDetailed(currentPort: ResourceUri): ISet[FlowCollector] = {
+    previousPorts(currentPort)
   }
 
   def reachSimplePath(source: ResourceUri, target: ResourceUri, isRefined: Boolean

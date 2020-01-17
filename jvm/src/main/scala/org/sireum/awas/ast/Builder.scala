@@ -77,7 +77,9 @@ final class Builder private() {
       if (ctx.`with` != null) ctx.`with`.map(build) else Node.emptySeq[Name],
       ctx.port().map(build),
       ctx.propagation().map(build),
+      ctx.secDomin().map(build),
       ctx.flow().map(build),
+      ctx.declass().map(build),
       if (ctx.transition() != null) Some(build(ctx.transition())) else None,
       if (ctx.behaviour() != null) Some(build(ctx.behaviour())) else {
         None
@@ -142,6 +144,10 @@ final class Builder private() {
     Propagation(buildId(ctx.id), ctx.errorT.map(build)) at ctx
   }
 
+  def build(ctx: SecDominContext): Security = {
+    Security(buildId(ctx.id), buildId(ctx.domain))
+  }
+
   def build(ctx: FlowContext): Flow = {
     Flow(buildId(ctx.id),
       arbitraryToken(ctx.from),
@@ -154,6 +160,12 @@ final class Builder private() {
     CFlow(buildId(ctx.id),
       ctx.fromE.map(build),
       ctx.toE.map(build)) at ctx
+  }
+
+  def build(ctx: DeclassContext): Declass = {
+    Declass(buildId(ctx.flowId),
+      if (ctx.fromD == null) None else Some(buildId(ctx.fromD)),
+      buildId(ctx.toD))
   }
 
   def arbitraryToken(n: Token): Option[Id] = {

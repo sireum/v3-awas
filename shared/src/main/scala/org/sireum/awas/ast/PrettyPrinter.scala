@@ -225,6 +225,18 @@ final class PrettyPrinter(sb: StringBuilder) {
       println()
     }
 
+    if (compd.security.nonEmpty) {
+      printIndent(localIndent + 1)
+      sb.append("security")
+      println()
+      print(compd.security.head, localIndent + 2)
+      for (cpr <- compd.security.tail) {
+        println()
+        print(cpr, localIndent + 2)
+      }
+      println()
+    }
+
     if(compd.flows.nonEmpty) {
       printIndent(localIndent+1)
       sb.append("flows")
@@ -636,6 +648,13 @@ final class PrettyPrinter(sb: StringBuilder) {
       print(pett)
     }
     sb.append("}")
+  }
+
+  def print(p: Security, indent: Natural): Unit = {
+    printIndent(indent)
+    print(p.id)
+    sb.append(" = ")
+    print(p.domain)
   }
 
   def print(f : Flow, indent: Natural) : Unit ={

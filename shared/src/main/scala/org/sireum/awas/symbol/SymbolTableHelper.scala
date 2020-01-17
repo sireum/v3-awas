@@ -272,7 +272,7 @@ object SymbolTableHelper {
 
   def findComponentUri(uri: ResourceUri, st: SymbolTable): Option[ResourceUri] = {
     val ans = getAllAncestors(uri, st)
-    println(ans)
+
     if (ans.nonEmpty && ans.lastIndexWhere(it => getUriType(it) == COMPONENT_TYPE) > -1) {
       Some(ans(ans.lastIndexWhere(it => getUriType(it) == COMPONENT_TYPE)))
     } else {

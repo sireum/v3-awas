@@ -220,11 +220,11 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
     nodeType.get match {
       case SvgNodeType.Node => {
         node.firstElementChild.setAttribute("fill", _nodeColor)
-        node.firstElementChild.setAttribute("fill-opacity", "1")
+        node.firstElementChild.setAttribute("fill-opacity", ".8")
       }
       case SvgNodeType.Port => {
         node.firstElementChild.setAttribute("fill", _portColor)
-        node.firstElementChild.setAttribute("fill-opacity", "1")
+        node.firstElementChild.setAttribute("fill-opacity", ".8")
       }
       case SvgNodeType.Flow => {
         node.firstElementChild.setAttribute("fill", _portColor)
@@ -232,7 +232,7 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
       }
       case SvgNodeType.Error => {
         node.firstElementChild.setAttribute("fill", _errorColor)
-        node.firstElementChild.setAttribute("fill-opacity", "1")
+        node.firstElementChild.setAttribute("fill-opacity", ".8")
       }
       case SvgNodeType.Edge => {
         node.firstElementChild.nextElementSibling.setAttribute("fill", _edgeColor)

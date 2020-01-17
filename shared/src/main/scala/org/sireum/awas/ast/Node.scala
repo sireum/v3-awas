@@ -28,7 +28,7 @@
 package org.sireum.awas.ast
 
 import org.sireum.util._
-import upickle.default.{ReadWriter => RW, macroRW}
+import upickle.default.{macroRW, ReadWriter => RW}
 
 object Node {
   type Seq[T] = IVector[T]
@@ -84,7 +84,9 @@ final case class ComponentDecl(compName: Id,
                                withSM: Node.Seq[Name],
                                ports: Node.Seq[Port],
                                propagations : Node.Seq[Propagation],
+                               security: Node.Seq[Security],
                                flows: Node.Seq[Flow],
+                               declass: Node.Seq[Declass],
                                transitions: Option[Transition],
                                behaviour: Option[Behaviour],
                                subComp: Node.Seq[ComponentDecl],
@@ -124,6 +126,12 @@ object Propagation {
   implicit def rw : RW[Propagation] = macroRW
 }
 
+final case class Security(id: Id, domain: Id) extends Node
+
+object Security {
+  implicit def rw: RW[Security] = macroRW
+}
+
 final case class Flow(id: Id,
                       from: Option[Id],
                       fromE: Node.Seq[Fault],
@@ -138,6 +146,14 @@ final case class CFlow(id: Id,
                        toE: Node.Seq[Fault] = Node.emptySeq[Fault]) extends Node
 object CFlow {
   implicit def rw : RW[CFlow] = macroRW
+}
+
+final case class Declass(fid: Id,
+                         fromDomain: Option[Id],
+                         toDomain: Id) extends Node
+
+object Declass {
+  implicit def rw: RW[Declass] = macroRW
 }
 
 final case class Property(id: Id,

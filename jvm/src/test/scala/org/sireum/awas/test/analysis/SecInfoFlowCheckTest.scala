@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2020, Hariharan Thiagarajan, Kansas State University
+ * Copyright (c) 2019, Robby, Kansas State University
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,40 +24,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// #Sireum
+package org.sireum.awas.test.analysis
 
-package org.sireum.awas.witness
+import java.util
 
-import org.sireum._
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
+import org.sireum.test.{JUnitTestFramework, TestDef}
 
-@datatype class SvgGenConfig(
-                              rankDir: RankDir.Type,
-                              simpleConn: B,
-                              //complexConn: B,
-                              viewVirtualPorts: B,
-                              viewErrors: Errors.Type,
-                              viewFlows: B,
-                              bindings: B,
-                              behaviors: B,
-                              states: B
-)
+@RunWith(value = classOf[Parameterized])
+final class SecInfoFlowCheckTest(name: String, td: TestDef) {
 
-@enum object RankDir {
-  'TB
-  'LR
-  'BT
-  'RL
+  @Test
+  def test(): Unit = {
+    td.test(JUnitTestFramework)
+  }
 }
 
-@enum object Errors {
-  'None
-  'Errors
-  'Types
-}
+object SecInfoFlowCheckTest {
+  val provider = new SecInfoFlowCheckTestDefProvider(JUnitTestFramework)
 
-object SvgGenConfig {
-
-  def defaultConfig: SvgGenConfig = {
-    SvgGenConfig(RankDir.TB, F, T, Errors.None, T, F, F, F)
+  @Parameters(name = "{0}")
+  def parameters: util.ArrayList[Array[Object]] = {
+    val ps = provider.enabledTestDefs.map(td => Array(td.name, td))
+    val r = new java.util.ArrayList[Array[Object]](ps.size)
+    for (p <- ps) {
+      r.add(p)
+    }
+    r
   }
 }

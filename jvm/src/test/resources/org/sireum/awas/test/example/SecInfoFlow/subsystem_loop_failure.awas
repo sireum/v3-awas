@@ -1,0 +1,57 @@
+types
+  lattice Low
+  lattice High extends Low
+
+system SubSystem_Success
+
+  sub-components {
+  A
+    ports
+      in aIn
+      out aOut
+    security
+      aOut = Low
+    flows
+      f1 : aIn -> aOut
+
+  B
+    ports
+      in bIn // expecting the algorithm to derive : Low <= bIn <= T
+      out bOut // High <= bOut <= T
+
+    sub-components {
+      B_1
+        ports
+          in b1In
+          out b1Out
+        flows
+          fb1 : b1In -> b1Out
+
+      B_2
+        ports
+          in b2In
+          out b2Out
+        security
+          b2Out = High
+        flows
+          fb2 : b2In -> b2Out
+    }
+    connections
+      c1 : bIn -> B_1.b1In
+      c2 : B_1.b1Out -> B_2.b2In
+      c3 : B_2.b2Out -> B_1.b1In
+      c4 : B_2.b2Out -> bOut
+
+  C
+    ports
+      in cIn
+      out cOut
+    security
+      cIn = Low
+    flows
+      f3 : cIn -> cOut
+  }
+  connections
+    c1 : A.aOut -> B.bIn
+    c2 : B.bOut -> C.cIn
+    c4 : C.cOut -> B.bIn

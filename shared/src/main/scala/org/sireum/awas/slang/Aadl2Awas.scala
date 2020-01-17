@@ -28,12 +28,12 @@
 package org.sireum.awas.slang
 
 
+import org.sireum.awas.ast._
 import org.sireum.hamr._
 import org.sireum.hamr.ir.Transformer.PrePost
 import org.sireum.hamr.ir.{EndPoint, Flow => _, Name => _, Property => _, _}
-import org.sireum.awas.ast._
 import org.sireum.util._
-import org.sireum.{B, Z, ISZ}
+import org.sireum.{B, ISZ, Z}
 
 
 final class Aadl2Awas private() {
@@ -159,7 +159,9 @@ final class Aadl2Awas private() {
           Port(true, buildId(Aadl2Awas.ACCESS_IN_PORT), None) :+ Port(false, buildId(Aadl2Awas.ACCESS_OUT_PORT), None)
       } else { comp.features.elements.flatMap(build).toVector}
       val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
+      val security = ivectorEmpty[Security] //TODO: modify Air
       val flows = getFlows(comp)
+      val declass = getDeclass(comp) //TODO: Modify Air
       val transistions = getTrans(comp)
       val behavior = getBehave(comp)
       val properties = getProperties(comp)
@@ -178,7 +180,9 @@ final class Aadl2Awas private() {
             sc._2.withSM,
             sc._2.ports ++ addedPorts(sc._1.name),
             sc._2.propagations,
+            sc._2.security,
             sc._2.flows,
+            sc._2.declass,
             sc._2.transitions,
             sc._2.behaviour,
             sc._2.subComp,
@@ -197,7 +201,9 @@ final class Aadl2Awas private() {
         withs,
         features,
         propagations,
+        security,
         flows,
+        declass,
         transistions,
         behavior,
         UpdatedSubComp.values.toVector,
@@ -690,6 +696,10 @@ final class Aadl2Awas private() {
       }
     }
     flows.toVector
+  }
+
+  def getDeclass(comp: ir.Component): Node.Seq[Declass] = {
+    Node.emptySeq[Declass]
   }
 
   def getTrans(comp: ir.Component): Option[Transition] = {

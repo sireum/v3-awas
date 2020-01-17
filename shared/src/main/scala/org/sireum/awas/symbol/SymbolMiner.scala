@@ -165,7 +165,23 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
       //stp.tables.aliasTable
 
-      case ld: LatticeDecl => false
+      case ld: LatticeDecl => {
+        val r = Resource(H.LATTICE_TYPE, parentRes, ld.name.value, Some(true), ld)
+        st.symbol2Uri(ld.name.value) = r.toUri
+        st.typeDeclTable(r.toUri) = ld
+        val tType = new stp.TypeT(r.toUri)
+        st.typeTable(r.toUri) = tType
+        val tt = tType.tables
+        val lr = Resource(H.LATTICE_TYPE, r, ld.name.value, Some(true), ld.name)
+        tt.symbol2Uri(ld.name.value) = lr.toUri
+        val sid = ld.superLattice.flatMap { it =>
+          val x = stp.typeTable(stp.getUriFromSymbol(it.value.last.value).get)
+          x.latticeElements.find(e => H.uri2IdString(e) == it.value.last.value)
+        }
+        tt.latticeTable(lr.toUri) = LatticeTableData(ld.name, msetEmpty ++ sid)
+        // st.typeTable =
+        false
+      }
 
       case ed: RecordDecl => false
     })(m)
@@ -291,7 +307,11 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
       comp.propagations.foreach(propagationMiner(m, _, r, tt, ctp))
 
+      comp.security.foreach(securityMiner(m, _, r, tt, ctp))
+
       comp.flows.foreach(flowMiner(m, _, r, tt, ctp))
+
+      comp.declass.foreach(declassMiner(m, _, r, tt, ctp))
 
       if (comp.behaviour.isDefined) {
         //TODO : resolve Fault, state and events from behavior and transistion,
@@ -367,6 +387,20 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
         flow.id,
         m, flow.id.value))
+    }
+  }
+
+  def declassMiner(m: Model, declass: Declass, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)
+                  (implicit reporter: AccumulatingTagReporter): Unit = {
+    val flowUri = ctp.tables.symbol2Uri.get(declass.fid.value)
+    if (flowUri.isDefined) {
+      val fromD = declass.fromDomain.flatMap(it => st.symbol2Uri.get(it.value))
+      val toD = st.symbol2Uri(declass.toDomain.value)
+      ctp.tables.declass(flowUri.get) = (fromD, toD)
+    } else {
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
+        declass.fid,
+        m, ""))
     }
   }
 
@@ -644,6 +678,49 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
           ctp.tables.propagationTable(portUri.get) = tempSet
       }
+    }
+  }
+
+  def securityMiner(m: Model,
+                    p: Security,
+                    r: Resource,
+                    tt: ISet[TypeTable],
+                    ctp: CompSTProducer)(
+                     implicit reporter: AccumulatingTagReporter): Unit = {
+
+    val portUri = ctp.getUriFromSymbol(p.id.value)
+
+    if (portUri.isEmpty) {
+      reporter.report(errorMessageGen(MISSING_PORT_DECL,
+        p,
+        m, p.id.value, r.toUri))
+
+    } else {
+      val tempSet = msetEmpty[ResourceUri]
+      Resource.useDefResolve(p, ctp.tables.portTable(portUri.get))
+      val updatedTT = stp.typeDecls.map(stp.typeTable).find(_.getUriFromSymbol(p.domain.value).isDefined)
+      if (updatedTT.isDefined) {
+        val duri = updatedTT.get.getUriFromSymbol(p.domain.value).get
+        Resource.useDefResolve(p.domain, updatedTT.get.latticeElement(duri))
+      } else {
+        reporter.report(errorMessageGen(MISSING_TYPE_DECL,
+          p.domain,
+          m, p.domain.value))
+      }
+      if (Resource.getResource(p.domain).isDefined) {
+        ctp.tables.securityTable(portUri.get) = Resource.getResource(p.domain).get.toUri
+      }
+
+
+      //        .foreach {
+      //        et => {
+      //          mineFault(m, et, r, tt)
+      //          if (Resource.getResource(et).isDefined) {
+      //            tempSet += Resource.getResource(et).get.toUri
+      //          }
+      //        }
+      //          ctp.tables.propagationTable(portUri.get) = tempSet
+
     }
   }
 

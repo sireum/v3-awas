@@ -1,0 +1,6 @@
+types
+  lattice A
+  lattice B extends A
+  lattice C extends B
+  lattice D extends B
+  lattice E extends C, D

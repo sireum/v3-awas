@@ -69,6 +69,7 @@ object FlowNode {
   private var nodepool = imapEmpty[ResourceUri, FlowNode]
   private var graphs = imapEmpty[ResourceUri, FlowGraph[FlowNode, Edge]]
 
+
   def createNode(uri: ResourceUri,
                  st: SymbolTable,
                  graph: FlowGraph[FlowNode, FlowEdge[FlowNode]])

@@ -1,0 +1,49 @@
+types
+  lattice Low
+  lattice High extends Low
+
+system SecInfoFlow
+
+  sub-components {
+  A
+    ports
+      in aIn
+      out aOut
+    security
+      aOut = Low
+    flows
+      f1 : aIn -> aOut
+
+  B
+    ports
+      in bIn
+      out bOut
+    flows
+      f2 : bIn -> bOut
+
+  C
+    ports
+      in cIn
+      out cOut
+    security
+      cIn = High
+    flows
+      f3 : cIn -> cOut
+    declassifications
+      f3 : High -> Low // can be also *(any) to domain
+
+  D
+    ports
+      in dIn
+      out dOut
+    security
+      dIn = Low
+    flows
+      f4 : dIn -> dOut
+
+  }
+  connections
+    c1 : A.aOut -> B.bIn
+    c2 : A.aOut -> C.cIn
+    c3 : B.bOut -> D.dIn
+    c4 : C.cOut -> D.dIn

@@ -2,7 +2,7 @@ digraph "component:$$AWAS#abc" {
 
   rankdir=TB
 
-   "component:$$AWAS$abc#A" [label="{In Port|<aIn>aIn} |component\nA|{Out Port|<aOut>aOut} ",  shape="record"] 
+   "componen t:$$AWAS$abc#A" [label="{In Port|<aIn>aIn} |component\nA|{Out Port|<aOut>aOut} ",  shape="record"]
    "component:$$AWAS$abc#B" [label="{In Port|<bIn>bIn} |component\nB|{Out Port|<bOut2>bOut2|<bOut>bOut} ",  shape="record"] 
    "component:$$AWAS$abc#C" [label="{In Port|<cIn>cIn} |component\nC|{Out Port|<cOut>cOut} ",  shape="record"] 
    "connection:$$AWAS$abc#A2B" [label="{In Port|<in>in} |connection\nA2B|{Out Port|<out>out} ",  shape="record"] 

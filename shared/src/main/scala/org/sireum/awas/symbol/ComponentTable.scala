@@ -50,9 +50,13 @@ trait ComponentTable {
 
   def propagation(portUri: ResourceUri): Set[ResourceUri]
 
+  def security(portUri: ResourceUri): Option[ResourceUri]
+
   def flows: Iterable[ResourceUri]
 
   def flow(flowUri: ResourceUri): FlowTableData
+
+  def declass(flowUri: ResourceUri): Option[(Option[ResourceUri], ResourceUri)]
 
   def behaviors: Iterable[ResourceUri]
 
@@ -87,7 +91,9 @@ sealed case class ComponentTableData
 (declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portTable: MMap[ResourceUri, Port] = mmapEmpty,
  propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+ securityTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
  flowTable: MMap[ResourceUri, FlowTableData] = mmapEmpty,
+ declass: MMap[ResourceUri, (Option[ResourceUri], ResourceUri)] = mmapEmpty,
  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  behaviorTable: MMap[ResourceUri, BehaveExpr] = mmapEmpty,
@@ -144,9 +150,17 @@ class CompSTProducer(val compUri: ResourceUri,
       isetEmpty
   }
 
+  override def security(portUri: ResourceUri): Option[ResourceUri] = {
+    if (tables.securityTable.contains(portUri))
+      Some(tables.securityTable(portUri))
+    else None
+  }
+
   override def flows: Iterable[ResourceUri] = tables.flowTable.keys
 
   override def flow(flowUri: ResourceUri): FlowTableData = tables.flowTable(flowUri)
+
+  override def declass(flowUri: ResourceUri): Option[(Option[ResourceUri], ResourceUri)] = tables.declass.get(flowUri)
 
   override def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri] = {
     tables.flowPortRelation.getOrElse(portUri, isetEmpty).toSet
@@ -187,6 +201,7 @@ class CompSTProducer(val compUri: ResourceUri,
   override def transitions: Iterable[ResourceUri] = tables.transitionTable.keys
 
   override def transition(transUri: ResourceUri): TransExpr = tables.transitionTable(transUri)
+
 }
 
 sealed case class FlowTableData

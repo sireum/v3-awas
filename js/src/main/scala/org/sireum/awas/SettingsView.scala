@@ -1,11 +1,37 @@
+/*
+ *
+ * Copyright (c) 2020, Hariharan Thiagarajan, Kansas State University
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package org.sireum.awas
-import facades.QuickView
-import org.scalajs.dom.html.{Anchor, Div, Input}
-import org.sireum.awas.witness.{JSON, RankDir, SvgGenConfig}
+
 import org.scalajs.dom
-import org.scalajs.dom.raw.{MouseEvent, UIEvent}
-import org.sireum.{B, F, T}
+import org.scalajs.dom.html.{Anchor, Div, Input}
+import org.scalajs.dom.raw.MouseEvent
+import org.sireum.awas.witness.{Errors, JSON, RankDir, SvgGenConfig}
 import org.sireum.common.JSutil.$
+import org.sireum.{B, F, T}
 
 object SettingsView {
   val key = "AWAS-WV-SETTINGS"
@@ -21,7 +47,10 @@ object SettingsView {
     val conn = $[Input](settingsNode, "#sconn")
 //    val ports = $[Input](settingsNode, "#vports")
     val flows = $[Input](settingsNode, "#vflows")
-    val errors = $[Input](settingsNode, "#verrors")
+    //    val errors = $[Input](settingsNode, "#verrors")
+    val eNone = $[Input](settingsNode, "#eNone")
+    val eErrors = $[Input](settingsNode, "#eErrors")
+    val eTypes = $[Input](settingsNode, "#eTypes")
     val bind = $[Input](settingsNode, "#vbind")
     val apply = $[Anchor](settingsNode, "#settings_apply")
     val cancel = $[Anchor](settingsNode, "#settings_cancel")
@@ -38,6 +67,27 @@ object SettingsView {
       }
     }
 
+    eNone.onclick = (_: MouseEvent) => {
+      if (eNone.checked) {
+        eErrors.checked = false
+        eTypes.checked = false
+      }
+    }
+
+    eErrors.onclick = (_: MouseEvent) => {
+      if (eErrors.checked) {
+        eNone.checked = false
+        eTypes.checked = false
+      }
+    }
+
+    eTypes.onclick = (_: MouseEvent) => {
+      if (eTypes.checked) {
+        eNone.checked = false
+        eErrors.checked = false
+      }
+    }
+
     if (currentConfig.rankDir == RankDir.TB) {
       tdNode.checked = true
     } else {
@@ -46,7 +96,14 @@ object SettingsView {
 
     if (currentConfig.simpleConn) conn.checked = true
 //    if (currentConfig.viewVirtualPorts) ports.checked = true
-    if (currentConfig.viewErrors) errors.checked = true
+    if (currentConfig.viewErrors == Errors.None) {
+      eNone.checked = true
+    } else if (currentConfig.viewErrors == Errors.Errors) {
+      eErrors.checked = true
+    } else {
+      eTypes.checked = true
+    }
+
     if (currentConfig.viewFlows) flows.checked = true
     if (currentConfig.bindings) bind.checked = true
 
@@ -58,7 +115,7 @@ object SettingsView {
           if (tdNode.checked) RankDir.TB else RankDir.LR,
           B(conn.checked),
           T,
-          B(errors.checked),
+          if (eNone.checked) Errors.None else if (eErrors.checked) Errors.Errors else Errors.Types,
           B(flows.checked),
           B(bind.checked),
           F,
@@ -67,11 +124,14 @@ object SettingsView {
 
         if (currentConfig != config) {
           currentConfig = config
+          //          if(currentConfig.viewErrors == Errors.Types) {
+          //            SecViolations.secInfoFlow = Some(SecInfoFlowAnalysis())
+          //          }
           setStoredSettings(currentConfig)
           Util.reDrawGraphs(currentConfig)
+          Main.viewHideViolations()
         }
         apply.classList.remove("is-loading")
-
       })
     }
   }

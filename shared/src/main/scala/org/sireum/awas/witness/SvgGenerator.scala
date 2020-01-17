@@ -27,23 +27,24 @@
 
 package org.sireum.awas.witness
 
+import org.sireum.awas.AliranAman.SecInfoFlowAnalysis
 import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.collector.Collector
-import org.sireum.awas.witness._
 import org.sireum.awas.fptc._
-import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.ops.ISZOps
 import org.sireum.util._
-import org.sireum.{$Slang, $internal, ISZ, ST}
+import org.sireum.{$Slang, ISZ, ST}
 import scalatags.Text.all._
-import org.sireum.{F, T}
 
 object SvgGenerator {
+  val URI_GLUE = "="
+
   var viewConfig = SvgGenConfig.defaultConfig
 
-//      SvgGenConfig(
+
+  //      SvgGenConfig(
 //      rankDir = RankDir,
 //      simpleConn = false,
 //      complexConn = true,
@@ -176,12 +177,22 @@ object SvgGenerator {
     val inPorts = vertex.inPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
     val outPorts = vertex.outPorts.map(it => (it.split('$').last, it, H.uri2IdString(it))).toSeq
 
-    val errors = vertex.ports.map(it => (it, if (viewConfig.viewErrors.value) vertex.getPropagation(it).toSeq else ilistEmpty[String]))
-      .toMap
+    val errors = vertex.ports.map { it =>
+      (it,
+        if (viewConfig.viewErrors == Errors.Types) {
+          //        val cst = st.componentTable(vertex.getUri)
+          //        (ivectorEmpty :+ cst.security(it)).flatten
+          (ivectorEmpty :+ SecInfoFlowAnalysis().getSecTypes().get(it)).flatten
+        } else if (viewConfig.viewErrors == Errors.Errors) {
+          vertex.getPropagation(it).toSeq
+        }
+        else
+          ilistEmpty[String])
+    }.toMap
 
     val flows =
       if (vertex.isComponent && this.viewConfig.viewFlows.value)
-        if (this.viewConfig.viewErrors.value) {
+        if (this.viewConfig.viewErrors == Errors.Errors) {
           vertex.getFlows.map(it => (it._1, it._2.toString)).toSeq
         } else {
           vertex.getFlows.filter(it => it._2.fromFaults.isEmpty && it._2.toFaults.isEmpty).map(it => (it._1, it._2.toString))
@@ -449,7 +460,7 @@ object SvgGenerator {
                         for (error <- errors(uri))
                           yield
                             td(
-                              attr("target") := "Error" + ":" + uri + ':' + error,
+                              attr("target") := "Error" + URI_GLUE + uri + URI_GLUE + error,
                               attr("href") := "templink",
                               attr("title") := "error",
                               attr("cellpadding") := 2, //id := "badlink", attr("border") := 1, attr("sides") := "B",
@@ -457,7 +468,7 @@ object SvgGenerator {
                               tag("font")(
                                 attr("POINT-SIZE") := 8,
                                 tabledata(
-                                  H.uri2CanonicalName(error),
+                                  if (viewConfig.viewErrors != Errors.Types) H.uri2CanonicalName(error) else H.uri2IdString(error),
                                   if (inPorts.last != (portid, uri, text)) true
                                   else false
                                 )
