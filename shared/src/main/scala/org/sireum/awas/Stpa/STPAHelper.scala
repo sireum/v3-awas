@@ -1,8 +1,6 @@
-// #Sireum
-
 /*
  *
- * Copyright (c) 2020, Hariharan Thiagarajan, Kansas State University
+ * Copyright (c) 2019, Robby, Kansas State University
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,40 +24,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.sireum.awas.fptc
 
+object STPAHelper {
+  val STPA_RESOURCE_URI = "stpa_"
 
-package org.sireum.awas.witness
-
-import org.sireum._
-
-@datatype class SvgGenConfig(
-                              rankDir: RankDir.Type,
-                              simpleConn: B,
-                              //complexConn: B,
-                              viewVirtualPorts: B,
-                              viewErrors: Errors.Type,
-                              viewFlows: B,
-                              bindings: B,
-                              behaviors: B,
-                              states: B
-)
-
-@enum object RankDir {
-  'TB
-  'LR
-  'BT
-  'RL
-}
-
-@enum object Errors {
-  'None
-  'Errors
-  'Types
-}
-
-object SvgGenConfig {
-
-  def defaultConfig: SvgGenConfig = {
-    SvgGenConfig(RankDir.TB, F, T, Errors.None, T, F, F, F)
-  }
 }

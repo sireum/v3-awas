@@ -1,0 +1,21 @@
+port-in:$$AWAS$SecInfoFlow$A#aIn -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-out:$$AWAS$SecInfoFlow$A#aOut -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+
+port-in:$$AWAS$SecInfoFlow$B#bIn -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-out:$$AWAS$SecInfoFlow$B#bOut -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+
+port-in:$$AWAS$SecInfoFlow$C#cIn -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$High#High
+port-out:$$AWAS$SecInfoFlow$C#cOut -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$High#High
+
+port-in:$$AWAS$SecInfoFlow$D#dIn -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$High#High
+port-out:$$AWAS$SecInfoFlow$D#dOut -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$High#High
+
+
+port-out-virtual:$$AWAS$SecInfoFlow$c1#out -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-in-virtual:$$AWAS$SecInfoFlow$c4#in -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$High#High
+port-in-virtual:$$AWAS$SecInfoFlow$c3#in -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-in-virtual:$$AWAS$SecInfoFlow$c1#in -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-out-virtual:$$AWAS$SecInfoFlow$c4#out -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$High#High
+port-in-virtual:$$AWAS$SecInfoFlow$c2#in -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-out-virtual:$$AWAS$SecInfoFlow$c3#out -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low
+port-out-virtual:$$AWAS$SecInfoFlow$c2#out -> lattice:$$AWAS$example/SecInfoFlow/simple_success.awas$Low#Low

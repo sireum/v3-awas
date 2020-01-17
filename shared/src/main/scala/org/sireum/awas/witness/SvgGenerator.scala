@@ -1,6 +1,6 @@
 /*
  *
- *  Copyright (c) 2017, Hariharan Thiagarajan, Kansas State University
+ *  Copyright (c) 2020, Hariharan Thiagarajan, Kansas State University
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -30,13 +30,16 @@ package org.sireum.awas.witness
 import org.sireum.awas.AliranAman.SecInfoFlowAnalysis
 import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.collector.Collector
+import org.sireum.awas.witness._
 import org.sireum.awas.fptc._
+import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.ops.ISZOps
 import org.sireum.util._
-import org.sireum.{$Slang, ISZ, ST}
+import org.sireum.{$Slang, $internal, ISZ, ST}
 import scalatags.Text.all._
+import org.sireum.{F, T}
 
 object SvgGenerator {
   val URI_GLUE = "="
