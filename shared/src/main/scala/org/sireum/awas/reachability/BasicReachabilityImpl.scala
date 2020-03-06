@@ -29,8 +29,8 @@ package org.sireum.awas.reachability
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector._
-import org.sireum.awas.fptc.FlowNode._
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode, NodeType}
+import org.sireum.awas.flow.FlowNode._
+import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowNode, NodeType}
 import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri

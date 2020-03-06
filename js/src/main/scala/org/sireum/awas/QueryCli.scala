@@ -36,7 +36,7 @@ import org.scalajs.jquery.jQuery
 import org.sireum.awas.Main._
 import org.sireum.awas.Notification.Kind
 import org.sireum.awas.analysis.FaultImpactAnalysis
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
+import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.query.QueryInter
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.common.JSutil.{$, render}

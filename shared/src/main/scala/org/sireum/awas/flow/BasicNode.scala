@@ -25,7 +25,7 @@
  *
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.flow
 
 import org.sireum.awas.util.AwasUtil.ResourceUri
 

@@ -35,7 +35,7 @@ object Notification {
     val Plain, Primary, Info, Warning, Error, Success = Value
   }
 
-  def notify(tpe: Kind.Type, message: String): Unit = {
+  def notify(tpe: Kind.Type, message: String, stay: Boolean = false): Unit = {
     val (bgColor, color) = tpe match {
       case Kind.Plain => ("#f9f5fb", "#4e4e4e")
       case Kind.Primary => ("#8e44ad", "#ffffff")
@@ -52,6 +52,7 @@ object Notification {
         message = message
       ),
       position = "bottom right",
+      sticky = stay,
       inEffect = "slideRight",
       outEffect = "slideRight",
       resetTimeout = "true"

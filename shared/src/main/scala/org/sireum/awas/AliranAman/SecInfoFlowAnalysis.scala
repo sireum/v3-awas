@@ -1,39 +1,42 @@
 /*
- *
- * Copyright (c) 2019, Robby, Kansas State University
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*
+* Copyright (c) 2019, Robby, Kansas State University
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice, this
+*    list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 package org.sireum.awas.AliranAman
 
+import org.sireum.ST
 import org.sireum.awas.AliranAman.Lattice.{LEdge, LNode}
 import org.sireum.awas.collector.Collector
-import org.sireum.awas.fptc.FlowNode
+import org.sireum.awas.flow.{FlowNode, NodeType}
 import org.sireum.awas.graph.{AwasEdge, SlangGraphImpl}
 import org.sireum.awas.reachability.PortReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.ops.GraphOps
 import org.sireum.util._
+import org.sireum.{$Slang, $internal, ISZ, ST}
 
 //plan :
 
@@ -163,8 +166,9 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
             workList1 = workList1 :+ (p, nt)
           }
         }
-        workList1 = workList1.tail
+
       }
+      workList1 = workList1.tail
     }
 
     //step 2: from the set of (all typevar - typevars with type defined),
@@ -286,7 +290,10 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
             ports = ports + start
             while (col.getNextPort(start).nonEmpty) {
               val x = col.getNextPort(start)
-              assert(col.getNextPort(start).size == 1)
+              if (col.getNextPort(start).size > 1) {
+                println(x)
+              }
+              assert(col.getNextPort(start).size <= 1)
               ports = ports + col.getNextPort(start).head
               start = col.getNextPort(start).head
             }
@@ -356,9 +363,9 @@ object Lattice {
     val t = lattice.addNode(TOP)
     val b = lattice.addNode(BOT)
 
-    val leaf = lattice.nodes.filter(it => lattice.incommingEdges(it).isEmpty)
+    val leaf = lattice.nodes.filter(it => lattice.incommingEdges(it).isEmpty && it != t)
     leaf.foreach(l => lattice.addEdge(b.id, l.id))
-    val roots = lattice.nodes.filter(it => lattice.outgoingEdges(it).isEmpty)
+    val roots = lattice.nodes.filter(it => lattice.outgoingEdges(it).isEmpty && it != b)
     roots.foreach(r => lattice.addEdge(r.id, t.id))
     lattice
   }
@@ -375,11 +382,14 @@ trait Lattice {
   def LUB(nodes: ISet[String]): String
   def GLB(nodes: ISet[String]): String
   def checkLessThan(type1: String, type2: String): Boolean
+
+  def getDot: String
 }
 
 trait LatticeUpdate {
   def addNode(id: String): LNode
-  def addEdge(from: String, to: String): LEdge
+
+  def addEdge(from: String, to: String): Unit
 }
 
 class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
@@ -391,6 +401,38 @@ class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
   private var nodeChildrenMap = imapEmpty[String, IList[String]]
 
   val graph = new SlangGraphImpl[LNode, LEdge]()
+
+  private var graphAttributes = ivectorEmpty[ST] :+ st"""rankdir=BT"""
+
+  private var toDot: () => String = () => {
+    val nST: ISZ[ST] = ISZ((for (e <- graph.nodes) yield st"""${nodeToDot(e)}""").toSeq.sortWith((lt1, lt2) =>
+      lt1.render < lt2.render): _*)
+    val eST: ISZ[ST] =
+      ISZ[ST]((for (e <- graph.edges.toSeq) yield st""" "${e.source.id}" -> "${e.target.id}" """).sortWith((e1, e2) => e1.render < e2.render): _*)
+
+    val r =
+      st"""digraph "Lattice" {
+          |
+      |  ${(graphAttributes, "\n")}
+          |
+      |  ${(nST, "\n")}
+          |
+      |  ${(eST, "\n")}
+          |
+      |}"""
+    r.render.value
+  }
+
+  private var nodeToDot = (n: LNode) => {
+    st""" "${n.id}" [label="${
+      if (n.id != Lattice.TOP || n.id != Lattice.BOT) {
+        SymbolTableHelper.uri2IdString(n.id)
+      } else n.id
+    }" ${(if (n.id == Lattice.TOP) "rank=max" else if (n.id == Lattice.BOT) "rank=min" else "")} shape="box"] """
+  }
+
+
+  override def getDot: String = toDot()
 
   def nodes: ISet[LNode] = {
     graph.nodes.toSet
@@ -410,7 +452,9 @@ class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
 
   def addEdge(from: String, to: String) = {
     assert(idNodeMap.contains(from) && idNodeMap.contains(to))
-    graph.addEdge(idNodeMap(from), idNodeMap(to), new LEdge(idNodeMap(from), idNodeMap(to)))
+    if (from != to) {
+      graph.addEdge(idNodeMap(from), idNodeMap(to), new LEdge(idNodeMap(from), idNodeMap(to)))
+    }
   }
 
   def incommingEdges(node: LNode): ISet[LEdge] = {
@@ -447,19 +491,46 @@ class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
     }
   }
 
-  def LUB(nodes: ISet[String]): String = {
+  def LUB(nodes: ISet[String], check: Boolean): Option[String] = {
     val parents = nodes.map(computeAllParent)
-    val any = parents.head
-    val rest = (parents - any).map(_.toSet)
-    var res = Lattice.TOP
-    var found = false
-    for (it <- any) {
-      if (!found && rest.forall(temp => temp.contains(it))) {
-        found = true
-        res = it
+    if (check) {
+      var common = parents.foldLeft(nodes)((r, c) => r.intersect(c.toSet))
+      for (b1 <- common) {
+        for (b2 <- common if b1 != b2) {
+          if (computeAllParent(b1).contains(b2)) {
+            common = common - b2
+          }
+        }
+      }
+      if (common.size == 1) {
+        Some(common.head)
+      } else {
+        None
+      }
+    } else {
+      val any = parents.head
+      val rest = (parents - any).map(_.toSet)
+      var res = Lattice.TOP
+      var found = false
+      for (it <- any) {
+        if (!found && rest.forall(temp => temp.contains(it))) {
+          found = true
+          res = it
+        }
+      }
+      Some(res)
+    }
+  }
+
+  def reduce(edges: ISet[LEdge]): Unit = {
+    edges.foreach { edge =>
+      val src = edge.source
+      val tgt = edge.target
+      val otherSucc = graph.getSuccessorNodes(src) - tgt
+      if (graph.forwardReach(otherSucc.toSet).contains(tgt)) {
+        graph.removeEdge(src, tgt)
       }
     }
-    res
   }
 
   def computeAllParent(id: String): IList[String] = {
@@ -524,4 +595,6 @@ class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
   def checkLessThan(type1: String, type2: String): Boolean = {
     computeAllParent(type1).contains(type2) || type1 == type2
   }
+
+  override def LUB(nodes: ISet[String]): String = LUB(nodes, check = false).get
 }

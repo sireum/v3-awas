@@ -32,6 +32,8 @@ import org.scalajs.dom.raw.MouseEvent
 import org.sireum.awas.witness.{Errors, JSON, RankDir, SvgGenConfig}
 import org.sireum.common.JSutil.$
 import org.sireum.{B, F, T}
+import scalatags.JsDom.styles.display
+import scalatags.generic._
 
 object SettingsView {
   val key = "AWAS-WV-SETTINGS"
@@ -54,6 +56,7 @@ object SettingsView {
     val bind = $[Input](settingsNode, "#vbind")
     val apply = $[Anchor](settingsNode, "#settings_apply")
     val cancel = $[Anchor](settingsNode, "#settings_cancel")
+    val lattice = $[Div](settingsNode, "#lattice")
 
     tdNode.onclick = (_: MouseEvent) => {
       if (tdNode.checked) {
@@ -71,6 +74,8 @@ object SettingsView {
       if (eNone.checked) {
         eErrors.checked = false
         eTypes.checked = false
+        showOrHideLegend(lattice, false)
+
       }
     }
 
@@ -78,6 +83,7 @@ object SettingsView {
       if (eErrors.checked) {
         eNone.checked = false
         eTypes.checked = false
+        showOrHideLegend(lattice, false)
       }
     }
 
@@ -85,6 +91,8 @@ object SettingsView {
       if (eTypes.checked) {
         eNone.checked = false
         eErrors.checked = false
+        showOrHideLegend(lattice, true)
+
       }
     }
 
@@ -98,9 +106,12 @@ object SettingsView {
 //    if (currentConfig.viewVirtualPorts) ports.checked = true
     if (currentConfig.viewErrors == Errors.None) {
       eNone.checked = true
+      showOrHideLegend(lattice, false)
     } else if (currentConfig.viewErrors == Errors.Errors) {
+      showOrHideLegend(lattice, false)
       eErrors.checked = true
     } else {
+      showOrHideLegend(lattice, true)
       eTypes.checked = true
     }
 
@@ -133,6 +144,18 @@ object SettingsView {
         }
         apply.classList.remove("is-loading")
       })
+    }
+  }
+
+  def showOrHideLegend(lattice: Div, toShow: Boolean): Unit = {
+    if (toShow) {
+      lattice.setAttribute("style", "display: block; text-align: center;")
+      if (!lattice.lastElementChild.isEqualNode(SecViolations.apply().getLattice)) {
+        lattice.appendChild(SecViolations.apply().getLattice)
+      }
+    } else {
+      lattice.removeChild(lattice.lastElementChild)
+      lattice.setAttribute("style", "display: none;")
     }
   }
 

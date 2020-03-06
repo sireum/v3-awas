@@ -27,12 +27,11 @@
 
 package org.sireum.awas.awasfacade;
 
-import org.sireum.$internal.PackageTrait;
 import org.sireum.IS;
 import org.sireum.Z;
-import org.sireum.awas.fptc.FlowEdge;
-import org.sireum.awas.fptc.FlowGraph;
-import org.sireum.awas.fptc.FlowNode;
+import org.sireum.awas.flow.FlowEdge;
+import org.sireum.awas.flow.FlowGraph;
+import org.sireum.awas.flow.FlowNode;
 import org.sireum.awas.query.*;
 import org.sireum.awas.reachability.ErrorReachability;
 import org.sireum.awas.reachability.ErrorReachability$;
@@ -41,11 +40,9 @@ import org.sireum.awas.reachability.PortReachability$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTableHelper;
 import org.sireum.awas.util.AwasJvmUtil;
-import org.sireum.awas.util.JavaConverters;
 import org.sireum.message.Message;
 import org.sireum.message.Reporter;
 import scala.Tuple2;
-import scala.collection.Seq;
 import scala.collection.immutable.ListMap;
 
 

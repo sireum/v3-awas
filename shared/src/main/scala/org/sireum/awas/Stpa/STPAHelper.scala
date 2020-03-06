@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.flow
 
 object STPAHelper {
   val STPA_RESOURCE_URI = "stpa_"

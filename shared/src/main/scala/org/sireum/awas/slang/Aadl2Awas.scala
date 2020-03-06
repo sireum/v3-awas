@@ -42,14 +42,28 @@ final class Aadl2Awas private() {
 
   def build(aadl: ir.Aadl): Model = {
     typeDecls = typeDecls ++
-      aadl.errorLib.elements.map(build).toVector ++
-      buildAlias(aadl.errorLib.elements)
+      aadl.annexLib.elements.filter(it => it.isInstanceOf[Emv2Lib]).map(it => build(it.asInstanceOf[Emv2Library])).toVector ++
+      buildAlias(aadl.annexLib.elements.filter(it => it.isInstanceOf[Emv2Lib]).map(_.asInstanceOf[Emv2Library])).toVector ++
+      aadl.annexLib.elements.filter(it => it.isInstanceOf[SmfLib]).flatMap(it => build(it.asInstanceOf[SmfLibrary])).toVector
 
     val r = Model(typeDecls,
-      Node.emptySeq[StateMachineDecl] ++ aadl.errorLib.elements.flatMap(buildSM),
+      Node.emptySeq[StateMachineDecl] ++ aadl.annexLib.elements.filter(it => it.isInstanceOf[Emv2Lib]).map(_.asInstanceOf[Emv2Library]).flatMap(buildSM),
       Node.emptySeq[ConstantDecl],
       build(aadl.components.elements.head))
     r
+  }
+
+  def build(smfLib: ir.SmfLibrary): Seq[TypeDecl] = {
+    smfLib.types.elements.map(build)
+  }
+
+  def build(smfType: SmfType): TypeDecl = {
+    LatticeDecl(buildId(smfType.typeName.name.elements.last.value),
+      if (smfType.parentType.nonEmpty) {
+        Node.emptySeq :+ Name(Node.emptySeq :+ buildId(smfType.parentType.get.name.elements.last.value))
+      } else {
+        Node.emptySeq
+      })
   }
 
   def build(errorLib: ir.Emv2Library): TypeDecl = {
@@ -159,7 +173,7 @@ final class Aadl2Awas private() {
           Port(true, buildId(Aadl2Awas.ACCESS_IN_PORT), None) :+ Port(false, buildId(Aadl2Awas.ACCESS_OUT_PORT), None)
       } else { comp.features.elements.flatMap(build).toVector}
       val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
-      val security = ivectorEmpty[Security] //TODO: modify Air
+      val security = getSecurity(comp) //TODO: modify Air
       val flows = getFlows(comp)
       val declass = getDeclass(comp) //TODO: Modify Air
       val transistions = getTrans(comp)
@@ -698,8 +712,39 @@ final class Aadl2Awas private() {
     flows.toVector
   }
 
+  def getSecurity(comp: ir.Component): Node.Seq[Security] = {
+    var res = Node.emptySeq[Security]
+    comp.annexes.foreach { annex =>
+      if (annex.name.value == "smf") {
+        val clause = annex.clause.asInstanceOf[SmfClause]
+        clause.classification.elements.foreach { cls =>
+          val portName = buildId(cls.portName.name.elements.last.value)
+          val typeName = buildId(cls.typeName.name.elements.last.value)
+          res = res :+ Security(portName, typeName)
+        }
+      }
+    }
+    res
+  }
+
   def getDeclass(comp: ir.Component): Node.Seq[Declass] = {
-    Node.emptySeq[Declass]
+    var res = Node.emptySeq[Declass]
+    comp.annexes.foreach { annex =>
+      if (annex.name.value == "smf") {
+        val clause = annex.clause.asInstanceOf[SmfClause]
+        clause.declass.elements.foreach { decls =>
+          val flowName = buildId(decls.flowName.name.elements.last.value)
+          val srcType = if (decls.srcType.nonEmpty) {
+            Some(buildId(decls.srcType.get.name.elements.last.value))
+          } else {
+            None
+          }
+          val snkType = buildId(decls.snkType.name.elements.last.value)
+          res = res :+ Declass(flowName, srcType, snkType)
+        }
+      }
+    }
+    res
   }
 
   def getTrans(comp: ir.Component): Option[Transition] = {
@@ -707,17 +752,19 @@ final class Aadl2Awas private() {
     val defaultName = "T"
     var transExpr = Node.emptySeq[TransExpr]
     comp.annexes.foreach { annex =>
-      val clause = annex.clause.asInstanceOf[Emv2Clause]
-      if (clause.componentBehavior.nonEmpty) {
-        clause.componentBehavior.get.transitions.elements.foreach { trans =>
-          transExpr = transExpr :+ TransExpr(if (trans.id.nonEmpty) {
-            buildId(trans.id.get.name.elements.last.value)
-          } else {
-            transCount = transCount + 1
-            buildId(defaultName + transCount)
-          }, Node.emptySeq :+ buildId(trans.sourceState.name.elements.last.value),
-            Node.emptySeq :+ buildId(trans.targetState.name.elements.last.value),
-            Some(build(trans.condition)))
+      if (annex.name.value == "Emv2") {
+        val clause = annex.clause.asInstanceOf[Emv2Clause]
+        if (clause.componentBehavior.nonEmpty) {
+          clause.componentBehavior.get.transitions.elements.foreach { trans =>
+            transExpr = transExpr :+ TransExpr(if (trans.id.nonEmpty) {
+              buildId(trans.id.get.name.elements.last.value)
+            } else {
+              transCount = transCount + 1
+              buildId(defaultName + transCount)
+            }, Node.emptySeq :+ buildId(trans.sourceState.name.elements.last.value),
+              Node.emptySeq :+ buildId(trans.targetState.name.elements.last.value),
+              Some(build(trans.condition)))
+          }
         }
       }
     }
@@ -729,20 +776,22 @@ final class Aadl2Awas private() {
     val defaultName = "B"
     var behaveExpr = Node.emptySeq[BehaveExpr]
     component.annexes.foreach { annex =>
-      val clause = annex.clause.asInstanceOf[Emv2Clause]
-      if (clause.componentBehavior.nonEmpty) {
-        clause.componentBehavior.get.propagations.elements.foreach { prop =>
-          behaveExpr = behaveExpr :+ BehaveExpr(
-            if (prop.id.nonEmpty) buildId(prop.id.get.name.elements.last.value) else {
-              behaveCount = behaveCount + 1
-              buildId(defaultName + behaveCount)
-            }, if (prop.condition.nonEmpty) {
-              Some(build(prop.condition.get))
-            } else {
-              None
-            }, if (prop.target.nonEmpty) Some(buildTuple(prop.target)) else None,
-            Node.seq(prop.source.elements.map(it => buildId(it.name.elements.last.value)))
-          )
+      if (annex.name.value == "Emv2") {
+        val clause = annex.clause.asInstanceOf[Emv2Clause]
+        if (clause.componentBehavior.nonEmpty) {
+          clause.componentBehavior.get.propagations.elements.foreach { prop =>
+            behaveExpr = behaveExpr :+ BehaveExpr(
+              if (prop.id.nonEmpty) buildId(prop.id.get.name.elements.last.value) else {
+                behaveCount = behaveCount + 1
+                buildId(defaultName + behaveCount)
+              }, if (prop.condition.nonEmpty) {
+                Some(build(prop.condition.get))
+              } else {
+                None
+              }, if (prop.target.nonEmpty) Some(buildTuple(prop.target)) else None,
+              Node.seq(prop.source.elements.map(it => buildId(it.name.elements.last.value)))
+            )
+          }
         }
       }
     }

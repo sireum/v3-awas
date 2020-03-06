@@ -402,8 +402,7 @@ object Views {
       )
     )
 
-  def quickView(): Frag = {
-    div(
+  def quickView(): Frag = div(
       id := "quickviewDefault",
       cls := "quickview",
       header(
@@ -466,11 +465,13 @@ object Views {
                 cls := "control",
                 a(cls := "button is-light", id := "settings_cancel", attr("data-dismiss") := "quickview", "Cancel")
               )
+            ),
+            div(id := "lattice", display.none,
+              div(id := "lattice-title", cls := "is-divider", attr("data-content") := "Lattice"),
             )
           )
         )
       ),
       footer(cls := "quickview-footer")
     )
-  }
 }

@@ -394,8 +394,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
                   (implicit reporter: AccumulatingTagReporter): Unit = {
     val flowUri = ctp.tables.symbol2Uri.get(declass.fid.value)
     if (flowUri.isDefined) {
-      val fromD = declass.fromDomain.flatMap(it => st.symbol2Uri.get(it.value))
-      val toD = st.symbol2Uri(declass.toDomain.value)
+      val fromD = declass.fromDomain.flatMap(it => st.symbol2Uri.get(it.value).flatMap(it2 => st.typeTable(it2).getUriFromSymbol(it.value)))
+      val toD = st.typeTable(st.symbol2Uri(declass.toDomain.value)).getUriFromSymbol(declass.toDomain.value).get
       ctp.tables.declass(flowUri.get) = (fromD, toD)
     } else {
       reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,

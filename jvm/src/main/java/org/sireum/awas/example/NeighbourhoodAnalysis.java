@@ -26,12 +26,10 @@
 
 package org.sireum.awas.example;
 
-import org.sireum.hamr.ir.Aadl;
 import org.sireum.awas.ast.Model;
 import org.sireum.awas.awasfacade.AwasGraph;
-import org.sireum.awas.awasfacade.AwasGraphBuilder;
 import org.sireum.awas.awasfacade.AwasGraphImpl;
-import org.sireum.awas.fptc.*;
+import org.sireum.awas.flow.*;
 import org.sireum.awas.slang.Aadl2Awas$;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTable$;
@@ -52,7 +50,7 @@ import static org.sireum.awas.util.JavaConverters.toJavaSet;
 public class NeighbourhoodAnalysis {
     public static void main(String[] args) {
 
-        String modelPath = "org/sireum/awas/test/example/aadl-json/PCA_System_PCA_Shutoff_System_imp_Instance.json";
+        String modelPath = "/Users/hariharan/Documents/workspace/sireum-v3/awas/jvm/src/test/resources/org/sireum/awas/test/example/aadl-json/PCA_System_PCA_Shutoff_System_imp_Instance.json";
         Model awasModel = Aadl2Awas$.MODULE$.apply(FileUtil.readFile(FileUtil.toUri(modelPath))._1).get();
         SymbolTable st = SymbolTable$.MODULE$.apply(awasModel, new ConsoleTagReporter()); //reporter is slightly changed in my version
         FlowGraph<FlowNode, FlowEdge<FlowNode>> graph = FlowGraph$.MODULE$.apply(awasModel, st, false); //building all the graphs and returning only the top level graph

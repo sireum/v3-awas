@@ -30,8 +30,8 @@ package org.sireum.awas.query
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper.{ReachAnalysisStage, _}
 import org.sireum.awas.collector.{Collector, CollectorImpl, Operator, ResultType}
-import org.sireum.awas.fptc.FlowNode.Edge
-import org.sireum.awas.fptc.{FlowGraph, FlowNode}
+import org.sireum.awas.flow.FlowNode.Edge
+import org.sireum.awas.flow.{FlowGraph, FlowNode}
 import org.sireum.awas.query.ConstraintKind.ConstraintKind
 import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}

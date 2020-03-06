@@ -35,7 +35,7 @@ import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.ast.AwasSerializer
 import org.sireum.awas.collector.{Collector, ResultType}
-import org.sireum.awas.fptc._
+import org.sireum.awas.flow._
 import org.sireum.awas.query.QueryInter
 import org.sireum.awas.reachability.{ErrorReachabilityImpl, PortReachabilityImpl}
 import org.sireum.awas.slang.Aadl2Awas

@@ -31,6 +31,7 @@ import org.sireum.Graph
 import org.sireum.ops.GraphOps
 import org.sireum.util.{CSet, isetEmpty, ilistEmpty}
 
+
 class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 //(ef: AwasEdgeFactory[Node, EdgeT])
   extends AwasGraph[Node, Edge] with AwasGraphUpdate[Node, Edge] {
@@ -148,6 +149,14 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
       cycles = Some(GraphOps(graph).getCycles.elements.map(_.elements))
     }
     cycles.getOrElse(ilistEmpty)
+  }
+
+  override def forwardReach(criteria: Set[Node]): CSet[Node] = {
+    GraphOps(graph).forwardReach(org.sireum.ISZ(criteria.toSeq: _ *)).elements.toSet
+  }
+
+  override def backwardReach(criteria: Set[Node]): CSet[Node] = {
+    GraphOps(graph).backwardReach(org.sireum.ISZ(criteria.toSeq: _ *)).elements.toSet
   }
 
   override def reComputeCycles(): Unit = {

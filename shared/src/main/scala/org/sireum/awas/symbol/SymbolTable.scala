@@ -51,7 +51,6 @@ object SymbolTable {
 
   def getTable: Option[SymbolTable] = symbolTable
 
-
   private def buildSymbolTable(m: Model)(
     implicit reporter: AccumulatingTagReporter): SymbolTable = {
     val stp = SymbolMiner(m, new STProducer())

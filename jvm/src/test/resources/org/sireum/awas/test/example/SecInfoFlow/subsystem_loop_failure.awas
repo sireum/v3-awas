@@ -2,7 +2,7 @@ types
   lattice Low
   lattice High extends Low
 
-system SubSystem_Success
+system SubSystem_loop_failure
 
   sub-components {
   A

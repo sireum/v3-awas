@@ -31,7 +31,7 @@ import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.codegen.ContextInSensitiveGen
-import org.sireum.awas.fptc.FlowGraph
+import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.TestUtils
 import org.sireum.awas.util.TestUtils._

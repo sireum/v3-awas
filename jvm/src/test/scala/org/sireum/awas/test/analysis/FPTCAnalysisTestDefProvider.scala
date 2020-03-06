@@ -32,7 +32,7 @@ import java.nio.file.Paths
 import org.sireum.awas.analysis.{FPTCAnalysis, FPTCNode, StateReachAnalysis}
 import org.sireum.awas.ast.{Builder, PrettyPrinter}
 import org.sireum.awas.codegen.ContextInSensitiveGen
-import org.sireum.awas.fptc.FlowGraph
+import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq}
@@ -47,7 +47,7 @@ final class FPTCAnalysisTestDefProvider(tf: TestFramework)
   val resultsDir = toFilePath(fileUri(this.getClass, s"../results/fptc"))
   val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/fptc"))
 
-  val generateExpected = true
+  val generateExpected = false
 
     override def testDefs: ISeq[TestDef] = {
       val files = testDirs.flatMap { d =>

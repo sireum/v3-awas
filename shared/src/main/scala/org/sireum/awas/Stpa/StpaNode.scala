@@ -26,8 +26,8 @@
 
 package org.sireum.awas.Stpa
 
-import org.sireum.awas.fptc.NodeType.NodeType
-import org.sireum.awas.fptc.{BasicNode, BasicNodeImpl, FlowNode, StpaControlStructure}
+import org.sireum.awas.flow.NodeType.NodeType
+import org.sireum.awas.flow.{BasicNode, BasicNodeImpl, FlowNode, StpaControlStructure}
 import org.sireum.awas.graph.AwasEdge
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri

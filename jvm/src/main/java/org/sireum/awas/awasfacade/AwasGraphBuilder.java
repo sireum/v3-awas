@@ -30,10 +30,10 @@ package org.sireum.awas.awasfacade;
 
 import org.sireum.awas.ast.Builder;
 import org.sireum.awas.ast.Model;
-import org.sireum.awas.fptc.FlowEdge;
-import org.sireum.awas.fptc.FlowGraph;
-import org.sireum.awas.fptc.FlowGraph$;
-import org.sireum.awas.fptc.FlowNode;
+import org.sireum.awas.flow.FlowEdge;
+import org.sireum.awas.flow.FlowGraph;
+import org.sireum.awas.flow.FlowGraph$;
+import org.sireum.awas.flow.FlowNode;
 import org.sireum.awas.symbol.SymbolTable;
 import org.sireum.awas.symbol.SymbolTable$;
 import org.sireum.awas.util.JavaConverters;

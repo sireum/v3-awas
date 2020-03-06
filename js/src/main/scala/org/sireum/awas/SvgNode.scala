@@ -30,7 +30,7 @@ package org.sireum.awas
 import org.scalajs.dom.MouseEvent
 import org.scalajs.dom.html.Anchor
 import org.sireum.awas.SvgNodeType.SvgNodeType
-import org.sireum.awas.fptc.FlowNode
+import org.sireum.awas.flow.FlowNode
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 
 import scala.scalajs.js

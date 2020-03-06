@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.flow
 
 import org.sireum.awas.Stpa.{StpaEdge, StpaNode}
 import org.sireum.awas.ast.{Id, RecordInit, StringInit}
@@ -77,6 +77,10 @@ class StpaControlStructureImpl(csId : String) extends StpaControlStructure {
     * @return set of cycles
     */
   override def getCycles: Seq[Seq[StpaNode]] = ???
+
+  override def forwardReach(criteria: Set[StpaNode]): CSet[StpaNode] = ???
+
+  override def backwardReach(criteria: Set[StpaNode]): CSet[StpaNode] = ???
 }
 
 object StpaControlStructure {

@@ -27,10 +27,8 @@
 
 package org.sireum.awas.awasfacade;
 
-import org.sireum.awas.fptc.FlowEdge;
-import org.sireum.awas.fptc.FlowGraph;
-import org.sireum.awas.fptc.FlowNode;
-import org.sireum.awas.symbol.SymbolTable;
+import org.sireum.awas.flow.FlowEdge;
+import org.sireum.awas.flow.FlowNode;
 import org.sireum.util.Tag;
 import scala.Enumeration;
 

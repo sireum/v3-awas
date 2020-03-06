@@ -16,8 +16,8 @@ system SubSystem_Success
 
   B
     ports
-      in bIn // expecting the algorithm to derive : Low <= bIn <= T
-      out bOut // High <= bOut <= T
+      in bIn // expecting the algorithm to derive : High
+      out bOut // High
 
     sub-components {
       B_1

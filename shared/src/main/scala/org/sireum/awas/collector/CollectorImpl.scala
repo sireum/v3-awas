@@ -30,8 +30,8 @@ package org.sireum.awas.collector
 
 import org.sireum.awas.collector.Operator.Operator
 import org.sireum.awas.collector.ResultType.ResultType
-import org.sireum.awas.fptc.FlowNode._
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowNode}
+import org.sireum.awas.flow.FlowNode._
+import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowNode}
 import org.sireum.awas.reachability.ErrorReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -449,9 +449,20 @@ case class CollectorImpl(graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
   }
 
   override def getNextPort(currentPort: ResourceUri): ISet[ResourceUri] = {
-    if (SymbolTable.getTable.isDefined)
-      ErrorReachability(SymbolTable.getTable.get).getSuccessor(currentPort).intersect(getPorts)
-    else
+    if (SymbolTable.getTable.isDefined) {
+      var res = isetEmpty[ResourceUri]
+      val sd = ErrorReachability(SymbolTable.getTable.get).getSuccDetailed(currentPort)
+      sd.foreach { fc =>
+        if (fc.flows.nonEmpty && getFlows.intersect(fc.flows).nonEmpty) {
+          res = res ++ fc.ports.intersect(getPorts)
+        }
+
+        if (fc.edges.nonEmpty && getEdges.intersect(fc.edges).nonEmpty) {
+          res = res ++ fc.ports.intersect(getPorts)
+        }
+      }
+      res
+    } else
       isetEmpty
   }
 

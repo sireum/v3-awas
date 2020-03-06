@@ -31,7 +31,7 @@ import org.sireum.awas.AliranAman.SecInfoFlowAnalysis
 import org.sireum.awas.ast.PrettyPrinter
 import org.sireum.awas.collector.Collector
 import org.sireum.awas.witness._
-import org.sireum.awas.fptc._
+import org.sireum.awas.flow._
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -197,6 +197,26 @@ object SvgGenerator {
       if (vertex.isComponent && this.viewConfig.viewFlows.value)
         if (this.viewConfig.viewErrors == Errors.Errors) {
           vertex.getFlows.map(it => (it._1, it._2.toString)).toSeq
+        } else if (this.viewConfig.viewErrors == Errors.Types) {
+          vertex.getFlows.filter(it => it._2.fromFaults.isEmpty && it._2.toFaults.isEmpty).map { it =>
+            if (st.componentTable(vertex.getUri).declass(it._1).isDefined) {
+              val declass = st.componentTable(vertex.getUri).declass(it._1).get
+              var res = ""
+              res = res + (if (it._2.fromPortUri.isDefined) H.uri2IdString(it._2.fromPortUri.get) else "*")
+
+              res = res + "{" + (if (declass._1.isDefined) H.uri2IdString(declass._1.get) else "*") + "}"
+
+              res = res + "->"
+
+              res = res + (if (it._2.toPortUri.isDefined) H.uri2IdString(it._2.toPortUri.get) else "*")
+
+              res = res + "{" + H.uri2IdString(declass._2) + "}"
+
+              (it._1, res)
+            } else {
+              (it._1, it._2.toString)
+            }
+          }.toSeq
         } else {
           vertex.getFlows.filter(it => it._2.fromFaults.isEmpty && it._2.toFaults.isEmpty).map(it => (it._1, it._2.toString))
             .toSeq

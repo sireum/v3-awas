@@ -120,11 +120,11 @@ object RandomColor extends Function0[String] {
       gradient.appendChild(stop)
     }
     stripedef.appendChild(gradient)
-    ("url(#" + id + ")", stripedef)
+    (id, stripedef)
   }
 
-  def stripeColorViolation(violationColor: String, otherColors: ISet[String]): (String, Defs) = {
-    val sortedColors = otherColors.toList.sorted
+  def colorViolation(violationColor: String, typeColor: String): (String, Defs) = {
+
     val id = "c" + cid
     cid = cid + 1
     val namespaceURI = "http://www.w3.org/2000/svg"
@@ -134,19 +134,20 @@ object RandomColor extends Function0[String] {
     gradient.setAttribute("x1", "0%")
     gradient.setAttribute("y1", "0%")
     gradient.setAttribute("x2", "100%")
-    gradient.setAttribute("y2", "100%")
+    gradient.setAttribute("y2", "0%")
 
-    for (a <- 0 to 20) {
-      val stop = document.createElementNS(namespaceURI, "stop")
-      stop.setAttribute("offset", (a * 5) + "%")
-      if (a < 5) {
-        stop.setAttribute("style", "stop-color:" + violationColor + ";stop-opacity:1")
-      } else {
-        stop.setAttribute("style", "stop-color:" + sortedColors(a % sortedColors.length) + ";stop-opacity:1")
-      }
-      gradient.appendChild(stop)
-    }
+
+    val stop1 = document.createElementNS(namespaceURI, "stop")
+    stop1.setAttribute("offset", "10%")
+    stop1.setAttribute("style", "stop-color:" + violationColor + ";stop-opacity:1")
+    gradient.appendChild(stop1)
+
+    val stop = document.createElementNS(namespaceURI, "stop")
+    stop.setAttribute("offset", "20%")
+    stop.setAttribute("style", "stop-color:" + typeColor + ";stop-opacity:1")
+    gradient.appendChild(stop)
+
     stripedef.appendChild(gradient)
-    ("url(#" + id + ")", stripedef)
+    (id, stripedef)
   }
 }

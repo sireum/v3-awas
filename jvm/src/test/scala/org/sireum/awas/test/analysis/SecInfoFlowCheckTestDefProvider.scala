@@ -30,7 +30,7 @@ import java.nio.file.Paths
 
 import org.sireum.awas.AliranAman.SecInfoFlowAnalysis
 import org.sireum.awas.ast.{AwasSerializer, Builder}
-import org.sireum.awas.fptc.FlowGraph
+import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils.extensor
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
@@ -42,7 +42,7 @@ class SecInfoFlowCheckTestDefProvider(tf: TestFramework) extends TestDefProvider
   val resultsDir = toFilePath(fileUri(this.getClass, s"../results/SecInfoFlow"))
   val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/SecInfoFlow"))
 
-  val generateExpected = true
+  val generateExpected = false
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -52,8 +52,8 @@ class SecInfoFlowCheckTestDefProvider(tf: TestFramework) extends TestDefProvider
       //      p.toLowerCase.contains("pcashutoff") ||
       //        p.toLowerCase.contains("isolette") ||
       //        p.toLowerCase.contains("abcloop")  ||
-      p.toLowerCase.contains("simple_failure")
-//      true
+      //      p.toLowerCase.contains("subsystem_success")
+      true
     }
 
     filesEqual.toVector.map { x =>

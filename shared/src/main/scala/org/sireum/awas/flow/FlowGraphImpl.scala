@@ -25,12 +25,12 @@
  *
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.flow
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
-import org.sireum.awas.fptc.FlowNode.Edge
+import org.sireum.awas.flow.FlowNode.Edge
 import org.sireum.awas.graph._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -487,4 +487,8 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     }
   }
   override def reComputeCycles(): Unit = superClass.reComputeCycles()
+
+  override def forwardReach(criteria: Set[FlowNode]): CSet[FlowNode] = ???
+
+  override def backwardReach(criteria: Set[FlowNode]): CSet[FlowNode] = ???
 }

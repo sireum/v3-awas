@@ -31,7 +31,7 @@ import org.scalajs.dom.html.{Anchor, Input}
 import org.scalajs.dom.raw.SVGElement
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.Main._
-import org.sireum.awas.fptc.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
+import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.awas.witness.{Errors, RankDir, SvgGenConfig, SvgGenerator}
@@ -77,7 +77,7 @@ object Util {
     var result = templateContent(raw(svgString)).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
 
     if (viewConfig.viewErrors == Errors.Types) {
-      SecViolations().getColorDefs.foreach(result.appendChild(_))
+      SecViolations().getColorDefs(graphUri).foreach(result.appendChild(_))
       //      result = templateContent(raw(result.outerHTML)).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
     }
 
@@ -94,15 +94,15 @@ object Util {
         val typeUri = en.getUri.split(SvgGenerator.URI_GLUE).last
         val pUri = en.getUri.split(SvgGenerator.URI_GLUE)(1)
         var color = if (SecViolations().getSecInfoFlow.getViolations().contains(pUri)) {
-          SecViolations().getViolationColor(typeUri)
+          SecViolations().getViolationColor(graphUri)(typeUri)
         } else if (SecViolations().getSecInfoFlow.getProvidedSecType().keySet.contains(pUri)) {
           SecViolations().getProvidedColor(typeUri)
         } else {
-          SecViolations().getTypeColor(typeUri)
+          SecViolations().getTypeColor(graphUri)(typeUri)
         }
 
         // val pNode = uriNodeMap(pUri).map(_.asInstanceOf[SvgNodeUpdateColors])
-        val tNode = uriNodeMap(en.getUri).map(_.asInstanceOf[SvgNodeUpdateColors])
+        val tNode = uriNodeMap(en.getUri).intersect(nodes).map(_.asInstanceOf[SvgNodeUpdateColors])
 
         //pNode.foreach(_.portColor_=(color))
 

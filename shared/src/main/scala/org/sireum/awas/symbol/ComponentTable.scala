@@ -87,6 +87,18 @@ trait ComponentTable {
   def getUriFromSymbol(symbol: String): Option[ResourceUri]
 }
 
+trait ComponentTableUpdate {
+
+  def addFlow(flowUri: ResourceUri,
+              fromPortUri: Option[ResourceUri],
+              toPortUri: Option[ResourceUri],
+              fromFaults: Set[ResourceUri],
+              toFaults: Set[ResourceUri]): Unit
+
+}
+
+
+
 sealed case class ComponentTableData
 (declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
  portTable: MMap[ResourceUri, Port] = mmapEmpty,
@@ -113,7 +125,7 @@ class CompSTProducer(val compUri: ResourceUri,
                      val compDecl: ComponentDecl,
                      val st: SymbolTable,
                      val parent: Option[ResourceUri] = None)
-  extends ComponentTable {
+  extends ComponentTable with ComponentTableUpdate {
 
   val tables = ComponentTableData()
 
@@ -202,6 +214,26 @@ class CompSTProducer(val compUri: ResourceUri,
 
   override def transition(transUri: ResourceUri): TransExpr = tables.transitionTable(transUri)
 
+  override def addFlow(flowUri: ResourceUri,
+                       fromPortUri: Option[ResourceUri],
+                       toPortUri: Option[ResourceUri],
+                       fromFaults: Set[ResourceUri],
+                       toFaults: Set[ResourceUri]): Unit = {
+    if (!flows.toSet.contains(flowUri)) {
+      val fdt = FlowTableData(flowUri, fromPortUri, toPortUri, fromFaults, toFaults)
+      tables.flowTable + (flowUri -> fdt)
+
+      if (fromPortUri.isDefined) {
+        tables.portFlowRelation + (flowUri -> fromPortUri.get)
+        tables.flowPortRelation + (fromPortUri.get -> flowUri)
+      }
+
+      if (toPortUri.isDefined) {
+        tables.portFlowRelation + (flowUri -> toPortUri.get)
+        tables.flowPortRelation + (toPortUri.get -> flowUri)
+      }
+    }
+  }
 }
 
 sealed case class FlowTableData

@@ -78,6 +78,7 @@ object SymbolTableHelper {
   val PORT_IN_BIND_TYPE = "port-in-bind"
   val PORT_OUT_BIND_TYPE = "port-out-bind"
   val FLOW_TYPE = "flow"
+  val VIRTUAL_FLOW_TYPE = "flow-virtual"
   val BEHAVIOR_TYPE = "behavior"
   val TRANSITION_TYPE = "transition"
   val CONNECTION_TYPE = "connection"
@@ -110,7 +111,7 @@ object SymbolTableHelper {
 
   def isVirtual(r: Resource): Boolean = r.uriType.endsWith(VIRTUAL_PORT_TYPE)
 
-  def isFlow(r: Resource): Boolean = r.uriType == FLOW_TYPE
+  def isFlow(r: Resource): Boolean = r.uriType == FLOW_TYPE || r.uriType == VIRTUAL_FLOW_TYPE
 
   def isConnection(r: Resource): Boolean = r.uriType == CONNECTION_TYPE
 

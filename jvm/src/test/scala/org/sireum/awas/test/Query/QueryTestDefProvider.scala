@@ -30,7 +30,7 @@ package org.sireum.awas.test.Query
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.Builder
-import org.sireum.awas.fptc.FlowGraph
+import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.query.{QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._

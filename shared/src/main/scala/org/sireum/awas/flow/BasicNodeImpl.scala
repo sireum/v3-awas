@@ -25,9 +25,9 @@
  *
  */
 
-package org.sireum.awas.fptc
+package org.sireum.awas.flow
 
-import org.sireum.awas.fptc.NodeType.NodeType
+import org.sireum.awas.flow.NodeType.NodeType
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._

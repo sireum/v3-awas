@@ -72,6 +72,10 @@ trait AwasGraph[Node, Edge <: AwasEdge[Node]] {
     * @return set of cycles
     */
   def getCycles: Seq[Seq[Node]]
+
+  def forwardReach(criteria: Set[Node]): CSet[Node]
+
+  def backwardReach(criteria: Set[Node]): CSet[Node]
 }
 
 trait AwasGraphUpdate[Node, Edge <: AwasEdge[Node]] {

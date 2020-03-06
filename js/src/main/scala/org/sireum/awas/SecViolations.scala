@@ -28,14 +28,16 @@ package org.sireum.awas
 
 import facades._
 import org.scalajs.dom.html.{Anchor, Div, Table, TableDataCell, TableRow}
+import org.scalajs.dom.raw.{SVGAElement, SVGElement, SVGPolygonElement}
 import org.scalajs.dom.svg.Defs
 import org.scalajs.dom.{raw => _, _}
 import org.sireum.awas.AliranAman.SecInfoFlowAnalysis
 import org.sireum.awas.Main.{collectorToUris, gl, highlight}
-import org.sireum.awas.symbol.SymbolTable
+import org.sireum.awas.Notification.Kind
+import org.sireum.awas.symbol.{SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.common.JSutil
-import org.sireum.common.JSutil.{$, render}
+import org.sireum.common.JSutil.{$, render, templateContent}
 import org.sireum.util._
 import scalatags.Text.all._
 
@@ -48,7 +50,8 @@ object SecViolations {
   var secInfoFlow: Option[SecViolations] = None
 
   def openWindow(st: SymbolTable): Boolean = {
-    if (gl.isDefined) {
+
+    if (gl.isDefined && apply().getSecInfoFlow.getViolations().nonEmpty) {
 
       if (gl.get.root.getComponentsByName("violation").nonEmpty) {
         val vi = gl.get.root.getItemsById("violation").head
@@ -98,8 +101,11 @@ object SecViolations {
           tr.appendChild(td1)
           tr.appendChild(td2)
           violationTable.appendChild(tr)
+          violation_num = violation_num + 1
         }
       }
+    } else {
+      Notification.notify(Kind.Info, "No Secure information leak found")
     }
     false
   }
@@ -116,16 +122,21 @@ object SecViolations {
 trait SecViolations {
   def getSecInfoFlow: SecInfoFlowAnalysis
 
-  def getTypeColor: IMap[ResourceUri, String]
+  def getTypeColor(graphUri: ResourceUri): IMap[ResourceUri, String]
 
   def getProvidedColor: IMap[ResourceUri, String]
 
-  def getViolationColor: IMap[ResourceUri, String]
+  def getViolationColor(graphUri: ResourceUri): IMap[ResourceUri, String]
 
-  def getColorDefs: ISet[Defs]
+  def getColorDefs(graphUri: ResourceUri): ISet[Defs]
+
+  def getLattice: SVGElement
 }
 
 class SecViolationsImpl() extends SecViolations {
+
+  private var latticesvg: Option[SVGElement] = None
+
   private val secInfoFlow: SecInfoFlowAnalysis = SecInfoFlowAnalysis()
 
   private val typeColor: IMap[ResourceUri, String] = secInfoFlow
@@ -139,22 +150,29 @@ class SecViolationsImpl() extends SecViolations {
 
   private var gradColorDefs = isetEmpty[Defs]
 
+  private val inferedColor: IMap[ResourceUri, String] = secInfoFlow
+    .getSecTypes()
+    .values
+    .toSet
+    .map { it: ResourceUri =>
+      val (cid, defs) = RandomColor.stripeColor((isetEmpty[String] + typeColor(it)) + "#ffffff")
+      gradColorDefs = gradColorDefs + defs
+      (it, cid)
+    }
+    .toMap
+
   private val providedColor: IMap[ResourceUri, String] = secInfoFlow
     .getProvidedSecType()
     .values
     .toSet
-    .map { pc: ResourceUri =>
-      val (cid, defs) = RandomColor.stripeColor((isetEmpty[String] + typeColor(pc)) + "#ffffff")
-      gradColorDefs = gradColorDefs + defs
-      (pc, cid)
-    }
+    .map { pc: ResourceUri => (pc, typeColor(pc)) }
     .toMap
 
   private val violationColor: IMap[ResourceUri, String] = secInfoFlow
     .getViolations()
     .map { vp =>
       val pc = secInfoFlow.getSecTypes()(vp)
-      val (cid, defs) = RandomColor.stripeColorViolation("#cc0000", (isetEmpty[String] + typeColor(pc)) + "#ffffff")
+      val (cid, defs) = RandomColor.colorViolation("#cc0000", typeColor(pc))
       gradColorDefs = gradColorDefs + defs
       (pc, cid)
     }
@@ -164,20 +182,51 @@ class SecViolationsImpl() extends SecViolations {
     secInfoFlow
   }
 
-  def getTypeColor: IMap[ResourceUri, String] = {
-    typeColor
+  def getTypeColor(graphUri: ResourceUri): IMap[ResourceUri, String] = {
+    inferedColor.map(k => (k._1, "url(#" + SymbolTableHelper.uri2CanonicalName(graphUri) + "." + k._2 + ")"))
   }
 
   def getProvidedColor: IMap[ResourceUri, String] = {
     providedColor
   }
 
-  def getViolationColor: IMap[ResourceUri, String] = {
-    violationColor
+  def getViolationColor(graphUri: ResourceUri): IMap[ResourceUri, String] = {
+    violationColor.map(k => (k._1, "url(#" + SymbolTableHelper.uri2CanonicalName(graphUri) + "." + k._2 + ")"))
   }
 
-  def getColorDefs: ISet[Defs] = {
-    gradColorDefs
+  def getColorDefs(graphUri: ResourceUri): ISet[Defs] = {
+    gradColorDefs.map { od =>
+      val defs = od.cloneNode(true).asInstanceOf[Defs]
+      val id = defs.firstElementChild.getAttribute("id")
+      defs.firstElementChild.setAttribute("id", SymbolTableHelper.uri2CanonicalName(graphUri) + "." + id)
+      defs
+    }
+  }
+
+  def getLattice: SVGElement = {
+    if (latticesvg.isDefined) {
+      latticesvg.get
+    } else {
+      val g = secInfoFlow.getLattice().getDot
+      println(g)
+      val svg = templateContent(raw(GraphViz.Viz(g)))
+        .querySelectorAll("svg")(0).asInstanceOf[SVGElement]
+
+      //getColorDefs("lattice").foreach(defs => svg.appendChild(defs))
+
+      val nodes = org.scalajs.dom.ext.PimpedNodeList(svg.querySelectorAll(".node"))
+      nodes.foreach { n =>
+        val typeUri = n.asInstanceOf[SVGElement].firstElementChild.textContent
+
+        val p = n.asInstanceOf[SVGElement].getElementsByTagName("polygon").item(0)
+        if (typeColor.contains(typeUri)) {
+          p.asInstanceOf[SVGPolygonElement].setAttribute("fill", typeColor(typeUri))
+          p.asInstanceOf[SVGPolygonElement].setAttribute("fill-opacity", ".8")
+        }
+      }
+      latticesvg = Some(svg)
+      latticesvg.get
+    }
   }
 
 }
