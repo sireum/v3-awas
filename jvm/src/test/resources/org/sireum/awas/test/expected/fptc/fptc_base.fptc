@@ -1,42 +1,16 @@
-fptc_base.fptc
-++++++++++++++++
+{"$type":"org.sireum.awas.collector.CollectorImpl","graphs":["component:$$AWAS#fptc_base"],"resType":[2],"resEdges":[{"$type":"org.sireum.awas.flow.FlowEdgeImpl","owner":"component:$$AWAS#fptc_base","sourceNodeUri":"component:$$AWAS$fptc_base#A","targetNodeUri":"connection:$$AWAS$fptc_base#A2B"},{"$type":"org.sireum.awas.flow.FlowEdgeImpl","owner":"component:$$AWAS#fptc_base","sourceNodeUri":"component:$$AWAS$fptc_base#B","targetNodeUri":"connection:$$AWAS$fptc_base#B2A"},{"$type":"org.sireum.awas.flow.FlowEdgeImpl","owner":"component:$$AWAS#fptc_base","sourceNodeUri":"connection:$$AWAS$fptc_base#B2A","targetNodeUri":"component:$$AWAS$fptc_base#A"},{"$type":"org.sireum.awas.flow.FlowEdgeImpl","owner":"component:$$AWAS#fptc_base","sourceNodeUri":"connection:$$AWAS$fptc_base#A2B","targetNodeUri":"component:$$AWAS$fptc_base#B"}],"operator":[3],"resNodes":["component:$$AWAS$fptc_base#B","connection:$$AWAS$fptc_base#B2A","connection:$$AWAS$fptc_base#A2B","component:$$AWAS$fptc_base#A"],"resPorts":["port-in:$$AWAS$fptc_base$B#bIn","port-out:$$AWAS$fptc_base$B#bOut","port-out-virtual:$$AWAS$fptc_base$B2A#out","port-in-virtual:$$AWAS$fptc_base$A2B#in","port-out-virtual:$$AWAS$fptc_base$A2B#out","port-in-virtual:$$AWAS$fptc_base$B2A#in","port-in:$$AWAS$fptc_base$A#aIn","port-out:$$AWAS$fptc_base$A#aOut"],"resPortError":{"port-in:$$AWAS$fptc_base$B#bIn":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#value","error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-out:$$AWAS$fptc_base$B#bOut":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-out-virtual:$$AWAS$fptc_base$B2A#out":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-in-virtual:$$AWAS$fptc_base$A2B#in":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#value","error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-out-virtual:$$AWAS$fptc_base$A2B#out":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#value","error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-in-virtual:$$AWAS$fptc_base$B2A#in":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-in:$$AWAS$fptc_base$A#aIn":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"],"port-out:$$AWAS$fptc_base$A#aOut":["error:$$AWAS$example/fptc/fptc_base.awas$Fault#value","error:$$AWAS$example/fptc/fptc_base.awas$Fault#late"]},"resBehav":["behavior:$$AWAS$fptc_base$A#b2","behavior:$$AWAS$fptc_base$B#b5","behavior:$$AWAS$fptc_base$A#b1","behavior:$$AWAS$fptc_base$B#b3"]}{ port-in-virtual:$$AWAS$fptc_base$A2B#in[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late, error:$$AWAS$example/fptc/fptc_base.awas$Fault#value ]
+port-in-virtual:$$AWAS$fptc_base$B2A#in[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late ]
+port-in:$$AWAS$fptc_base$A#aIn[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late ]
+port-in:$$AWAS$fptc_base$B#bIn[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late, error:$$AWAS$example/fptc/fptc_base.awas$Fault#value ]
+port-out-virtual:$$AWAS$fptc_base$A2B#out[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late, error:$$AWAS$example/fptc/fptc_base.awas$Fault#value ]
+port-out-virtual:$$AWAS$fptc_base$B2A#out[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late ]
+port-out:$$AWAS$fptc_base$A#aOut[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late, error:$$AWAS$example/fptc/fptc_base.awas$Fault#value ]
+port-out:$$AWAS$fptc_base$B#bOut[ error:$$AWAS$example/fptc/fptc_base.awas$Fault#late ] } 
 
-A2B::Connection
-=================
-##InSET##
-*
-Fault.late
-Fault.value
-##OutSET##
-*
-Fault.late
-Fault.value
+ States : 
 
-B2A::Connection
-=================
-##InSET##
-*
-Fault.late
-##OutSET##
-*
-Fault.late
-
-A::Component
-=================
-##InSET##
-*
-Fault.late
-##OutSET##
-Fault.late
-Fault.value
-
-B::Component
-=================
-##InSET##
-*
-Fault.late
-Fault.value
-##OutSET##
-*
-Fault.late
-
+ Behaviors: 
+behavior:$$AWAS$fptc_base$A#b2
+behavior:$$AWAS$fptc_base$B#b5
+behavior:$$AWAS$fptc_base$A#b1
+behavior:$$AWAS$fptc_base$B#b3
