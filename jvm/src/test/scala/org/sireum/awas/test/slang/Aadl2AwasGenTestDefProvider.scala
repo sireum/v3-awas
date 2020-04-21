@@ -27,12 +27,15 @@
 
 package org.sireum.awas.test.slang
 
-import org.sireum.awas.ast.PrettyPrinter
-import org.sireum.awas.slang.Aadl2Awas
+import org.sireum.awas.ast.{AwasSerializer, PrettyPrinter}
+import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
+import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
+import org.sireum.awas.witness.SvgGenerator
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.jvm.FileUtil._
-import org.sireum.util.{FileResourceUri, ISeq, Uri}
+import org.sireum.util.{AccumulatingTagReporter, ConsoleTagReporter, FileResourceUri, ISeq, Uri}
+import org.sireum.awas.slang.Aadl2Awas
 
 class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(makePath("..", "example", "aadl-json"))
@@ -50,8 +53,8 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     //equals test by excluding some
     val filesEqual = files.filter { p =>
-      true
-//          p.toLowerCase.contains("impl3")
+      //true
+          p.toLowerCase.contains("latest-security")
     }
 
     filesEqual.toVector.map { x =>
@@ -72,15 +75,16 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
   }
 
   def translateAndParse(fileResourceUri: FileResourceUri, model: String): String = {
+//    var x = AwasSerializer.unapply(model)
     Aadl2Awas(model) match {
       case Some(x) => {
-//                        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
-//                        val st = SymbolTable(x)
-//                        val graph = FlowGraph(x, st)
-//                        SvgGenerator(graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
-//                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]], false)
-//        AwasSerializer(x)
-val rr = PrettyPrinter(x)
+        implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
+                        val st = SymbolTable(x)
+//                        val graph = FlowGraph(x, st, false)
+//                        SvgGenerator(st, graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+//                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]],SvgGenerator.viewConfig, None)
+        val rr = AwasSerializer(x)
+//val rr = PrettyPrinter(x.get)
 //        FaultImpactAnalysis.generateFIAQueries(x, false) + "\n \n" + FaultImpactAnalysis.generateFIAQueries(x, true)
         rr
       }

@@ -251,7 +251,7 @@ object SvgGenerator {
             attr("TITLE") := vertex.getUri.split(H.ID_SEPARATOR).last,
             tr(
               td(
-                if (vertex.isFlowDefined) colspan := 3 else colspan := 2, // attr("bgcolor") := "#eeccff",
+                if (flows.nonEmpty) colspan := 3 else colspan := 2, // attr("bgcolor") := "#eeccff",
                 attr("cellpadding") := 5,
                 attr("href") := "templink",
                 attr("title") := "node",
@@ -290,22 +290,22 @@ object SvgGenerator {
             else tr(portContent(inPorts, errors), portContent(outPorts, errors)),
             if (states.nonEmpty)
               tr(
-                td(if (vertex.isFlowDefined) colspan := 3 else colspan := 2, attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("States"))
+                td(if (flows.nonEmpty) colspan := 3 else colspan := 2, attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("States"))
               )
             else
               StringFrag(""),
             if (states.nonEmpty)
-              tr(stateContent(states, vertex.isFlowDefined))
+              tr(stateContent(states, flows.nonEmpty))
             else
               StringFrag(""),
             if (behaviour.nonEmpty)
               tr(
-                td(if (vertex.isFlowDefined) colspan := 3 else colspan := 2, attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Behaviors"))
+                td(if (flows.nonEmpty) colspan := 3 else colspan := 2, attr("align") := "Center", attr("bgcolor") := "#F8F8F8", i("Behaviors"))
               )
             else
               StringFrag(""),
             if (behaviour.nonEmpty)
-              tr(behaveContent(behaviour, vertex.isFlowDefined))
+              tr(behaveContent(behaviour, flows.nonEmpty))
             else
               StringFrag("")
           )

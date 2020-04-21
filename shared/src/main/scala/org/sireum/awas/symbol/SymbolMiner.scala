@@ -283,9 +283,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       comp.withSM.foreach {
         withs => {
           //TODO: Will change in the presence of multiple files/models
-          val withName = withs.value.last.value
-          val smUri = st.stateMachineDeclTable.find(_._1.endsWith(withName))
-          val tyUri = st.typeDeclTable.find(_._1.endsWith(withName))
+          val withName = withs.value.map(_.value).mkString(".")
+          val smUri = st.stateMachineDeclTable.find(_._1.endsWith(H.ID_SEPARATOR+withName))
+          val tyUri = st.typeDeclTable.find(_._1.endsWith(H.ID_SEPARATOR+withName))
           if (smUri.isDefined) {
             st.compSMTable(r.toUri) = smUri.get._1
             ctp.tables.stateMachine.add(smUri.get._1)
@@ -355,6 +355,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           ctp.tables.symbol2Uri(nt.get.connection.connName.value) = nt.get.connectionUri
         }
       }
+
       if (isSystem) {
         stp.tables.componentSymbolTable(ctp.componentUri) = ctp
       }
@@ -662,7 +663,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         p,
         m, p.id.value, r.toUri))
 
-    } else if (st.compTypeTable.get(r.toUri).isEmpty) {
+    } else if (!(ctp.compUri == r.toUri || st.compTypeTable.get(r.toUri).isEmpty)) {
+      println(ctp.compUri)
+      println(r.toUri)
       reporter.report(errorMessageGen(MISSING_TYPE_ASSOCIATION,
         p,
         m, ""))

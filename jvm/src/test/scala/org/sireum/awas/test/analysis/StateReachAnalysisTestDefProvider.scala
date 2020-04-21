@@ -46,17 +46,17 @@ final class StateReachAnalysisTestDefProvider(tf: TestFramework) extends TestDef
   val resultsDir = toFilePath(fileUri(this.getClass, s"../results/fptc"))
   val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/fptc"))
 
-  val generateExpected = false
+  val generateExpected = true
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
       listFiles(fileUri(this.getClass, d), "awas")
     }
     val filesEqual = files.filter { p =>
-      //      p.toLowerCase.contains("pcashutoff") ||
+            p.toLowerCase.contains("pca_system") //||
       //        p.toLowerCase.contains("isolette") ||
       //        p.toLowerCase.contains("abcloop")  ||
-      p.toLowerCase.contains("fptc_base")
+      //p.toLowerCase.contains("fptc_base")
     }
 
     filesEqual.toVector.map { x =>

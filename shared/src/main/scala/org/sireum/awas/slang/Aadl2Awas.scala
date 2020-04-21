@@ -285,7 +285,7 @@ final class Aadl2Awas private() {
         Aadl2Awas.ALLOWED_SUBPROGRAM_CALL_BINDING)
 
       if (!bindingPropSet.contains(prop.name.name.elements.last.value)) {
-        val id = buildId(prop.name.name.elements.last.value)
+        val name = build(prop.name)
         val value = if (prop.propertyValues.nonEmpty) {
           if (prop.propertyValues.elements.size > 1) {
             Some(SeqInit(NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)),
@@ -305,7 +305,7 @@ final class Aadl2Awas private() {
             case aer: AadlElementRef => None
           }
         }
-        Some(Property(id, value, at.toMap))
+        Some(Property(name, value, at.toMap))
       } else {
         None
       }
@@ -440,16 +440,16 @@ final class Aadl2Awas private() {
 
   def build(conn: ir.Connection, compName: Seq[String]): Seq[ConnectionDecl] = {
     if (conn.name.name.nonEmpty) {
-      if ((conn.src.size == Z(1)) && (conn.dst.size == Z(1))) {
+      if ((conn.src.length.toInt == 1) && (conn.dst.length.toInt == 1)) {
         buildConnection(conn.name.name.elements.last.value,
           conn.src.elements.last,
           conn.dst.elements.last,
           conn.kind,
           conn.isBiDirectional,
           compName)
-      } else if (conn.src.size == conn.dst.size) {
+      } else if (conn.src.length == conn.dst.length) {
         var res = ilistEmpty[ConnectionDecl]
-        for (i <- 0 until conn.src.size.get.toInt) {
+        for (i <- 0 until conn.src.length.get.toInt) {
           res = res ++ buildConnection(
             conn.name.name.elements.last.value + "_" + conn.src(i).feature.get.name.elements.last,
             conn.src(i),
@@ -468,8 +468,8 @@ final class Aadl2Awas private() {
 
   def buildConnection(id: String,
                       src: EndPoint,
-    dst: EndPoint,
-    kind : ir.ConnectionKind.Type,
+                      dst: EndPoint,
+                      kind : ir.ConnectionKind.Type,
                       isBidirectional: B,
                       compName: Seq[String]): Seq[ConnectionDecl] = {
 
@@ -621,6 +621,9 @@ final class Aadl2Awas private() {
       case fg: FeatureGroup => build(fg,
         featureGroup.isInverse || isInverse,
         pId + "_")
+      case fa : FeatureAccess => build(fa,
+        featureGroup.isInverse || isInverse,
+        pId + "_")
     }
   }
 
@@ -672,16 +675,30 @@ final class Aadl2Awas private() {
 
   def getFlows(comp: ir.Component): Node.Seq[Flow] = {
     var flows = isetEmpty[Flow]
+    val features = comp.features.elements.flatMap(build).map(_.id.value).toSet
     comp.flows.foreach { flow =>
       val id = buildId(flow.name.name.elements.last.value)
 
       val from = if (flow.source.nonEmpty) {
-
-        Some(build(flow.source.get).map(_.id).filterNot(_.value.endsWith("_OUT")).last)
+        val sid = flow.source.get.name.elements.last.value
+        if(features.contains(sid)) {
+          Some(buildId(sid))
+        } else if(features.contains(sid+"_IN")) {
+          Some(buildId(sid+"_IN"))
+        } else {
+          None
+        }
       } else None
 
       val to = if (flow.sink.nonEmpty) {
-        Some(build(flow.sink.get).map(_.id).last)
+        val sid = flow.sink.get.name.elements.last.value
+        if(features.contains(sid)) {
+          Some(buildId(sid))
+        } else if(features.contains(sid+"_OUT")) {
+          Some(buildId(sid+"_OUT"))
+        } else {
+          None
+        }
       } else None
 
       flows = flows + Flow(id, from, Node.emptySeq[Fault], to, Node.emptySeq[Fault])

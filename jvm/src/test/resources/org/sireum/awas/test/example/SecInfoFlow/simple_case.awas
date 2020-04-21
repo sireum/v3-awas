@@ -1,0 +1,447 @@
+types
+  enum UAS_Errors {wellformed_authenticated, wellformed_unauthenticated, not_wellformed_authenticated, not_wellformed_unauthenticated}
+
+  lattice Low
+
+  lattice High extends Low
+
+system  UAS_Impl_Instance
+
+    sub-components {
+      GND
+        with UAS_Errors
+          ports
+            out send_map
+            in recv_status
+            in RFA_IN
+            out RFA_OUT
+          propagations
+            send_map = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+          flows
+            wellformed_map : * -> send_map{UAS_Errors::not_wellformed_authenticated}
+            receive_status : recv_status -> *
+            authenticated_map : * -> send_map{UAS_Errors::wellformed_authenticated}
+            not_wellformed_map : * -> send_map{UAS_Errors::not_wellformed_unauthenticated}
+            unauthenticated_map : * -> send_map{UAS_Errors::wellformed_unauthenticated}
+            transmit_map : * -> send_map
+
+      RFB
+        ports
+          in ACCESS_IN
+          out ACCESS_OUT
+          in bindings_IN
+          out bindings_OUT
+
+      UAV
+        with UAS_Errors
+          ports
+            in RFA_IN
+            out RFA_OUT
+            in recv_map
+            out send_status
+          propagations
+            recv_map = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+          flows
+            provide_map : recv_map -> *
+            update_status : * -> send_status
+
+          sub-components {
+            FCTL
+              with UAS_Errors
+                ports
+                  in UARTA_IN
+                  out UARTA_OUT
+                  in waypoint
+                  out position_status
+                propagations
+                  waypoint = {UAS_Errors::wellformed_authenticated}
+                security
+                  waypoint = High
+                flows
+                  follow_waypoints : waypoint -> *
+                  send_pos : * -> position_status
+                  authenticated_wellformed : waypoint{UAS_Errors::wellformed_authenticated} -> *
+
+            MCMP
+              with UAS_Errors
+                ports
+                  in UARTA_IN
+                  out UARTA_OUT
+                  in RFA_IN
+                  out RFA_OUT
+                  in recv_map
+                  in position_status
+                  out waypoint
+                  out send_status
+                propagations
+                  recv_map = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+                  waypoint = {UAS_Errors::wellformed_authenticated}
+                flows
+                  compute_waypoint : recv_map -> waypoint
+                  compute_status : position_status -> send_status
+                  wellformed_authenticated : recv_map{UAS_Errors::wellformed_authenticated} -> waypoint{UAS_Errors::wellformed_authenticated}
+                  not_wellformed_map : recv_map{UAS_Errors::not_wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated} -> *
+                  unauthenticated_map : recv_map{UAS_Errors::not_wellformed_unauthenticated, UAS_Errors::wellformed_unauthenticated} -> *
+
+                sub-components {
+                  BUS_HW
+                    ports
+                      in ACCESS_IN
+                      out ACCESS_OUT
+                      in bindings_IN
+                      out bindings_OUT
+
+                  MEM_HW
+                    ports
+                      in MCA_IN
+                      out MCA_OUT
+
+                  PROC_HW
+                    ports
+                      in MCA_IN
+                      out MCA_OUT
+                      in bindings_IN
+                      out bindings_OUT
+                    properties
+                      TB_SYS::OS = "CAmkES"
+                      TB_SYS::HW = "TK1"
+                      TB_SYS::Add_Dummy_Arg_To_Void_Fns = "true"
+
+                  PROC_SW
+                    with UAS_Errors
+                      ports
+                        in recv_map
+                        out send_status
+                        out waypoint
+                        in position_status
+                        in processor_IN
+                        out processor_OUT
+                      propagations
+                        recv_map = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+                        waypoint = {UAS_Errors::wellformed_authenticated}
+                      flows
+                        compute_status : position_status -> send_status
+                        compute_waypoint_flight_plan : recv_map -> waypoint
+                        compute_waypoint_pos_status : position_status -> waypoint
+                        authenticated_wellformed : recv_map{UAS_Errors::wellformed_authenticated} -> waypoint{UAS_Errors::wellformed_authenticated}
+                        unauthenticated_map : recv_map{UAS_Errors::not_wellformed_unauthenticated, UAS_Errors::wellformed_unauthenticated} -> *
+                        not_wellformed_map : recv_map{UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated} -> *
+
+                      sub-components {
+                        FLT
+                          with UAS_Errors
+                            ports
+                              in filter_in
+                              out filter_out
+                              in processor_IN
+                              out processor_OUT
+                            propagations
+                              filter_in = {UAS_Errors::wellformed_authenticated, UAS_Errors::not_wellformed_authenticated}
+                              filter_out = {UAS_Errors::wellformed_authenticated}
+                            security
+                              filter_in = Low
+                              filter_out = High
+                            flows
+                              filtered_cmd : filter_in -> filter_out
+                              wellformed_map : filter_in{UAS_Errors::wellformed_authenticated} -> filter_out{UAS_Errors::wellformed_authenticated}
+                              not_wellformed_map : filter_in{UAS_Errors::not_wellformed_authenticated} -> *
+
+                        FPLN
+                          with UAS_Errors
+                            ports
+                              out flight_plan
+                              in recv_map
+                              in position_status
+                              in processor_IN
+                              out processor_OUT
+                            propagations
+                              recv_map = {UAS_Errors::wellformed_authenticated}
+                              flight_plan = {UAS_Errors::wellformed_authenticated}
+                            flows
+                              compute_flight_plan_map : recv_map -> flight_plan
+                              compute_flight_plan_pos : position_status -> flight_plan
+                              authenticated_wellformed : recv_map{UAS_Errors::wellformed_authenticated} -> flight_plan{UAS_Errors::wellformed_authenticated}
+                            properties
+                              Thread_Properties::Dispatch_Protocol = "Sporadic"
+                              Thread_Properties::Priority = UNIT_PROP(UNIT_PROP_VAL = "200.0", UNIT_PROP_UNIT = None[STRING_PROP])
+                              Memory_Properties::Stack_Size = UNIT_PROP(UNIT_PROP_VAL = "8192.0", UNIT_PROP_UNIT = Some[STRING_PROP]("bits"))
+                              Timing_Properties::Compute_Execution_Time = RANGE_PROP(RANGE_PROP_LOW = UNIT_PROP(UNIT_PROP_VAL = "1.0E7", UNIT_PROP_UNIT = Some[STRING_PROP]("ps")), RANGE_PROP_HIGH = UNIT_PROP(UNIT_PROP_VAL = "1.0E8", UNIT_PROP_UNIT = Some[STRING_PROP]("ps")))
+                              Timing_Properties::Period = UNIT_PROP(UNIT_PROP_VAL = "1.0E9", UNIT_PROP_UNIT = Some[STRING_PROP]("ps"))
+                              TB_SYS::Sends_Events_To = "{{}}"
+
+                        FPLN_FLT
+                          ports
+                            in flight_plan_in
+                            out flight_plan_out
+                            in processor_IN
+                            out processor_OUT
+                          flows
+                            flight_plan_wellformed : flight_plan_in -> flight_plan_out
+                            flight_plan_notwellformed : flight_plan_in -> *
+
+                        FPLN_VALID
+                          ports
+                            in flight_plan_in
+                            out flight_plan_out
+                            in processor_IN
+                            out processor_OUT
+                          flows
+                            flight_plan_valid : flight_plan_in -> flight_plan_out
+                            flight_plan_invalid : flight_plan_in -> *
+
+                        RADIO
+                          with UAS_Errors
+                            ports
+                              in recv_map_in
+                              out send_status_out
+                              in send_status_in
+                              out recv_map_out
+                              in processor_IN
+                              out processor_OUT
+                            propagations
+                              recv_map_in = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+                              recv_map_out = {UAS_Errors::wellformed_authenticated, UAS_Errors::not_wellformed_authenticated}
+                            flows
+                              unauthenticated_map : recv_map_in{UAS_Errors::not_wellformed_unauthenticated, UAS_Errors::wellformed_unauthenticated} -> *
+                              comm_status : send_status_in -> send_status_out
+                              authenticated_notwellformed : recv_map_in{UAS_Errors::not_wellformed_authenticated} -> recv_map_out{UAS_Errors::not_wellformed_authenticated}
+                              comm_map : recv_map_in -> recv_map_out
+                              authenticated_wellformed : recv_map_in{UAS_Errors::wellformed_authenticated} -> recv_map_out{UAS_Errors::wellformed_authenticated}
+
+                        UART
+                          with UAS_Errors
+                            ports
+                              in position_status_in
+                              out waypoint_out
+                              out position_status_out
+                              in waypoint_in
+                              in processor_IN
+                              out processor_OUT
+                            propagations
+                              waypoint_in = {UAS_Errors::wellformed_authenticated}
+                              waypoint_out = {UAS_Errors::wellformed_authenticated}
+                            flows
+                              comm_waypoint : waypoint_in -> waypoint_out
+                              comm_status : position_status_in -> position_status_out
+                              authenticated_wellformed : waypoint_in{UAS_Errors::wellformed_authenticated} -> waypoint_out{UAS_Errors::wellformed_authenticated}
+                            properties
+                              Thread_Properties::Dispatch_Protocol = "Sporadic"
+                              Thread_Properties::Priority = UNIT_PROP(UNIT_PROP_VAL = "200.0", UNIT_PROP_UNIT = None[STRING_PROP])
+                              Memory_Properties::Stack_Size = UNIT_PROP(UNIT_PROP_VAL = "8192.0", UNIT_PROP_UNIT = Some[STRING_PROP]("bits"))
+                              Timing_Properties::Compute_Execution_Time = RANGE_PROP(RANGE_PROP_LOW = UNIT_PROP(UNIT_PROP_VAL = "1.0E7", UNIT_PROP_UNIT = Some[STRING_PROP]("ps")), RANGE_PROP_HIGH = UNIT_PROP(UNIT_PROP_VAL = "1.0E8", UNIT_PROP_UNIT = Some[STRING_PROP]("ps")))
+                              Timing_Properties::Period = UNIT_PROP(UNIT_PROP_VAL = "1.0E9", UNIT_PROP_UNIT = Some[STRING_PROP]("ps"))
+                              TB_SYS::Sends_Events_To = "{{}}"
+
+                        WPM
+                          with UAS_Errors
+                            ports
+                              in flight_plan
+                              out waypoint
+                              in position_status
+                              in processor_IN
+                              out processor_OUT
+                            propagations
+                              flight_plan = {UAS_Errors::wellformed_authenticated}
+                              waypoint = {UAS_Errors::wellformed_authenticated}
+                            flows
+                              compute_waypoint_flight_plan : flight_plan -> waypoint
+                              compute_waypoint_pos_status : position_status -> waypoint
+                              authenticated_wellformed : flight_plan{UAS_Errors::wellformed_authenticated} -> waypoint{UAS_Errors::wellformed_authenticated}
+                            properties
+                              Thread_Properties::Dispatch_Protocol = "Sporadic"
+                              Thread_Properties::Priority = UNIT_PROP(UNIT_PROP_VAL = "200.0", UNIT_PROP_UNIT = None[STRING_PROP])
+                              Memory_Properties::Stack_Size = UNIT_PROP(UNIT_PROP_VAL = "8192.0", UNIT_PROP_UNIT = Some[STRING_PROP]("bits"))
+                              Timing_Properties::Compute_Execution_Time = RANGE_PROP(RANGE_PROP_LOW = UNIT_PROP(UNIT_PROP_VAL = "1.0E7", UNIT_PROP_UNIT = Some[STRING_PROP]("ps")), RANGE_PROP_HIGH = UNIT_PROP(UNIT_PROP_VAL = "1.0E8", UNIT_PROP_UNIT = Some[STRING_PROP]("ps")))
+                              Timing_Properties::Period = UNIT_PROP(UNIT_PROP_VAL = "1.0E9", UNIT_PROP_UNIT = Some[STRING_PROP]("ps"))
+                              TB_SYS::Sends_Events_To = "{{}}"
+                              Programming_Properties::Source_Text = "test.o"
+                      }
+                      connections
+                        c1 : recv_map -> RADIO.recv_map_in
+
+                        c11 : position_status -> UART.position_status_in
+
+                        c2 : RADIO.send_status_out -> send_status
+
+                        c10 : UART.waypoint_out -> waypoint
+
+                        c3 : RADIO.recv_map_out -> FLT.filter_in
+
+                        c4 : FLT.filter_out -> FPLN.recv_map
+
+                        c5_b : FPLN_FLT.flight_plan_out -> FPLN_VALID.flight_plan_in
+
+                        c5 : FPLN_VALID.flight_plan_out -> WPM.flight_plan
+
+                        c5_a : FPLN.flight_plan -> FPLN_FLT.flight_plan_in
+
+                        c6 : WPM.waypoint -> UART.waypoint_in
+
+                        c7 : UART.position_status_out -> WPM.position_status
+
+                        c8 : UART.position_status_out -> FPLN.position_status
+
+                        c9 : UART.position_status_out -> RADIO.send_status_in
+
+
+                  RADIO_HW
+                    with UAS_Errors
+                      ports
+                        in recv_map_in
+                        out recv_map_out
+                        in send_status_in
+                        out send_status_out
+                        in MCA_IN
+                        out MCA_OUT
+                        in RFA_IN
+                        out RFA_OUT
+                      propagations
+                        recv_map_in = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+                        recv_map_out = {UAS_Errors::wellformed_authenticated, UAS_Errors::wellformed_unauthenticated, UAS_Errors::not_wellformed_authenticated, UAS_Errors::not_wellformed_unauthenticated}
+                      flows
+                        comm_status : send_status_in -> send_status_out
+                        not_wellformed_unauthenticated : recv_map_in{UAS_Errors::not_wellformed_unauthenticated} -> recv_map_out{UAS_Errors::not_wellformed_unauthenticated}
+                        not_wellformed_authenticated : recv_map_in{UAS_Errors::not_wellformed_authenticated} -> recv_map_out{UAS_Errors::not_wellformed_authenticated}
+                        wellformed_authenticated : recv_map_in{UAS_Errors::wellformed_authenticated} -> recv_map_out{UAS_Errors::wellformed_authenticated}
+                        wellformed_unauthenticated : recv_map_in{UAS_Errors::wellformed_unauthenticated} -> recv_map_out{UAS_Errors::wellformed_unauthenticated}
+                        comm_map : recv_map_in -> recv_map_out
+
+                  UART_HW
+                    with UAS_Errors
+                      ports
+                        in waypoint_in
+                        out waypoint_out
+                        in position_status_in
+                        out position_status_out
+                        in MCA_IN
+                        out MCA_OUT
+                        in UARTA_IN
+                        out UARTA_OUT
+                      propagations
+                        waypoint_in = {UAS_Errors::wellformed_authenticated}
+                        waypoint_out = {UAS_Errors::wellformed_authenticated}
+                      flows
+                        comm_waypoint : waypoint_in -> waypoint_out
+                        comm_status : position_status_in -> position_status_out
+                        authenticated_wellformed : waypoint_in{UAS_Errors::wellformed_authenticated} -> waypoint_out{UAS_Errors::wellformed_authenticated}
+                }
+                connections
+                  bac5_FORWARD : RFA_IN -> RADIO_HW.RFA_IN
+
+                  bac5_BACKWARD : RADIO_HW.RFA_OUT -> RFA_OUT
+
+                  c1 : recv_map -> RADIO_HW.recv_map_in
+
+                  c4 : RADIO_HW.send_status_out -> send_status
+
+                  bac6_FORWARD : UART_HW.UARTA_OUT -> UARTA_OUT
+
+                  bac6_BACKWARD : UARTA_IN -> UART_HW.UARTA_IN
+
+                  c6 : UART_HW.waypoint_out -> waypoint
+
+                  c7 : position_status -> UART_HW.position_status_in
+
+                  bac1_FORWARD : RADIO_HW.MCA_OUT -> BUS_HW.ACCESS_IN
+
+                  bac1_BACKWARD : BUS_HW.ACCESS_OUT -> RADIO_HW.MCA_IN
+
+                  bac2_FORWARD : UART_HW.MCA_OUT -> BUS_HW.ACCESS_IN
+
+                  bac2_BACKWARD : BUS_HW.ACCESS_OUT -> UART_HW.MCA_IN
+
+                  bac3_FORWARD : PROC_HW.MCA_OUT -> BUS_HW.ACCESS_IN
+
+                  bac3_BACKWARD : BUS_HW.ACCESS_OUT -> PROC_HW.MCA_IN
+
+                  bac4_FORWARD : MEM_HW.MCA_OUT -> BUS_HW.ACCESS_IN
+
+                  bac4_BACKWARD : BUS_HW.ACCESS_OUT -> MEM_HW.MCA_IN
+
+                  c2 : RADIO_HW.recv_map_out -> PROC_SW.recv_map
+
+                  c8 : UART_HW.position_status_out -> PROC_SW.position_status
+
+                  c3 : PROC_SW.send_status -> RADIO_HW.send_status_in
+
+                  c5 : PROC_SW.waypoint -> UART_HW.waypoint_in
+
+                deployment
+                  UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_OUT -> UAS_Impl_Instance::UAV::MCMP::c3
+
+                  UAS_Impl_Instance::UAV::MCMP::c8 -> UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_IN
+
+                  UAS_Impl_Instance::UAV::MCMP::c2 -> UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_IN
+
+                  UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_OUT -> UAS_Impl_Instance::UAV::MCMP::c8
+
+                  UAS_Impl_Instance::UAV::MCMP::PROC_SW.processor_OUT -> UAS_Impl_Instance::UAV::MCMP::PROC_HW.bindings_IN
+
+                  UAS_Impl_Instance::UAV::MCMP::c5 -> UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_IN
+
+                  UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_OUT -> UAS_Impl_Instance::UAV::MCMP::c5
+
+                  UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_OUT -> UAS_Impl_Instance::UAV::MCMP::c2
+
+                  UAS_Impl_Instance::UAV::MCMP::c3 -> UAS_Impl_Instance::UAV::MCMP::BUS_HW.bindings_IN
+
+                  UAS_Impl_Instance::UAV::MCMP::PROC_HW.bindings_OUT -> UAS_Impl_Instance::UAV::MCMP::PROC_SW.processor_IN
+
+
+            SBUS
+              ports
+                in ACCESS_IN
+                out ACCESS_OUT
+                in bindings_IN
+                out bindings_OUT
+          }
+          connections
+            bac3 : RFA_IN -> MCMP.RFA_IN
+
+            c1 : recv_map -> MCMP.recv_map
+
+            c2 : MCMP.send_status -> send_status
+
+            bac1_FORWARD : SBUS.ACCESS_OUT -> MCMP.UARTA_IN
+
+            bac1_BACKWARD : MCMP.UARTA_OUT -> SBUS.ACCESS_IN
+
+            bac2_FORWARD : SBUS.ACCESS_OUT -> FCTL.UARTA_IN
+
+            bac2_BACKWARD : FCTL.UARTA_OUT -> SBUS.ACCESS_IN
+
+            c3 : MCMP.waypoint -> FCTL.waypoint
+
+            c4 : FCTL.position_status -> MCMP.position_status
+
+          deployment
+            UAS_Impl_Instance::UAV::c3 -> UAS_Impl_Instance::UAV::SBUS.bindings_IN
+
+            UAS_Impl_Instance::UAV::SBUS.bindings_OUT -> UAS_Impl_Instance::UAV::c3
+
+            UAS_Impl_Instance::UAV::c4 -> UAS_Impl_Instance::UAV::SBUS.bindings_IN
+
+            UAS_Impl_Instance::UAV::SBUS.bindings_OUT -> UAS_Impl_Instance::UAV::c4
+
+    }
+    connections
+      bac1_FORWARD : RFB.ACCESS_OUT -> GND.RFA_IN
+
+      bac1_BACKWARD : GND.RFA_OUT -> RFB.ACCESS_IN
+
+      bac2_FORWARD : RFB.ACCESS_OUT -> UAV.RFA_IN
+
+      bac2_BACKWARD : UAV.RFA_OUT -> RFB.ACCESS_IN
+
+      c1 : GND.send_map -> UAV.recv_map
+
+      c2 : UAV.send_status -> GND.recv_status
+
+    deployment
+      UAS_Impl_Instance::c1 -> UAS_Impl_Instance::RFB.bindings_IN
+
+      UAS_Impl_Instance::RFB.bindings_OUT -> UAS_Impl_Instance::c1
+
+      UAS_Impl_Instance::c2 -> UAS_Impl_Instance::RFB.bindings_IN
+
+      UAS_Impl_Instance::RFB.bindings_OUT -> UAS_Impl_Instance::c2

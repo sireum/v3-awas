@@ -75,7 +75,6 @@ object SettingsView {
         eErrors.checked = false
         eTypes.checked = false
         showOrHideLegend(lattice, false)
-
       }
     }
 
@@ -150,7 +149,9 @@ object SettingsView {
   def showOrHideLegend(lattice: Div, toShow: Boolean): Unit = {
     if (toShow) {
       lattice.setAttribute("style", "display: block; text-align: center;")
-      if (!lattice.lastElementChild.isEqualNode(SecViolations.apply().getLattice)) {
+      if(lattice.lastElementChild == null) {
+        lattice.appendChild(SecViolations.apply().getLattice)
+      } else if (!lattice.lastElementChild.isEqualNode(SecViolations.apply().getLattice)) {
         lattice.appendChild(SecViolations.apply().getLattice)
       }
     } else {

@@ -26,22 +26,34 @@
 
 package org.sireum.awas.AliranAman
 
-import org.sireum.ST
 import org.sireum.awas.AliranAman.Lattice.{LEdge, LNode}
 import org.sireum.awas.collector.Collector
-import org.sireum.awas.flow.{FlowNode, NodeType}
+import org.sireum.awas.flow.FlowNode
 import org.sireum.awas.graph.{AwasEdge, SlangGraphImpl}
 import org.sireum.awas.reachability.PortReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.ops.GraphOps
+import org.sireum.message.{Position, Reporter}
 import org.sireum.util._
 import org.sireum.{$Slang, $internal, ISZ, ST}
 
 //plan :
 
 object SecInfoFlowAnalysis {
-  def apply(): SecInfoFlowAnalysis = new SecInfoFlowAnalysisImpl(SymbolTable.getTable.get)
+  var st : Option[SymbolTable] = None
+  var res : Option[SecInfoFlowAnalysis] = None
+  def apply(): SecInfoFlowAnalysis = {
+    if(st.isDefined) {
+      if(st != SymbolTable.getTable) {
+        st = SymbolTable.getTable
+        res = Some(new SecInfoFlowAnalysisImpl(st.get)(new Reporter(ISZ())))
+      }
+    } else {
+      st = SymbolTable.getTable
+      res = Some(new SecInfoFlowAnalysisImpl(st.get)(new Reporter(ISZ())))
+    }
+    res.get
+  }
 }
 
 trait SecInfoFlowAnalysis {
@@ -56,11 +68,11 @@ trait SecInfoFlowAnalysis {
   def getViolatingPaths(): ILinkedMap[String, Collector]
 }
 
-class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
+class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecInfoFlowAnalysis {
 
   private val pr = PortReachability(st)
 
-  private val lattice = Lattice(st)
+  private val lattice = Lattice(st, reporter)
 
   private val H = SymbolTableHelper
 
@@ -172,9 +184,10 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
     }
 
     //step 2: from the set of (all typevar - typevars with type defined),
-    //        perform a backward reach until the defined are reached
+    //        perform a forward reach until the defined are reached
 
     val rest = ports.diff(res.keySet)
+    println("rest: "+rest)
     var seen = isetEmpty[ResourceUri]
     var workList2 = ivectorEmpty[ResourceUri] ++ rest
 
@@ -186,26 +199,32 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
           forwardFrom = forwardFrom + curr
           seen = seen + curr
         } else {
-          val pre = pr.getSuccessor(curr)
-          workList2 = workList2 ++ pre
+          val succ = if(H.isInPort(curr) && FlowNode.getNode(curr).isDefined) {
+            val curPortNode = FlowNode.getNode(curr).get
+            curPortNode.getOwner.getSuccessorPorts(curr).ports
+          } else pr.getSuccessor(curr)
+          workList2 = workList2 ++ succ
           seen = seen + curr
         }
       }
       workList2 = workList2.tail
     }
 
-    //step 3: From the defined perform a forward analysis with LUB on join
+    //step 3: From the defined perform a backward analysis with GLB on join
     //          until all the undefined vars are defined
-
+    val cacheRes = res
+    println(forwardFrom)
     if (forwardFrom.nonEmpty) {
-      var workList3 = ivectorEmpty[(ResourceUri, String)] ++ forwardFrom.map(it => (it, res(it)))
+      var workList3 = ivectorEmpty[(ResourceUri, String)]++
+        forwardFrom.map(it => (it, res(it))) //++
+        //providedTypes
 
       while (workList3.nonEmpty) {
         val curr = workList3.head
         val succ = pr.getPredecessor(curr._1)
 
         succ.foreach { p =>
-          if (rest.contains(p)) {
+          if (!cacheRes.keySet.contains(p)) {
             if (res.contains(p)) {
               //p should not be in providedSecInfo
 
@@ -230,7 +249,8 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
 
     providedTypes.keySet.foreach { p =>
       pr.getPredecessor(p).foreach { pre =>
-        if (H.isInPort(p)) {
+        if (H.isInPort(p) && res.contains(pre) && res.contains(p)) {
+
           if (!lattice.checkLessThan(res(pre), res(p))) {
             localViolations = localViolations + p
           }
@@ -255,7 +275,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable) extends SecInfoFlowAnalysis {
         }
       }
     }
-
+//    println("from here "+localViolations)
     (res, localViolations)
   }
 
@@ -349,8 +369,8 @@ object Lattice {
 
   case class LNode(id: String)
 
-  def apply(st: SymbolTable): Lattice = {
-    val lattice = new LatticeImpl(st)
+  def apply(st: SymbolTable, reporter: Reporter): Lattice = {
+    val lattice = new LatticeImpl(st, reporter)
     st.typeDecls.foreach { typeUri =>
       val elems = st.typeTable(typeUri).latticeElements
       elems.foreach { e =>
@@ -392,7 +412,7 @@ trait LatticeUpdate {
   def addEdge(from: String, to: String): Unit
 }
 
-class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
+class LatticeImpl(st: SymbolTable, reporter: Reporter) extends Lattice with LatticeUpdate {
 
   private var idNodeMap = imapEmpty[String, LNode]
 
@@ -528,6 +548,8 @@ class LatticeImpl(st: SymbolTable) extends Lattice with LatticeUpdate {
       val tgt = edge.target
       val otherSucc = graph.getSuccessorNodes(src) - tgt
       if (graph.forwardReach(otherSucc.toSet).contains(tgt)) {
+
+        reporter.error(org.sireum.None[Position], "Lattice Well-formedness Error", src.id + " is child of "+tgt.id+ " in more than one way")
         graph.removeEdge(src, tgt)
       }
     }

@@ -156,7 +156,7 @@ object Declass {
   implicit def rw: RW[Declass] = macroRW
 }
 
-final case class Property(id: Id,
+final case class Property(id: Name,
                           //                          propType: Type,
                           value: Option[Init],
                           appliesTo: Map[String, ISet[String]]) extends Node

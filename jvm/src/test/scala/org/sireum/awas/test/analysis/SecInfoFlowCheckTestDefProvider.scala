@@ -42,7 +42,7 @@ class SecInfoFlowCheckTestDefProvider(tf: TestFramework) extends TestDefProvider
   val resultsDir = toFilePath(fileUri(this.getClass, s"../results/SecInfoFlow"))
   val expectedDir = toFilePath(fileUri(this.getClass, s"../expected/SecInfoFlow"))
 
-  val generateExpected = false
+  val generateExpected = true
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -52,8 +52,8 @@ class SecInfoFlowCheckTestDefProvider(tf: TestFramework) extends TestDefProvider
       //      p.toLowerCase.contains("pcashutoff") ||
       //        p.toLowerCase.contains("isolette") ||
       //        p.toLowerCase.contains("abcloop")  ||
-      //      p.toLowerCase.contains("subsystem_success")
-      true
+            p.toLowerCase.contains("case_sw")
+//      true
     }
 
     filesEqual.toVector.map { x =>
@@ -93,7 +93,7 @@ class SecInfoFlowCheckTestDefProvider(tf: TestFramework) extends TestDefProvider
         val r = SecInfoFlowAnalysis()
 
         r.getSecTypes().mkString("\n") + "\n ---- \n" +
-          r.getViolations().mkString("\n") + "\n ---- \n" + AwasSerializer(m) +
+          r.getViolations().mkString("\n") + "\n ---- \n" +
           "\n ---- \n" + r.getViolatingPaths()
 
     }

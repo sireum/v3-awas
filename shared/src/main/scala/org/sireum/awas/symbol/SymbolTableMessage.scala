@@ -45,7 +45,7 @@ object SymbolTableMessage {
     "Event '%s' already declared in the state machine"
 
   val MiSSING_TYPE_OR_STATE_MACHINE =
-    "Type / State machine '%s' not declared"
+    "Type or State machine '%s' not declared"
 
   val DUPLICATE_FLOW_NAME =
     "Flow Name '%s' already declared"

@@ -26,6 +26,7 @@
 
 package org.sireum.awas.flow
 
+import org.sireum.awas.ast.{All, And, ConditionTuple, EventRef, Or, OrLess, OrMore, PrimaryCondition, Tuple}
 import org.sireum.awas.reachability.PortReachability
 import org.sireum.awas.symbol.{ComponentTableUpdate, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
@@ -50,9 +51,46 @@ object FlowInference {
       H.getComponentsLevelOrder(st).reverse.foreach { comp =>
         inferComponentFlows(comp, pr, st)
       }
+    }
+  }
 
+  def getLeafComponents(): ISet[ResourceUri] = {
+    val stOpt = SymbolTable.getTable
+    if (stOpt.isDefined) {
+      stOpt.get.components.filter {curi =>
+        stOpt.get.componentTable(curi).subComponents.isEmpty
+      }.toSet
+    } else {
+      isetEmpty
+    }
+  }
+
+  private def intraComponentFlowInfer(compUri: ResourceUri,
+                                      st: SymbolTable)
+  : ISet[ResourceUri] = {
+    val ct = st.componentTable(compUri)
+    if(ct.behaviors.nonEmpty) {
+      isetEmpty
+    } else {
+      isetEmpty
     }
 
+  }
+
+  private def getTuples(condition: ConditionTuple): ISet[Tuple] = {
+    condition match {
+      case and: And => getTuples(and.lhs) ++ getTuples(and.rhs)
+      case or: Or => getTuples(or.lhs) ++ getTuples(or.rhs)
+      case orMore: OrMore => orMore.conds.flatMap(getTuples).toSet
+      case orLess: OrLess => orLess.conds.flatMap(getTuples).toSet
+      case all: All => all.conds.flatMap(getTuples).toSet
+      case primary: PrimaryCondition => {
+        primary match {
+          case ef: EventRef => isetEmpty[Tuple]
+          case tup: Tuple => isetEmpty[Tuple] + tup
+        }
+      }
+    }
   }
 
   private def inferComponentFlows(

@@ -179,7 +179,7 @@ final class Builder private() {
   }
 
   def build(ctx: PropertyContext): Property = {
-    Property(buildId(ctx.ID()),
+    Property(build(ctx.name()),
       //      build(ctx.`type`()),
       if (ctx.init() != null) Some(build(ctx.init())) else None,
       imapEmpty) at ctx

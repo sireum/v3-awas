@@ -24,7 +24,7 @@ typeDecl
   ;
 
 behaviorDecl
-  : smName=ID ':' states (events)?
+  : smName=Name ':' states (events)?
   ;
 
 componentDecl
@@ -117,7 +117,7 @@ declass
   ;
 
 property
-  : ID ':' type ( '=' init )?
+  : name (':' type)? ( '=' init )?
   ;
 
 constantDecl
