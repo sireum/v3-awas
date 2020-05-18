@@ -104,12 +104,13 @@ final class QueryEval(st: SymbolTable) {
 //  }
 
   def eval(qexp: QueryExpr): Collector = {
-    qexp match {
+    val x = qexp match {
       case binary: BinaryExpr => eval(binary)
       case primary: PrimaryExpr => eval(primary)
       case filter: FilterExpr => eval(filter)
       case reach: ReachExpr => eval(reach)
     }
+    x
   }
 
   def eval(fexp: FilterExpr): Collector = {

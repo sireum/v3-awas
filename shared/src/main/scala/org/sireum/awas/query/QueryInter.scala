@@ -39,7 +39,6 @@ class QueryInter(st: SymbolTable) {
   val qe = new QueryEval(st)
 
   def evalCmd(cmd: String): (QueryEval.Result, Reporter) = {
-    println(cmd)
     reporter = new Reporter(org.sireum.ISZ())
     try {
       QueryParser(cmd, reporter) match {
@@ -61,6 +60,7 @@ class QueryInter(st: SymbolTable) {
       }
     } catch {
       case e : Throwable => {
+        e.printStackTrace()
         reporter.error(org.sireum.None[Position], "Exception", e.getMessage)
         (result, reporter)
       }

@@ -81,12 +81,12 @@ connections
       publish : sender.pub -> receiver.sub
 
 deployment
-      network.bindings_OUT -> publish
-      publish -> network.bindings_IN
+      Communication_impl3_Instance::network.bindings_OUT -> Communication_impl3_Instance::publish
+      Communication_impl3_Instance::publish -> Communication_impl3_Instance::network.bindings_IN
 
-      hw2.bindings_OUT -> receiver.processor_IN
-      receiver.processor_OUT -> hw2.bindings_IN
+      Communication_impl3_Instance::hw2.bindings_OUT -> Communication_impl3_Instance::receiver.processor_IN
+      Communication_impl3_Instance::receiver.processor_OUT -> Communication_impl3_Instance::hw2.bindings_IN
 
-      hw1.bindings_OUT -> sender.processor_IN
-      sender.processor_OUT -> hw1.bindings_IN
+      Communication_impl3_Instance::hw1.bindings_OUT -> Communication_impl3_Instance::sender.processor_IN
+      Communication_impl3_Instance::sender.processor_OUT -> Communication_impl3_Instance::hw1.bindings_IN
 

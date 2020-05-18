@@ -41,4 +41,10 @@ object StpaProperty {
   val CONTROL_STRUCTURE = "STPA::ControlStructure"
   val CONTROL_STRUCT_ID = "ID"
   val CONTROL_STRUCT_DESC = "Description"
+
+  val HAZARDS = "STPA::Hazards"
+  val HAZARD_ID = "ID"
+  val HAZARD_DESC = "Description"
+  val HAZARD_VC = "ViolatingConstraints"
+  val HAZARD_CAUSES = "Causes"
 }

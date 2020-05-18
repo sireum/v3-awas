@@ -189,7 +189,19 @@ case class CollectorImpl(graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
 
   //  override def getSymbolTable: SymbolTable = symbolTable
 
-  override def getGraphs: ISet[FlowGraph[FlowNode, FlowNode.Edge]] = graphs.flatMap(FlowNode.getGraph)
+  override def getGraphs: ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
+    if(graphs.isEmpty && getResultType.isDefined) {
+       getResultType.get match {
+        case ResultType.Node => getNodes.map(_.getOwner)
+        case ResultType.Port => getPorts.flatMap(Resource.getParentUri).flatMap(FlowNode.getNode).map(_.getOwner)
+        case ResultType.Error => getPortErrors.keySet.flatMap(Resource.getParentUri).flatMap(FlowNode.getNode).map(_.getOwner)
+        case _ => isetEmpty
+      }
+    } else {
+      graphs.flatMap(FlowNode.getGraph)
+    }
+//    graphs.flatMap(FlowNode.getGraph)
+  }
 
   override def getResultType: Option[ResultType] = resType
 
@@ -385,7 +397,7 @@ case class CollectorImpl(graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
         c.getResultType
       }
       Collector(
-        getGraphs intersect c.getGraphs,
+        isetEmpty , //computed when getGraphs is called
         resT,
         getEdges intersect c.getEdges,
         Some(Operator.Intersection),

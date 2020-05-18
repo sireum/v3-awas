@@ -35,7 +35,6 @@ import org.sireum.util._
 /**
   * Created by hariharan on 12/17/16.
   */
-
 // TODO: Refactoring, make it extensible by using traits
 
 object SymbolMiner {
@@ -62,15 +61,13 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   val st: SymbolTableData = stp.tables
   val H = SymbolTableHelper
 
-  def miner(m: Model)(implicit reporter: AccumulatingTagReporter):
-  Unit = {
+  def miner(m: Model)(implicit reporter: AccumulatingTagReporter): Unit = {
     if (m.system.isDefined) {
       componentElemMiner(modelMiner(m), m.system.get, None)
     }
   }
 
-  def modelMiner(m: Model)(
-    implicit reporter: AccumulatingTagReporter): Model = {
+  def modelMiner(m: Model)(implicit reporter: AccumulatingTagReporter): Model = {
     var parentRes = Resource(H.HEAD)
     //    Visitor.build({
     //      case md: Model =>
@@ -102,8 +99,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     * @param reporter to collect errors
     * @return model and side effect : mine enum type error table
     */
-  def typeDeclMiner(m: Model)(
-    implicit reporter: AccumulatingTagReporter): Model = {
+  def typeDeclMiner(m: Model)(implicit reporter: AccumulatingTagReporter): Model = {
     var parentRes = Resource(H.HEAD)
     Visitor.build({
       case m: Model =>
@@ -125,10 +121,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           if (!tempSet.keySet.contains(er.toUri))
             tempSet(er.toUri) = elem
           else {
-            reporter.report(errorMessageGen(
-              DUPLICATE_TYPE,
-              elem,
-              m, elem.value))
+            reporter.report(errorMessageGen(DUPLICATE_TYPE, elem, m, elem.value))
           }
         }
         tt.enumTable(r.toUri) = tempSet
@@ -138,8 +131,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         def getErrorTypeUri(symbol: Name): Option[ResourceUri] = {
           val typeUri = stp.getUriFromSymbol(symbol.value.head.value)
           if (typeUri.isDefined && typeUri.get.startsWith(H.ENUM_TYPE)) {
-            stp.typeTable(typeUri.get).getUriFromSymbol(
-              symbol.value.last.value)
+            stp.typeTable(typeUri.get).getUriFromSymbol(symbol.value.last.value)
           } else {
             None
           }
@@ -155,10 +147,14 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           st.aliasTable.getOrElseUpdate(typeUri.get, msetEmpty[ResourceUri]).add(aliasUri.get)
           st.aliasTable.getOrElseUpdate(aliasUri.get, msetEmpty[ResourceUri]).add(typeUri.get)
         } else {
-          reporter.report(errorMessageGen(
-            MISSING_ERROR_TYPE,
-            ad,
-            m, PrettyPrinter.print(ad.typeName) + " or " + PrettyPrinter.print(ad.aliasName)))
+          reporter.report(
+            errorMessageGen(
+              MISSING_ERROR_TYPE,
+              ad,
+              m,
+              PrettyPrinter.print(ad.typeName) + " or " + PrettyPrinter.print(ad.aliasName)
+            )
+          )
         }
         false
       }
@@ -195,8 +191,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     * @param reporter for collecting symbolc errors
     * @return the model itself, as side effect build the table
     */
-  def stateMachineMiner(m: Model)
-                       (implicit reporter: AccumulatingTagReporter): Model = {
+  def stateMachineMiner(m: Model)(implicit reporter: AccumulatingTagReporter): Model = {
     Visitor.build({
       case sm: StateMachineDecl => {
         var parentRes = Resource(H.HEAD)
@@ -209,36 +204,30 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         val smt = stp.stateMachineTableProducer(r.toUri)
         parentRes = r
 
-        sm.states.foreach {
-          s => {
+        sm.states.foreach { s =>
+          {
             val sr = Resource(H.STATE_TYPE, parentRes, s.value.last.value, Some(true), s)
             smt.tables.symbol2Uri(s.value.last.value) = sr.toUri
             if (!smt.tables.statesTable.keySet.contains(sr.toUri))
               smt.tables.statesTable(sr.toUri) = s
             else {
-              reporter.report(errorMessageGen(
-                DUPLICATE_STATE,
-                s,
-                m, s.value.last.value))
+              reporter.report(errorMessageGen(DUPLICATE_STATE, s, m, s.value.last.value))
             }
           }
         }
-        sm.events.foreach {
-          e => {
+        sm.events.foreach { e =>
+          {
             val se = Resource(H.EVENT_TYPE, parentRes, e.value.last.value, Some(true), e)
             smt.tables.symbol2Uri(e.value.last.value) = se.toUri
             if (!smt.tables.eventsTable.keySet.contains(se.toUri))
               smt.tables.eventsTable(se.toUri) = e
             else {
-              reporter.report(errorMessageGen(DUPLICATE_EVENT,
-                e,
-                m, e.value.last.value)
-              )
+              reporter.report(errorMessageGen(DUPLICATE_EVENT, e, m, e.value.last.value))
             }
           }
         }
       }
-        false
+      false
 
     })(m)
     m
@@ -253,11 +242,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     *         : side-effect component symbol table
     */
 
-  def componentElemMiner(m: Model,
-                         comp: ComponentDecl,
-                         parentRes: Option[Resource])(
-                          implicit reporter: AccumulatingTagReporter):
-  ComponentTable = {
+  def componentElemMiner(m: Model, comp: ComponentDecl, parentRes: Option[Resource])(
+    implicit reporter: AccumulatingTagReporter
+  ): ComponentTable = {
 
     var isSystem = false
     val pRes = if (parentRes.isEmpty) {
@@ -280,23 +267,20 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         new CompSTProducer(r.toUri, comp, stp, Some(pRes.toUri))
       }
 
-      comp.withSM.foreach {
-        withs => {
+      comp.withSM.foreach { withs =>
+        {
           //TODO: Will change in the presence of multiple files/models
           val withName = withs.value.map(_.value).mkString(".")
-          val smUri = st.stateMachineDeclTable.find(_._1.endsWith(H.ID_SEPARATOR+withName))
-          val tyUri = st.typeDeclTable.find(_._1.endsWith(H.ID_SEPARATOR+withName))
+          val smUri = st.stateMachineDeclTable.find(_._1.endsWith(H.ID_SEPARATOR + withName))
+          val tyUri = st.typeDeclTable.find(_._1.endsWith(H.ID_SEPARATOR + withName))
           if (smUri.isDefined) {
             st.compSMTable(r.toUri) = smUri.get._1
             ctp.tables.stateMachine.add(smUri.get._1)
           } else if (tyUri.isDefined) {
-            st.compTypeTable.getOrElseUpdate(r.toUri,
-              msetEmpty[ResourceUri]).add(tyUri.get._1)
+            st.compTypeTable.getOrElseUpdate(r.toUri, msetEmpty[ResourceUri]).add(tyUri.get._1)
             ctp.tables.types.add(tyUri.get._1)
           } else {
-            reporter.report(errorMessageGen(MiSSING_TYPE_OR_STATE_MACHINE,
-              withs,
-              m, withName))
+            reporter.report(errorMessageGen(MiSSING_TYPE_OR_STATE_MACHINE, withs, m, withName))
           }
         }
       }
@@ -359,24 +343,24 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       if (isSystem) {
         stp.tables.componentSymbolTable(ctp.componentUri) = ctp
       }
-
-      comp.deployment.foreach { depl =>
-        val dep = deploymentMiner(m, depl, ctp)
-        if (dep.isDefined) {
-          ctp.tables.deploymentDeclTable(dep.get) = depl
+      if (isSystem) {
+        comp.deployment.foreach { depl =>
+          val dep = deploymentMiner(m, depl, ctp)
+          if (dep.isDefined) {
+            ctp.tables.deploymentDeclTable(dep.get) = depl
+          }
         }
       }
       ctp
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_COMPONENT,
-        comp,
-        m, comp.compName.value))
+      reporter.report(errorMessageGen(DUPLICATE_COMPONENT, comp, m, comp.compName.value))
       st.componentSymbolTable(r.toUri)
     }
   }
 
-  def flowMiner(m: Model, flow: Flow, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)
-               (implicit reporter: AccumulatingTagReporter): Unit = {
+  def flowMiner(m: Model, flow: Flow, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)(
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
     val fr = Resource(H.FLOW_TYPE, r, flow.id.value, some(true), flow)
 
     ctp.tables.symbol2Uri(flow.id.value) = fr.toUri
@@ -385,36 +369,34 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       val to = flowCheck(m, flow, fr.toUri, r, tt, isFrom = false, ctp)
       ctp.tables.flowTable(fr.toUri) = FlowTableData(fr.toUri, from._1, to._1, from._2, to._2)
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-        flow.id,
-        m, flow.id.value))
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME, flow.id, m, flow.id.value))
     }
   }
 
-  def declassMiner(m: Model, declass: Declass, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)
-                  (implicit reporter: AccumulatingTagReporter): Unit = {
+  def declassMiner(m: Model, declass: Declass, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)(
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
     val flowUri = ctp.tables.symbol2Uri.get(declass.fid.value)
     if (flowUri.isDefined) {
-      val fromD = declass.fromDomain.flatMap(it => st.symbol2Uri.get(it.value).flatMap(it2 => st.typeTable(it2).getUriFromSymbol(it.value)))
+      val fromD = declass.fromDomain.flatMap(
+        it => st.symbol2Uri.get(it.value).flatMap(it2 => st.typeTable(it2).getUriFromSymbol(it.value))
+      )
       val toD = st.typeTable(st.symbol2Uri(declass.toDomain.value)).getUriFromSymbol(declass.toDomain.value).get
       ctp.tables.declass(flowUri.get) = (fromD, toD)
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-        declass.fid,
-        m, ""))
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME, declass.fid, m, ""))
     }
   }
 
-
-  def flowCheck(m: Model,
-                flow: Flow,
-                fr: ResourceUri,
-                r: Resource,
-                tt: ISet[TypeTable],
-                isFrom: Boolean,
-                ctp: CompSTProducer)(
-                 implicit reporter: AccumulatingTagReporter):
-  (Option[ResourceUri], ISet[ResourceUri]) = {
+  def flowCheck(
+    m: Model,
+    flow: Flow,
+    fr: ResourceUri,
+    r: Resource,
+    tt: ISet[TypeTable],
+    isFrom: Boolean,
+    ctp: CompSTProducer
+  )(implicit reporter: AccumulatingTagReporter): (Option[ResourceUri], ISet[ResourceUri]) = {
 
     val port = if (isFrom) flow.from else flow.to
     val errors = if (isFrom) flow.fromE else flow.toE
@@ -426,16 +408,22 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
         ctp.tables.portFlowRelation.getOrElseUpdate(fr, msetEmpty[ResourceUri]) += fromP.get
         if (errors.nonEmpty) {
-          errors.foreach {
-            f => mineFault(m, f, r, tt)
+          errors.foreach { f =>
+            mineFault(m, f, r, tt)
           }
           res = (fromP, errors.flatMap(e => Resource.getResource(e)).map(_.toUri).toSet)
         } else {
           res = (fromP, isetEmpty[ResourceUri])
         }
       } else {
-        reporter.report(errorMessageGen(MISSING_PORT_DECL,
-          flow, m, flow.id.value.toString, r.uriPaths.tail.tail.mkString(".").toString)
+        reporter.report(
+          errorMessageGen(
+            MISSING_PORT_DECL,
+            flow,
+            m,
+            flow.id.value.toString,
+            r.uriPaths.tail.tail.mkString(".").toString
+          )
         )
         res = (None, isetEmpty[ResourceUri])
       }
@@ -443,18 +431,18 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     res
   }
 
-
-  def transMiner(m: Model,
-                 expr: TransExpr,
-                 r: Resource,
-                 tt: ISet[TypeTable],
-                 smUri: Option[ResourceUri],
-                 ctp: CompSTProducer)(
-                  implicit reporter: AccumulatingTagReporter): Unit = {
+  def transMiner(
+    m: Model,
+    expr: TransExpr,
+    r: Resource,
+    tt: ISet[TypeTable],
+    smUri: Option[ResourceUri],
+    ctp: CompSTProducer
+  )(implicit reporter: AccumulatingTagReporter): Unit = {
     val tr = Resource(H.TRANSITION_TYPE, r, expr.id.value, Some(true), expr)
 
     ctp.tables.symbol2Uri(expr.id.value) = tr.toUri
-    if (!ctp.tables.behaviorTable.contains(tr.toUri)) {
+    if (!ctp.tables.behaviorTable.contains(tr.toUri) && smUri.isDefined) {
       ctp.tables.transitionTable(tr.toUri) = expr
       stateRefMiner(m, expr.lhs, r, smUri.get)
       stateRefMiner(m, expr.rhs, r, smUri.get)
@@ -463,20 +451,18 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       }
 
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-        expr.id,
-        m, expr.id.value))
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME, expr.id, m, expr.id.value))
     }
   }
 
-
-  def exprMiner(m: Model,
-                expr: BehaveExpr,
-                r: Resource,
-                tt: ISet[TypeTable],
-                smUri: Option[ResourceUri],
-                ctp : CompSTProducer)(
-    implicit reporter: AccumulatingTagReporter): Unit = {
+  def exprMiner(
+    m: Model,
+    expr: BehaveExpr,
+    r: Resource,
+    tt: ISet[TypeTable],
+    smUri: Option[ResourceUri],
+    ctp: CompSTProducer
+  )(implicit reporter: AccumulatingTagReporter): Unit = {
 
     val br = Resource(H.BEHAVIOR_TYPE, r, expr.id.value, Some(true), expr)
 
@@ -505,22 +491,19 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         }
       }
 
-
-
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-        expr.id,
-        m, expr.id.value))
+      reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME, expr.id, m, expr.id.value))
     }
   }
 
-  def condMiner(m: Model,
-                conditionTuple: ConditionTuple,
-                r: Resource,
-                tt: ISet[TypeTable],
-                smtUri: Option[ResourceUri],
-                ctp: CompSTProducer)(
-                 implicit reporter: AccumulatingTagReporter): Unit = {
+  def condMiner(
+    m: Model,
+    conditionTuple: ConditionTuple,
+    r: Resource,
+    tt: ISet[TypeTable],
+    smtUri: Option[ResourceUri],
+    ctp: CompSTProducer
+  )(implicit reporter: AccumulatingTagReporter): Unit = {
     conditionTuple match {
       case and: And => {
         condMiner(m, and.lhs, r, tt, smtUri, ctp)
@@ -550,7 +533,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
   def eventRefMiner(m: Model, ef: EventRef, r: Resource, smtUri: Option[ResourceUri])(
-    implicit reporter: AccumulatingTagReporter): Unit = {
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
     val smt = st.stateMachineTable.get(smtUri.get)
     if (smt.nonEmpty) {
       val eventUri = smt.get.events.find(it => H.uri2IdString(it) == ef.event.last.value)
@@ -559,13 +543,12 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       } else {
         reporter.report(errorMessageGen(MISSING_EVENT_DECL, ef, m, ef.event.last.value, r.toUri))
       }
-    } else {
-
-    }
+    } else {}
   }
 
   def stateRefMiner(m: Model, state: Node.Seq[Id], r: Resource, smUri: ResourceUri)(
-    implicit reporter: AccumulatingTagReporter): Unit = {
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
     val smt = st.stateMachineTable.get(smUri)
     if (smt.nonEmpty) {
       val stateUri = smt.get.states.find(it => H.uri2IdString(it) == state.last.value)
@@ -574,37 +557,30 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       } else {
         reporter.report(errorMessageGen(MISSING_STATE_DECL, state.last, m, state.last.value, r.toUri))
       }
-    } else {
-
-    }
+    } else {}
   }
 
-  def tupleMiner(m: Model,
-                 tup: Tuple,
-                 r: Resource,
-                 tt: ISet[TypeTable],
-                 ctp: CompSTProducer)(
-    implicit reporter: AccumulatingTagReporter): Unit = {
-    tup.tokens.foreach {
-      t =>
-        val port = ctp.ports.find(_.endsWith(t._1.value))
-        if (port.isDefined) {
-          Resource.useDefResolve(t._1, ctp.port(port.get).get)
-        } else {
-          println("failed :" + t._1.value)
-          reporter.report(errorMessageGen(MISSING_PORT_DECL,
-            t._1,
-            m, t._1.value, r.toUri))
-        }
-        t._2 match {
-          case f: Fault => mineFault(m, f, r, tt)
-          case fs: FaultSet => fs.value.foreach(mineFault(m, _, r, tt))
-        }
+  def tupleMiner(m: Model, tup: Tuple, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)(
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
+    tup.tokens.foreach { t =>
+      val port = ctp.ports.find(_.endsWith(t._1.value))
+      if (port.isDefined) {
+        Resource.useDefResolve(t._1, ctp.port(port.get).get)
+      } else {
+        //println("failed :" + t._1.value)
+        reporter.report(errorMessageGen(MISSING_PORT_DECL, t._1, m, t._1.value, r.toUri))
+      }
+      t._2 match {
+        case f: Fault => mineFault(m, f, r, tt)
+        case fs: FaultSet => fs.value.foreach(mineFault(m, _, r, tt))
+      }
     }
   }
 
   def mineFault(m: Model, f: Fault, r: Resource, tt: ISet[TypeTable])(
-    implicit reporter: AccumulatingTagReporter): Unit = {
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
     val fif = f.enum.value.map(_.value)
     if (fif.size > 1) {
       val updated = fif.takeRight(2)
@@ -614,89 +590,67 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         if (eUri.isDefined) {
           Resource.useDefResolve(f, updatedtt.get.enumElement(eUri.get))
         } else {
-          reporter.report(errorMessageGen(MISSING_TYPE_DECL,
-            f,
-            m, updated.last))
+          reporter.report(errorMessageGen(MISSING_TYPE_DECL, f, m, updated.last))
         }
       } else {
-        reporter.report(errorMessageGen(MiSSING_TYPE_OR_STATE_MACHINE,
-          f,
-          m, updated.head))
+        reporter.report(errorMessageGen(MiSSING_TYPE_OR_STATE_MACHINE, f, m, updated.head))
       }
     } else {
       val elem = tt.flatMap(x => x.getUriFromSymbol(fif.last))
       //    val elem = tt.flatMap(x => x.enumElements.find(_.endsWith(fif)))
       if (elem.nonEmpty) {
         if (elem.size > 1) {
-          reporter.report(errorMessageGen(TYPE_RESOLUTION_FAILURE,
-            f,
-            m, fif.last))
+          reporter.report(errorMessageGen(TYPE_RESOLUTION_FAILURE, f, m, fif.last))
         } else {
           if (Resource.getParentUri(elem.head).isDefined) {
             Resource.useDefResolve(f, st.typeTable(Resource.getParentUri(elem.head).get).enumElement(elem.head))
           } else {
             //should never hit
-            reporter.report(errorMessageGen(MISSING_TYPE_DECL,
-              f,
-              m, fif.last))
+            reporter.report(errorMessageGen(MISSING_TYPE_DECL, f, m, fif.last))
           }
         }
       } else {
-        reporter.report(errorMessageGen(MISSING_TYPE_DECL,
-          f,
-          m, fif.last))
+        reporter.report(errorMessageGen(MISSING_TYPE_DECL, f, m, fif.last))
       }
     }
   }
 
-  def propagationMiner(m: Model,
-                       p: Propagation,
-                       r: Resource,
-                       tt: ISet[TypeTable],
-                       ctp: CompSTProducer)(
-                        implicit reporter: AccumulatingTagReporter): Unit = {
+  def propagationMiner(m: Model, p: Propagation, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)(
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
 
     val portUri = ctp.getUriFromSymbol(p.id.value)
 
     if (portUri.isEmpty) {
-      reporter.report(errorMessageGen(MISSING_PORT_DECL,
-        p,
-        m, p.id.value, r.toUri))
+      reporter.report(errorMessageGen(MISSING_PORT_DECL, p, m, p.id.value, r.toUri))
 
     } else if (!(ctp.compUri == r.toUri || st.compTypeTable.get(r.toUri).isEmpty)) {
-      println(ctp.compUri)
-      println(r.toUri)
-      reporter.report(errorMessageGen(MISSING_TYPE_ASSOCIATION,
-        p,
-        m, ""))
+      //println(ctp.compUri)
+      //println(r.toUri)
+      reporter.report(errorMessageGen(MISSING_TYPE_ASSOCIATION, p, m, ""))
     } else {
       val tempSet = msetEmpty[ResourceUri]
       Resource.useDefResolve(p, ctp.tables.portTable(portUri.get))
-      p.errorTypes.foreach {
-        et => {
+      p.errorTypes.foreach { et =>
+        {
           mineFault(m, et, r, tt)
           if (Resource.getResource(et).isDefined) {
             tempSet += Resource.getResource(et).get.toUri
           }
         }
-          ctp.tables.propagationTable(portUri.get) = tempSet
+        ctp.tables.propagationTable(portUri.get) = tempSet
       }
     }
   }
 
-  def securityMiner(m: Model,
-                    p: Security,
-                    r: Resource,
-                    tt: ISet[TypeTable],
-                    ctp: CompSTProducer)(
-                     implicit reporter: AccumulatingTagReporter): Unit = {
+  def securityMiner(m: Model, p: Security, r: Resource, tt: ISet[TypeTable], ctp: CompSTProducer)(
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
 
     val portUri = ctp.getUriFromSymbol(p.id.value)
 
     if (portUri.isEmpty) {
-      reporter.report(errorMessageGen(MISSING_PORT_DECL,
-        p,
-        m, p.id.value, r.toUri))
+      reporter.report(errorMessageGen(MISSING_PORT_DECL, p, m, p.id.value, r.toUri))
 
     } else {
       val tempSet = msetEmpty[ResourceUri]
@@ -706,15 +660,11 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         val duri = updatedTT.get.getUriFromSymbol(p.domain.value).get
         Resource.useDefResolve(p.domain, updatedTT.get.latticeElement(duri))
       } else {
-        reporter.report(errorMessageGen(MISSING_TYPE_DECL,
-          p.domain,
-          m, p.domain.value))
+        reporter.report(errorMessageGen(MISSING_TYPE_DECL, p.domain, m, p.domain.value))
       }
       if (Resource.getResource(p.domain).isDefined) {
         ctp.tables.securityTable(portUri.get) = Resource.getResource(p.domain).get.toUri
       }
-
-
       //        .foreach {
       //        et => {
       //          mineFault(m, et, r, tt)
@@ -728,29 +678,24 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
   }
 
   def portMiner(m: Model, p: Port, r: Resource, ctp: CompSTProducer)(
-    implicit reporter: AccumulatingTagReporter): Unit = {
+    implicit reporter: AccumulatingTagReporter
+  ): Unit = {
     val pr = Resource(if (p.isIn) H.PORT_IN_TYPE else H.PORT_OUT_TYPE, r, p.id.value, Some(true), p)
     ctp.tables.symbol2Uri(p.id.value) = pr.toUri
     if (!ctp.tables.portTable.keySet.contains(pr.toUri)) {
       ctp.tables.portTable(pr.toUri) = p
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_PORT,
-        p,
-        m, p.id.value, r.toUri))
+      reporter.report(errorMessageGen(DUPLICATE_PORT, p, m, p.id.value, r.toUri))
     }
   }
 
   //TODO: Rewrite this method
-  def connectionMiner(m: Model,
-                      connDecl: ConnectionDecl,
-                      parentRes: Resource,
-                      parentCT: ComponentTable)(
-                       implicit reporter: AccumulatingTagReporter):
-  Option[ConnSTProducer] = {
+  def connectionMiner(m: Model, connDecl: ConnectionDecl, parentRes: Resource, parentCT: ComponentTable)(
+    implicit reporter: AccumulatingTagReporter
+  ): Option[ConnSTProducer] = {
     val r = Resource(H.CONNECTION_TYPE, parentRes, connDecl.connName.value, Some(true), connDecl)
 
     st.symbol2Uri(connDecl.connName.value) = r.toUri
-
 
     if (!parentCT.connections.toSet.contains(r.toUri)) {
 
@@ -761,15 +706,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
 
         val ntp = new ConnSTProducer(r.toUri, connDecl, stp, parentRes.toUri)
 
-        val inr = Resource(H.PORT_IN_VIRTUAL_TYPE,
-          r,
-          H.INPUT_CONN_PORT_ID,
-          Some(true))
+        val inr = Resource(H.PORT_IN_VIRTUAL_TYPE, r, H.INPUT_CONN_PORT_ID, Some(true))
 
-        val outr = Resource(H.PORT_OUT_VIRTUAL_TYPE,
-          r,
-          H.OUTPUT_CONN_PORT_ID,
-          Some(true))
+        val outr = Resource(H.PORT_OUT_VIRTUAL_TYPE, r, H.OUTPUT_CONN_PORT_ID, Some(true))
 
         ntp.tables.symbol2Uri(H.INPUT_CONN_PORT_ID) = inr.toUri
         ntp.tables.symbol2Uri(H.OUTPUT_CONN_PORT_ID) = outr.toUri
@@ -782,8 +721,9 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         } else {
           Some(parentRes.toUri)
         }
-        val compSt = if (fcompUri.get == parentCT.componentUri) parentCT
-        else st.componentSymbolTable(fcompUri.get)
+        val compSt =
+          if (fcompUri.get == parentCT.componentUri) parentCT
+          else st.componentSymbolTable(fcompUri.get)
         val fportUri = compSt.getUriFromSymbol(connDecl.fromPort.value)
 
         val errors = compSt.propagation(fportUri.get)
@@ -799,20 +739,22 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
             flow.fromE.foreach(mineFault(m, _, r, st.typeTable.values.toSet))
             flow.toE.foreach(mineFault(m, _, r, st.typeTable.values.toSet))
 
-            ntp.tables.flowTable(fr.toUri) = FlowTableData(fr.toUri,
+            ntp.tables.flowTable(fr.toUri) = FlowTableData(
+              fr.toUri,
               if (flow.fromE.nonEmpty) Some(inr.toUri) else None,
               if (flow.toE.nonEmpty) Some(outr.toUri) else None,
               flow.fromE.flatMap(fe => Resource.getResource(fe)).map(_.toUri).toSet,
-              flow.toE.flatMap(fe => Resource.getResource(fe)).map(_.toUri).toSet)
+              flow.toE.flatMap(fe => Resource.getResource(fe)).map(_.toUri).toSet
+            )
 
             if (flow.fromE.nonEmpty) {
               ntp.tables.flowPortRelation.getOrElseUpdate(
                 ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head,
                 msetEmpty[ResourceUri]
               ) += fr.toUri
-              ntp.tables.portFlowRelation.getOrElseUpdate(
-                fr.toUri, msetEmpty[ResourceUri]
-              ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE)).head
+              ntp.tables.portFlowRelation.getOrElseUpdate(fr.toUri, msetEmpty[ResourceUri]) += ntp.tables.portTable
+                .filter(_.startsWith(H.PORT_IN_VIRTUAL_TYPE))
+                .head
 
               flow.fromE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
             }
@@ -821,21 +763,18 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
                 ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head,
                 msetEmpty[ResourceUri]
               ) += fr.toUri
-              ntp.tables.portFlowRelation.getOrElseUpdate(
-                fr.toUri, msetEmpty[ResourceUri]
-              ) += ntp.tables.portTable.filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE)).head
+              ntp.tables.portFlowRelation.getOrElseUpdate(fr.toUri, msetEmpty[ResourceUri]) += ntp.tables.portTable
+                .filter(_.startsWith(H.PORT_OUT_VIRTUAL_TYPE))
+                .head
               flow.toE.foreach(f => mineFault(m, f, r, st.typeTable.values.toSet))
             }
           } else {
-            reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME,
-              flow.id,
-              m, flow.id.value))
+            reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME, flow.id, m, flow.id.value))
           }
         }
         var i = 1
         //default flow
         errors.foreach { e =>
-
           buildAndAddDefaultConnectionFlows(r, Some(e), i.toString, inr, outr, ntp)
           i = i + 1
         }
@@ -845,9 +784,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       }
 
     } else {
-      reporter.report(errorMessageGen(DUPLICATE_CONNECTION,
-        connDecl,
-        m, connDecl.connName.value))
+      reporter.report(errorMessageGen(DUPLICATE_CONNECTION, connDecl, m, connDecl.connName.value))
       None
     }
   }
@@ -884,15 +821,43 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
   }
 
-  def deploymentMiner(m: Model,
-                      deploy: DeploymentDecl,
-                      cstp: CompSTProducer)(
-                       implicit reporter: AccumulatingTagReporter): Option[(ResourceUri, ResourceUri)] = {
+  def deploymentMiner(m: Model, deploy: DeploymentDecl, cstp: CompSTProducer)(
+    implicit reporter: AccumulatingTagReporter
+  ): Option[(ResourceUri, ResourceUri)] = {
     // all comp/conn references in deployment must be part of the subcomp / conn
     // defined in the parent comp of deploy
+//    val ff = H.findUri(deploy.fromNode.value.map(_.value).toVector, cstp.st)
 
-    val fromUri = cstp.getUriFromSymbol(deploy.fromNode.value.last.value)
-    val toUri = cstp.getUriFromSymbol(deploy.toNode.value.last.value)
+    val fromUri = if(H.findUri(deploy.fromNode.value.map(_.value), cstp.st).isDefined) {
+      H.findUri(deploy.fromNode.value.map(_.value), cstp.st)
+    } else {
+      val parent = H.findUri(deploy.fromNode.value.map(_.value).init, cstp.st)
+      if(parent.isDefined && H.getUriType(parent.get) == H.COMPONENT_TYPE) {
+        val t = st.componentSymbolTable(parent.get).connections.filter{it =>
+          H.uri2IdString(it).split("-").nonEmpty && H.uri2IdString(it).split("-").head == deploy.fromNode.value.map(_.value).last}
+        assert(t.size == 1, "Cannot handle bindings on a connection with feature group end points")
+        if(t.nonEmpty) {
+          Some(t.head)
+        } else {
+          None
+        }
+      } else {
+        None
+      }
+    }
+    val toUri = if(H.findUri(deploy.toNode.value.map(_.value), cstp.st).isDefined) {
+      H.findUri(deploy.toNode.value.map(_.value), cstp.st)
+    } else {
+      val parent = H.findUri(deploy.toNode.value.map(_.value).init, cstp.st)
+      if(parent.isDefined && H.getUriType(parent.get) == H.COMPONENT_TYPE) {
+        val t = st.componentSymbolTable(parent.get).connections.filter{it =>
+          H.uri2IdString(it).split("-").nonEmpty && H.uri2IdString(it).split("-").head == deploy.toNode.value.map(_.value).last}
+        assert(t.size == 1, "Cannot handle bindings on a connection with feature group end points")
+        Some(t.head)
+      } else {
+        None
+      }
+    }
 
     val fromPortUri = if (fromUri.isDefined && deploy.fromPort.isDefined) {
       stp.tables.componentSymbolTable(fromUri.get).getUriFromSymbol(deploy.fromPort.get.value)
@@ -907,46 +872,56 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     }
 
     if (fromPortUri.isDefined) {
-      Resource.useDefResolve(deploy.fromNode, cstp.subComponent(fromUri.get))
-      Resource.useDefResolve(deploy.fromPort.get, cstp.tables.subComponentsTable(fromUri.get).port(fromPortUri.get).get)
+      Resource.useDefResolve(deploy.fromNode, cstp.st.componentTable(fromUri.get).componentDecl)
+      Resource.useDefResolve(deploy.fromPort.get, cstp.st.componentTable(fromUri.get).port(fromPortUri.get).get)
     } else if (fromUri.isDefined) {
-      Resource.useDefResolve(deploy.fromNode,
-        if (fromUri.get.startsWith(H.COMPONENT_TYPE)) cstp.subComponent(fromUri.get)
-        else cstp.connection(fromUri.get))
+      if (fromUri.get.startsWith(H.COMPONENT_TYPE)) {
+        Resource.useDefResolve(
+          deploy.fromNode,
+          cstp.st.componentTable(fromUri.get).componentDecl)
+      } else if(Resource.getParentUri(fromUri.get).isDefined) {
+        Resource.useDefResolve(
+          deploy.fromNode,
+          cstp.st.componentTable(Resource.getParentUri(fromUri.get).get).connection(fromUri.get))
+      }
     } else {
-      reporter.report(errorMessageGen(MISSING_COMPONENT_OR_CONNECTION,
-        deploy,
-        m, deploy.fromNode.value.last.value))
+      reporter.report(errorMessageGen(MISSING_COMPONENT_OR_CONNECTION, deploy, m, deploy.fromNode.value.last.value))
     }
 
     if (toPortUri.isDefined) {
-      Resource.useDefResolve(deploy.toNode, cstp.subComponent(toUri.get))
-      Resource.useDefResolve(deploy.toPort.get, cstp.tables.subComponentsTable(toUri.get).port(toPortUri.get).get)
+      Resource.useDefResolve(deploy.toNode, cstp.st.componentTable(toUri.get).componentDecl)
+      Resource.useDefResolve(deploy.toPort.get, cstp.st.componentTable(toUri.get).port(toPortUri.get).get)
     } else if (toUri.isDefined) {
-      Resource.useDefResolve(deploy.toNode,
-        if (toUri.get.startsWith(H.COMPONENT_TYPE)) cstp.subComponent(toUri.get)
-        else cstp.connection(toUri.get))
+      if (toUri.get.startsWith(H.COMPONENT_TYPE)) {
+        Resource.useDefResolve(
+          deploy.toNode,
+          cstp.st.componentTable(toUri.get).componentDecl)
+      } else if(Resource.getParentUri(toUri.get).isDefined) {
+        Resource.useDefResolve(
+          deploy.toNode,
+        cstp.st.componentTable(Resource.getParentUri(toUri.get).get).connection(toUri.get))
+      }
     } else {
-      reporter.report(errorMessageGen(MISSING_COMPONENT_OR_CONNECTION,
-        deploy,
-        m, deploy.toNode.value.last.value))
+      reporter.report(errorMessageGen(MISSING_COMPONENT_OR_CONNECTION, deploy, m, deploy.toNode.value.last.value))
     }
 
     val furi = if (fromPortUri.isDefined) {
       fromPortUri.get
+
     } else {
       //only one of the two can be connection in a deployment
       assert(toPortUri.nonEmpty, "Connection cannot be bound to a connection")
-      addBindPortsToNodes(fromUri.get, cstp, m, toPortUri.get, toUri.get)
-      fromUri.get
+      val fp = addBindPortsToNodes(fromUri.get,  m, toPortUri.get, toUri.get, isFrom = true)
+      if(fp.isDefined) fp.get else fromUri.get
+
     }
 
     val turi = if (toPortUri.isDefined) {
       toPortUri.get
     } else {
       assert(fromPortUri.nonEmpty, "Connection cannot be bound to a connection")
-      addBindPortsToNodes(toUri.get, cstp, m, fromPortUri.get, fromUri.get)
-      toUri.get
+      val tp = addBindPortsToNodes(toUri.get,  m, fromPortUri.get, fromUri.get, isFrom = false)
+      if(tp.isDefined) tp.get else toUri.get
     }
 
     Some((furi, turi))
@@ -960,16 +935,16 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     //add ports
   }
 
-  def addBindPortsToNodes(nodeUri: ResourceUri,
-                          cstp: CompSTProducer,
-                          m: Model,
-                          otherPort: ResourceUri,
-                          otherComp: ResourceUri)(
-                           implicit reporter: AccumulatingTagReporter): Unit = {
+  def addBindPortsToNodes(
+    nodeUri: ResourceUri,
+    //st : SymbolTable,
+    m: Model,
+    otherPort: ResourceUri,
+    otherComp: ResourceUri,
+    isFrom : Boolean
+  )(implicit reporter: AccumulatingTagReporter): Option[ResourceUri] = {
     if (nodeUri.startsWith(H.COMPONENT_TYPE)) {
-      reporter.report(errorMessageGen(MISSING_PORT_REF,
-        st.componentSymbolTable(nodeUri).componentDecl,
-        m))
+      reporter.report(errorMessageGen(MISSING_PORT_REF, st.componentSymbolTable(nodeUri).componentDecl, m))
       assert(false, "this should never be a component")
       //      val pt = stp.tables.componentSymbolTable(nodeUri).tables.portTable
       //      val port1 = Port(isIn = true, Id(H.INPUT_BIND_PORT_ID), None)
@@ -980,119 +955,132 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       //      pt(Resource(H.PORT_OUT_BIND_TYPE,
       //        Resource.getDefResource(nodeUri).get,
       //        H.OUTPUT_BIND_PORT_ID, Some(true), port2).toUri) = port2
+      None
     } else {
-      val tables = cstp.tables.connectionSymbolTabel(nodeUri).tables
-      val pt = tables.portTable
-      val bindInPort = Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get,
-        H.INPUT_BIND_PORT_ID, Some(true))
-      val bindOutPort = Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get,
-        H.OUTPUT_BIND_PORT_ID, Some(true))
-      pt += bindInPort.toUri
-      pt += bindOutPort.toUri
-      var propagations = tables.propagationTable
-      val connInPort = cstp.tables.connectionSymbolTabel(nodeUri).ports.filter(it =>
-        H.uri2IdString(it) == H.INPUT_CONN_PORT_ID).head
-      val connOutPort = cstp.tables.connectionSymbolTabel(nodeUri).ports.filter(it =>
-        H.uri2IdString(it) == H.OUTPUT_CONN_PORT_ID).head
-      val otherTable = cstp.tables.subComponentsTable.get(otherComp)
+      val compRes = Resource.getParentUri(nodeUri)
+      if (compRes.isDefined && st.componentSymbolTable.get(compRes.get).isDefined) {
+        val cstp = st.componentSymbolTable(compRes.get).asInstanceOf[CompSTProducer]
+        val tables = cstp.tables.connectionSymbolTabel(nodeUri).tables
+        val pt = tables.portTable
+        val bindInPort =
+          Resource(H.PORT_IN_BIND_TYPE, Resource.getDefResource(nodeUri).get, H.INPUT_BIND_PORT_ID, Some(true))
+        val bindOutPort =
+          Resource(H.PORT_OUT_BIND_TYPE, Resource.getDefResource(nodeUri).get, H.OUTPUT_BIND_PORT_ID, Some(true))
+        pt += bindInPort.toUri
+        pt += bindOutPort.toUri
+        var propagations = tables.propagationTable
+        val connInPort =
+          cstp.tables.connectionSymbolTabel(nodeUri).ports.filter(it => H.uri2IdString(it) == H.INPUT_CONN_PORT_ID).head
+        val connOutPort = cstp.tables
+          .connectionSymbolTabel(nodeUri)
+          .ports
+          .filter(it => H.uri2IdString(it) == H.OUTPUT_CONN_PORT_ID)
+          .head
 
-      //adding propagation and flows
-      if (H.isInPort(otherPort)) {
-        propagations += (bindOutPort.toUri -> (msetEmpty ++
-          otherTable.get.propagation(otherPort)))
-      } else {
-        propagations += (bindInPort.toUri -> (msetEmpty ++
-          otherTable.get.propagation(otherPort)))
-      }
+        val otherTable = st.componentSymbolTable.get(otherComp)
 
-      var temp_i = 1
-      if (Resource.getDefResource(nodeUri).isDefined) {
-        val res = Resource.getDefResource(nodeUri).get
+        //adding propagation and flows
+        //todo : if there are more than one bus bound to same connection, union the error tokens
         if (H.isInPort(otherPort)) {
-          propagations(connInPort).intersect(propagations(bindOutPort.toUri)).foreach { e =>
+          propagations += (bindOutPort.toUri -> (msetEmpty ++
+            otherTable.get.propagation(otherPort)))
+        } else {
+          propagations += (bindInPort.toUri -> (msetEmpty ++
+            otherTable.get.propagation(otherPort)))
+        }
+
+        var temp_i = 1
+        if (Resource.getDefResource(nodeUri).isDefined) {
+          val res = Resource.getDefResource(nodeUri).get
+          if (H.isInPort(otherPort)) {
+            propagations(connInPort).intersect(propagations(bindOutPort.toUri)).foreach { e =>
+              buildAndAddDefaultConnectionFlows(
+                res,
+                Some(e),
+                "_bind_out" + temp_i,
+                Resource.getDefResource(connInPort).get,
+                bindOutPort,
+                cstp.tables.connectionSymbolTabel(nodeUri)
+              )
+              temp_i = temp_i + 1
+            }
+
             buildAndAddDefaultConnectionFlows(
               res,
-              Some(e),
+              None,
               "_bind_out" + temp_i,
               Resource.getDefResource(connInPort).get,
               bindOutPort,
               cstp.tables.connectionSymbolTabel(nodeUri)
             )
+
             temp_i = temp_i + 1
-          }
 
-          buildAndAddDefaultConnectionFlows(
-            res,
-            None,
-            "_bind_out" + temp_i,
-            Resource.getDefResource(connInPort).get,
-            bindOutPort,
-            cstp.tables.connectionSymbolTabel(nodeUri)
-          )
+            propagations(connInPort).diff(propagations(bindOutPort.toUri)).foreach { e =>
+              buildAndAddDefaultConnectionFlows(
+                res,
+                Some(e),
+                "_bind" + temp_i,
+                Resource.getDefResource(connInPort).get,
+                Resource.getDefResource(connOutPort).get,
+                cstp.tables.connectionSymbolTabel(nodeUri)
+              )
+              temp_i = temp_i + 1
+            }
 
-          temp_i = temp_i + 1
-
-          propagations(connInPort).diff(propagations(bindOutPort.toUri)).foreach { e =>
             buildAndAddDefaultConnectionFlows(
               res,
-              Some(e),
+              None,
               "_bind" + temp_i,
               Resource.getDefResource(connInPort).get,
               Resource.getDefResource(connOutPort).get,
               cstp.tables.connectionSymbolTabel(nodeUri)
             )
+
             temp_i = temp_i + 1
-          }
-
-          buildAndAddDefaultConnectionFlows(
-            res,
-            None,
-            "_bind" + temp_i,
-            Resource.getDefResource(connInPort).get,
-            Resource.getDefResource(connOutPort).get,
-            cstp.tables.connectionSymbolTabel(nodeUri)
-          )
-
-          temp_i = temp_i + 1
-        } else {
-          propagations(bindInPort.toUri).foreach { e =>
+          } else {
+            propagations(bindInPort.toUri).foreach { e =>
+              buildAndAddDefaultConnectionFlows(
+                res,
+                Some(e),
+                "_bind_in" + temp_i,
+                bindInPort,
+                Resource.getDefResource(connOutPort).get,
+                cstp.tables.connectionSymbolTabel(nodeUri)
+              )
+              temp_i = temp_i + 1
+            }
             buildAndAddDefaultConnectionFlows(
               res,
-              Some(e),
+              None,
               "_bind_in" + temp_i,
               bindInPort,
               Resource.getDefResource(connOutPort).get,
               cstp.tables.connectionSymbolTabel(nodeUri)
             )
+
             temp_i = temp_i + 1
           }
-          buildAndAddDefaultConnectionFlows(
-            res,
-            None,
-            "_bind_in" + temp_i,
-            bindInPort,
-            Resource.getDefResource(connOutPort).get,
-            cstp.tables.connectionSymbolTabel(nodeUri)
-          )
-
-          temp_i = temp_i + 1
         }
+        if(isFrom) Some(bindOutPort.toUri) else Some(bindInPort.toUri)
+      } else  {
+        None
       }
     }
   }
 
-  def compPortCheck(m: Model, comp: Option[Name],
-                    port: Id,
-                    parentCST: ComponentTable)(
-                     implicit reporter: AccumulatingTagReporter): Boolean = {
+  def compPortCheck(m: Model, comp: Option[Name], port: Id, parentCST: ComponentTable)(
+    implicit reporter: AccumulatingTagReporter
+  ): Boolean = {
     val fcompUri = if (comp.isDefined) {
       parentCST.getUriFromSymbol(comp.get.value.last.value)
     } else {
       Some(parentCST.componentUri)
     }
     if (fcompUri.isDefined) {
-      val fcomp = if (fcompUri.get == parentCST.componentUri) parentCST
-      else stp.componentTable(fcompUri.get)
+      val fcomp =
+        if (fcompUri.get == parentCST.componentUri) parentCST
+        else stp.componentTable(fcompUri.get)
 
       if (comp.isDefined) {
         Resource.useDefResolve(comp.get, fcomp.componentDecl)
@@ -1103,20 +1091,19 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         Resource.useDefResolve(port, fcomp.port(fportUri.get).get)
         true
       } else {
-        reporter.report(errorMessageGen(MISSING_PORT_DECL,
-          port,
-          m, fcomp.componentDecl.compName.value+"."+port.value))
+        reporter.report(
+          errorMessageGen(MISSING_PORT_DECL, port, m, fcomp.componentDecl.compName.value + "." + port.value)
+        )
         false
       }
     } else {
       //here comp is vacuously defined
-      reporter.report(errorMessageGen(MISSING_COMPONENT, comp.get.value.last, m, (comp.get.value.map(_.value)).mkString("::"))
+      reporter.report(
+        errorMessageGen(MISSING_COMPONENT, comp.get.value.last, m, (comp.get.value.map(_.value)).mkString("::"))
       )
       false
     }
   }
-
-
 
 }
 

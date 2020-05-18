@@ -94,6 +94,14 @@ trait SymbolTable {
 
   def uris(file: FileResourceUri): MSet[ResourceUri]
 
+  def computeDeployment() : Unit
+
+  def removeDeployments() : Unit
+
+  def forwardDeployment(uri : ResourceUri) : ISet[ResourceUri]
+
+  def backwardDeployment(uri : ResourceUri) : ISet[ResourceUri]
+
   def compTypeDecl(compUri: ResourceUri): Set[ResourceUri]
 
   def getUriFromSymbol(symbol: String): Option[ResourceUri]
@@ -114,6 +122,8 @@ sealed case class SymbolTableData
  compSMTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
  compTypeTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
  constTable: MMap[ResourceUri, ConstantDecl] = mmapEmpty,
+ forwardDeployment : MMap[ResourceUri, ISet[ResourceUri]] = mmapEmpty,
+ backwardDeployment : MMap[ResourceUri, ISet[ResourceUri]] = mmapEmpty,
  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
@@ -196,6 +206,8 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
     tables.compTypeTable.getOrElse(compUri, isetEmpty[ResourceUri]).toSet
   }
 
+
+
   override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
     tables.symbol2Uri.get(symbol)
   }
@@ -223,7 +235,10 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
       tables.latticeTable(latticeElemUri).parents.toSet
 
     override def getUriFromSymbol(symbol: String): Option[ResourceUri] = {
+//      println(symbol)
+//      tables.symbol2Uri.foreach(it => println(it))
       tables.symbol2Uri.get(symbol)
+
     }
 
   }
@@ -249,6 +264,31 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
   override def components: Iterable[ResourceUri] = {
     tables.componentDeclTable.keys
   }
+
+  override def computeDeployment() : Unit = {
+    tables.forwardDeployment ++= componentTable(this.system).deployments.groupBy(_._1).mapValues(_.map(_._2).toSet)
+    tables.backwardDeployment ++= componentTable(this.system).deployments.map(x => (x._2, x._1)).groupBy(_._1).mapValues(_.map(_._2).toSet)
+  }
+
+  override def removeDeployments() : Unit = {
+    tables.forwardDeployment --= tables.forwardDeployment.keySet
+    tables.backwardDeployment --= tables.backwardDeployment.keySet
+  }
+
+  override def forwardDeployment(uri: ResourceUri): ISet[ResourceUri] = {
+    if(tables.forwardDeployment.isEmpty) {
+      tables.forwardDeployment ++= componentTable(this.system).deployments.groupBy(_._1).mapValues(_.map(_._2).toSet)
+    }
+    tables.forwardDeployment.getOrElse(uri, isetEmpty)
+  }
+
+  override def backwardDeployment(uri: ResourceUri): ISet[ResourceUri] = {
+    if(tables.backwardDeployment.isEmpty) {
+      tables.backwardDeployment ++= componentTable(this.system).deployments.map(x => (x._2, x._1)).groupBy(_._1).mapValues(_.map(_._2).toSet)
+    }
+      tables.backwardDeployment.getOrElse(uri, isetEmpty)
+  }
+
 }
 
 object STProducer {

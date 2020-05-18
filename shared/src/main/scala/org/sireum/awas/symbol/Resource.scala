@@ -173,7 +173,13 @@ case class ResourceBean(var _uriType: String,
   
   override def toFullyQualifiedName: String = {
     if (this._uriPaths.size > 2) {
-      (this._uriPaths.drop(2) :+ _uri).mkString(".")
+      val res = (this._uriPaths.drop(2) :+ _uri)
+      if(res.head == "") {
+        res.tail.mkString(".")
+      } else {
+        res.mkString(".")
+      }
+
     } else {
       ""
     }

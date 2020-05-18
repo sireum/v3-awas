@@ -29,7 +29,7 @@ package org.sireum.awas.test.Query
 
 import java.nio.file.Paths
 
-import org.sireum.awas.ast.Builder
+import org.sireum.awas.ast.{AwasSerializer, Builder}
 import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.query.{QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
@@ -58,7 +58,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     val filesEqual = files.filter { p =>
       true
-//          p.toLowerCase.contains("abc")
+//          p.toLowerCase.contains("pca_pulseox")
     }
 
     filesEqual.toVector.map { x =>

@@ -24,7 +24,7 @@ typeDecl
   ;
 
 behaviorDecl
-  : smName=Name ':' states (events)?
+  : smName= ID ':' states (events)?
   ;
 
 componentDecl

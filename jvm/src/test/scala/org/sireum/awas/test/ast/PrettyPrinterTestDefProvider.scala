@@ -68,17 +68,17 @@ final class PrettyPrinterTestDefProvider(tf: TestFramework)
 
     filesEqual.toVector.map { x =>
       println(x)
-      EqualOptTest(filename(x), printAndParse(x, readFile(x)._1), readFile(x)._1)
+      EqualTest(filename(x), printAndParse(x, readFile(x)._1), readFile(x)._1)
     } ++ filesConditional.toVector.map {x =>
-    ConditionTest(filename(x), Builder(some(x),printAndParse(x, readFile(x)._1).get).isDefined)}
+    ConditionTest(filename(x), Builder(some(x),printAndParse(x, readFile(x)._1)).isDefined)}
   }
 
-  def printAndParse(fileResourceUri: FileResourceUri, model: String): Option[String] = {
+  def printAndParse(fileResourceUri: FileResourceUri, model: String): String = {
     Builder(Some(fileResourceUri), model) match {
-      case None => None
+      case None => "Error"
       case Some(e) =>
         val result = PrettyPrinter(e)
-        Some(result)
+        result
     }
   }
 }

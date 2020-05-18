@@ -233,41 +233,41 @@ object FlowGraph {
       }
     }
 
-    cst.deployments.foreach { dep =>
-      val fromUri = dep._1
-      val toUri = dep._2
-
-      val fromPortUri = if (H.isPort(dep._1)) {
-        dep._1
-      } else {
-        //must be a connection
-        assert(H.getUriType(dep._1) == H.CONNECTION_TYPE, "Deployment uri is not port or connection")
-        cst.connectionTable(dep._1).ports.filter(_.startsWith(H.PORT_OUT_BIND_TYPE)).head
-      }
-
-      val toPortUri = if (H.isPort(dep._2)) {
-        dep._2
-      } else {
-        assert(H.getUriType(dep._2) == H.CONNECTION_TYPE, "Deployment uri is not port or connection")
-        cst.connectionTable(dep._2).ports.filter(_.startsWith(H.PORT_IN_BIND_TYPE)).head
-      }
-
-      val fromNodeUri = Resource.getParentUri(fromPortUri)
-      val toNodeUri = Resource.getParentUri(toPortUri)
-
-
-      if (fromNodeUri.isDefined && toNodeUri.isDefined) {
-        val fromNode = FlowNode.getNode(fromNodeUri.get)
-        val toNode = FlowNode.getNode(toNodeUri.get)
-        if (fromNode.isDefined && toNode.isDefined) {
-          val edge1 = result.addEdge(fromNode.get, toNode.get)
-
-          result.addPortEdge(fromPortUri, edge1)
-          result.addPortEdge(toPortUri, edge1)
-          result.addEdgePortRelation(edge1, fromPortUri, toPortUri)
-        }
-      }
-    }
+//    cst.deployments.foreach { dep =>
+//      val fromUri = dep._1
+//      val toUri = dep._2
+//
+//      val fromPortUri = if (H.isPort(dep._1)) {
+//        dep._1
+//      } else {
+//        //must be a connection
+//        assert(H.getUriType(dep._1) == H.CONNECTION_TYPE, "Deployment uri is not port or connection")
+//        cst.connectionTable(dep._1).ports.filter(_.startsWith(H.PORT_OUT_BIND_TYPE)).head
+//      }
+//
+//      val toPortUri = if (H.isPort(dep._2)) {
+//        dep._2
+//      } else {
+//        assert(H.getUriType(dep._2) == H.CONNECTION_TYPE, "Deployment uri is not port or connection")
+//        cst.connectionTable(dep._2).ports.filter(_.startsWith(H.PORT_IN_BIND_TYPE)).head
+//      }
+//
+//      val fromNodeUri = Resource.getParentUri(fromPortUri)
+//      val toNodeUri = Resource.getParentUri(toPortUri)
+//
+//
+//      if (fromNodeUri.isDefined && toNodeUri.isDefined) {
+//        val fromNode = FlowNode.getNode(fromNodeUri.get)
+//        val toNode = FlowNode.getNode(toNodeUri.get)
+//        if (fromNode.isDefined && toNode.isDefined) {
+//          val edge1 = result.addEdge(fromNode.get, toNode.get)
+//
+//          result.addPortEdge(fromPortUri, edge1)
+//          result.addPortEdge(toPortUri, edge1)
+//          result.addEdgePortRelation(edge1, fromPortUri, toPortUri)
+//        }
+//      }
+//    }
     result
   }
 
@@ -278,9 +278,11 @@ object FlowGraph {
     val result = buildGraph(systemST, st)
     if (includeBindingEdges) {
       //TODO: safly type casting here as it is inside FlowGraph, but have to rework to avoid this casting
-      FlowNode.getGraphs.foreach(it => addBindings(it.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]]))
+      //FlowNode.getGraphs.foreach(it => addBindings(it.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]]))
+      st.computeDeployment()
     } else {
-      FlowNode.getGraphs.foreach(it => removeBindings(it.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]]))
+      //FlowNode.getGraphs.foreach(it => removeBindings(it.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]]))
+      st.removeDeployments()
     }
     FlowNode.getGraph(st.system).get
   }

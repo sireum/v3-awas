@@ -150,6 +150,7 @@ object Main {
       val reporter = new ConsoleTagReporter()
       st = Some(SymbolTable(model.get)(reporter))
 
+
       val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = true)
 
       //val systemSvg = graph2Svg(systemGraph)
@@ -196,7 +197,7 @@ object Main {
               val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
               svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
               container.getElement().append(breadCrumbs).append(svgDiv)
-              new SVGPanZoom(asvg, Options(svgDiv))
+              new SVGPanZoom(asvg, Options(asvg.parentNode.asInstanceOf[Element]))
             }
             container.getElement().attr("display", "inline-block;")
           }
@@ -499,7 +500,7 @@ object Main {
       val restCriteria = (criteria -- errorCriteria) -- edgeOrFlowCriteria
       errorCriteria.foreach { c =>
         val pe = c.substring(6)
-        val ei = pe.indexOf(":error")
+        val ei = pe.indexOf("=error")
         val port = pe.subSequence(0, ei).toString
         val error = pe.subSequence(ei + 1, pe.size).toString
         highlight(collectorToUris(new ErrorReachabilityImpl(st).forwardErrorReach(port, isetEmpty + error)), "#78c0a8")
@@ -516,7 +517,7 @@ object Main {
       val restCriteria = (criteria -- errorCriteria) -- edgeOrFlowCriteria
       errorCriteria.foreach { c =>
         val pe = c.substring(6)
-        val ei = pe.indexOf(":error")
+        val ei = pe.indexOf("=error")
         val port = pe.subSequence(0, ei).toString
         val error = pe.subSequence(ei + 1, pe.size).toString
         highlight(collectorToUris(new ErrorReachabilityImpl(st).backwardErrorReach(port, isetEmpty + error)), "#78c0a8")

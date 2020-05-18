@@ -27,15 +27,17 @@
 
 package org.sireum.awas.reachability
 
+import org.sireum.awas.AliranAman.Lattice.{LEdge, LNode}
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
 import org.sireum.awas.collector.{Collector, CollectorErrorHelper, FlowCollector, ResultType}
 import org.sireum.awas.flow.FlowNode.Edge
-import org.sireum.awas.flow.{FlowGraph, FlowNode, NodeType}
+import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowNode, NodeType}
+import org.sireum.awas.graph.{AwasEdge, SlangGraphImpl}
 import org.sireum.awas.query.{ConstraintExpr, ConstraintKind}
 import org.sireum.awas.symbol.{Resource, SymbolTable}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.util.{ILinkedSet, _}
+import org.sireum.util.{ILinkedSet, ISet, _}
 
 class PortReachabilityImpl[Node](st: SymbolTable)
   extends BasicReachabilityImpl(st) with PortReachability[FlowNode] {
@@ -60,6 +62,17 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         succ = succ + FlowNode.getNode(portNode.getOwner.getUri).get.getOwner.getSuccessorPorts(port)
       }
       succ
+    } else if(H.isOutPort(port) && st.forwardDeployment(port).nonEmpty) {
+      val succPorts = st.forwardDeployment(port)
+      succPorts.flatMap { sp =>
+        val nodeUri = Resource.getParentUri(sp)
+        if(nodeUri.isDefined) {
+          Some(FlowCollector(isetEmpty+FlowNode.getNode(nodeUri.get).get.getOwner,
+            isetEmpty+sp, isetEmpty, isetEmpty, isetEmpty))
+        } else {
+          None
+        }
+      }
     } else {
       //there is no port node for this port
       //if this is a port then there must be a parent uri
@@ -88,6 +101,18 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         pred = pred + FlowNode.getNode(portNode.getOwner.getUri).get.getOwner.getPredecessorPorts(port)
       }
       pred
+    } else if(H.isInPort(port) && st.backwardDeployment(port).nonEmpty) {
+      val predPorts = st.backwardDeployment(port)
+      predPorts.flatMap { pp =>
+        val nodeUri = Resource.getParentUri(pp)
+
+        if(nodeUri.isDefined) { // && FlowNode.getNode(nodeUri.get).isDefined) {
+          Some(FlowCollector(isetEmpty+FlowNode.getNode(nodeUri.get).get.getOwner,
+            isetEmpty+pp, isetEmpty, isetEmpty, isetEmpty))
+        } else {
+          None
+        }
+      }
     } else {
       //there is no port node for this port
       //if this is a port then there must be a parent uri
@@ -569,6 +594,70 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
 //    cycle.flatMap(n => g.getOutgoingEdges(n).filter(e => cycle.contains(e.target)))
 //  }
 
+  private def cyclePortsEdges(cycle : Seq[ResourceUri]) : (ISet[Edge], ISet[ResourceUri]) = {
+    var ports = cycle.toSet
+    var edges = isetEmpty[FlowEdge[FlowNode]]
+    ports.foreach{ p =>
+      val parent = Resource.getParentUri(p)
+      if(parent.isDefined && FlowNode.getNode(parent.get).isDefined) {
+        val graph = FlowNode.getNode(parent.get).get.getOwner
+        val es = graph.getEdgeForPort(p)
+        es.foreach {e =>
+          if(e.sourcePort.isDefined &&
+            e.targetPort.isDefined &&
+            ports.contains(e.sourcePort.get) &&
+            ports.contains(e.targetPort.get)) {
+            edges = edges + e
+          }
+        }
+      }
+      if(FlowNode.getNode(p).isDefined) {
+        val graph = FlowNode.getNode(p).get.getOwner
+        val es = graph.getEdgeForPort(p)
+        es.foreach { e =>
+          if(e.sourcePort.isDefined &&
+            e.targetPort.isDefined &&
+            ports.contains(e.sourcePort.get) &&
+            ports.contains(e.targetPort.get)) {
+            edges = edges + e
+          }
+        }
+      }
+    }
+    (edges, ports)
+  }
+
+  private def computePortCycles(source: ResourceUri, target: ResourceUri) : Seq[Seq[ResourceUri]] = {
+    class PEdge(src: PNode, dst: PNode) extends AwasEdge[PNode] {
+      override def source: PNode = src
+      override def target: PNode = dst
+    }
+    case class PNode(id: ResourceUri)
+    val pGraph = new SlangGraphImpl[PNode, PEdge]()
+    val initPorts = forwardPortReach(source).intersect(backwardPortReach(target)).getPorts
+    val uriPNMap = initPorts.map(p => (p,pGraph.addNode(PNode(p)))).toMap
+    var worklist = ilistEmpty :+ source
+    while(worklist.nonEmpty) {
+      val curr = worklist.head
+      if(initPorts.contains(curr)) {
+        val next = nextPorts(curr).flatMap(_.ports)
+        next.intersect(initPorts).foreach{n =>
+          if(uriPNMap.get(curr).isDefined && uriPNMap.get(n).isDefined) {
+            val srcPN = uriPNMap(curr)
+            val dstPN = uriPNMap(n)
+            val pe = new PEdge(srcPN, dstPN)
+            if(pGraph.getEdge(srcPN, dstPN).isEmpty) {
+              pGraph.addEdge(srcPN, dstPN, pe)
+              worklist = worklist :+ n
+            }
+          }
+        }
+      }
+      worklist = worklist.tail
+    }
+    pGraph.getCycles.map(_.map(_.id))
+  }
+
   /**
     * This method computes paths from source port to target ports
     * There are two kinds of paths, simple and with cycle
@@ -590,11 +679,17 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       //val sNodePath = getSimpleNodePaths(snodes, tnodes)
       val cycleNodes = graphs.map(g => (g, g.getCycles)).toMap
 
-      val cyclePorts = cycleNodes.flatMap { gcyc =>
-        val g = gcyc._1
-        val cycs = gcyc._2.toSet
-        cycs.map(cyc => getPortsFromNodes(ilistEmpty ++ cyc, g))
+      val cyclePorts = computePortCycles(source, target).map{ cyc =>
+        cyclePortsEdges(cyc)
       }
+
+//      val cyclePorts = cycleNodes.flatMap { gcyc =>
+//        val g = gcyc._1
+//        val cycs = gcyc._2.toSet
+//        cycs.map(cyc => getPortsFromNodes(ilistEmpty ++ cyc, g))
+//      }
+
+
 
       val simplePaths = getSimplePath(computeSimplePaths(source, target, isRefined), source, target)
       val pathCycles =
@@ -643,11 +738,16 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
       val graphs = findRelaventGraphs(snodes, tnodes)
       val cycleNodes = graphs.map(g => (g, g.getCycles)).toMap
 
-      val cyclePorts = cycleNodes.flatMap { gcyc =>
-        val g = gcyc._1
-        val cycs = gcyc._2.toSet
-        cycs.map(cyc => getPortsFromNodes(ilistEmpty ++ cyc, g))
+      val cyclePorts = computePortCycles(source, target).map{ cyc =>
+        cyclePortsEdges(cyc)
       }
+
+//      val cyclePorts = cycleNodes.flatMap { gcyc =>
+//        val g = gcyc._1
+//        val cycs = gcyc._2.toSet
+//        cycs.map(cyc => getPortsFromNodes(ilistEmpty ++ cyc, g))
+//      }
+
       val simplePaths = getSimplePath(computeSimplePaths(source, target, isRefined), source, target)
 
       val simplePathNone = constraint.kind match {

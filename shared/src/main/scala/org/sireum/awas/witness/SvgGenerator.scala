@@ -43,6 +43,9 @@ import org.sireum.{F, T}
 
 object SvgGenerator {
   val URI_GLUE = "="
+  val ERROR_URI_HEAD = "Error"
+  val STATE_URI_HEAD = "State"
+  val EVENT_URI_HEAD  = "Event"
 
   var viewConfig = SvgGenConfig.defaultConfig
 
@@ -67,13 +70,15 @@ object SvgGenerator {
     //    graph.setNodeLabelProvider(nlabelProvide)
 
     if (!this.viewConfig.bindings) {
-      FlowNode.getGraphs.foreach { gra =>
-        FlowGraph.removeBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
-      }
+      st.removeDeployments()
+//      FlowNode.getGraphs.foreach { gra =>
+//        FlowGraph.removeBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
+//      }
     } else {
-      FlowNode.getGraphs.foreach { gra =>
-        FlowGraph.addBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
-      }
+      st.computeDeployment()
+//      FlowNode.getGraphs.foreach { gra =>
+//        FlowGraph.addBindings(gra.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]])
+//      }
     }
 
     graph.setNodeToST(nodeToST(_, st))
@@ -295,7 +300,7 @@ object SvgGenerator {
             else
               StringFrag(""),
             if (states.nonEmpty)
-              tr(stateContent(states, flows.nonEmpty))
+              tr(stateContent(states, vertex.getUri, flows.nonEmpty))
             else
               StringFrag(""),
             if (behaviour.nonEmpty)
@@ -375,7 +380,9 @@ object SvgGenerator {
       )
     )
 
-  private def stateContent(states: List[(ResourceUri, String)], isFlow: Boolean) =
+  private def stateContent(states: List[(ResourceUri, String)],
+                           nodeUri: ResourceUri,
+                           isFlow: Boolean) =
     td(if (isFlow) colspan := 3 else colspan := 2,
       attr("cellpadding") := 0,
       table(
@@ -396,7 +403,7 @@ object SvgGenerator {
                       attr("border") := 0,
                       attr("href") := "templink",
                       attr("title") := "state",
-                      attr("target") := uri,
+                      attr("target") := STATE_URI_HEAD+URI_GLUE+nodeUri+URI_GLUE+uri,
                       attr("cellpadding") := 0,
                       id := "badlink",
                       attr("cellspacing") := 0,
@@ -483,7 +490,7 @@ object SvgGenerator {
                         for (error <- errors(uri))
                           yield
                             td(
-                              attr("target") := "Error" + URI_GLUE + uri + URI_GLUE + error,
+                              attr("target") := ERROR_URI_HEAD + URI_GLUE + uri + URI_GLUE + error,
                               attr("href") := "templink",
                               attr("title") := "error",
                               attr("cellpadding") := 2, //id := "badlink", attr("border") := 1, attr("sides") := "B",

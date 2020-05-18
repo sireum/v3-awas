@@ -95,7 +95,7 @@ object BehaviorConditionEval {
         }
       }
     }
-    println(x)
+//    println(x)
     x
   }
 }

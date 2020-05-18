@@ -225,6 +225,7 @@ object SymbolTableHelper {
 
   def findUri(name: IVector[String], st: SymbolTable): Option[ResourceUri] = {
     var interUri = st.getUriFromSymbol(name.head)
+    //println(name)
     if (name.size <= 1) {
       interUri
     } else {
@@ -243,7 +244,7 @@ object SymbolTableHelper {
             }
           }
         } else if (interUri.isDefined && getUriType(interUri.get) == ENUM_TYPE) {
-          st.typeTable(interUri.get).getUriFromSymbol(name.last)
+          interUri = st.typeTable(interUri.get).getUriFromSymbol(name.last)
         } else {
           interUri = None
         }

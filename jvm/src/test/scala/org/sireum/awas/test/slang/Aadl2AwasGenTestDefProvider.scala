@@ -54,7 +54,7 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
     //equals test by excluding some
     val filesEqual = files.filter { p =>
       //true
-          p.toLowerCase.contains("latest-security")
+          p.toLowerCase.contains("security")
     }
 
     filesEqual.toVector.map { x =>
@@ -80,11 +80,11 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
       case Some(x) => {
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter
                         val st = SymbolTable(x)
-//                        val graph = FlowGraph(x, st, false)
-//                        SvgGenerator(st, graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
-//                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]],SvgGenerator.viewConfig, None)
-        val rr = AwasSerializer(x)
-//val rr = PrettyPrinter(x.get)
+                        val graph = FlowGraph(x, st, false)
+                        SvgGenerator(st, graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
+                          with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]],SvgGenerator.viewConfig, None)
+        //val rr = AwasSerializer(x)
+val rr = PrettyPrinter(x)
 //        FaultImpactAnalysis.generateFIAQueries(x, false) + "\n \n" + FaultImpactAnalysis.generateFIAQueries(x, true)
         rr
       }

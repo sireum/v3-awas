@@ -187,7 +187,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
     //        perform a forward reach until the defined are reached
 
     val rest = ports.diff(res.keySet)
-    println("rest: "+rest)
+//    println("rest: "+rest)
     var seen = isetEmpty[ResourceUri]
     var workList2 = ivectorEmpty[ResourceUri] ++ rest
 
@@ -213,7 +213,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
     //step 3: From the defined perform a backward analysis with GLB on join
     //          until all the undefined vars are defined
     val cacheRes = res
-    println(forwardFrom)
+    //println(forwardFrom)
     if (forwardFrom.nonEmpty) {
       var workList3 = ivectorEmpty[(ResourceUri, String)]++
         forwardFrom.map(it => (it, res(it))) //++
@@ -291,6 +291,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
         workList4 = workList4 ++ pr.getPredecessor(v)
         while (workList4.nonEmpty) {
           val curr = workList4.head
+          seen2 = seen2 + curr
           if (providedTypes.keySet.contains(curr)) {
             sources = sources + curr
           } else {
@@ -311,7 +312,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
             while (col.getNextPort(start).nonEmpty) {
               val x = col.getNextPort(start)
               if (col.getNextPort(start).size > 1) {
-                println(x)
+                //println(x)
               }
               assert(col.getNextPort(start).size <= 1)
               ports = ports + col.getNextPort(start).head

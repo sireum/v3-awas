@@ -121,6 +121,23 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
           .get.getOwner.getPredecessorError(tuple)
       }
       succ
+    } else if(H.isInPort(tuple._1) && st.backwardDeployment(tuple._1).nonEmpty) {
+      val succPorts = st.backwardDeployment(tuple._1)
+      succPorts.flatMap { sp =>
+        val nodeUri = Resource.getParentUri(sp)
+        if(nodeUri.isDefined && FlowNode.getNode(nodeUri.get).isDefined) {
+          val tp = FlowNode.getNode(nodeUri.get).get.getPropagation(sp)
+          val errors = if(tp.contains(tuple._2)){
+            (isetEmpty + tuple._2).map(e => (sp, e))
+          } else {
+            (st.typeAlias(tuple._2) intersect tp).map(e => (sp, e))
+          }
+          Some(FlowErrorNextCollector(errors, isetEmpty, isetEmpty, isetEmpty,
+            isetEmpty + FlowNode.getNode(nodeUri.get).get.getOwner))
+        } else {
+          None
+        }
+      }
     } else {
       //there is no port node for this port
       //if this is a port then there must be a parent uri
@@ -148,6 +165,23 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
           .get.getOwner.getSuccessorError(tuple)
       }
       succ
+    } else if(H.isOutPort(tuple._1) && st.forwardDeployment(tuple._1).nonEmpty) {
+      val succPorts = st.forwardDeployment(tuple._1)
+      succPorts.flatMap { sp =>
+        val nodeUri = Resource.getParentUri(sp)
+        if(nodeUri.isDefined && FlowNode.getNode(nodeUri.get).isDefined) {
+          val tp = FlowNode.getNode(nodeUri.get).get.getPropagation(sp)
+          val errors = if(tp.contains(tuple._2)){
+            (isetEmpty + tuple._2).map(e => (sp, e))
+          } else {
+            (st.typeAlias(tuple._2) intersect tp).map(e => (sp, e))
+          }
+          Some(FlowErrorNextCollector(errors, isetEmpty, isetEmpty, isetEmpty,
+            isetEmpty + FlowNode.getNode(nodeUri.get).get.getOwner))
+        } else {
+          None
+        }
+      }
     } else {
       //there is no port node for this port
       //if this is a port then there must be a parent uri

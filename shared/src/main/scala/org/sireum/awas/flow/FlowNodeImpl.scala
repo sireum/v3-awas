@@ -295,7 +295,7 @@ final class FlowNodeImpl(uri: ResourceUri,
         }
       }
     } else {
-      result = result ++ outPorts.flatMap(it => getPropagation(it).map(e => (it, e))).toSet
+      result = result ++ (if(isForward)outPorts else inPorts).flatMap(it => getPropagation(it).map(e => (it, e))).toSet
       errors += warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.FlowError)
     }
     collector.FlowErrorNextCollector(result, isetEmpty[Edge], flows, errors, isetEmpty + getOwner)

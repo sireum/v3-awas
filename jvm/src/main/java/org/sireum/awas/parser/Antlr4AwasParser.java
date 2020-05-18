@@ -29,7 +29,7 @@ public class Antlr4AwasParser extends Parser {
 		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, T__50=51, T__51=52, 
 		T__52=53, T__53=54, T__54=55, T__55=56, T__56=57, T__57=58, T__58=59, 
 		T__59=60, INTEGER=61, REAL=62, STRING=63, ID=64, WS=65, COMMENT=66, LINE_COMMENT=67, 
-		ERROR_CHAR=68, Name=69;
+		ERROR_CHAR=68;
 	public static final int
 		RULE_modelFile = 0, RULE_model = 1, RULE_typeDecl = 2, RULE_behaviorDecl = 3, 
 		RULE_componentDecl = 4, RULE_connectionDecl = 5, RULE_deploymentDecl = 6, 
@@ -77,7 +77,7 @@ public class Antlr4AwasParser extends Parser {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, "INTEGER", "REAL", "STRING", "ID", "WS", "COMMENT", "LINE_COMMENT", 
-			"ERROR_CHAR", "Name"
+			"ERROR_CHAR"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -234,7 +234,7 @@ public class Antlr4AwasParser extends Parser {
 				setState(94);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while (_la==Name) {
+				while (_la==ID) {
 					{
 					{
 					setState(91);
@@ -392,7 +392,7 @@ public class Antlr4AwasParser extends Parser {
 		public StatesContext states() {
 			return getRuleContext(StatesContext.class,0);
 		}
-		public TerminalNode Name() { return getToken(Antlr4AwasParser.Name, 0); }
+		public TerminalNode ID() { return getToken(Antlr4AwasParser.ID, 0); }
 		public EventsContext events() {
 			return getRuleContext(EventsContext.class,0);
 		}
@@ -410,7 +410,7 @@ public class Antlr4AwasParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(118);
-			((BehaviorDeclContext)_localctx).smName = match(Name);
+			((BehaviorDeclContext)_localctx).smName = match(ID);
 			setState(119);
 			match(T__4);
 			setState(120);
@@ -3804,7 +3804,7 @@ public class Antlr4AwasParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3G\u02eb\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3F\u02eb\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -3878,7 +3878,7 @@ public class Antlr4AwasParser extends Parser {
 		"\2hk\3\2\2\2ig\3\2\2\2ij\3\2\2\2jm\3\2\2\2ki\3\2\2\2le\3\2\2\2lm\3\2\2"+
 		"\2mp\3\2\2\2no\7\6\2\2oq\5\n\6\2pn\3\2\2\2pq\3\2\2\2q\5\3\2\2\2rw\5\20"+
 		"\t\2sw\5\22\n\2tw\5\24\13\2uw\5\26\f\2vr\3\2\2\2vs\3\2\2\2vt\3\2\2\2v"+
-		"u\3\2\2\2w\7\3\2\2\2xy\7G\2\2yz\7\7\2\2z|\5L\'\2{}\5N(\2|{\3\2\2\2|}\3"+
+		"u\3\2\2\2w\7\3\2\2\2xy\7B\2\2yz\7\7\2\2z|\5L\'\2{}\5N(\2|{\3\2\2\2|}\3"+
 		"\2\2\2}\t\3\2\2\2~\u0088\7B\2\2\177\u0080\7\b\2\2\u0080\u0085\5J&\2\u0081"+
 		"\u0082\7\t\2\2\u0082\u0084\5J&\2\u0083\u0081\3\2\2\2\u0084\u0087\3\2\2"+
 		"\2\u0085\u0083\3\2\2\2\u0085\u0086\3\2\2\2\u0086\u0089\3\2\2\2\u0087\u0085"+

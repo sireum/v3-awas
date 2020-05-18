@@ -50,6 +50,9 @@ import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 @JSExportTopLevel("STPA")
 object STPA {
 
+  val isSTPA = true
+  val isISO14971 = true
+
   @JSExport
   def main(): Unit = {
     var model = if (GraphQuery.json.isDefined) {
@@ -70,20 +73,25 @@ object STPA {
       val mainDiv = render[Div](Views.stpaMain())
       val body = mainDiv.querySelector("#body")
       println(body.innerHTML)
-      body.appendChild(render[Div](getSystem(st.get)))
-      body.appendChild(render[Div](getAccidentLevels(st.get)))
-      body.appendChild(render[Div](getAccident(st.get)))
-      body.appendChild(render[Div](getSystemConstraints(st.get)))
-      body.appendChild(render[Div](getEnvCond(st.get)))
-      body.appendChild(render[Div](getSystemHaz(st.get)))
 
-      val asvg = Util.graph2Svg(systemGraph.getUri, SettingsView.currentConfig, st.get)
-      val svgDiv = render[Div](div(height := "100%", div(cls := "tempSvg")))
-      svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
-      new SVGPanZoom(asvg, Options(svgDiv))
-      body.appendChild(svgDiv)
-      body.appendChild(getCausalScenario(st.get, ""))
+      if(isSTPA) {
+        body.appendChild(render[Div](getSystem(st.get)))
+        body.appendChild(render[Div](getAccidentLevels(st.get)))
+        body.appendChild(render[Div](getAccident(st.get)))
+        body.appendChild(render[Div](getSystemConstraints(st.get)))
+        body.appendChild(render[Div](getEnvCond(st.get)))
+        body.appendChild(render[Div](getAllHaz(st.get)))
+        body.appendChild(render[Div](getSystemHaz(st.get)))
 
+        val asvg = Util.graph2Svg(systemGraph.getUri, SettingsView.currentConfig, st.get)
+        val svgDiv = render[Div](div(height := "100%", div(cls := "tempSvg")))
+        svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
+        new SVGPanZoom(asvg, Options(svgDiv))
+        body.appendChild(svgDiv)
+        body.appendChild(getCausalScenario(st.get, ""))
+      } else if(isISO14971) {
+
+      }
 
 
 
@@ -95,8 +103,8 @@ object STPA {
 
   def getSystem(st: SymbolTable): Frag = {
     val systemProps = st.componentTable(st.system).componentDecl.properties
-    val sysProp = systemProps.find(prop => prop.id.value == StpaProperty.SYSTEM_PROP)
-    println(sysProp)
+    val sysProp = systemProps.find(prop => prop.id.value.last.value == StpaProperty.SYSTEM_PROP)
+//    println(sysProp)
     if (sysProp.isDefined && sysProp.get.value.isDefined) {
       val sysVal = sysProp.get.value.get.asInstanceOf[RecordInit]
       // we know system property val is a record type
@@ -127,7 +135,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
 
         sh.foreach { s =>
           if (s.value.isDefined) {
@@ -200,7 +208,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
 
         sh.foreach { s =>
           if (s.value.isDefined) {
@@ -266,7 +274,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
         sh.foreach { s =>
           if (s.value.isDefined) {
             val constraint = s.value.get.asInstanceOf[RecordInit].fields.get(Id(StpaProperty.SYSTEM_HAZARD_CONSTRAINT))
@@ -306,7 +314,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
 
         sh.foreach { s =>
           if (s.value.isDefined) {
@@ -341,13 +349,58 @@ object STPA {
     }
   }
 
+  def getAllHaz(st: SymbolTable) : Frag = {
+    var hazards = ilistEmpty[RecordInit]
+    st.components.foreach { compUri =>
+      val props = st.componentTable(compUri).componentDecl.properties
+      if (props.nonEmpty) {
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.HAZARDS)
+        sh.foreach {haz =>
+          hazards = hazards :+ haz.value.get.asInstanceOf[RecordInit]
+        }
+      }
+    }
+
+    if(hazards.nonEmpty) {
+      val tableRows = hazards.sortBy(_.fields(Id(StpaProperty.HAZARD_ID)).asInstanceOf[StringInit].value).map{ hs =>
+        val vcs = ilistEmpty[String]
+        val violatingConst = hs.fields.get(Id(StpaProperty.HAZARD_VC))
+        if(violatingConst.nonEmpty) {
+          val vc = violatingConst.get.asInstanceOf[RecordInit]
+          vc.fields(Id(StpaProperty.SAFETY_CONSTRAINT_ID))
+        }
+        tr(
+          id := hs.fields(Id(StpaProperty.HAZARD_ID)).asInstanceOf[StringInit].value,
+          td(hs.fields(Id(StpaProperty.HAZARD_ID)).asInstanceOf[StringInit].value),
+          td(hs.fields(Id(StpaProperty.HAZARD_DESC)).asInstanceOf[StringInit].value)
+
+        )
+
+      }
+
+      val tab = table(
+        cls := "table",
+        thead(tr(th(p("ID")), th(p("Description")))),
+        tbody(
+          for (row <- tableRows)
+            yield row
+        )
+      )
+
+      div(cls := "content is-medium", h3("Hazards"), tab)
+    } else {
+      div()
+    }
+
+  }
+
   def getSystemHaz(st: SymbolTable): Frag = {
     var systemHaz = ilistEmpty[RecordInit]
     var envCond = ilistEmpty[RecordInit]
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
 
         sh.foreach { s =>
           if (s.value.isDefined) {
@@ -427,7 +480,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
 
         sh.foreach { s =>
           if (s.value.isDefined) {
@@ -441,7 +494,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val compRoles = props.filter(p => p.id.value == StpaProperty.COMPONENT_ROLES)
+        val compRoles = props.filter(p => p.id.value.last.value == StpaProperty.COMPONENT_ROLES)
         compRoles.foreach { cr =>
           if (cr.value.isDefined) {
 
@@ -467,7 +520,7 @@ object STPA {
     st.components.foreach { compUri =>
       val props = st.componentTable(compUri).componentDecl.properties
       if (props.nonEmpty) {
-        val sh = props.filter(p => p.id.value == StpaProperty.SYSTEM_HAZARD)
+        val sh = props.filter(p => p.id.value.last.value == StpaProperty.SYSTEM_HAZARD)
         sh.foreach { s =>
           if (s.value.isDefined) {
             val rlist = s.appliesTo.toList.flatMap { s =>
@@ -480,7 +533,7 @@ object STPA {
                 res = res :+ (uri.get -> st.componentTable(H.findComponentUri(uri.get, st).get).propagation(uri.get))
               } else if (uri.isDefined && H.isFlow(uri.get)) {
                 assert(H.findComponentUri(uri.get, st).isDefined)
-                println(H.findComponentUri(uri.get, st).get)
+//                println(H.findComponentUri(uri.get, st).get)
                 val cst = st.componentTable(H.findComponentUri(uri.get, st).get)
                 val ft = cst.flow(uri.get)
                 if (ft.fromPortUri.isDefined) {
@@ -511,27 +564,78 @@ object STPA {
         val an = a(id := "shid", shid)
         val ran = render[Anchor](an)
         ran.onclick = (_: MouseEvent) => {
-          resColl = Some(pss(sh._2, st))
+          Some(pss(sh._2, st))
+        }
+        resColl = Some(StateReachAnalysis.getReachability(sh._2, st))
+        val comps = resColl.get.getNodes.filter(_.getResourceType == NodeType.COMPONENT)
+        var hazards = ilistEmpty[Property]
+        comps.foreach {comUri =>
+          val props = st.componentTable(comUri.getUri).componentDecl.properties
+          if (props.nonEmpty) {
+            val sh = props.filter(p => p.id.value.last.value == StpaProperty.HAZARDS)
+            sh.foreach {haz =>
+              hazards = hazards :+ haz
+            }
+          }
+        }
+
+        val causalHaz = hazards.flatMap{hs =>
+          val hid = hs.value.get.asInstanceOf[RecordInit].fields(Id(StpaProperty.HAZARD_ID)).asInstanceOf[StringInit].value
+          val x = hs.appliesTo.toList.flatMap{hap =>
+            val uri = H.findUri(hap._1.split('.').toVector, st)
+            var res = ilistEmpty[(ResourceUri, ISet[ResourceUri])]
+            if (uri.isDefined && H.isPort(uri.get) && hap._2.nonEmpty) {
+              val pe =  uri.get -> hap._2.flatMap(it => H.findUri(it.split('.').toVector, st))
+              if(resColl.get.getPortErrors.contains(pe._1) &&
+                resColl.get.getPortErrors(pe._1).intersect(pe._2).nonEmpty) {
+                res = res :+ pe
+              }
+            }
+            res
+          }
+          if(x.nonEmpty) {
+            Some((hid, x))
+          } else {
+            None
+          }
         }
 
         val td1 = render[TableCell](td())
         td1.appendChild(ran)
+
+
+
         val tr1 = render[TableRow](tr())
         tr1.appendChild(td1)
+        println(causalHaz)
+        val td2 = render[TableCell](td())
+        val anchs = causalHaz.map{cz =>
+          render[Anchor](a(href := "#" + cz._1, cz._1))
+        }.sortBy(_.id)
+
+        td2.appendChild(anchs.head)
+        anchs.tail.foldLeft(td2){(c, v) =>
+          c.appendChild(render(span(", ")))
+          c.appendChild(v)
+          c
+        }
+
+        tr1.appendChild(td2)
+
         tr1
       }
 
       val comps = resColl.get.getNodes.filter(_.getResourceType == NodeType.COMPONENT)
-
+      println(comps)
       val tab = render[Table](table(cls := "table", thead(tr(
         th(p("ID")),
-        th(p("Contributing Hazards")), for (c <- comps) th(p(H.uri2IdString(c.getUri)))
+        th(p("Contributing Hazards")) //, for (c <- comps) th(p(H.uri2IdString(c.getUri)))
       ))))
       for (r <- tableRows) {
         tab.appendChild(r)
       }
 
-      val temp = render[Div](div(cls := "content is-medium", h4("System Hazards")))
+      val temp = render[Div](div(cls := "content is-medium", h4("Hazardous Situations")))
       temp.appendChild(tab)
       temp
     } else {

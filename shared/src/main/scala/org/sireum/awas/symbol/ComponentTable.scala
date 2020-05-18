@@ -221,16 +221,16 @@ class CompSTProducer(val compUri: ResourceUri,
                        toFaults: Set[ResourceUri]): Unit = {
     if (!flows.toSet.contains(flowUri)) {
       val fdt = FlowTableData(flowUri, fromPortUri, toPortUri, fromFaults, toFaults)
-      tables.flowTable + (flowUri -> fdt)
+      tables.flowTable(flowUri) = fdt
 
       if (fromPortUri.isDefined) {
-        tables.portFlowRelation + (flowUri -> fromPortUri.get)
-        tables.flowPortRelation + (fromPortUri.get -> flowUri)
+        tables.portFlowRelation.getOrElseUpdate(flowUri, msetEmpty[ResourceUri]) +=fromPortUri.get
+        tables.flowPortRelation.getOrElseUpdate(fromPortUri.get, msetEmpty[ResourceUri]) += flowUri
       }
 
       if (toPortUri.isDefined) {
-        tables.portFlowRelation + (flowUri -> toPortUri.get)
-        tables.flowPortRelation + (toPortUri.get -> flowUri)
+        tables.portFlowRelation.getOrElseUpdate(flowUri, msetEmpty[ResourceUri]) +=  toPortUri.get
+        tables.flowPortRelation.getOrElseUpdate(toPortUri.get, msetEmpty[ResourceUri]) += flowUri
       }
     }
   }
