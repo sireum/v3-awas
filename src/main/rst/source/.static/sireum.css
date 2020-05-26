@@ -8,6 +8,15 @@ body {
   color:#5F5F5F;
 }
 
+
+.body {
+  max-width: 1200px !important;
+}
+
+.wy-nav-content {
+max-width: 1200px !important;
+}
+
 h1 {
   color:#FFFFFF;
   font-size:0%;

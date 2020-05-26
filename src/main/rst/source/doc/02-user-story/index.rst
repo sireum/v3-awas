@@ -874,7 +874,77 @@ error token in the query. The following query's behavior is identical to `Query 
    :width: 100%
    :alt: Query with error tokens
 
-	 
+Query Language Grammar
+**********************
+
+.. highlight:: none
+
+Simplified version::
+
+        modelFile
+            :   model EOF
+            ;
+
+        model
+            : queryStatement+ 
+            ;
+
+        queryStatement
+            : ID '=' queryExpr 
+            ;
+
+        queryExpr
+            : 'reach' reachExpr ((('-' | 'union' | 'intersect') queryExpr) | ':' filter)?
+            | primaryExpr ((('-' | 'union' | 'intersect') queryExpr) | ':' filter)?
+            ;
+
+        reachExpr
+            : ('forward' | 'backward') queryExpr 
+            | 'from' queryExpr 'to' queryExpr
+            | ('refined')? ('simple')? 'paths from' queryExpr 'to' queryExpr 'with' withExpr     
+            ;
+
+        withExpr
+            : ('some' | 'all' | 'none') '(' queryExpr ')'  
+            ;    
+
+        primaryExpr
+            : nodeNameError
+            | '(' queryExpr ')'
+            | '{' nodeNameError (',' nodeNameError)+ '}'  
+            ;
+
+        filter
+            : node
+            | port-error
+            | port
+            | in-port
+            | out-port
+            | error
+            | source
+            | sink
+            ;    
+
+        nodeNameError
+            :  nodeName error? 
+            ;    
+
+        nodeName
+            : ID('.' ID)*   
+            ; 
+
+        error
+            : '{' errorId (',' errorId)* '}' 
+            ;
+
+        errorId
+            : ID ('.' ID)*
+            ;    
+
+        ID
+            : ([A-Z] | [a-z]) ([A-Z] | [a-z] | [0-9]| '_')*
+            ;    
+
 
 Known Issues
 ************

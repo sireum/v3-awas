@@ -117,7 +117,7 @@ html_theme_options = {
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "",
 
-    'navbar_pagenav_name': "",
+    #'navbar_pagenav_name': "",
 
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
@@ -128,6 +128,8 @@ html_theme_options = {
     # an arbitrary url.
     'navbar_links': [
         ("Download", "doc/01-getting-started/index"),
+        ("Visualizer User Story", "doc/02-user-story/index"),
+        ("Risk Analysis", "doc/03-risk-analysis/index"),
         ("Documentation", "doc/index")
     ],
 
@@ -139,7 +141,7 @@ html_theme_options = {
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 2,
+    'globaltoc_depth': 6,
 
     # Include hidden TOCs in Site navbar?
     #
@@ -171,6 +173,7 @@ html_theme_options = {
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)
     'bootstrap_version': "3",
+
 }
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
