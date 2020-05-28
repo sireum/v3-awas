@@ -11,9 +11,9 @@ Sireum Awas Documentation
 ###########################
 
 .. toctree::
-   :maxdepth: 5
-   :numbered: 5
+   :maxdepth: 4
+   :numbered: 4
 
-   01-getting-started/index.rst
-   02-user-story/index.rst
-   03-risk-analysis/index.rst	      
+   01-getting-started/index
+   02-user-story/index
+   03-risk-analysis/index	      

@@ -1,0 +1,92 @@
+property set ISO14971_80001 is
+with EMV2;
+
+  SystemInfo: record (	
+    Name : aadlstring;                                                        --required
+    Description: aadlstring;                                                  --optional
+    IntendedUse: aadlstring;                                                  --optional
+  ) applies to (system);
+	
+  Causes: list of ISO14971_80001::Cause applies to ({emv2}**error source, {emv2}**error type, {emv2}**error behavior state, {emv2}**error event);
+
+  Hazardous_Situations: list of ISO14971_80001::Hazardous_Situation applies to (system);
+	
+  Hazards: list of ISO14971_80001::Hazard applies to ({emv2}**error type, {emv2}**error behavior state);
+	
+  Harm: type record (
+    ID: aadlstring;                                                          -- required
+    Description: aadlstring;                                                 -- optional
+    Severity: ISO14971_80001::SeverityScales;                                -- Catastrophic, High, Medium, Low, Negligible --optional
+  );
+	
+  Cause: type record (
+    ID : aadlstring;                                                         -- required
+    Description : aadlstring;                                                -- optional
+    Basis :  ISO14971_80001::ProbabilityBasis;                               -- Causes per hour, or causes per number of occurrences
+    NumberOfOccurrencesPerCause : aadlinteger;                               -- how many occurrences are expected to produce one hazard?                              
+    Probability : ISO14971_80001::ProbabilityScales;                         -- Frequent, Probable, occasional, remote, improbable  --optional
+  );
+	
+  Hazard: type record (
+    ID : aadlstring;                                                         -- hazard unique identifier 
+    Description : aadlstring;                                                -- description of the hazard eg: opioid --optional
+    Causes : list of ISO14971_80001::Cause;                                  -- optional, provide only if you wish to override 
+  ); 
+	
+  --circumstance in which people, property, or the environment are exposed to one or more hazard(s) (page 2)              
+  Hazardous_Situation: type record (
+    ID: aadlstring; 
+    Description : aadlstring;                                                -- optional
+    Hazard :  ISO14971_80001::Hazard;
+    Severity : ISO14971_80001::SeverityScales;                               -- optional, and computed. Provide value only if you wish to override 
+    Paths_to_harm : list of record (
+      Harm: ISO14971_80001::Harm;                                            -- e.g. patient overdosed/fatality
+      Contributing_Factors: list of ISO14971_80001::Contributing_Factor;     -- e.g. Patient vitals are deteriorating  
+      Probability_of_Transition: ISO14971_80001::ProbabilityScales;          -- optional (used only for sorting and coloring)
+    );                                                                       -- optional
+    Risk : ISO14971_80001::RiskLevels;                                       -- optional, can be computed
+    Probability : ISO14971_80001::ProbabilityScales;                         -- optional
+  );
+		
+  Contributing_Factor : type record (
+    ID : aadlstring;
+    Description : aadlstring;                                                --optional
+  );
+	
+  Risk_Control : record (
+    ID : aadlstring;
+    Description : aadlstring;
+    Effective_Probability: ISO14971_80001::ProbabilityScales;                -- probability that the risk control mitigates an incoming error;
+  ) applies to ({emv2}**error behavior state,
+                  {emv2}**error event, {emv2}**error flow, {emv2}**error propagation);
+
+------------------------------------------------------
+------------------------Scales------------------------
+------------------------------------------------------
+
+  SeverityScales: type enumeration (Catastrophic, High, Medium, Low, Negligible, Critical, Serious, Minor, NoEffect);
+  --for ISO 80001
+  Catatrophic: constant EMV2::SeverityRange => 1;
+  High: constant EMV2::SeverityRange => 2;
+  Medium: constant EMV2::SeverityRange => 3;
+  Low	: constant EMV2::SeverityRange => 4;
+  Negligible	: constant EMV2::SeverityRange => 5;
+  --ISO 14971 uses some different terms for severity
+  Critical : constant EMV2::SeverityRange => 2;            -- Results in permanent impairment or life-threatening injury
+  Serious : constant EMV2::SeverityRange => 3;             -- Results in injury or impairment requiring professional medical intervention
+  Minor : constant EMV2::SeverityRange => 4;               -- Results in temporary injury or impairment not requiring professional medical intervention
+  NoEffect : constant EMV2::SeverityRange => 5;            -- same as Negligible because EMV2::SeverityRange = [1..5]	
+	
+  ProbabilityScales: type enumeration (Frequent, Probable, Occasional, Remote, Improbable);
+	
+  Frequent: constant EMV2::LikelihoodLabels => A;
+  Probable: constant EMV2::LikelihoodLabels => B;
+  Occasional: constant EMV2::LikelihoodLabels => C;
+  Remote: constant EMV2::LikelihoodLabels => D;
+  Improbable: constant EMV2::LikelihoodLabels => E;
+	
+  RiskLevels : type enumeration (High, Moderate, Low);
+  --ISO 14971 allows risks to be quantified as the number of uses for each adverse event, on average
+  ProbabilityBasis: type enumeration (CausesPerHour, NumberOfOccurrencesPerCause);
+	
+end ISO14971_80001;

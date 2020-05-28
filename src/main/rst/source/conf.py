@@ -88,7 +88,7 @@ exclude_patterns = [ 'def.rst' ]
 #show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'manni'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -117,7 +117,7 @@ html_theme_options = {
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "",
 
-    #'navbar_pagenav_name': "",
+    'navbar_pagenav_name': "",
 
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
@@ -137,11 +137,11 @@ html_theme_options = {
     'navbar_sidebarrel': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': True,
+    'navbar_pagenav': False,
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 6,
+    'globaltoc_depth': -1,
 
     # Include hidden TOCs in Site navbar?
     #

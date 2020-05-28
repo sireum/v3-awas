@@ -1,8 +1,7 @@
-{# Import the theme's layout. #}
 {% extends "!layout.html" %}
 
-{% set bootswatch_css_custom = ['_static/sireum.css'] %}
-{%- block extrahead -%}
+{% block header %}
+  {{ super() }}
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133922066-1"></script>
 <script>
@@ -12,7 +11,7 @@
 
   gtag('config', 'UA-133922066-1');
 </script>
-{%- endblock -%}
+{% endblock %}
 
 {# Add some extra stuff before and use existing with 'super()' call. #}
 {% block footer %}

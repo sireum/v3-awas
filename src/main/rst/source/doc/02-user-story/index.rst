@@ -151,12 +151,12 @@ Awas provides the following model navigation capabilities over OSATE:
    highlighted
 2. By default an edge represents an AADL Connection. However, this can
    be modified by the view settings.
-2. Awas will highlight an edge along with the ports involved in the
+3. Awas will highlight an edge along with the ports involved in the
    connection when clicked. Although AADL diagrams can have cleaner
    layouts, the edges involved in complex systems tend to overlap in
    AADL diagrams which can make it tedious to trace an individual
    edge.
-4.
+4.  
    .. raw:: html
 		  
      This icon <img src="../../_static/sub-graph-icon.png" alt="Sub-graph" style="width:1%"> in front of a component name
@@ -494,7 +494,7 @@ The query view tab contains two additional tabs:
 
       <table width="100%" > <tr> <td>
 
-   .. code:: bash
+   .. code:: 
 
       forward_GND_send_map = reach forward UAS_Impl_Instance.GND.send_map
 
@@ -877,12 +877,11 @@ error token in the query. The following query's behavior is identical to `Query 
 Query Language Grammar
 **********************
 
-.. highlight:: none
 
-Simplified version::
-
-        modelFile
-            :   model EOF
+.. code:: antlr-python
+	  
+        modelFile 
+	    : model EOF
             ;
 
         model

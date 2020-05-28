@@ -4,7 +4,7 @@ from pygments.token import *
 
 class AwasLexer(RegexLexer):
     name = 'Awas'
-    aliases = ['Awas']
+    aliases = ['awas']
     filenames = ['*.aq']
 
     flags = re.MULTILINE | re.DOTALL

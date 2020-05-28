@@ -1,0 +1,67 @@
+/* COLORPICKER 1 EXAMPLE */
+.colorPicker
+{
+    width:          30px;
+    height:         0px;
+    position: relative;
+    clear: both;
+    margin: -12px auto 0px;
+}
+
+.track {
+    background:     no-repeat 50% 50%;
+    height:         150px;
+    width:          150px;
+    padding:        0px;
+    position:       absolute;
+    cursor:         crosshair;
+    float:          left;
+    left:           -63px;
+    top:            -64px;
+    display:        none;
+    border:         1px solid #ccc;
+    z-index:        12;
+    -webkit-border-radius: 150px;
+    -moz-border-radius: 150px;
+    border-radius: 140px;
+
+}
+
+.color {
+    width:          25px;
+    height:         25px;
+    padding:        0px;
+    border:         0px solid #ccc;
+    display:        block;
+    position:       relative;
+    z-index:        11;
+    background-color: #EFEFEF;
+    -webkit-border-radius: 27px;
+    -moz-border-radius: 27px;
+    border-radius: 27px;
+    cursor: pointer;
+}
+
+.colorInner {
+    width:          25px;
+    height:         25px;
+    -webkit-border-radius: 27px;
+    -moz-border-radius: 27px;
+    border-radius: 27px;
+}
+
+.dropdown {
+    list-style: none;
+    display: none;
+    width: 27px;
+    position: absolute;
+    top: 28px;
+    border: 1px solid #ccc;
+    left: 0;
+    z-index: 1000;
+}
+
+.dropdown li{
+    height: 25px;
+    cursor: pointer;
+}
