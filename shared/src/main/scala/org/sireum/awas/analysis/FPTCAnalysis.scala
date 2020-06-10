@@ -28,6 +28,7 @@ package org.sireum.awas.analysis
 
 import org.sireum.awas.analysis.FPTCAnalysis.H
 import org.sireum.awas.ast.{BehaveExpr, Fault, FaultSet, Id, One, PrettyPrinter, Tuple}
+import org.sireum.awas.collector
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.flow.FlowNode.Edge
 import org.sireum.awas.flow.{FlowGraph, FlowNode, NodeType}
@@ -362,6 +363,37 @@ class StateReachAnalysis(st: SymbolTable) {
               //process rhs
             }
           }
+        } else {
+          println(currentNode.getUri)
+          currentNode.inPorts.foreach { ip =>
+            if (store.contains(ip)) {
+              val resP = successor(ip, store(ip), store)
+              workList = workList ++ (resP.getNodes - currentNode)
+              resP.getPortErrors.foreach { pe => store = store + (pe._1 -> (store.getOrElse(pe._1, isetEmpty) ++ pe._2)) }
+              res = res.union(resP)
+            }
+          }
+
+          currentNode.getFlows.foreach { flow =>
+            if (flow._2.fromPortUri.isEmpty && flow._2.fromFaults.isEmpty &&
+              flow._2.toPortUri.isDefined && flow._2.toFaults.nonEmpty) {
+              val p = flow._2.toPortUri.get
+              val e = flow._2.toFaults
+              if (!store.contains(p) || store(p).intersect(e).nonEmpty) {
+
+                store = store + (p -> (store.getOrElse(p, isetEmpty) ++ e))
+                res = res.union(Collector(
+                  isetEmpty[FlowGraph[FlowNode, Edge]],
+                  imapEmpty + (p -> e),
+                  isetEmpty + flow._1, isetEmpty[Edge], isForward = true, isetEmpty[ResourceUri], isetEmpty[Tag]))
+
+                val resP = (imapEmpty + (p -> e)).map(x => successor(x._1, x._2, store)).foldLeft(Collector(st))((c, n) => c.union(n))
+                workList = workList ++ (resP.getNodes - currentNode)
+                resP.getPortErrors.foreach { pe => store = store + (pe._1 -> (store.getOrElse(pe._1, isetEmpty) ++ pe._2)) }
+                res = res.union(resP)
+              }
+            }
+          }
         }
       } else {
         currentNode.inPorts.foreach { ip =>
@@ -383,7 +415,7 @@ class StateReachAnalysis(st: SymbolTable) {
   def reachBackward(initState: IMap[ResourceUri, ISet[ResourceUri]],
                     collector: Option[Collector]): Collector = {
     var store = getInitStore(processInitforBack(initState), collector)
-
+    println(collector)
     val nodes = if (collector.isDefined) collector.get.getNodes else store.map(x =>
       er.backwardErrorReach(x._1, x._2)).foldLeft(Collector(st))((c, n) => c.union((n))).getNodes
 
@@ -401,7 +433,6 @@ class StateReachAnalysis(st: SymbolTable) {
           if (collector.isDefined) collector.get.getBehavior.contains(x) else true
         } else isetEmpty
         if (transitionUris.nonEmpty) {
-
           cst.transitions.foreach { trans =>
             if (Resource.getResource(cst.transition(trans).rhs.head).isDefined &&
               store.get(currNode.getUri).isDefined &&

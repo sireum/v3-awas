@@ -35,8 +35,11 @@ import scala.scalajs.js
 
 object Views {
 
-  def getInitLayout(title: String, inGraph: String): js.Dictionary[scalajs.js.Any] = js.Dictionary(
-    ("settings", js.Dictionary(("showPopoutIcon", false), ("showCloseIcon", false))),
+  def getInitLayout(title: String, inGraph: String, canPop: Boolean = false): js.Dictionary[scalajs.js.Any] = js.Dictionary(
+    ("settings", js.Dictionary(
+      if (canPop) ("popoutWholeStack", true) else ("popoutWholeStack", false),
+      if (canPop) ("showPopoutIcon", true) else ("showPopoutIcon", false),
+      ("showCloseIcon", false))),
     (
       "content",
       js.Array(
@@ -72,6 +75,10 @@ object Views {
     ("componentName", "system"),
     ("id", graph),
     ("componentState", js.Dictionary(("graph", graph), ("isTD", SettingsView.currentConfig.rankDir == RankDir.TB)))
+  )
+
+  def popoutRoot(): js.Dictionary[scalajs.js.Any] = js.Dictionary(
+    ("type", "stack")
   )
 
   def cliConfig(): js.Dictionary[scalajs.js.Any] = js.Dictionary(
@@ -261,6 +268,42 @@ object Views {
         hr(cls := "hr", backgroundColor := "black"),
         div(cls := "hero-body", alignItems := "flex-start",
           div(id := "body")
+        ),
+        hr(cls := "hr", backgroundColor := "black"),
+        div(cls := "hero-foot",
+          nav(id := "foot", cls := "level", p(
+            cls := "level-item has-text-centered",
+            span("SAnToS Laboratory, Kansas State University")
+          )
+          )
+        )
+      )
+
+    )
+  }
+
+  def iso14971Main(): Frag = {
+    div(
+      id := "stpa",
+      cls := "container",
+      tag("section")(cls := "hero is-light is-fullheight",
+        div(cls := "hero-head", id := "header",
+          nav(cls := "level",
+            div(cls := "level-item has-text-centered",
+              paddingTop := "2%",
+              h1(
+                cls := "title is-1",
+                id := "title",
+                textAlign := "center",
+                "ISO 14971 Report"
+              )
+            )
+
+          )
+        ),
+        hr(cls := "hr", backgroundColor := "black"),
+        div(cls := "hero-body", alignItems := "flex-start",
+          div(id := "body", cls := "container")
         ),
         hr(cls := "hr", backgroundColor := "black"),
         div(cls := "hero-foot",

@@ -7,6 +7,7 @@ rm -rf $AWASWEBDIR
 mkdir $AWASWEBDIR
 mkdir $AWASWEBDIR/min
 cp $DIR/js/target/scala-2.12/classes/index.html $AWASWEBDIR/index.html
+cp $DIR/js/target/scala-2.12/classes/risk-analysis-report.html $AWASWEBDIR/risk-analysis-report.html
 cp -r $DIR/js/target/scala-2.12/classes/min/css $AWASWEBDIR/min/css
 cp -r $DIR/js/target/scala-2.12/classes/min/images $AWASWEBDIR/min/images
 cp -r $DIR/js/target/scala-2.12/classes/min/webfonts $AWASWEBDIR/min/webfonts

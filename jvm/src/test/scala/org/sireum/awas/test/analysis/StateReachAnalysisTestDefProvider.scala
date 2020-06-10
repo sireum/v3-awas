@@ -32,6 +32,7 @@ import org.sireum.awas.analysis.StateReachAnalysis
 import org.sireum.awas.ast.Builder
 import org.sireum.awas.codegen.ContextInSensitiveGen
 import org.sireum.awas.flow.FlowGraph
+import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.awas.util.TestUtils.extensor
@@ -50,10 +51,10 @@ final class StateReachAnalysisTestDefProvider(tf: TestFramework) extends TestDef
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
-      listFiles(fileUri(this.getClass, d), "awas")
+      listFiles(fileUri(this.getClass, d), "json")
     }
     val filesEqual = files.filter { p =>
-            p.toLowerCase.contains("pca_system") //||
+      p.toLowerCase.contains("security") //||
       //        p.toLowerCase.contains("isolette") ||
       //        p.toLowerCase.contains("abcloop")  ||
       //p.toLowerCase.contains("fptc_base")
@@ -84,7 +85,7 @@ final class StateReachAnalysisTestDefProvider(tf: TestFramework) extends TestDef
     val basePath = Paths.get(fileUri(this.getClass, s"../"))
     val relativeUri = basePath.relativize(Paths.get(infileUri))
     var result = ""
-    Builder(Some(relativeUri.toString), model) match {
+    Aadl2Awas(model) match {
       case None => ""
       case Some(m) =>
         implicit val reporter: AccumulatingTagReporter = new ConsoleTagReporter

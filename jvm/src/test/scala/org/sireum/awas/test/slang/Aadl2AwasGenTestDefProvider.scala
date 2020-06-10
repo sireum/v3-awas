@@ -84,7 +84,7 @@ class Aadl2AwasGenTestDefProvider(tf: TestFramework) extends TestDefProvider {
                         SvgGenerator(st, graph.asInstanceOf[FlowGraph[FlowNode, FlowNode.Edge]
                           with FlowGraphUpdate[FlowNode, FlowEdge[FlowNode]]],SvgGenerator.viewConfig, None)
         //val rr = AwasSerializer(x)
-val rr = PrettyPrinter(x)
+        val rr = PrettyPrinter(x)
 //        FaultImpactAnalysis.generateFIAQueries(x, false) + "\n \n" + FaultImpactAnalysis.generateFIAQueries(x, true)
         rr
       }

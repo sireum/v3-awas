@@ -473,7 +473,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     ports.foreach { p =>
       result = result + ((p, op1(p).intersect(op2(p))))
     }
-    result
+    result.filter(_._2.nonEmpty)
   }
 
   override def getPredecessor(currentPort: ResourceUri,

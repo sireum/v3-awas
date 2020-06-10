@@ -41,6 +41,9 @@ object PrettyPrinter {
   def print(n : Node): String ={
     val sb = new StringBuilder
     Visitor.build({
+      case conn: ConnectionDecl =>
+        new PrettyPrinter(sb).print(conn, 0)
+        false
       case n : Name =>
         new PrettyPrinter(sb).print(n)
         false

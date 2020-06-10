@@ -41,6 +41,9 @@ class GoldenLayout(configuration: js.Dictionary[js.Any],
                    container: JQuery) extends js.Object {
   var isInitialised : Boolean = js.native
   var root : ContentItem = js.native
+  var eventHub: EventEmitter = js.native
+  //var container : JQuery = js.native
+
 
   def selectItem(contentItem: ContentItem): Nothing = js.native
   def registerComponent(name : String, component: js.Function): Nothing = js.native
@@ -88,7 +91,15 @@ trait ContentItem extends js.Object {
 
   def addChild(itemOrItemConfig: js.Dictionary[js.Any]): Nothing = js.native
 
+  def addChild(itemOrItemConfig: ContentItem): Nothing = js.native
+
   def addChild(itemOrItemConfig: js.Dictionary[js.Any], index: Int): Nothing = js.native
+
+  def addChild(itemOrItemConfig: ContentItem, index: Int): Nothing = js.native
+
+  def removeChild(contentItem: ContentItem, keepChild: Boolean = false): Nothing = js.native
+
+  def replaceChild(oldChild: ContentItem, newChild: js.Dictionary[js.Any]): Nothing = js.native
 }
 
 @js.native
@@ -100,3 +111,9 @@ trait Container extends js.Object {
   def close(): Nothing = js.native
 }
 
+@js.native
+trait EventEmitter extends js.Object {
+  def on(event: String, callBack: js.Function, context: Option[js.Object] = None): js.UndefOr[Nothing] = js.native
+
+  def emit(eventName: String, args: js.Object*): js.UndefOr[Nothing] = js.native
+}

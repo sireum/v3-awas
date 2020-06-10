@@ -62,4 +62,8 @@ object SvgGenConfig {
   def defaultConfig: SvgGenConfig = {
     SvgGenConfig(RankDir.TB, F, T, Errors.None, T, F, F, F)
   }
+
+  def defaultErrorConfig: SvgGenConfig = {
+    SvgGenConfig(RankDir.TB, F, T, Errors.Errors, T, F, F, F)
+  }
 }

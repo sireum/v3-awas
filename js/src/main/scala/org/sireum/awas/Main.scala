@@ -119,6 +119,15 @@ object Main {
 
         //gl.get.root.contentItems(0).setActiveContentItem(ci)
       } else {
+        println(gl.get.root.contentItems(0).isComponent)
+        //        if(gl.get.root.contentItems(0).isComponent) {
+        //          val ci = gl.get.root.contentItems(0)
+        //          gl.get.root.removeChild(ci, true)
+        //          //gl.get.root.replaceChild(gl.get.root.contentItems(0), Views.popoutRoot())
+        //          gl.get.root.addChild(Views.popoutRoot())
+        //
+        //          gl.get.root.contentItems(0).addChild(ci)
+        //        }
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
         $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
@@ -128,6 +137,54 @@ object Main {
   }
 
   //def openChildGraph()
+
+  def buildGraphWindow(isErrror: Boolean = false): Unit = {
+    val systemName = st.get.systemDecl.compName.value
+
+    gl.get.registerComponent("system", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
+      if (componentState.get("graph").isDefined) {
+        val uri = componentState.get("graph").get.asInstanceOf[ResourceUri]
+
+        val breadCrumbs = render[Div](uriToBreadCrumbs(uri, st.get))
+        $[Input](breadCrumbs, "#td").onclick = (_: MouseEvent) => toTopDown(uri)
+        $[Input](breadCrumbs, "#lr").onclick = (_: MouseEvent) => toLeftRight(uri)
+
+        if (SettingsView.currentConfig.rankDir == RankDir.TB) {
+          $[Input](breadCrumbs, "#td").checked = true
+          $[Input](breadCrumbs, "#lr").checked = false
+        } else {
+          $[Input](breadCrumbs, "#lr").checked = true
+          $[Input](breadCrumbs, "#td").checked = false
+        }
+
+        val asvg = Util.graph2Svg(uri, if (isErrror) SvgGenConfig.defaultErrorConfig else SettingsView.currentConfig, st.get)
+        val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
+        svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
+        container.getElement().append(breadCrumbs).append(svgDiv)
+        new SVGPanZoom(asvg, Options(asvg.parentNode.asInstanceOf[Element]))
+      }
+      container.getElement().attr("display", "inline-block;")
+    }
+
+    }: js.Function)
+    gl.get.init()
+    gl.get.eventHub.on("highlight", { (uris: IMap[String, Boolean], color: String) => {
+      //clearAll(selections.keySet)
+      highlight(uris, color)
+    }
+    }: js.Function)
+    gl.get.eventHub.on("clearall", { () => {
+      clearAll(selections.keySet)
+    }
+    }: js.Function)
+    gl.get.on("windowClosed", { () => {
+      println("window close triggered")
+      openGraphTab(st.get.system)
+    }
+    }: js.Function)
+    window.onresize = (_: UIEvent) => computeHeight(gl.get)
+    gl.get.root.setTitle(systemName)
+  }
 
   @JSExport
   def main(): Unit = {
@@ -175,36 +232,7 @@ object Main {
       document.onreadystatechange = (_: Event) => {
         document.body.appendChild(mainDiv)
         if (document.readyState == "complete" && gl.isDefined) {
-          val systemName = st.get.systemDecl.compName.value
-
-          gl.get.registerComponent("system", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
-            if (componentState.get("graph").isDefined) {
-              val uri = componentState.get("graph").get.asInstanceOf[ResourceUri]
-
-              val breadCrumbs = render[Div](uriToBreadCrumbs(uri, st.get))
-              $[Input](breadCrumbs, "#td").onclick = (_: MouseEvent) => toTopDown(uri)
-              $[Input](breadCrumbs, "#lr").onclick = (_: MouseEvent) => toLeftRight(uri)
-
-              if (SettingsView.currentConfig.rankDir == RankDir.TB) {
-                $[Input](breadCrumbs, "#td").checked = true
-                $[Input](breadCrumbs, "#lr").checked = false
-              } else {
-                $[Input](breadCrumbs, "#lr").checked = true
-                $[Input](breadCrumbs, "#td").checked = false
-              }
-
-              val asvg = Util.graph2Svg(uri, SettingsView.currentConfig, st.get)
-              val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
-              svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
-              container.getElement().append(breadCrumbs).append(svgDiv)
-              new SVGPanZoom(asvg, Options(asvg.parentNode.asInstanceOf[Element]))
-            }
-            container.getElement().attr("display", "inline-block;")
-          }
-
-          }: js.Function)
-          gl.get.init()
-          gl.get.root.setTitle(systemName)
+          buildGraphWindow()
           computeHeight(gl.get)
 //
           val queryButton = mainDiv.querySelector("#query-button")
@@ -259,7 +287,7 @@ object Main {
           QuickView.quickView()
         }
       }
-      window.onresize = (_: UIEvent) => computeHeight(gl.get)
+
     } else {
       document.body.appendChild(render(p("Failed to load the model")))
     }

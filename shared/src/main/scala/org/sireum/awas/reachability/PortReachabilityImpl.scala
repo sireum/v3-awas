@@ -407,27 +407,27 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         nodePortsMap += (elem -> (nodePortsMap.getOrElse(elem, isetEmpty[ResourceUri]) + p))
       }
     }
-    assert(nodePortsMap.forall(p => p._2.size <= 2), "cycle has more than two ports per node")
+    //assert(nodePortsMap.forall(p => p._2.size <= 2), "cycle has more than two ports per node")
 
     //drop path case: path dropped only when there is a flow defined
     //for the inPort and the out port is not in it.
-    val isValidPath = nodePortsMap.forall {
-      case (n, ps) =>
-        if (ps.size == 2 && n.isFlowDefined) {
-          val inPort = ps.filter(H.isInPort).head
-          val outPort = ps.filter(H.isOutPort).head
-          val flows = n.getFlowsFromPort(inPort).map(it => n.getFlows(it))
-          if (flows.nonEmpty && flows.exists(f => f.toPortUri.isDefined && f.toPortUri.get == outPort)) {
-            true
-          } else {
-            false
-          }
-        } else {
-          true
-        }
-    }
+    //    val isValidPath = nodePortsMap.forall {
+    //      case (n, ps) =>
+    //        if (n.isFlowDefined) {
+    //          val inPort = ps.filter(H.isInPort).head
+    //          val outPort = ps.filter(H.isOutPort).head
+    //          val flows = n.getFlowsFromPort(inPort).map(it => n.getFlows(it))
+    //          if (flows.nonEmpty && flows.exists(f => f.toPortUri.isDefined && f.toPortUri.get == outPort)) {
+    //            true
+    //          } else {
+    //            false
+    //          }
+    //        } else {
+    //          true
+    //        }
+    //    }
 
-    if (isValidPath) {
+    //    if (isValidPath) {
       var result = isetEmpty[Collector] + Collector(
         isetEmpty,
         isetEmpty[FlowNode],
@@ -441,38 +441,41 @@ class PortReachabilityImpl[Node](st: SymbolTable)
 
       nodePortsMap.foreach {
         case (n, ps) =>
-          if (n.isFlowDefined && ps.size == 2 && n.isComponent) {
-            val inPort = ps.filter(H.isInPort).head
-            val outPort = ps.filter(H.isOutPort).head
-            val flows = n
-              .getFlowsFromPort(inPort)
-              .map(it => n.getFlows(it))
-              .filter(f => f.toPortUri.isDefined && f.toPortUri.get == outPort)
-            if (flows.nonEmpty) {
-              //more than one flow then create multiple paths
-              result = result.flatMap(
-                r =>
-                  flows.map(
-                    f =>
-                      Collector(
-                        r.getGraphs,
-                        isetEmpty[FlowNode],
-                        r.getPorts,
-                        r.getResultType.get,
-                        r.getEdges,
-                        r.getFlows + f.flowUri,
-                        r.getCriteria, hasCycle = true,
-                        r.getErrors ++ r.getWarnings
-                      )
-                  )
-              )
+          if (n.isFlowDefined && n.isComponent) {
+            val inPort = ps.filter(H.isInPort)
+            val outPort = ps.filter(H.isOutPort)
+
+            inPort.foreach { inp =>
+              val flows = n
+                .getFlowsFromPort(inp)
+                .map(it => n.getFlows(it))
+                .filter(f => f.toPortUri.isDefined && outPort.contains(f.toPortUri.get))
+              if (flows.nonEmpty) {
+                //more than one flow then create multiple paths
+                result = result.flatMap(
+                  r =>
+                    flows.map(
+                      f =>
+                        Collector(
+                          r.getGraphs,
+                          isetEmpty[FlowNode],
+                          r.getPorts,
+                          r.getResultType.get,
+                          r.getEdges,
+                          r.getFlows + f.flowUri,
+                          r.getCriteria, hasCycle = true,
+                          r.getErrors ++ r.getWarnings
+                        )
+                    )
+                )
+              }
             }
           }
       }
       result
-    } else {
-      isetEmpty[Collector]
-    }
+    //    } else {
+    //      isetEmpty[Collector]
+    //    }
 
   }
 

@@ -93,9 +93,9 @@ class FaultImpactAnalysis {
     val er = ErrorReachability(st)
 
     if(isSource) {
-      genSourceFIAQueries(graph, er)
+      genSourceFIAQueries(graph, er, st)
     } else {
-      genSinkFIAQueries(graph, er)
+      genSinkFIAQueries(graph, er, st)
     }
   }
 
@@ -209,7 +209,7 @@ class FaultImpactAnalysis {
     uri.split(H.ID_SEPARATOR).last
   }
 
-  def genSourceFIAQueries(graph : FlowGraph[FlowNode, Edge], er : ErrorReachability[FlowNode]) : String = {
+  def genSourceFIAQueries(graph: FlowGraph[FlowNode, Edge], er: ErrorReachability[FlowNode], st: SymbolTable): String = {
     var result = ilistEmpty[String]
     val nodes = FlowNode.getGraphs.flatMap(_.nodes)
     val sources = nodes.flatMap(_.getFlows.toList).filter(f =>
@@ -220,7 +220,7 @@ class FaultImpactAnalysis {
       val resCollector = er.forwardErrorReach(spe._1, isetEmpty + spe._2)
       var npes = ilistEmpty[(ResourceUri, ResourceUri)]
       npes ++= flows2PortError(resCollector, isSource = false)
-      npes ++= collector2PortError(resCollector, isSource = false)
+      npes ++= collector2PortError(resCollector, isSource = false, st)
       var i = 0
       npes.foreach { npe =>
         i=i+1
@@ -237,7 +237,7 @@ class FaultImpactAnalysis {
       val resCollector = er.forwardErrorReach(nspe._1, isetEmpty + nspe._2)
       var npes = ilistEmpty[(ResourceUri, ResourceUri)]
       npes ++= flows2PortError(resCollector, isSource = false)
-      npes ++= collector2PortError(resCollector, isSource = false)
+      npes ++= collector2PortError(resCollector, isSource = false, st)
       var i = 0
       npes.foreach { npe =>
         i = i + 1
@@ -251,7 +251,7 @@ class FaultImpactAnalysis {
     result.sorted.mkString("\n")
   }
 
-  def genSinkFIAQueries(graph : FlowGraph[FlowNode, Edge], er : ErrorReachability[FlowNode]) : String = {
+  def genSinkFIAQueries(graph: FlowGraph[FlowNode, Edge], er: ErrorReachability[FlowNode], st: SymbolTable): String = {
     var result = ilistEmpty[String]
     val nodes = FlowNode.getGraphs.flatMap(_.nodes)
     val sinks = nodes.flatMap(_.getFlows.toList).filter(f =>
@@ -262,7 +262,7 @@ class FaultImpactAnalysis {
       val resCollector = er.backwardErrorReach(spe._1, isetEmpty + spe._2)
       var npes = ilistEmpty[(ResourceUri, ResourceUri)]
       npes ++= flows2PortError(resCollector, isSource = true)
-      npes ++= collector2PortError(resCollector, isSource = true)
+      npes ++= collector2PortError(resCollector, isSource = true, st)
       var i = 0
       npes.foreach { npe =>
         i=i+1
@@ -278,7 +278,7 @@ class FaultImpactAnalysis {
       val resCollector = er.backwardErrorReach(nspe._1, isetEmpty + nspe._2)
       var npes = ilistEmpty[(ResourceUri, ResourceUri)]
       npes ++= flows2PortError(resCollector, isSource = true)
-      npes ++= collector2PortError(resCollector, isSource = true)
+      npes ++= collector2PortError(resCollector, isSource = true, st)
       var i = 0
       npes.foreach { npe =>
         i = i + 1
@@ -291,10 +291,14 @@ class FaultImpactAnalysis {
     result.sorted.mkString("\n")
   }
 
-  private def collector2PortError(collector : Collector, isSource : Boolean)
+  private def collector2PortError(collector: Collector, isSource: Boolean, st: SymbolTable)
   :ISet[(ResourceUri, ResourceUri)] = {
     val ports = collector.getPortErrors.keySet.filter(p =>
-      if(isSource){H.isInPort(p)} else {H.isOutPort(p)}) -- collector.getEdges.flatMap(e =>
+      if (isSource) {
+        H.isInPort(p) && st.backwardDeployment(p).isEmpty
+      } else {
+        H.isOutPort(p) && st.forwardDeployment(p).isEmpty
+      }) -- collector.getEdges.flatMap(e =>
       if(isSource) {e.targetPort} else {e.sourcePort})
     collector.getPortErrors.filter(pe => ports.contains(pe._1)).flatMap(pe => pe._2.map((pe._1, _))).toSet
   }
