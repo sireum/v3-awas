@@ -1,0 +1,98 @@
+types
+  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
+
+  enum GPSErrorLibrary extends EMV2 {SensorFailure, CPUFailure, PowerSupplyFailure, NetworkFailure, LowPrecisionData, IncorrectData, NoSignal, LowSignal}
+
+  enum AFGErrorLibrary extends EMV2 {NoValue, NoService, ErraticBehavior, NoPilotInput, ErraticPilotInput, ErraticValue, FlightSystemfailure}
+
+system  FlightSystem_tier1_Instance
+    with ErrorLibrary, GPSErrorLibrary, AFGErrorLibrary
+      ports
+        in satelliteSignal
+        out ObservableFailure
+        in pilotInput
+      propagations
+        satelliteSignal = {NoSignal, LowSignal}
+        pilotInput = {NoPilotInput, ErraticPilotInput}
+        ObservableFailure = {ServiceOmission, ErraticBehavior}
+      flows
+        SatelliteError : satelliteSignal{NoSignal} -> ObservableFailure{ServiceOmission}
+        NoFlightSystem : * -> ObservableFailure{ServiceOmission}
+        NoPilot : pilotInput{NoPilotInput} -> ObservableFailure{ServiceOmission}
+        ErraticPilot : pilotInput{ErraticPilotInput} -> ObservableFailure{ErraticBehavior}
+        ErraticFlightSystem : * -> ObservableFailure{ErraticBehavior}
+
+      sub-components {
+        AutoFlightGuidance
+          with AFGErrorLibrary, GPSErrorLibrary, ErrorLibrary
+            ports
+              in powersupply
+              in position
+              in operatorCommand
+              out AFGOutput
+            propagations
+              position = {IncorrectData, ServiceOmission, LowPrecisionData}
+              operatorCommand = {NoPilotInput, ErraticPilotInput}
+              powersupply = {NoService}
+              AFGOutput = {NoService, ErraticValue}
+            flows
+              ErraticPilotPath : operatorCommand{ErraticPilotInput} -> AFGOutput{ErraticValue}
+              GPSPath1 : position{LowPrecisionData} -> *
+              GPSPath : position{NoService} -> AFGOutput{NoService}
+              NoPilotPath : operatorCommand{NoPilotInput} -> AFGOutput{NoService}
+              epPower : powersupply{NoService} -> AFGOutput{NoService}
+              AFGsource : * -> AFGOutput{NoService}
+              AFGsource1 : * -> AFGOutput{ErraticValue}
+
+        FSpowersupply
+          with ErrorLibrary, GPSErrorLibrary
+            ports
+              out power
+            propagations
+              power = {ServiceOmission}
+            flows
+              power_es : * -> power{ServiceOmission}
+
+        FlightControl
+          with AFGErrorLibrary
+            ports
+              in powersupply
+              in guidanceCommands
+              out flightSurfaceControl
+            propagations
+              guidanceCommands = {NoService, ErraticValue}
+              powersupply = {NoService}
+              flightSurfaceControl = {NoService, ErraticBehavior}
+            flows
+              fces : * -> flightSurfaceControl{NoService}
+              fgtofcNo : guidanceCommands{NoService} -> flightSurfaceControl{NoService}
+              fgtofcErratic : guidanceCommands{ErraticValue} -> flightSurfaceControl{ErraticBehavior}
+              epPower : powersupply{NoService} -> flightSurfaceControl{NoService}
+
+        GPS
+          with ErrorLibrary, GPSErrorLibrary
+            ports
+              in satelliteSignal
+              out location
+            propagations
+              satelliteSignal = {NoSignal, LowSignal}
+              location = {IncorrectData, ServiceOmission, LowPrecisionData}
+            flows
+              GPSAsErrorSource : * -> location{ServiceOmission, LowPrecisionData, IncorrectData}
+              SatelliteError : satelliteSignal{NoSignal} -> location{ServiceOmission}
+              SatelliteError1 : satelliteSignal{LowSignal} -> location{LowPrecisionData}
+      }
+      connections
+        satellite : satelliteSignal -> GPS.satelliteSignal
+
+        PilottoAfg : pilotInput -> AutoFlightGuidance.operatorCommand
+
+        power1 : FSpowersupply.power -> AutoFlightGuidance.powersupply
+
+        power2 : FSpowersupply.power -> FlightControl.powersupply
+
+        gpstoafg : GPS.location -> AutoFlightGuidance.position
+
+        afgtofc : AutoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands
+
+        FlightControlEffect : FlightControl.flightSurfaceControl -> ObservableFailure

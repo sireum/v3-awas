@@ -27,7 +27,6 @@
 
 package org.sireum.awas.slang
 
-
 import org.sireum.awas.ast._
 import org.sireum.hamr._
 import org.sireum.hamr.ir.Transformer.PrePost
@@ -35,28 +34,37 @@ import org.sireum.hamr.ir.{EndPoint, Flow => _, Name => _, Property => _, _}
 import org.sireum.util.{IMap, ISet, _}
 import org.sireum.{B, ISZ, Z}
 
-
-final class Aadl2Awas private() {
+final class Aadl2Awas private () {
 
   var typeDecls = Node.emptySeq[TypeDecl]
 
   def build(aadl: ir.Aadl): Model = {
     typeDecls = typeDecls ++
-      aadl.annexLib.elements.filter(it => it.isInstanceOf[Emv2Lib]).map(it => build(it.asInstanceOf[Emv2Library])).toVector ++
+      aadl.annexLib.elements
+        .filter(it => it.isInstanceOf[Emv2Lib])
+        .map(it => build(it.asInstanceOf[Emv2Library]))
+        .toVector ++
       buildAlias(aadl.annexLib.elements.filter(it => it.isInstanceOf[Emv2Lib]).map(_.asInstanceOf[Emv2Library])).toVector ++
-      aadl.annexLib.elements.filter(it => it.isInstanceOf[SmfLib]).flatMap(it => build(it.asInstanceOf[SmfLibrary])).toVector
+      aadl.annexLib.elements
+        .filter(it => it.isInstanceOf[SmfLib])
+        .flatMap(it => build(it.asInstanceOf[SmfLibrary]))
+        .toVector
 
     val (comps, conns) = mineComponents(aadl.components.elements)
 
     //mineBindingProps(comps.toSeq, conns.toSeq)
 
-    val (deplDecls, addedPorts) = mineBindingProps(comps.toSeq,
-      conns.toSeq)
+    val (deplDecls, addedPorts) = mineBindingProps(comps.toSeq, conns.toSeq)
 
-    val r = Model(typeDecls,
-      Node.emptySeq[StateMachineDecl] ++ aadl.annexLib.elements.filter(it => it.isInstanceOf[Emv2Lib]).map(_.asInstanceOf[Emv2Library]).flatMap(buildSM),
+    val r = Model(
+      typeDecls,
+      Node.emptySeq[StateMachineDecl] ++ aadl.annexLib.elements
+        .filter(it => it.isInstanceOf[Emv2Lib])
+        .map(_.asInstanceOf[Emv2Library])
+        .flatMap(buildSM),
       Node.emptySeq[ConstantDecl],
-      build(aadl.components.elements.head, deplDecls, addedPorts, isRoot = true))
+      build(aadl.components.elements.head, deplDecls, addedPorts, isRoot = true)
+    )
     r
   }
 
@@ -65,19 +73,23 @@ final class Aadl2Awas private() {
   }
 
   def build(smfType: SmfType): TypeDecl = {
-    LatticeDecl(buildId(smfType.typeName.name.elements.last.value),
-      if (smfType.parentType.nonEmpty) {
-        Node.emptySeq :+ Name(Node.emptySeq :+ buildId(smfType.parentType.get.name.elements.last.value))
-      } else {
-        Node.emptySeq
-      })
+    LatticeDecl(buildId(smfType.typeName.name.elements.last.value), if (smfType.parentType.nonEmpty) {
+      Node.emptySeq :+ Name(Node.emptySeq :+ buildId(smfType.parentType.get.name.elements.last.value))
+    } else {
+      Node.emptySeq
+    })
   }
 
   def build(errorLib: ir.Emv2Library): TypeDecl = {
-    EnumDecl(buildId(errorLib.name.name.elements.last.value),
+    EnumDecl(
+      buildId(errorLib.name.name.elements.last.value),
       errorLib.useTypes.elements.map(buildName).toVector,
-      errorLib.errorTypeDef.elements.map(_.id).map(it =>
-        buildId(it.name.elements.last.value)).toVector)
+      errorLib.errorTypeDef.elements.map { etd =>
+        val id = buildId(etd.id.name.elements.last.value)
+        id.auriFrag = Some(etd.uriFrag.value)
+        id
+      }.toVector
+    )
   }
 
   def buildAlias(errorLibs: Seq[ir.Emv2Library]): ISeq[TypeDecl] = {
@@ -95,7 +107,7 @@ final class Aadl2Awas private() {
           val al = alibs.find(it => it.name.name.elements.last == ael)
           if (al.isDefined) {
             al.get.errorTypeDef.elements.map(_.id.name.elements.last.value).find(_ == aet.value).map { a =>
-               AliasDecl(
+              AliasDecl(
                 Name(ivectorEmpty),
                 NamedTypeDecl(Name(ivectorEmpty[Id] :+ buildId(al.get.name.name.elements.last.value) :+ buildId(a)))
               )
@@ -120,7 +132,8 @@ final class Aadl2Awas private() {
   }
 
   def build(stateMachine: ir.BehaveStateMachine): StateMachineDecl = {
-    StateMachineDecl(buildId(stateMachine.id.name.elements.mkString(".")),
+    StateMachineDecl(
+      buildId(stateMachine.id.name.elements.mkString(".")),
       buildStates(stateMachine.states),
       buildEvents(stateMachine.events)
     )
@@ -150,8 +163,7 @@ final class Aadl2Awas private() {
     Id(id)
   }
 
-  def mineComponents(comps: Seq[ir.Component])
-  : (Set[ir.Component], Set[ir.ConnectionInstance]) = {
+  def mineComponents(comps: Seq[ir.Component]): (Set[ir.Component], Set[ir.ConnectionInstance]) = {
     var components = isetEmpty[ir.Component]
     var connections = isetEmpty[ir.ConnectionInstance]
     var workList = ilistEmpty[ir.Component]
@@ -170,8 +182,12 @@ final class Aadl2Awas private() {
     (components, connections)
   }
 
-  def build(comp: ir.Component,  depls : ISet[DeploymentDecl],
-            toAddPorts : IMap[ISZ[org.sireum.String], ISet[Port]], isRoot : Boolean): Option[ComponentDecl] = {
+  def build(
+    comp: ir.Component,
+    depls: ISet[DeploymentDecl],
+    toAddPorts: IMap[ISZ[org.sireum.String], ISet[Port]],
+    isRoot: Boolean
+  ): Option[ComponentDecl] = {
     if (comp.identifier.name.nonEmpty) {
       val id = buildId(comp.identifier.name.elements.last.value)
       val withs = getWiths(comp.annexes.elements)
@@ -179,7 +195,7 @@ final class Aadl2Awas private() {
       val features = if (comp.category == ir.ComponentCategory.Bus) {
         comp.features.elements.flatMap(build).toVector :+
           Port(true, buildId(Aadl2Awas.ACCESS_IN_PORT), None) :+ Port(false, buildId(Aadl2Awas.ACCESS_OUT_PORT), None)
-      } else { comp.features.elements.flatMap(build).toVector}
+      } else { comp.features.elements.flatMap(build).toVector }
       val propagations = comp.annexes.elements.flatMap(getPropagations).toVector
       val security = getSecurity(comp) //TODO: modify Air
       val flows = getFlows(comp)
@@ -190,14 +206,12 @@ final class Aadl2Awas private() {
       val subcomp = comp.subComponents.elements.flatMap { sc =>
         build(sc, depls, toAddPorts, isRoot = false).map((sc.identifier, _))
       }.toMap
-      val conns = comp.connections.elements.flatMap(n =>
-        build(n, comp.identifier.name.map(_.value).elements)).toVector
-
-
+      val conns = comp.connections.elements.flatMap(n => build(n, comp.identifier.name.map(_.value).elements)).toVector
 
       val UpdatedSubComp = subcomp.map { sc =>
         if (toAddPorts.contains(sc._1.name)) {
-          val usc = ComponentDecl(sc._2.compName,
+          val usc = ComponentDecl(
+            sc._2.compName,
             sc._2.withSM,
             sc._2.ports ++ toAddPorts(sc._1.name),
             sc._2.propagations,
@@ -209,15 +223,17 @@ final class Aadl2Awas private() {
             sc._2.subComp,
             sc._2.connections,
             sc._2.deployment,
-            sc._2.properties)
+            sc._2.properties
+          )
+          usc.auriFrag = sc._2.auriFrag
           (sc._1, usc)
         } else {
           sc
         }
       }
 
-      val deployments = if(isRoot) depls.toVector else ivectorEmpty
-      Some(ComponentDecl(
+      val deployments = if (isRoot) depls.toVector else ivectorEmpty
+      val res = ComponentDecl(
         id,
         withs,
         features,
@@ -230,7 +246,10 @@ final class Aadl2Awas private() {
         UpdatedSubComp.values.toVector,
         conns,
         deployments,
-        properties))
+        properties
+      )
+      res.auriFrag = Some(comp.uriFrag.value)
+      Some(res)
     } else None
   }
 
@@ -238,7 +257,8 @@ final class Aadl2Awas private() {
     pval match {
       case cp: ClassifierProp => StringInit(cp.name.value)
       case rp: RangeProp => {
-        RecordInit(buildName(Aadl2Awas.RANGE_PROP),
+        RecordInit(
+          buildName(Aadl2Awas.RANGE_PROP),
           imapEmpty[Id, Init]
             + (buildId(Aadl2Awas.RANGE_PROP_LOW) -> buildInit(rp.low))
             + (buildId(Aadl2Awas.RANGE_PROP_HIGH) -> buildInit(rp.high))
@@ -247,28 +267,36 @@ final class Aadl2Awas private() {
       case rec: RecordProp => {
         val res = rec.properties.elements.map { p =>
           p.name.name.elements.last.value
-          (buildName(p.name.name.elements.last.value).value.last,
-            p.propertyValues.elements.map(buildInit))
+          (buildName(p.name.name.elements.last.value).value.last, p.propertyValues.elements.map(buildInit))
         }
-        RecordInit(buildName(Aadl2Awas.RECORD_PROP), res.map { r =>
-          if (r._2.size > 1) {
-            (r._1, SeqInit(NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)), Node.seq(r._2)))
-          } else if(r._2.nonEmpty) {
-            (r._1, r._2.head)
-          } else {
-            (r._1, NoneInit(BooleanTypeDecl()))
-          }
-        }.toMap)
+        RecordInit(
+          buildName(Aadl2Awas.RECORD_PROP),
+          res.map { r =>
+            if (r._2.size > 1) {
+              (r._1, SeqInit(NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)), Node.seq(r._2)))
+            } else if (r._2.nonEmpty) {
+              (r._1, r._2.head)
+            } else {
+              (r._1, NoneInit(BooleanTypeDecl()))
+            }
+          }.toMap
+        )
       }
       case ref: ReferenceProp => NameRefInit(build(ref.value), None)
       case unit: UnitProp => {
-        RecordInit(buildName(Aadl2Awas.UNIT_PROP), imapEmpty[Id, Init]
-          + (buildId(Aadl2Awas.UNIT_PROP_VAL) -> StringInit(unit.value.value))
-          + (buildId(Aadl2Awas.UNIT_PROP_UNIT) -> (if (unit.unit.nonEmpty) {
-          SomeInit(NamedTypeDecl(buildName(Aadl2Awas.STRING_PROP)), StringInit(unit.unit.get.value))
-        } else {
-          NoneInit(NamedTypeDecl(buildName(Aadl2Awas.STRING_PROP)))
-        })))
+        RecordInit(
+          buildName(Aadl2Awas.UNIT_PROP),
+          imapEmpty[Id, Init]
+            + (buildId(Aadl2Awas.UNIT_PROP_VAL) -> StringInit(unit.value.value))
+            + (buildId(Aadl2Awas.UNIT_PROP_UNIT) -> (if (unit.unit.nonEmpty) {
+                                                       SomeInit(
+                                                         NamedTypeDecl(buildName(Aadl2Awas.STRING_PROP)),
+                                                         StringInit(unit.unit.get.value)
+                                                       )
+                                                     } else {
+                                                       NoneInit(NamedTypeDecl(buildName(Aadl2Awas.STRING_PROP)))
+                                                     }))
+        )
       }
       case vp: ValueProp => StringInit(vp.value.value)
     }
@@ -283,7 +311,8 @@ final class Aadl2Awas private() {
       }
     }
     val res = props.flatMap { prop =>
-      val bindingPropSet = Set(Aadl2Awas.ACTUAL_CONNECTION_BINDING,
+      val bindingPropSet = Set(
+        Aadl2Awas.ACTUAL_CONNECTION_BINDING,
         Aadl2Awas.ACTUAL_FUNCTION_BINDING,
         Aadl2Awas.ACTUAL_MEMORY_BINDING,
         Aadl2Awas.ACTUAL_PROCESSOR_BINDING,
@@ -291,14 +320,19 @@ final class Aadl2Awas private() {
         Aadl2Awas.ALLOWED_CONNECTION_BINDING,
         Aadl2Awas.ALLOWED_MEMORY_BINDING,
         Aadl2Awas.ALLOWED_PROCESSOR_BINDING,
-        Aadl2Awas.ALLOWED_SUBPROGRAM_CALL_BINDING)
+        Aadl2Awas.ALLOWED_SUBPROGRAM_CALL_BINDING
+      )
 
       if (!bindingPropSet.contains(prop.name.name.elements.last.value)) {
         val name = build(prop.name)
         val value = if (prop.propertyValues.nonEmpty) {
           if (prop.propertyValues.elements.size > 1) {
-            Some(SeqInit(NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)),
-              Node.emptySeq ++ prop.propertyValues.elements.map(buildInit)))
+            Some(
+              SeqInit(
+                NamedTypeDecl(buildName(Aadl2Awas.LIST_PROP)),
+                Node.emptySeq ++ prop.propertyValues.elements.map(buildInit)
+              )
+            )
           } else {
             Some(buildInit(prop.propertyValues.elements.head))
           }
@@ -322,12 +356,14 @@ final class Aadl2Awas private() {
     Node.seq(res)
   }
 
-  def mineBindingProps(subComps: Seq[ir.Component], connInst: Seq[ir.ConnectionInstance])
-  : (ISet[DeploymentDecl], IMap[ISZ[org.sireum.String], ISet[Port]]) = {
+  def mineBindingProps(
+    subComps: Seq[ir.Component],
+    connInst: Seq[ir.ConnectionInstance]
+  ): (ISet[DeploymentDecl], IMap[ISZ[org.sireum.String], ISet[Port]]) = {
     var resDepl = isetEmpty[DeploymentDecl]
     var resPorts = imapEmpty[ISZ[org.sireum.String], ISet[Port]]
 
-    def createBindingsPorts(compName : ISZ[org.sireum.String]): Unit = {
+    def createBindingsPorts(compName: ISZ[org.sireum.String]): Unit = {
       resPorts += (compName ->
         (resPorts.getOrElse(compName, isetEmpty[Port]) +
           Port(true, Id(Aadl2Awas.BINDINGS_IN), None)))
@@ -336,16 +372,18 @@ final class Aadl2Awas private() {
           Port(false, Id(Aadl2Awas.BINDINGS_OUT), None)))
     }
 
-    def createActualPorts(compName : ISZ[org.sireum.String], isIn: Boolean, portId : String): Unit = {
+    def createActualPorts(compName: ISZ[org.sireum.String], isIn: Boolean, portId: String): Unit = {
       resPorts += (compName ->
         (resPorts.getOrElse(compName, isetEmpty[Port]) +
           Port(isIn, Id(portId), None)))
     }
 
-    def createDepl(srcCompName: ISZ[org.sireum.String],
-                   dstCompName: ISZ[org.sireum.String],
-                   srcPort: String,
-                   dstPort: String) ={
+    def createDepl(
+      srcCompName: ISZ[org.sireum.String],
+      dstCompName: ISZ[org.sireum.String],
+      srcPort: String,
+      dstPort: String
+    ) = {
       resDepl = resDepl + DeploymentDecl(
         Name(srcCompName.elements.map(it => Id(it.value)).toVector),
         Some(Id(srcPort)),
@@ -463,16 +501,20 @@ final class Aadl2Awas private() {
   def build(conn: ir.Connection, compName: Seq[String]): Seq[ConnectionDecl] = {
     if (conn.name.name.nonEmpty) {
       if ((conn.src.length.toInt == 1) && (conn.dst.length.toInt == 1)) {
-        buildConnection(conn.name.name.elements.last.value,
+        val res = buildConnection(
+          conn.name.name.elements.last.value,
           conn.src.elements.last,
           conn.dst.elements.last,
           conn.kind,
           conn.isBiDirectional,
-          compName)
+          compName
+        )
+        res.foreach(_.auriFrag = Some(conn.uriFrag.value))
+        res
       } else if (conn.src.length == conn.dst.length) {
         var res = ilistEmpty[ConnectionDecl]
-        if(conn.src.length.toInt == 0) {
-          println( "cannot be empty" + conn.name.name.elements)
+        if (conn.src.length.toInt == 0) {
+          println("cannot be empty" + conn.name.name.elements)
         }
         for (i <- 0 until conn.src.length.get.toInt) {
           res = res ++ buildConnection(
@@ -481,8 +523,10 @@ final class Aadl2Awas private() {
             conn.dst(i),
             conn.kind,
             conn.isBiDirectional,
-            compName)
+            compName
+          )
         }
+        res.foreach(_.auriFrag = Some(conn.uriFrag.value))
         res
       } else {
         assert(false, "feature groups end points must be same")
@@ -491,12 +535,14 @@ final class Aadl2Awas private() {
     } else ilistEmpty[ConnectionDecl]
   }
 
-  def buildConnection(id: String,
-                      src: EndPoint,
-                      dst: EndPoint,
-                      kind : ir.ConnectionKind.Type,
-                      isBidirectional: B,
-                      compName: Seq[String]): Seq[ConnectionDecl] = {
+  def buildConnection(
+    id: String,
+    src: EndPoint,
+    dst: EndPoint,
+    kind: ir.ConnectionKind.Type,
+    isBidirectional: B,
+    compName: Seq[String]
+  ): Seq[ConnectionDecl] = {
 
     //val id = conn.name.name.elements.last.value
     val srcComp = if (src.component.name.map(_.value).elements == compName) {
@@ -515,13 +561,13 @@ final class Aadl2Awas private() {
     val actualSrcPort = if (srcPort.isEmpty) {
       "ACCESS"
     } else {
-      if (kind == ConnectionKind.Access) { srcPort.get} else srcPort.get
+      if (kind == ConnectionKind.Access) { srcPort.get } else srcPort.get
     }
 
     val actualSinkPort = if (sinkPort.isEmpty) {
       "ACCESS"
     } else {
-      if (kind == ConnectionKind.Access) { sinkPort.get} else sinkPort.get
+      if (kind == ConnectionKind.Access) { sinkPort.get } else sinkPort.get
     }
 
     if (isBidirectional) {
@@ -544,8 +590,7 @@ final class Aadl2Awas private() {
         if (src.direction.nonEmpty && dst.direction.nonEmpty &&
           ((src.direction.get != ir.Direction.In) ||
           (dst.direction.get != ir.Direction.Out))) {
-
-          res = res :+ ConnectionDecl(
+          val cd = ConnectionDecl(
             buildId(id + "_FORWARD"),
             srcComp,
             if (src.direction.nonEmpty && (src.direction.get == ir.Direction.InOut)) {
@@ -560,6 +605,7 @@ final class Aadl2Awas private() {
             None,
             Node.emptySeq[Property]
           )
+          res = res :+ cd
         }
       }
       if (!(superComp.isEmpty && superDir.nonEmpty && (superDir.get == backwardDirChk))) {
@@ -581,8 +627,8 @@ final class Aadl2Awas private() {
             None,
             Node.emptySeq[Property]
           )
-          }
         }
+      }
       //}
       res
     } else {
@@ -599,7 +645,8 @@ final class Aadl2Awas private() {
         } else buildId(actualSinkPort),
         Node.emptySeq[CFlow],
         None,
-        Node.emptySeq[Property])
+        Node.emptySeq[Property]
+      )
     }
   }
 
@@ -614,16 +661,22 @@ final class Aadl2Awas private() {
     withs
   }
 
-  def build(featureEnd: FeatureEnd,
-            isInverse: B, portId: String): Seq[Port] = {
+  def build(featureEnd: FeatureEnd, isInverse: B, portId: String): Seq[Port] = {
     var pId = portId + featureEnd.identifier.name.elements.last.value
     if (featureEnd.direction == ir.Direction.InOut) {
-      Seq(Port(isIn = true, buildId(pId + "_IN"), None),
-        Port(isIn = false, buildId(pId + "_OUT"), None))
+      val inp = Port(isIn = true, buildId(pId + "_IN"), None)
+      val outp = Port(isIn = false, buildId(pId + "_OUT"), None)
+      inp.auriFrag = Some(featureEnd.uriFrag.value)
+      outp.auriFrag = Some(featureEnd.uriFrag.value)
+      Seq(inp, outp)
     } else if (featureEnd.direction == ir.Direction.In) {
-      Seq(Port(isIn = true, buildId(pId), None))
+      val p = Port(isIn = true, buildId(pId), None)
+      p.auriFrag = Some(featureEnd.uriFrag.value)
+      Seq(p)
     } else {
-      Seq(Port(isIn = false, buildId(pId), None))
+      val p = Port(isIn = false, buildId(pId), None)
+      p.auriFrag = Some(featureEnd.uriFrag.value)
+      Seq(p)
     }
   }
 
@@ -632,23 +685,19 @@ final class Aadl2Awas private() {
 //    if (featureAccess.category == ir.FeatureCategory.BusAccess) {
 //      pId = pId + Aadl2Awas.BUS_ACCESS
 //    }
-    Seq(Port(isIn = true, buildId(pId + "_IN"), None), Port(isIn = false, buildId(pId + "_OUT"), None))
+    val inp = Port(isIn = true, buildId(pId + "_IN"), None)
+    val outp = Port(isIn = false, buildId(pId + "_OUT"), None)
+    inp.auriFrag = Some(featureAccess.uriFrag.value)
+    outp.auriFrag = Some(featureAccess.uriFrag.value)
+    Seq(inp, outp)
   }
 
-  def build(featureGroup: FeatureGroup,
-            isInverse: B,
-            portId: String): Seq[Port] = {
+  def build(featureGroup: FeatureGroup, isInverse: B, portId: String): Seq[Port] = {
     var pId = portId + featureGroup.identifier.name.elements.last.value
     featureGroup.features.elements.flatMap {
-      case fe: FeatureEnd => build(fe,
-        featureGroup.isInverse || isInverse,
-        pId + "_")
-      case fg: FeatureGroup => build(fg,
-        featureGroup.isInverse || isInverse,
-        pId + "_")
-      case fa : FeatureAccess => build(fa,
-        featureGroup.isInverse || isInverse,
-        pId + "_")
+      case fe: FeatureEnd => build(fe, featureGroup.isInverse || isInverse, pId + "_")
+      case fg: FeatureGroup => build(fg, featureGroup.isInverse || isInverse, pId + "_")
+      case fa: FeatureAccess => build(fa, featureGroup.isInverse || isInverse, pId + "_")
     }
   }
 
@@ -714,10 +763,10 @@ final class Aadl2Awas private() {
 
       val from = if (flow.source.nonEmpty) {
         val sid = flow.source.get.name.elements.last.value
-        if(features.contains(sid)) {
+        if (features.contains(sid)) {
           Some(buildId(sid))
-        } else if(features.contains(sid+"_IN")) {
-          Some(buildId(sid+"_IN"))
+        } else if (features.contains(sid + "_IN")) {
+          Some(buildId(sid + "_IN"))
         } else {
           None
         }
@@ -725,16 +774,17 @@ final class Aadl2Awas private() {
 
       val to = if (flow.sink.nonEmpty) {
         val sid = flow.sink.get.name.elements.last.value
-        if(features.contains(sid)) {
+        if (features.contains(sid)) {
           Some(buildId(sid))
-        } else if(features.contains(sid+"_OUT")) {
-          Some(buildId(sid+"_OUT"))
+        } else if (features.contains(sid + "_OUT")) {
+          Some(buildId(sid + "_OUT"))
         } else {
           None
         }
       } else None
-
-      flows = flows + Flow(id, from, Node.emptySeq[Fault], to, Node.emptySeq[Fault])
+      val f = Flow(id, from, Node.emptySeq[Fault], to, Node.emptySeq[Fault])
+      f.auriFrag = Some(flow.uriFrag.value)
+      flows = flows + f
     }
     comp.annexes.foreach { annex =>
       if (annex.name.value == "Emv2") {
@@ -755,7 +805,9 @@ final class Aadl2Awas private() {
             to = Some(sprop.id)
             toE = sprop.errorTypes
           }
-          flows = flows + Flow(id, from, fromE, to, toE)
+          val f = Flow(id, from, fromE, to, toE)
+          f.auriFrag = Some(flow.uriFrag.value)
+          flows = flows + f
         }
       }
     }
@@ -806,14 +858,17 @@ final class Aadl2Awas private() {
         val clause = annex.clause.asInstanceOf[Emv2Clause]
         if (clause.componentBehavior.nonEmpty) {
           clause.componentBehavior.get.transitions.elements.foreach { trans =>
-            transExpr = transExpr :+ TransExpr(if (trans.id.nonEmpty) {
-              buildId(trans.id.get.name.elements.last.value)
-            } else {
-              transCount = transCount + 1
-              buildId(defaultName + transCount)
-            }, Node.emptySeq :+ buildId(trans.sourceState.name.elements.last.value),
+            transExpr = transExpr :+ TransExpr(
+              if (trans.id.nonEmpty) {
+                buildId(trans.id.get.name.elements.last.value)
+              } else {
+                transCount = transCount + 1
+                buildId(defaultName + transCount)
+              },
+              Node.emptySeq :+ buildId(trans.sourceState.name.elements.last.value),
               Node.emptySeq :+ buildId(trans.targetState.name.elements.last.value),
-              Some(build(trans.condition)))
+              Some(build(trans.condition))
+            )
           }
         }
       }
@@ -831,14 +886,17 @@ final class Aadl2Awas private() {
         if (clause.componentBehavior.nonEmpty) {
           clause.componentBehavior.get.propagations.elements.foreach { prop =>
             behaveExpr = behaveExpr :+ BehaveExpr(
-              if (prop.id.nonEmpty) buildId(prop.id.get.name.elements.last.value) else {
+              if (prop.id.nonEmpty) buildId(prop.id.get.name.elements.last.value)
+              else {
                 behaveCount = behaveCount + 1
                 buildId(defaultName + behaveCount)
-              }, if (prop.condition.nonEmpty) {
+              },
+              if (prop.condition.nonEmpty) {
                 Some(build(prop.condition.get))
               } else {
                 None
-              }, if (prop.target.nonEmpty) Some(buildTuple(prop.target)) else None,
+              },
+              if (prop.target.nonEmpty) Some(buildTuple(prop.target)) else None,
               Node.seq(prop.source.elements.map(it => buildId(it.name.elements.last.value)))
             )
           }
@@ -872,13 +930,14 @@ final class Aadl2Awas private() {
   def buildTuple(props: ISZ[Emv2Propagation]): Tuple = {
     val tokens = props.elements.map { pp =>
       val id = buildId(pp.propagationPoint.name.elements.last.value)
-      val faults = pp.errorTokens.elements.map { et => Fault(build(et)) }
+      val faults = pp.errorTokens.elements.map { et =>
+        Fault(build(et))
+      }
       val errors = if (faults.size > 1) FaultSet(ilinkedSetEmpty ++ faults) else faults.head
       (id, errors)
     }
     Tuple(tokens.toList)
   }
-
 
   def collectComp(aadlModel: ir.Aadl): Unit = {
     var resColl = isetEmpty[ir.Component]
@@ -887,8 +946,7 @@ final class Aadl2Awas private() {
       new ir.Transformer[Unit](new PrePost[Unit] {
         def string: org.sireum.String = ""
 
-        override def preComponent(ctx: Unit, o: Component):
-        Transformer.PreResult[Unit, Component] = {
+        override def preComponent(ctx: Unit, o: Component): Transformer.PreResult[Unit, Component] = {
           resColl = resColl + o
           super.preComponent(ctx, o)
         }
@@ -908,7 +966,6 @@ final class Aadl2Awas private() {
   //  }
 
 }
-
 
 object Aadl2Awas {
 
@@ -957,8 +1014,6 @@ object Aadl2Awas {
   val UNIT_PROP_UNIT = "UNIT_PROP_UNIT"
   val STRING_PROP = "STRING_PROP"
 
-
-
   def apply(aadlModel: ir.Aadl): Model = {
 
     new Aadl2Awas().build(aadlModel)
@@ -966,7 +1021,7 @@ object Aadl2Awas {
 
   def apply(json: String): Option[Model] = {
     val aadl = org.sireum.hamr.ir.JSON.toAadl(json)
-    if(aadl.leftOpt.nonEmpty) {
+    if (aadl.leftOpt.nonEmpty) {
       Some(new Aadl2Awas().build(aadl.left))
     } else None
   }
@@ -983,6 +1038,5 @@ object Aadl2Awas {
   //                         sireumJarLoc: String): Unit = {
   //    Visualizer.main(Array(awasFile, queryFile, outputFolder, sireumJarLoc))
   //  }
-
 
 }

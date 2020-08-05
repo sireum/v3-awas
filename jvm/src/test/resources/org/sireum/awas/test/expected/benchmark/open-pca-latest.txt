@@ -1,0 +1,25 @@
+#graphs, #height, #components, #connections, #ports, #nodes, #edges, #flows
+19, 0, 80, 411, 1810, 921, 822, 170
+forward_node_0 = reach forward PCA_Pump_System_i_Instance.serv.security.security_process.algorithms.en_nonce
+forward_node_1 = reach forward PCA_Pump_System_i_Instance.serv.security.security_process.algorithms.de_result
+backward_node_0 = reach backward PCA_Pump_System_i_Instance.func.m_s_from_maintenance_the_fault_log_BACKWARD
+backward_node_1 = reach backward PCA_Pump_System_i_Instance.serv.security.security_process.algorithms.encryptor
+source_target_node_0 = reach from PCA_Pump_System_i_Instance.serv.security.security_process.algorithms.en to PCA_Pump_System_i_Instance.serv.communication_subsystem.m_maintenance_load_drug_library_BACKWARD
+source_target_node_1 = reach from PCA_Pump_System_i_Instance.func.safety_subsystem.rh to PCA_Pump_System_i_Instance.func.operation_subsystem.operation_process.operation_threads.btd
+forward_port_0 = reach forward PCA_Pump_System_i_Instance.func.operation_subsystem.operation_process.operation_threads.hlv.in
+forward_port_1 = reach forward PCA_Pump_System_i_Instance.func.operation_subsystem.operation_process.gel.out
+backward_port_0 = reach backward PCA_Pump_System_i_Instance.serv.security.security_process.controller.security_interface_key_label
+backward_port_1 = reach backward PCA_Pump_System_i_Instance.serv.security.security_process.algorithms.verifier.key_label
+source_target_path_0 = reach from PCA_Pump_System_i_Instance.board.upstream_monitor.gpio_IN to PCA_Pump_System_i_Instance.func.sensors_actuators.from_safety_pump_too_hot
+source_target_path_1 = reach from PCA_Pump_System_i_Instance.func.sense_ui_touch to PCA_Pump_System_i_Instance.func.sensors_actuators.from_safety_empty_reservoir(forward_node_0 ,3)
+(forward_node_1 ,2)
+(backward_node_0 ,5)
+(backward_node_1 ,4)
+(source_target_node_0 ,8)
+(source_target_node_1 ,7)
+(forward_port_0 ,1)
+(forward_port_1 ,20)
+(backward_port_0 ,8)
+(backward_port_1 ,8)
+(source_target_path_0 ,48)
+(source_target_path_1 ,45)

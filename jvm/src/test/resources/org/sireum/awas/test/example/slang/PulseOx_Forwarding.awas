@@ -1,0 +1,97 @@
+types
+  enum PulseOx_Forwarding_Errors extends EMV2 {SpO2ValueHigh, SpO2ValueLow, EarlySpO2, LateSpO2, NoSpO2, ErraticSpO2, MissedAlarm, LateAlarm, BogusAlarm}
+
+  enum MAP_Errors {ProcessModel, Content, High, Low, Timing, Early, Late, Halted, Erratic, Cleartext, ViolatedConstraint, SoftwareBug, BadSoftwareDesign, CompromisedSoftware, CompromisedHardware, HardwareBug, BadHardwareDesign, ProductionDefect, Deterioration, CosmicRay, OperatorHWMistake, OperatorHWWrongChoice, AdversaryAccessesHardware, AdversaryAccessesSoftware, OperatorSWMistake, OperatorSWWrongChoice, SyntaxMismatch, RateMismatch, SemanticMismatch}
+
+system  PulseOx_Forwarding_System_imp_Instance
+    with PulseOx_Forwarding_Errors
+
+      sub-components {
+        appDisplay
+          with PulseOx_Forwarding_Errors
+            ports
+              out ShowSpO2
+              in SpO2
+              in DerivedAlarm
+            propagations
+              DerivedAlarm = {MissedAlarm, BogusAlarm}
+            flows
+              AlarmOmission : DerivedAlarm{MissedAlarm} -> *
+
+            sub-components {
+              HandleAlarmThread
+                ports
+                  in Alarm
+
+              UpdateSpO2Thread
+                ports
+                  in SpO2
+            }
+            connections
+              incoming_spo2 : SpO2 -> UpdateSpO2Thread.SpO2
+
+              incoming_alarm : DerivedAlarm -> HandleAlarmThread.Alarm
+
+
+        appLogic
+          with MAP_Errors, PulseOx_Forwarding_Errors
+            ports
+              in SpO2
+              out DerivedAlarm
+            propagations
+              SpO2 = {SpO2ValueHigh, SpO2ValueLow, EarlySpO2, LateSpO2, NoSpO2, ErraticSpO2}
+              DerivedAlarm = {MissedAlarm, BogusAlarm}
+            flows
+              EarlySpO2DoesNothing : SpO2{EarlySpO2} -> *
+              LateSpO2DoesNothing : SpO2{LateSpO2} -> *
+              MultipleOutputs : SpO2{SpO2ValueHigh} -> DerivedAlarm{MissedAlarm, BogusAlarm}
+              BogusAlarmsArePossible : * -> DerivedAlarm{BogusAlarm}
+              MtoN : SpO2{SpO2ValueLow, SpO2ValueHigh} -> DerivedAlarm{BogusAlarm, MissedAlarm}
+              HighSpO2LeadsToMissedAlarm : SpO2{SpO2ValueHigh} -> DerivedAlarm{MissedAlarm}
+              MultipleInputs : SpO2{SpO2ValueHigh, SpO2ValueLow} -> DerivedAlarm{MissedAlarm}
+              LowSpO2DoesNothing : SpO2{SpO2ValueLow} -> *
+
+            sub-components {
+              CheckSpO2Thread
+                ports
+                  out Alarm
+
+              SpO2Val
+            }
+            connections
+              outgoing_alarm : CheckSpO2Thread.Alarm -> DerivedAlarm
+
+
+        clinician
+          ports
+            in ViewSpO2
+            out Treatment
+
+        patient
+          ports
+            out Fingerclip
+            in Treatment
+
+        pulseOx
+          with PulseOx_Forwarding_Errors, MAP_Errors
+            ports
+              in SensorInput
+              in IncSpO2
+              out SpO2
+            propagations
+              SpO2 = {SpO2ValueHigh}
+            flows
+              SpO2TooHighFlowSource : * -> SpO2{SpO2ValueHigh}
+      }
+      connections
+        Sense : patient.Fingerclip -> pulseOx.SensorInput
+
+        AdministerTreatment : clinician.Treatment -> patient.Treatment
+
+        spo2_to_logic : pulseOx.SpO2 -> appLogic.SpO2
+
+        spo2_to_display : pulseOx.SpO2 -> appDisplay.SpO2
+
+        alarm_to_display : appLogic.DerivedAlarm -> appDisplay.DerivedAlarm
+
+        ViewSpO2 : appDisplay.ShowSpO2 -> clinician.ViewSpO2

@@ -67,7 +67,6 @@ object Main {
   var st: Option[SymbolTable] = None
   var terminal: Option[Terminal] = None
 
-
   def uriToBreadCrumbs(uri: ResourceUri, st: SymbolTable): Frag = {
     val res = Resource.getDefResource(uri)
     if (res.isDefined) {
@@ -141,7 +140,7 @@ object Main {
   def buildGraphWindow(isErrror: Boolean = false): Unit = {
     val systemName = st.get.systemDecl.compName.value
 
-    gl.get.registerComponent("system", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) => {
+    def comp(container: Container, componentState: js.Dictionary[scalajs.js.Any]) = {
       if (componentState.get("graph").isDefined) {
         val uri = componentState.get("graph").get.asInstanceOf[ResourceUri]
 
@@ -157,7 +156,8 @@ object Main {
           $[Input](breadCrumbs, "#td").checked = false
         }
 
-        val asvg = Util.graph2Svg(uri, if (isErrror) SvgGenConfig.defaultErrorConfig else SettingsView.currentConfig, st.get)
+        val asvg =
+          Util.graph2Svg(uri, if (isErrror) SvgGenConfig.defaultErrorConfig else SettingsView.currentConfig, st.get)
         val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
         svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
         container.getElement().append(breadCrumbs).append(svgDiv)
@@ -166,21 +166,25 @@ object Main {
       container.getElement().attr("display", "inline-block;")
     }
 
-    }: js.Function)
+    //println(js.constructorOf(comp))
+    gl.get.registerComponent("system", GLUtil.componentFactory(comp))
     gl.get.init()
-    gl.get.eventHub.on("highlight", { (uris: IMap[String, Boolean], color: String) => {
-      //clearAll(selections.keySet)
-      highlight(uris, color)
-    }
+    gl.get.eventHub.on("highlight", { (uris: IMap[String, Boolean], color: String) =>
+      {
+        //clearAll(selections.keySet)
+        highlight(uris, color)
+      }
     }: js.Function)
-    gl.get.eventHub.on("clearall", { () => {
-      clearAll(selections.keySet)
-    }
+    gl.get.eventHub.on("clearall", { () =>
+      {
+        clearAll(selections.keySet)
+      }
     }: js.Function)
-    gl.get.on("windowClosed", { () => {
-      println("window close triggered")
-      openGraphTab(st.get.system)
-    }
+    gl.get.on("windowClosed", { () =>
+      {
+        println("window close triggered")
+        openGraphTab(st.get.system)
+      }
     }: js.Function)
     window.onresize = (_: UIEvent) => computeHeight(gl.get)
     gl.get.root.setTitle(systemName)
@@ -189,10 +193,11 @@ object Main {
   @JSExport
   def main(): Unit = {
     //var model = Aadl2Awas.apply(GraphQuery.json)
-
-    var model = if (GraphQuery.json.isDefined) {
+    val t = js.typeOf(js.Dynamic.global.awas)
+    println(t)
+    var model = if (js.typeOf(js.Dynamic.global.json) != "undefined") {
       Aadl2Awas.apply(GraphQuery.json.get)
-    } else if (GraphQuery.awas.isDefined) {
+    } else if (js.typeOf(js.Dynamic.global.awas) != "undefined") {
       AwasSerializer.unapply(GraphQuery.awas.get)
     } else {
       None
@@ -201,12 +206,11 @@ object Main {
     //if(model.isEmpty) {
     // var model = AwasSerializer.unapply(GraphQuery.awas)
     //}
-    val xx = GraphQuery.queries
+//    val xx = GraphQuery.queries
 
     if (model.isDefined) {
       val reporter = new ConsoleTagReporter()
       st = Some(SymbolTable(model.get)(reporter))
-
 
       val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = true)
 
@@ -270,16 +274,17 @@ object Main {
           }
 
           val burger = mainDiv.querySelector(".burger")
-          burger.addEventListener("click", { (_: MouseEvent) => {
-            val target = burger.asInstanceOf[AWASHTMLElement].dataset("target")
-            val targetElem = mainDiv.querySelector("#" + target)
-            burger.classList.toggle("is-active")
-            targetElem.classList.toggle("is-active")
-            computeHeight(gl.get)
-          }
+          burger.addEventListener("click", { (_: MouseEvent) =>
+            {
+              val target = burger.asInstanceOf[AWASHTMLElement].dataset("target")
+              val targetElem = mainDiv.querySelector("#" + target)
+              burger.classList.toggle("is-active")
+              targetElem.classList.toggle("is-active")
+              computeHeight(gl.get)
+            }
           }: js.Function1[MouseEvent, _])
 
-          if (!js.isUndefined(GraphQuery.queries)) {
+          if (js.typeOf(js.Dynamic.global.queries) != "undefined") {
             QueryCli.openQueryCli(st.get, systemGraph)
             qI.get.evalQueryFile(GraphQuery.queries.toString)
             updateTable(qI.get.getQueries, qI.get.getResults)
@@ -439,9 +444,8 @@ object Main {
       })
     } else {
       if (timer.isDefined) {
-        uriNodeMap.get(tempUri).foreach{ n =>
-
-        }
+        uriNodeMap.get(tempUri).foreach { n =>
+          }
         scalajs.js.timers.clearTimeout(timer.get)
         //do dbl click
         if (tempUri.startsWith(H.COMPONENT_TYPE) &&
@@ -487,8 +491,8 @@ object Main {
             col.getNodes.filter(_.getResourceType == NodeType.CONNECTION).foreach { c =>
               if (c.getOwner.getIncomingEdges(c).size == 1 &&
                 c.getOwner.getOutgoingEdges(c).size == 1) {
-                  connUri = connUri :+ c.getUri
-                }
+                connUri = connUri :+ c.getUri
+              }
             }
           }
           col.getPorts.toSeq ++ col.getFlows.toSeq ++ connUri
@@ -510,7 +514,10 @@ object Main {
               }
             }
           }
-          col.getPortErrors.flatMap(pe => isetEmpty + pe._1 ++ pe._2.map(e => "Error" + SvgGenerator.URI_GLUE + pe._1 + SvgGenerator.URI_GLUE + e)) ++
+          col.getPortErrors.flatMap(
+            pe =>
+              isetEmpty + pe._1 ++ pe._2.map(e => "Error" + SvgGenerator.URI_GLUE + pe._1 + SvgGenerator.URI_GLUE + e)
+          ) ++
             col.getFlows ++ connUri ++ col.getBehavior ++ col.getModes
         }
       }
@@ -575,7 +582,9 @@ object Main {
               justifyContent := "center",
               verticalAlign := "middle",
               style := "display:inline-flex;width:80%;",
-              label(`class` := "checkbox", input(`type` := "checkbox", `class` := "select-query", id := "select:" + entry._1)
+              label(
+                `class` := "checkbox",
+                input(`type` := "checkbox", `class` := "select-query", id := "select:" + entry._1)
               )
             )
           ),
@@ -670,23 +679,23 @@ object Main {
     val colorPickers = PimpedNodeList(table.querySelectorAll(".query-color-picker"))
     var queryColors = imapEmpty[String, String]
     colorPickers.foreach { cp =>
-
       val te = $[Div]("#" + cp.asInstanceOf[Div].id)
 
       val tcp = TinyColorPicker("#" + cp.asInstanceOf[Div].id)
-      tcp.tinycolorpicker(js.Dictionary(("colors", js.Array("#f07830")), ("backgroundUrl", "min/images/text-color.png")));
+      tcp.tinycolorpicker(
+        js.Dictionary(("colors", js.Array("#f07830")), ("backgroundUrl", "min/images/text-color.png"))
+      );
       val cpp = tcp.data("plugin_tinycolorpicker").asInstanceOf[TinyColorPicker]
-      tcp.bind("change", { () => {
-        val qid = cp.asInstanceOf[Div].id.split("r-").last.replace("-", ":")
-        queryColors = queryColors + (qid -> cpp.colorHex)
-      }
+      tcp.bind("change", { () =>
+        {
+          val qid = cp.asInstanceOf[Div].id.split("r-").last.replace("-", ":")
+          queryColors = queryColors + (qid -> cpp.colorHex)
+        }
       }: js.Function)
       cpp.setColor(RandomColor())
       val qid = cp.asInstanceOf[Div].id.split("r-").last.replace("-", ":")
       queryColors = queryColors + (qid -> cpp.colorHex)
     }
-
-
 
     def notifyErrors(id: String, coll: Collector): Unit = {
       if (coll.getGraphs.isEmpty) {
@@ -748,27 +757,28 @@ object Main {
           "expanderTemplate",
           "<a href=\"#\" style='vertical-align: middle; display:inline-block; width:3%;'><i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i></a>"
         ),
-        ("onNodeExpand", { (x: js.Any) => {
-          val exp = x.asInstanceOf[TreeNode].expander(0)
-          val oldChild = exp.firstElementChild
-          val newChild =
-            templateContent(raw("<i class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
-          exp.appendChild(newChild)
-          exp.removeChild(oldChild)
-        }
+        ("onNodeExpand", { (x: js.Any) =>
+          {
+            val exp = x.asInstanceOf[TreeNode].expander(0)
+            val oldChild = exp.firstElementChild
+            val newChild =
+              templateContent(raw("<i class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
+            exp.appendChild(newChild)
+            exp.removeChild(oldChild)
+          }
         }: js.ThisFunction),
-        ("onNodeCollapse", { (x: js.Any) => {
-          val exp = x.asInstanceOf[TreeNode].expander(0)
-          val oldChild = exp.firstElementChild
-          val newChild =
-            templateContent(raw("<i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
-          exp.appendChild(newChild)
-          exp.removeChild(oldChild)
-        }
+        ("onNodeCollapse", { (x: js.Any) =>
+          {
+            val exp = x.asInstanceOf[TreeNode].expander(0)
+            val oldChild = exp.firstElementChild
+            val newChild =
+              templateContent(raw("<i class=\"fa fa-chevron-right\" aria-hidden=\"true\"></i>")).asInstanceOf[Element]
+            exp.appendChild(newChild)
+            exp.removeChild(oldChild)
+          }
         }: js.ThisFunction)
       ),
       true
     )
   }
 }
-

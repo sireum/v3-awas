@@ -1,0 +1,109 @@
+types
+  enum PCA_Shutoff_Errors {TooMuchAnalgesic, TicketTooLong, TicketTooShort, NoTicket, EarlyTicket, LateTicket, SpO2ValueHigh, SpO2ValueLow, SpO2Early, SpO2Late, NoSpO2, ETCO2ValueHigh, ETCO2ValueLow, ETCO2Early, ETCO2Late, NoETCO2, RespirationRateHigh, RespirationRateLow, RespirationRateEarly, RespirationRateLate, NoRespirationRate}
+
+  enum MAP_Errors {ProcessModel, Content, High, Low, Timing, Early, Late, Halted, Erratic, ViolatedConstraint, SoftwareBug, BadSoftwareDesign, CompromisedSoftware, CompromisedHardware, HardwareBug, BadHardwareDesign, ProductionDefect, Deterioration, CosmicRay, OperatorHWMistake, OperatorHWWrongChoice, AdversaryAccessesHardware, AdversaryAccessesSoftware, OperatorSWMistake, OperatorSWWrongChoice, SyntaxMismatch, RateMismatch, SemanticMismatch}
+
+system  PCA_Shutoff_System_imp_Instance
+    with PCA_Shutoff_Errors
+
+      sub-components {
+        appLogic
+          with PCA_Shutoff_Errors
+            ports
+              in ETCO2
+              in SpO2
+              in RR
+              out CmdPumpNorm
+            propagations
+              SpO2 = {SpO2Early, SpO2Late, SpO2ValueHigh, SpO2ValueLow, NoSpO2}
+              ETCO2 = {ETCO2Late, ETCO2Early, ETCO2ValueHigh, NoETCO2, ETCO2ValueLow}
+              RR = {RespirationRateLate, RespirationRateHigh, RespirationRateLow, NoRespirationRate, RespirationRateEarly}
+              CmdPumpNorm = {EarlyTicket, LateTicket, TicketTooLong}
+            flows
+              DetectedErrorSource : * -> CmdPumpNorm{LateTicket}
+              LowRRLeadsToOD : RR{RespirationRateHigh} -> CmdPumpNorm{TicketTooLong}
+              EarlyRRLeadsToLate : RR{RespirationRateEarly} -> CmdPumpNorm{LateTicket}
+              HighETCO2LeadsToOD : ETCO2{ETCO2ValueLow} -> CmdPumpNorm{TicketTooLong}
+              RedundentSensor3 : RR{RespirationRateLate, RespirationRateHigh, RespirationRateLow, NoRespirationRate, RespirationRateEarly} -> *
+              EarlyETCO2LeadsToLate : ETCO2{ETCO2Early} -> CmdPumpNorm{LateTicket}
+              RedundentSensor1 : SpO2{SpO2Early, SpO2Late, SpO2ValueHigh, SpO2ValueLow, NoSpO2} -> *
+              HighSpO2LeadsToOD : SpO2{SpO2ValueHigh} -> CmdPumpNorm{TicketTooLong}
+              EarlySpO2LeadsToLate : SpO2{SpO2Early} -> CmdPumpNorm{LateTicket}
+              UndetectedErrorSource : * -> CmdPumpNorm{TicketTooLong, EarlyTicket, LateTicket}
+              spo2_flow : SpO2 -> CmdPumpNorm
+              RedundentSensor2 : ETCO2{ETCO2Late, ETCO2Early, ETCO2ValueHigh, NoETCO2, ETCO2ValueLow} -> *
+
+        capnograph
+          with PCA_Shutoff_Errors, MAP_Errors
+            ports
+              in Breath
+              out ETCO2
+              out RespiratoryRate
+            propagations
+              ETCO2 = {ETCO2Late, NoETCO2, ETCO2ValueLow}
+              RespiratoryRate = {RespirationRateLate, RespirationRateLow, RespirationRateHigh, NoRespirationRate}
+            flows
+              ETCO2FlowSource : * -> ETCO2{ETCO2ValueLow, ETCO2Late, NoETCO2}
+              RRFlowSource : * -> RespiratoryRate{RespirationRateHigh, RespirationRateLow, RespirationRateLate, NoRespirationRate}
+
+        patient
+          with PCA_Shutoff_Errors, MAP_Errors
+            ports
+              in vein
+              out fingerclip
+              out exhalation
+            propagations
+              vein = {TooMuchAnalgesic}
+            flows
+              PatientAbsorbsDrug : vein{TooMuchAnalgesic} -> *
+
+            sub-components {
+              health_status
+            }
+
+        pcaPump
+          with MAP_Errors, PCA_Shutoff_Errors
+            ports
+              out DrugFlow
+              in TicketInput
+            propagations
+              TicketInput = {EarlyTicket, NoTicket, TicketTooShort, LateTicket, TicketTooLong}
+              DrugFlow = {TooMuchAnalgesic}
+            flows
+              LowTicketValueIsntUnsafe : TicketInput{TicketTooShort} -> *
+              EarlyTicketLeadsToOD : TicketInput{EarlyTicket} -> DrugFlow{TooMuchAnalgesic}
+              OperatorSWWrongChoiceLeadsToOD : * -> DrugFlow{TooMuchAnalgesic}
+              OperatorSWMistakeLeadsToOD : * -> DrugFlow{TooMuchAnalgesic}
+              OperatorHWWrongChoiceLeadsToOD : * -> DrugFlow{TooMuchAnalgesic}
+              DeteriorationLeadsToOD : * -> DrugFlow{TooMuchAnalgesic}
+              OperatorHWMistakeLeadsToOD : * -> DrugFlow{TooMuchAnalgesic}
+              LateTicketLeadsSafe : TicketInput{LateTicket} -> *
+              NoTicketsArentUnsafe : TicketInput{NoTicket} -> *
+              CosmicRayLeadsToOD : * -> DrugFlow{TooMuchAnalgesic}
+              LongTicketLeadsToOD : TicketInput{TicketTooLong} -> DrugFlow{TooMuchAnalgesic}
+
+        pulseOx
+          with PCA_Shutoff_Errors, MAP_Errors
+            ports
+              in RefractedLight
+              out SpO2
+            propagations
+              SpO2 = {SpO2ValueHigh, SpO2ValueLow, NoSpO2}
+            flows
+              spo2_flow : * -> SpO2
+              SpO2UnDetectableHighValueFlowSource : * -> SpO2{SpO2ValueHigh, SpO2ValueLow, NoSpO2}
+      }
+      connections
+        pulseOx_measurement : patient.fingerclip -> pulseOx.RefractedLight
+
+        capnograph_measurement : patient.exhalation -> capnograph.Breath
+
+        spo2_logic : pulseOx.SpO2 -> appLogic.SpO2
+
+        etco2_logic : capnograph.ETCO2 -> appLogic.ETCO2
+
+        respiratoryrate_logic : capnograph.RespiratoryRate -> appLogic.RR
+
+        IVLine : pcaPump.DrugFlow -> patient.vein
+
+        pumpcommand_logic : appLogic.CmdPumpNorm -> pcaPump.TicketInput

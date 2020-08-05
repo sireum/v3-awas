@@ -1,0 +1,108 @@
+types
+  enum PCA_Error {SecurityError, message_leak, message_leak_MitM, unlikely_leak, authenticity_error, message_commission, message_omission, message_replay, unlikely_commission, message_corruption, unlikely_corruption}
+
+  enum SSCATE_Errors {start_commission, start_omission, stop_commission, stop_omission, SpO2_ValueError, SpO2_Omission}
+
+  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
+
+system  PCA_PulseOx_insecure_Instance
+
+    sub-components {
+      App
+        with SSCATE_Errors, PCA_Error
+          ports
+            in SpO2
+            out command
+          propagations
+            SpO2 = {SpO2_Omission, SpO2_ValueError, SecurityError}
+            command = {start_commission, start_omission, stop_omission, SecurityError, stop_commission}
+          flows
+            Check_Status : SpO2 -> command
+            inappropriate_ticket_provided : SpO2{SpO2_ValueError, SecurityError} -> command{stop_commission, stop_omission, start_commission, start_omission}
+            no_spo2 : SpO2{SpO2_Omission} -> command{stop_omission, start_omission}
+            command_in_plaintext : * -> command{SecurityError}
+            stop_fault : * -> command{stop_omission, stop_commission}
+
+      PCA_Pump
+        with PCA_Error, SSCATE_Errors, ErrorLibrary
+          ports
+            out IV_infuse
+            in control
+          propagations
+            control = {start_commission, start_omission, stop_omission, SecurityError, stop_commission}
+            IV_infuse = {LateServiceTermination, EarlyServiceStart, EarlyServiceTermination, LateServiceStart}
+          flows
+            modified_command : control{SecurityError} -> IV_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+            missed_stop : control{stop_omission} -> IV_infuse{LateServiceTermination}
+            incorrect_start : control{start_commission} -> IV_infuse{EarlyServiceStart, LateServiceStart}
+            unexpected_stop : control{stop_commission} -> IV_infuse{EarlyServiceTermination, LateServiceTermination}
+            missing_start : control{start_omission} -> IV_infuse{LateServiceStart}
+
+      Patient
+        with PCA_Error, SSCATE_Errors, ErrorLibrary
+          ports
+            in Vein_infuse
+            out BloodSat_Saturation
+          propagations
+            Vein_infuse = {LateServiceTermination, EarlyServiceStart, EarlyServiceTermination, LateServiceStart}
+          flows
+            accident : Vein_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart} -> *
+
+      PulseOx
+        with PCA_Error, SSCATE_Errors
+          ports
+            in FingerClip_Saturation
+            out SpO2
+          propagations
+            SpO2 = {SpO2_Omission, SpO2_ValueError, SecurityError}
+          flows
+            numerical_failure : * -> SpO2{SpO2_ValueError}
+            disloged_sensor : * -> SpO2{SpO2_Omission}
+            communicating_out : * -> SpO2{SecurityError}
+
+      wifi_command
+        with PCA_Error, SSCATE_Errors
+          ports
+            in in_interface
+            out out_interface
+          propagations
+            in_interface = {start_commission, start_omission, stop_omission, SecurityError, stop_commission}
+            out_interface = {start_commission, start_omission, stop_omission, SecurityError, stop_commission}
+          flows
+            transmission_stop_commission : in_interface{stop_commission} -> out_interface{stop_commission}
+            transmission_start_commission : in_interface{start_commission} -> out_interface{start_commission}
+            replay_message : in_interface{SecurityError} -> out_interface{SecurityError}
+            transmission_wifi : in_interface -> out_interface
+            spoof_message : * -> out_interface{SecurityError}
+            accessable : in_interface{SecurityError} -> *
+            transmission_start_omission : in_interface{start_omission} -> out_interface{start_omission}
+            transmission_stop_omission : in_interface{stop_omission} -> out_interface{stop_omission}
+
+      wifi_spo2
+        with PCA_Error, SSCATE_Errors
+          ports
+            in in_interface
+            out out_interface
+          propagations
+            in_interface = {SpO2_Omission, SpO2_ValueError, SecurityError}
+            out_interface = {SpO2_Omission, SpO2_ValueError, SecurityError}
+          flows
+            transmission_omission : in_interface{SpO2_Omission} -> out_interface{SpO2_Omission}
+            replay_message : in_interface{SecurityError} -> out_interface{SecurityError}
+            transmission_wifi : in_interface -> out_interface
+            spoof_message : * -> out_interface{SecurityError}
+            transmission_value_error : in_interface{SpO2_ValueError} -> out_interface{SpO2_ValueError}
+            accessable : in_interface{SecurityError} -> *
+    }
+    connections
+      administer : PCA_Pump.IV_infuse -> Patient.Vein_infuse
+
+      spo2 : PulseOx.SpO2 -> wifi_spo2.in_interface
+
+      spo2_app : wifi_spo2.out_interface -> App.SpO2
+
+      activate_pump : wifi_command.out_interface -> PCA_Pump.control
+
+      read : Patient.BloodSat_Saturation -> PulseOx.FingerClip_Saturation
+
+      activate_app : App.command -> wifi_command.in_interface

@@ -368,6 +368,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       val from = flowCheck(m, flow, fr.toUri, r, tt, isFrom = true, ctp)
       val to = flowCheck(m, flow, fr.toUri, r, tt, isFrom = false, ctp)
       ctp.tables.flowTable(fr.toUri) = FlowTableData(fr.toUri, from._1, to._1, from._2, to._2)
+      ctp.tables.flow(fr.toUri) = flow
     } else {
       reporter.report(errorMessageGen(DUPLICATE_FLOW_NAME, flow.id, m, flow.id.value))
     }
@@ -828,15 +829,18 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     // defined in the parent comp of deploy
 //    val ff = H.findUri(deploy.fromNode.value.map(_.value).toVector, cstp.st)
 
-    val fromUri = if(H.findUri(deploy.fromNode.value.map(_.value), cstp.st).isDefined) {
+    val fromUri = if (H.findUri(deploy.fromNode.value.map(_.value), cstp.st).isDefined) {
       H.findUri(deploy.fromNode.value.map(_.value), cstp.st)
     } else {
       val parent = H.findUri(deploy.fromNode.value.map(_.value).init, cstp.st)
-      if(parent.isDefined && H.getUriType(parent.get) == H.COMPONENT_TYPE) {
-        val t = st.componentSymbolTable(parent.get).connections.filter{it =>
-          H.uri2IdString(it).split("-").nonEmpty && H.uri2IdString(it).split("-").head == deploy.fromNode.value.map(_.value).last}
+      if (parent.isDefined && H.getUriType(parent.get) == H.COMPONENT_TYPE) {
+        val t = st.componentSymbolTable(parent.get).connections.filter { it =>
+          H.uri2IdString(it).split("-").nonEmpty && H.uri2IdString(it).split("-").head == deploy.fromNode.value
+            .map(_.value)
+            .last
+        }
         assert(t.size == 1, "Cannot handle bindings on a connection with feature group end points")
-        if(t.nonEmpty) {
+        if (t.nonEmpty) {
           Some(t.head)
         } else {
           None
@@ -845,13 +849,16 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
         None
       }
     }
-    val toUri = if(H.findUri(deploy.toNode.value.map(_.value), cstp.st).isDefined) {
+    val toUri = if (H.findUri(deploy.toNode.value.map(_.value), cstp.st).isDefined) {
       H.findUri(deploy.toNode.value.map(_.value), cstp.st)
     } else {
       val parent = H.findUri(deploy.toNode.value.map(_.value).init, cstp.st)
-      if(parent.isDefined && H.getUriType(parent.get) == H.COMPONENT_TYPE) {
-        val t = st.componentSymbolTable(parent.get).connections.filter{it =>
-          H.uri2IdString(it).split("-").nonEmpty && H.uri2IdString(it).split("-").head == deploy.toNode.value.map(_.value).last}
+      if (parent.isDefined && H.getUriType(parent.get) == H.COMPONENT_TYPE) {
+        val t = st.componentSymbolTable(parent.get).connections.filter { it =>
+          H.uri2IdString(it).split("-").nonEmpty && H.uri2IdString(it).split("-").head == deploy.toNode.value
+            .map(_.value)
+            .last
+        }
         assert(t.size == 1, "Cannot handle bindings on a connection with feature group end points")
         Some(t.head)
       } else {
@@ -876,13 +883,12 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       Resource.useDefResolve(deploy.fromPort.get, cstp.st.componentTable(fromUri.get).port(fromPortUri.get).get)
     } else if (fromUri.isDefined) {
       if (fromUri.get.startsWith(H.COMPONENT_TYPE)) {
+        Resource.useDefResolve(deploy.fromNode, cstp.st.componentTable(fromUri.get).componentDecl)
+      } else if (Resource.getParentUri(fromUri.get).isDefined) {
         Resource.useDefResolve(
           deploy.fromNode,
-          cstp.st.componentTable(fromUri.get).componentDecl)
-      } else if(Resource.getParentUri(fromUri.get).isDefined) {
-        Resource.useDefResolve(
-          deploy.fromNode,
-          cstp.st.componentTable(Resource.getParentUri(fromUri.get).get).connection(fromUri.get))
+          cstp.st.componentTable(Resource.getParentUri(fromUri.get).get).connection(fromUri.get)
+        )
       }
     } else {
       reporter.report(errorMessageGen(MISSING_COMPONENT_OR_CONNECTION, deploy, m, deploy.fromNode.value.last.value))
@@ -893,13 +899,12 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       Resource.useDefResolve(deploy.toPort.get, cstp.st.componentTable(toUri.get).port(toPortUri.get).get)
     } else if (toUri.isDefined) {
       if (toUri.get.startsWith(H.COMPONENT_TYPE)) {
+        Resource.useDefResolve(deploy.toNode, cstp.st.componentTable(toUri.get).componentDecl)
+      } else if (Resource.getParentUri(toUri.get).isDefined) {
         Resource.useDefResolve(
           deploy.toNode,
-          cstp.st.componentTable(toUri.get).componentDecl)
-      } else if(Resource.getParentUri(toUri.get).isDefined) {
-        Resource.useDefResolve(
-          deploy.toNode,
-        cstp.st.componentTable(Resource.getParentUri(toUri.get).get).connection(toUri.get))
+          cstp.st.componentTable(Resource.getParentUri(toUri.get).get).connection(toUri.get)
+        )
       }
     } else {
       reporter.report(errorMessageGen(MISSING_COMPONENT_OR_CONNECTION, deploy, m, deploy.toNode.value.last.value))
@@ -911,8 +916,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     } else {
       //only one of the two can be connection in a deployment
       assert(toPortUri.nonEmpty, "Connection cannot be bound to a connection")
-      val fp = addBindPortsToNodes(fromUri.get,  m, toPortUri.get, toUri.get, isFrom = true)
-      if(fp.isDefined) fp.get else fromUri.get
+      val fp = addBindPortsToNodes(fromUri.get, m, toPortUri.get, toUri.get, isFrom = true)
+      if (fp.isDefined) fp.get else fromUri.get
 
     }
 
@@ -920,8 +925,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       toPortUri.get
     } else {
       assert(fromPortUri.nonEmpty, "Connection cannot be bound to a connection")
-      val tp = addBindPortsToNodes(toUri.get,  m, fromPortUri.get, fromUri.get, isFrom = false)
-      if(tp.isDefined) tp.get else toUri.get
+      val tp = addBindPortsToNodes(toUri.get, m, fromPortUri.get, fromUri.get, isFrom = false)
+      if (tp.isDefined) tp.get else toUri.get
     }
 
     Some((furi, turi))
@@ -941,7 +946,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     m: Model,
     otherPort: ResourceUri,
     otherComp: ResourceUri,
-    isFrom : Boolean
+    isFrom: Boolean
   )(implicit reporter: AccumulatingTagReporter): Option[ResourceUri] = {
     if (nodeUri.startsWith(H.COMPONENT_TYPE)) {
       reporter.report(errorMessageGen(MISSING_PORT_REF, st.componentSymbolTable(nodeUri).componentDecl, m))
@@ -1062,8 +1067,8 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
             temp_i = temp_i + 1
           }
         }
-        if(isFrom) Some(bindOutPort.toUri) else Some(bindInPort.toUri)
-      } else  {
+        if (isFrom) Some(bindOutPort.toUri) else Some(bindInPort.toUri)
+      } else {
         None
       }
     }

@@ -54,6 +54,8 @@ trait ComponentTable {
 
   def flows: Iterable[ResourceUri]
 
+  def flowDecl(flowUri: ResourceUri): Option[Flow]
+
   def flow(flowUri: ResourceUri): FlowTableData
 
   def declass(flowUri: ResourceUri): Option[(Option[ResourceUri], ResourceUri)]
@@ -89,43 +91,45 @@ trait ComponentTable {
 
 trait ComponentTableUpdate {
 
-  def addFlow(flowUri: ResourceUri,
-              fromPortUri: Option[ResourceUri],
-              toPortUri: Option[ResourceUri],
-              fromFaults: Set[ResourceUri],
-              toFaults: Set[ResourceUri]): Unit
+  def addFlow(
+    flowUri: ResourceUri,
+    fromPortUri: Option[ResourceUri],
+    toPortUri: Option[ResourceUri],
+    fromFaults: Set[ResourceUri],
+    toFaults: Set[ResourceUri]
+  ): Unit
 
 }
 
-
-
-sealed case class ComponentTableData
-(declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
- portTable: MMap[ResourceUri, Port] = mmapEmpty,
- propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
- securityTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
- flowTable: MMap[ResourceUri, FlowTableData] = mmapEmpty,
- declass: MMap[ResourceUri, (Option[ResourceUri], ResourceUri)] = mmapEmpty,
- flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
- portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
- behaviorTable: MMap[ResourceUri, BehaveExpr] = mmapEmpty,
- transitionTable: MMap[ResourceUri, TransExpr] = mmapEmpty,
- subComponentsDecl: MMap[ResourceUri, ComponentDecl] = mmapEmpty,
- subComponentsTable: MMap[ResourceUri, ComponentTable] = mmapEmpty,
- types: MSet[ResourceUri] = msetEmpty,
- stateMachine: MSet[ResourceUri] = msetEmpty,
- connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,
- connectionSymbolTabel: MMap[ResourceUri, ConnSTProducer] = mmapEmpty,
- deploymentDeclTable: MMap[(ResourceUri, ResourceUri), DeploymentDecl] = mmapEmpty,
- propertyDecl: MMap[ResourceUri, Property] = mmapEmpty,
- symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
+sealed case class ComponentTableData(
+  declaredSymbols: MMap[FileResourceUri, MSet[ResourceUri]] = mmapEmpty,
+  portTable: MMap[ResourceUri, Port] = mmapEmpty,
+  propagationTable: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+  securityTable: MMap[ResourceUri, ResourceUri] = mmapEmpty,
+  flow: MMap[ResourceUri, Flow] = mmapEmpty,
+  flowTable: MMap[ResourceUri, FlowTableData] = mmapEmpty,
+  declass: MMap[ResourceUri, (Option[ResourceUri], ResourceUri)] = mmapEmpty,
+  flowPortRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+  portFlowRelation: MMap[ResourceUri, MSet[ResourceUri]] = mmapEmpty,
+  behaviorTable: MMap[ResourceUri, BehaveExpr] = mmapEmpty,
+  transitionTable: MMap[ResourceUri, TransExpr] = mmapEmpty,
+  subComponentsDecl: MMap[ResourceUri, ComponentDecl] = mmapEmpty,
+  subComponentsTable: MMap[ResourceUri, ComponentTable] = mmapEmpty,
+  types: MSet[ResourceUri] = msetEmpty,
+  stateMachine: MSet[ResourceUri] = msetEmpty,
+  connectionTable: MMap[ResourceUri, ConnectionDecl] = mmapEmpty,
+  connectionSymbolTabel: MMap[ResourceUri, ConnSTProducer] = mmapEmpty,
+  deploymentDeclTable: MMap[(ResourceUri, ResourceUri), DeploymentDecl] = mmapEmpty,
+  propertyDecl: MMap[ResourceUri, Property] = mmapEmpty,
+  symbol2Uri: MMap[String, ResourceUri] = mmapEmpty
 )
 
-class CompSTProducer(val compUri: ResourceUri,
-                     val compDecl: ComponentDecl,
-                     val st: SymbolTable,
-                     val parent: Option[ResourceUri] = None)
-  extends ComponentTable with ComponentTableUpdate {
+class CompSTProducer(
+  val compUri: ResourceUri,
+  val compDecl: ComponentDecl,
+  val st: SymbolTable,
+  val parent: Option[ResourceUri] = None
+) extends ComponentTable with ComponentTableUpdate {
 
   val tables = ComponentTableData()
 
@@ -170,6 +174,9 @@ class CompSTProducer(val compUri: ResourceUri,
 
   override def flows: Iterable[ResourceUri] = tables.flowTable.keys
 
+  override def flowDecl(flowUri: ResourceUri): Option[Flow] =
+    if (SymbolTableHelper.isVirtual(flowUri)) None else Some(tables.flow(flowUri))
+
   override def flow(flowUri: ResourceUri): FlowTableData = tables.flowTable(flowUri)
 
   override def declass(flowUri: ResourceUri): Option[(Option[ResourceUri], ResourceUri)] = tables.declass.get(flowUri)
@@ -196,7 +203,8 @@ class CompSTProducer(val compUri: ResourceUri,
 
   override def deployments: Iterable[(ResourceUri, ResourceUri)] = tables.deploymentDeclTable.keys
 
-  override def deployment(nodePairUri: (ResourceUri, ResourceUri)): DeploymentDecl = tables.deploymentDeclTable(nodePairUri)
+  override def deployment(nodePairUri: (ResourceUri, ResourceUri)): DeploymentDecl =
+    tables.deploymentDeclTable(nodePairUri)
 
   def connectionTable(connUri: ResourceUri): ConnectionTable = {
     tables.connectionSymbolTabel(connUri)
@@ -214,34 +222,36 @@ class CompSTProducer(val compUri: ResourceUri,
 
   override def transition(transUri: ResourceUri): TransExpr = tables.transitionTable(transUri)
 
-  override def addFlow(flowUri: ResourceUri,
-                       fromPortUri: Option[ResourceUri],
-                       toPortUri: Option[ResourceUri],
-                       fromFaults: Set[ResourceUri],
-                       toFaults: Set[ResourceUri]): Unit = {
+  override def addFlow(
+    flowUri: ResourceUri,
+    fromPortUri: Option[ResourceUri],
+    toPortUri: Option[ResourceUri],
+    fromFaults: Set[ResourceUri],
+    toFaults: Set[ResourceUri]
+  ): Unit = {
     if (!flows.toSet.contains(flowUri)) {
       val fdt = FlowTableData(flowUri, fromPortUri, toPortUri, fromFaults, toFaults)
       tables.flowTable(flowUri) = fdt
 
       if (fromPortUri.isDefined) {
-        tables.portFlowRelation.getOrElseUpdate(flowUri, msetEmpty[ResourceUri]) +=fromPortUri.get
+        tables.portFlowRelation.getOrElseUpdate(flowUri, msetEmpty[ResourceUri]) += fromPortUri.get
         tables.flowPortRelation.getOrElseUpdate(fromPortUri.get, msetEmpty[ResourceUri]) += flowUri
       }
 
       if (toPortUri.isDefined) {
-        tables.portFlowRelation.getOrElseUpdate(flowUri, msetEmpty[ResourceUri]) +=  toPortUri.get
+        tables.portFlowRelation.getOrElseUpdate(flowUri, msetEmpty[ResourceUri]) += toPortUri.get
         tables.flowPortRelation.getOrElseUpdate(toPortUri.get, msetEmpty[ResourceUri]) += flowUri
       }
     }
   }
 }
 
-sealed case class FlowTableData
-(flowUri: ResourceUri,
- fromPortUri: Option[ResourceUri],
- toPortUri: Option[ResourceUri],
- fromFaults: Set[ResourceUri],
- toFaults: Set[ResourceUri]
+sealed case class FlowTableData(
+  flowUri: ResourceUri,
+  fromPortUri: Option[ResourceUri],
+  toPortUri: Option[ResourceUri],
+  fromFaults: Set[ResourceUri],
+  toFaults: Set[ResourceUri]
 ) {
   override def toString: String = {
     val H = SymbolTableHelper

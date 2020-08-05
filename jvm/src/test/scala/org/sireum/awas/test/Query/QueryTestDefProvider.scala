@@ -34,7 +34,7 @@ import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.query.{QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils._
-import org.sireum.message.Reporter
+import org.sireum.message.{Reporter, ReporterImpl}
 import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util._
 import org.sireum.util.jvm.FileUtil._
@@ -89,7 +89,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     Builder(Some(relativeUri.toString), model) match {
       case None => "Failed to build the model"
       case Some(m) =>
-        implicit val reporter: Reporter = new Reporter(org.sireum.ISZ())
+        implicit val reporter: Reporter = new ReporterImpl(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
         val graph = FlowGraph(m, st, true)
         QueryParser(query, reporter) match {

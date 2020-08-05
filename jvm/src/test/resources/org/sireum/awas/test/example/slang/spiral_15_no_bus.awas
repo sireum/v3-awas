@@ -1,0 +1,245 @@
+types
+  enum PCA_Error {SecurityError, message_leak, message_leak_MitM, unlikely_leak, authenticity_error, message_commission, message_omission, message_replay, unlikely_commission, message_corruption, unlikely_corruption}
+
+  enum SSCATE_Errors {start_commission, start_omission, stop_commission, stop_omission, SpO2_ValueError, SpO2_Omission}
+
+  enum ErrorLibrary {ServiceError, ItemOmission, ServiceOmission, SequenceOmission, TransientServiceOmission, LateServiceStart, EarlyServiceTermination, BoundedOmissionInterval, ItemCommission, ServiceCommission, SequenceCommission, EarlyServiceStart, LateServiceTermination, ItemTimingError, EarlyDelivery, LateDelivery, SequenceTimingError, HighRate, LowRate, RateJitter, ServiceTimingError, DelayedService, EarlyService, TimingError, RateError, EarlyData, LateData, ServiceTimeShift, ItemValueError, UndetectableValueError, DetectableValueError, OutOfRange, BelowRange, AboveRange, OutOfBounds, SequenceValueError, BoundedValueChange, StuckValue, OutOfOrder, ServiceValueError, OutOfCalibration, ValueError, IncorrectValue, ValueCorruption, BadValue, SequenceError, SubtleValueError, BenignValueError, SubtleValueCorruption, ReplicationError, AsymmetricReplicatesError, AsymmetricValue, AsymmetricApproximateValue, AsymmetricExactValue, AsymmetricTiming, AsymmetricOmission, AsymmetricItemOmission, AsymmetricServiceOmission, SymmetricReplicatesError, SymmetricValue, SymmetricApproximateValue, SymmetricExactValue, SymmetricTiming, SymmetricOmission, SymmetricItemOmission, SymmetricServiceOmission, InconsistentValue, InconsistentTiming, InconsistentOmission, InconsistentItemOmission, InconsistentServiceOmission, AsymmetricTransmissive, ConcurrencyError, RaceCondition, ReadWriteRace, WriteWriteRace, MutExError, Deadlock, Starvation}
+
+system  PCA_PulseOx_secure_Instance
+
+    sub-components {
+      App
+        with PCA_Error, SSCATE_Errors
+          ports
+            in SpO2
+            out command
+          propagations
+            SpO2 = {SpO2_Omission, unlikely_commission, SpO2_ValueError, unlikely_corruption}
+            command = {start_commission, start_omission, stop_omission, SecurityError, stop_commission}
+          flows
+            Check_Status : SpO2 -> command
+            inappropriate_ticket_provided : SpO2{SpO2_ValueError, unlikely_commission, unlikely_corruption} -> command{stop_commission, stop_omission, start_commission, start_omission}
+            no_spo2 : SpO2{SpO2_Omission} -> command{stop_omission, start_omission}
+            comm_plaintext : * -> command{SecurityError}
+            stop_fault : * -> command{stop_omission, stop_commission}
+
+      PCA_Pump
+        with PCA_Error, SSCATE_Errors, ErrorLibrary
+          ports
+            out IV_infuse
+            in control
+          propagations
+            control = {unlikely_commission, start_commission, start_omission, stop_omission, unlikely_corruption, stop_commission}
+            IV_infuse = {LateServiceTermination, EarlyServiceStart, EarlyServiceTermination, LateServiceStart}
+          flows
+            missed_stop : control{stop_omission} -> IV_infuse{LateServiceTermination}
+            incorrect_start : control{start_commission} -> IV_infuse{EarlyServiceStart, LateServiceStart}
+            adversary_actions : control{unlikely_commission, unlikely_corruption} -> IV_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart}
+            missing_start : control{start_omission} -> IV_infuse{LateServiceStart}
+            unexpected_stop : control{stop_commission} -> IV_infuse{EarlyServiceTermination, LateServiceStart}
+
+      Patient
+        with PCA_Error, SSCATE_Errors, ErrorLibrary
+          ports
+            in Vein_infuse
+            out BloodSat_Saturation
+          propagations
+            Vein_infuse = {LateServiceTermination, EarlyServiceStart, EarlyServiceTermination, LateServiceStart}
+          flows
+            accident : Vein_infuse{EarlyServiceTermination, LateServiceTermination, EarlyServiceStart, LateServiceStart} -> *
+
+      PulseOx
+        with PCA_Error, SSCATE_Errors
+          ports
+            in FingerClip_Saturation
+            out SpO2
+          propagations
+            SpO2 = {SpO2_Omission, SpO2_ValueError, SecurityError}
+          flows
+            numerical_failure : * -> SpO2{SpO2_ValueError}
+            disloged_sensor : * -> SpO2{SpO2_Omission}
+            communicating_out : * -> SpO2{SecurityError}
+
+      decrypt_command
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {unlikely_commission, start_commission, start_omission, stop_omission, unlikely_corruption, stop_commission}
+            interface_OUT = {unlikely_commission, start_commission, start_omission, stop_omission, unlikely_corruption, stop_commission}
+          flows
+            transmission_stop_omission : interface_IN{stop_omission} -> interface_OUT{stop_omission}
+            transmission_start_commission : interface_IN{start_commission} -> interface_OUT{start_commission}
+            transmission_stop_commission : interface_IN{stop_commission} -> interface_OUT{stop_commission}
+            transmission_corruption : interface_IN{unlikely_corruption} -> interface_OUT{unlikely_corruption}
+            transmission_commission : interface_IN{unlikely_commission} -> interface_OUT{unlikely_commission}
+            transmission_start_omission : interface_IN{start_omission} -> interface_OUT{start_omission}
+
+      decrypt_spo2
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {SpO2_Omission, unlikely_commission, SpO2_ValueError, unlikely_corruption}
+            interface_OUT = {SpO2_Omission, unlikely_commission, SpO2_ValueError, unlikely_corruption}
+          flows
+            transmission_value : interface_IN{SpO2_ValueError} -> interface_OUT{SpO2_ValueError}
+            transmission_omission : interface_IN{SpO2_Omission} -> interface_OUT{SpO2_Omission}
+            transmission_commission : interface_IN{unlikely_commission} -> interface_OUT{unlikely_commission}
+            transmission_corruption : interface_IN{unlikely_corruption} -> interface_OUT{unlikely_corruption}
+
+      encrypt_command
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {start_commission, start_omission, stop_omission, SecurityError, stop_commission}
+            interface_OUT = {message_leak_MitM, start_commission, start_omission, unlikely_leak, stop_omission, stop_commission}
+          flows
+            transmission_stop_omission : interface_IN{stop_omission} -> interface_OUT{stop_omission}
+            encrypt_cmd : interface_IN{SecurityError} -> interface_OUT{unlikely_leak, message_leak_MitM}
+            transmission_start_commission : interface_IN{start_commission} -> interface_OUT{start_commission}
+            transmission_stop_commission : interface_IN{stop_commission} -> interface_OUT{stop_commission}
+            transmission_start_omission : interface_IN{start_omission} -> interface_OUT{start_omission}
+
+      encrypt_spo2
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {SpO2_Omission, SpO2_ValueError, SecurityError}
+            interface_OUT = {message_leak_MitM, SpO2_Omission, SpO2_ValueError, unlikely_leak}
+          flows
+            encrypt : interface_IN{SecurityError} -> interface_OUT{unlikely_leak, message_leak_MitM}
+            transmission_value : interface_IN{SpO2_ValueError} -> interface_OUT{SpO2_ValueError}
+            transmission_omission : interface_IN{SpO2_Omission} -> interface_OUT{SpO2_Omission}
+
+      sign_command
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {message_leak_MitM, start_commission, start_omission, unlikely_leak, stop_omission, stop_commission}
+            interface_OUT = {start_commission, start_omission, unlikely_leak, stop_omission, stop_commission}
+          flows
+            transmission_stop_omission : interface_IN{stop_omission} -> interface_OUT{stop_omission}
+            encrypt_sign : interface_IN{message_leak_MitM} -> interface_OUT{unlikely_leak}
+            transmission_start_commission : interface_IN{start_commission} -> interface_OUT{start_commission}
+            transmission_stop_commission : interface_IN{stop_commission} -> interface_OUT{stop_commission}
+            transmission_unlikely : interface_IN{unlikely_leak} -> interface_OUT{unlikely_leak}
+            transmission_start_omission : interface_IN{start_omission} -> interface_OUT{start_omission}
+
+      sign_spo2
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {message_leak_MitM, SpO2_Omission, SpO2_ValueError, unlikely_leak}
+            interface_OUT = {SpO2_Omission, SpO2_ValueError, unlikely_leak}
+          flows
+            encrypt_sign : interface_IN{message_leak_MitM} -> interface_OUT{unlikely_leak}
+            transmission_unlikely : interface_IN{unlikely_leak} -> interface_OUT{unlikely_leak}
+            transmission_value : interface_IN{SpO2_ValueError} -> interface_OUT{SpO2_ValueError}
+            transmission_omission : interface_IN{SpO2_Omission} -> interface_OUT{SpO2_Omission}
+
+      verify_command
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {message_replay, message_corruption, start_commission, message_commission, start_omission, stop_omission, message_omission, stop_commission}
+            interface_OUT = {unlikely_commission, start_commission, start_omission, stop_omission, unlikely_corruption, stop_commission}
+          flows
+            modifying : interface_IN{message_corruption} -> interface_OUT{stop_omission, start_omission, unlikely_corruption}
+            transmission_stop_omission : interface_IN{stop_omission} -> interface_OUT{stop_omission}
+            denial : interface_IN{message_omission} -> interface_OUT{stop_omission, start_omission}
+            replay_attack : interface_IN{message_replay} -> interface_OUT{stop_omission, start_omission}
+            transmission_start_commission : interface_IN{start_commission} -> interface_OUT{start_commission}
+            transmission_stop_commission : interface_IN{stop_commission} -> interface_OUT{stop_commission}
+            fabrication : interface_IN{message_commission} -> interface_OUT{unlikely_commission, stop_omission, start_omission}
+            transmission_start_omission : interface_IN{start_omission} -> interface_OUT{start_omission}
+
+      verify_spo2
+        with PCA_Error, SSCATE_Errors
+          ports
+            in interface_IN
+            out interface_OUT
+          propagations
+            interface_IN = {SpO2_Omission, message_replay, message_corruption, message_commission, SpO2_ValueError, message_omission}
+            interface_OUT = {SpO2_Omission, unlikely_commission, SpO2_ValueError, unlikely_corruption}
+          flows
+            transmission_value : interface_IN{SpO2_ValueError} -> interface_OUT{SpO2_ValueError}
+            replay_attack : interface_IN{message_replay} -> interface_OUT{SpO2_Omission}
+            fabrication : interface_IN{message_commission} -> interface_OUT{unlikely_commission, SpO2_Omission}
+            modifying : interface_IN{message_corruption} -> interface_OUT{SpO2_Omission, unlikely_corruption}
+            denial : interface_IN{message_omission} -> interface_OUT{SpO2_Omission}
+            transmission_omission : interface_IN{SpO2_Omission} -> interface_OUT{SpO2_Omission}
+
+      wifi_secure_command
+        with PCA_Error, SSCATE_Errors
+          ports
+            in in_interface
+            out out_interface
+          propagations
+            in_interface = {start_commission, start_omission, unlikely_leak, stop_omission, stop_commission}
+            out_interface = {message_replay, message_corruption, start_commission, message_commission, start_omission, stop_omission, message_omission, stop_commission}
+          flows
+            transmission_stop_commission : in_interface{stop_commission} -> out_interface{stop_commission}
+            transmission_start_commission : in_interface{start_commission} -> out_interface{start_commission}
+            spoof_message : * -> out_interface{message_commission, message_omission, message_replay, message_corruption}
+            transmission_wifi : in_interface -> out_interface
+            accessable : in_interface{unlikely_leak} -> *
+            transmission_start_omission : in_interface{start_omission} -> out_interface{start_omission}
+            transmission_stop_omission : in_interface{stop_omission} -> out_interface{stop_omission}
+
+      wifi_secure_spo2
+        with PCA_Error, SSCATE_Errors
+          ports
+            in in_interface
+            out out_interface
+          propagations
+            in_interface = {SpO2_Omission, SpO2_ValueError, unlikely_leak}
+            out_interface = {SpO2_Omission, message_replay, message_corruption, message_commission, SpO2_ValueError, message_omission}
+          flows
+            transmission_value : in_interface{SpO2_ValueError} -> out_interface{SpO2_ValueError}
+            transmission_omission : in_interface{SpO2_Omission} -> out_interface{SpO2_Omission}
+            transmission_wifi : in_interface -> out_interface
+            accessable : in_interface{unlikely_leak} -> *
+            modify_replay : in_interface{unlikely_leak} -> out_interface{message_replay, message_corruption}
+            fabricate_drop : * -> out_interface{message_commission, message_omission}
+    }
+    connections
+      spo2 : PulseOx.SpO2 -> encrypt_spo2.interface_IN
+
+      protocol_spo2lvl1_s : encrypt_spo2.interface_OUT -> sign_spo2.interface_IN
+
+      protocol_spo2lvl2_s : sign_spo2.interface_OUT -> wifi_secure_spo2.in_interface
+
+      wifi_spo2 : wifi_secure_spo2.out_interface -> verify_spo2.interface_IN
+
+      protocol_spo2lvl2_r : verify_spo2.interface_OUT -> decrypt_spo2.interface_IN
+
+      protocol_spo2lvl1_r : decrypt_spo2.interface_OUT -> App.SpO2
+
+      protocol_commandlvl1_s : encrypt_command.interface_OUT -> sign_command.interface_IN
+
+      protocol_commandlvl2_s : sign_command.interface_OUT -> wifi_secure_command.in_interface
+
+      wifi_command : wifi_secure_command.out_interface -> verify_command.interface_IN
+
+      protocol_commandlvl2_r : verify_command.interface_OUT -> decrypt_command.interface_IN
+
+      protocol_commandlvl1_r : decrypt_command.interface_OUT -> PCA_Pump.control
+
+      administer_secure : PCA_Pump.IV_infuse -> Patient.Vein_infuse
+
+      read : Patient.BloodSat_Saturation -> PulseOx.FingerClip_Saturation
+
+      activate_app : App.command -> encrypt_command.interface_IN

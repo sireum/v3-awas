@@ -516,20 +516,20 @@ def computeSimplePaths(
         )(_.union(_))
 
         nexts.ports.foreach { np =>
-          if (!currentPath.contains(np) && simpleReach.getPorts.contains(np)) {
+          if ((!currentPath.contains(np)) && simpleReach.getPorts.contains(np)) {
             if (isRefined) {
               val currParent = Resource.getParentUri(currPort)
               val nextParent = Resource.getParentUri(np)
               if (currParent.isDefined &&
                 nextParent.isDefined &&
                 currParent.get == nextParent.get) {
-                  if (FlowNode.getNode(currParent.get).isDefined &&
-                    FlowNode.getNode(currParent.get).get.getSubGraph.isEmpty) {
-                      workList = workList :+ (currentPath + np)
-                    }
-                } else {
+                if (FlowNode.getNode(currParent.get).isDefined &&
+                  FlowNode.getNode(currParent.get).get.getSubGraph.isEmpty) {
                   workList = workList :+ (currentPath + np)
                 }
+              } else {
+                workList = workList :+ (currentPath + np)
+              }
             } else {
               workList = workList :+ (currentPath + np)
             }

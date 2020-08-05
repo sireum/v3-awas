@@ -42,6 +42,7 @@ import org.sireum.awas.symbol.SymbolTableHelper;
 import org.sireum.awas.util.AwasJvmUtil;
 import org.sireum.message.Message;
 import org.sireum.message.Reporter;
+import org.sireum.message.Reporter$;
 import scala.Tuple2;
 import scala.collection.immutable.ListMap;
 
@@ -167,11 +168,11 @@ public class AwasGraphImpl implements AwasGraph {
     public Map<String, Collector> queryEvaluator(String query) throws Exception {
         List<Message> jl = new ArrayList<Message>();
         final IS<Z, Message> isz = AwasJvmUtil.isz(jl);
-        Reporter reporter = new Reporter(isz);
+        //Reporter reporter = Reporter$.MODULE$.apply(isz);
 
         final Tuple2<ListMap<String, org.sireum.awas.collector.Collector>, Reporter> queryRes = new QueryInter(st).evalCmd(query);
         if (queryRes._2.hasError()) {
-            Exception e = new Exception(queryRes._2.getMessages().elements().mkString("\n"));
+            Exception e = new Exception(queryRes._2.messages().elements().mkString("\n"));
             throw e;
         } else {
             return toJavaMap(queryRes._1).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> {

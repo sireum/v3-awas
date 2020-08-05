@@ -30,7 +30,7 @@ package facades
 import org.scalajs.dom.{Element, Node}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSGlobal, ScalaJSDefined}
+import scala.scalajs.js.annotation.{JSGlobal}
 
 //
 //import org.scalajs.dom.{Blob, Node}

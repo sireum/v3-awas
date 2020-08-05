@@ -29,27 +29,31 @@ package org.sireum.awas.query
 
 import org.sireum.awas.collector.Collector
 import org.sireum.awas.symbol.SymbolTable
-import org.sireum.message.{Position, Reporter}
+import org.sireum.message.{Position, Reporter, ReporterImpl}
 import org.sireum.util._
 
 class QueryInter(st: SymbolTable) {
   var result = ilinkedMapEmpty[String, Collector]
   var queries = ilinkedMapEmpty[String, String]
-  private var reporter: Reporter = new Reporter(org.sireum.ISZ())
+  private var reporter: Reporter = new ReporterImpl(org.sireum.ISZ())
   val qe = new QueryEval(st)
 
   def evalCmd(cmd: String): (QueryEval.Result, Reporter) = {
-    reporter = new Reporter(org.sireum.ISZ())
+    reporter = new ReporterImpl(org.sireum.ISZ())
     try {
       QueryParser(cmd, reporter) match {
         case Some(m) => {
 //          result.foreach(it => println(it._1))
-          if(m.queryStmt.forall(qs => qs.qName.value == st.systemDecl.compName.value)) {
-            reporter.error(org.sireum.None[Position],
+          if (m.queryStmt.forall(qs => qs.qName.value == st.systemDecl.compName.value)) {
+            reporter.error(
+              org.sireum.None[Position],
               org.sireum.String("Parse Error"),
-              org.sireum.String("Query name "+
-                m.queryStmt.find(qs => qs.qName.value == st.systemDecl.compName.value).get.qName.value
-                +" cannot be equal to system name"))
+              org.sireum.String(
+                "Query name " +
+                  m.queryStmt.find(qs => qs.qName.value == st.systemDecl.compName.value).get.qName.value
+                  + " cannot be equal to system name"
+              )
+            )
           } else {
             result = result ++ qe.eval(m, result)
             m.queryStmt.foreach(it => queries = queries + (QueryPPrinter(it.qName) -> QueryPPrinter(it.qExpr)))
@@ -59,7 +63,7 @@ class QueryInter(st: SymbolTable) {
         case None => (result, reporter)
       }
     } catch {
-      case e : Throwable => {
+      case e: Throwable => {
         e.printStackTrace()
         reporter.error(org.sireum.None[Position], "Exception", e.getMessage)
         (result, reporter)
@@ -68,7 +72,7 @@ class QueryInter(st: SymbolTable) {
   }
 
   def evalQueryFile(queryIns: String): (QueryEval.Result, Reporter) = {
-    reporter = new Reporter(org.sireum.ISZ())
+    reporter = new ReporterImpl(org.sireum.ISZ())
     QueryParser(queryIns, reporter) match {
       case Some(m) => {
         result = result ++ qe.eval(m)

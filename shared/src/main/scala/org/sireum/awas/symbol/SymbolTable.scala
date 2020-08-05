@@ -276,16 +276,16 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
   }
 
   override def forwardDeployment(uri: ResourceUri): ISet[ResourceUri] = {
-    if(tables.forwardDeployment.isEmpty) {
-      tables.forwardDeployment ++= componentTable(this.system).deployments.groupBy(_._1).mapValues(_.map(_._2).toSet)
-    }
+//    if(tables.forwardDeployment.isEmpty) {
+//      tables.forwardDeployment ++= componentTable(this.system).deployments.groupBy(_._1).mapValues(_.map(_._2).toSet)
+//    }
     tables.forwardDeployment.getOrElse(uri, isetEmpty)
   }
 
   override def backwardDeployment(uri: ResourceUri): ISet[ResourceUri] = {
-    if(tables.backwardDeployment.isEmpty) {
-      tables.backwardDeployment ++= componentTable(this.system).deployments.map(x => (x._2, x._1)).groupBy(_._1).mapValues(_.map(_._2).toSet)
-    }
+//    if(tables.backwardDeployment.isEmpty) {
+//      tables.backwardDeployment ++= componentTable(this.system).deployments.map(x => (x._2, x._1)).groupBy(_._1).mapValues(_.map(_._2).toSet)
+//    }
       tables.backwardDeployment.getOrElse(uri, isetEmpty)
   }
 

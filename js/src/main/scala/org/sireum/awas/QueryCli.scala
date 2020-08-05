@@ -26,7 +26,7 @@
 
 package org.sireum.awas
 
-import facades.{Container, FileSaver, GoldenLayout, Terminal}
+import facades.{Container, FileSaver, GLUtil, GoldenLayout, Terminal}
 import org.scalajs.dom
 import org.scalajs.dom.ext._
 import org.scalajs.dom.html.{Div, Input, Label}
@@ -64,31 +64,31 @@ object QueryCli {
         if (si.isDefined) si.get.setActiveContentItem(ci)
       } else {
         if (!cliRegistered) {
-          gl.get.registerComponent("cli", {
-            (container: Container, componentState: js.Dictionary[scalajs.js.Any]) =>
-              {
-                val termDom = //style := "display:block;width:100%;height:100%",
-                  div(id := "QueryCli", style := "display:block;width:100%;height:100%").render
-                container.getElement().append(termDom)
-                container.on("resize", { () =>
+          def qcli(container: Container, componentState: js.Dictionary[scalajs.js.Any]): js.Any = {
+            val termDom = //style := "display:block;width:100%;height:100%",
+              div(id := "QueryCli", style := "display:block;width:100%;height:100%").render
+            container.getElement().append(termDom)
+            container.on(
+              "resize", { () =>
+                {
+                  if (queryLayout.isDefined) {
+                    queryLayout.get.updateSize(scalajs.js.undefined, scalajs.js.undefined)
+                  }
+                }
+                container.on("close", { () =>
                   {
                     if (queryLayout.isDefined) {
-                      queryLayout.get.updateSize(scalajs.js.undefined, scalajs.js.undefined)
+                      queryLayout.get.destroy()
                     }
+                    container.close()
                   }
-                  container.on("close", { () =>
-                    {
-                      if (queryLayout.isDefined) {
-                        queryLayout.get.destroy()
-                      }
-                      container.close()
-                    }
-                  })
+                })
 
-                }: js.Function)
+              }: js.Function
+            )
 
-              }
-          }: js.Function)
+          }
+          gl.get.registerComponent("cli", GLUtil.componentFactory(qcli))
           cliRegistered = true
         }
 
@@ -106,23 +106,20 @@ object QueryCli {
           }
         }
 
-        queryLayout.get.registerComponent("query_table", {
-          (container: Container, componentState: js.Dictionary[scalajs.js.Any]) =>
-            {
-              container.getElement().append(qBox)
-            }
-        }: js.Function)
-        queryLayout.get.registerComponent(
-          "query_cli", { (container: Container, componentState: js.Dictionary[scalajs.js.Any]) =>
-            {
-              container
-                .getElement()
-                .append(
-                  span(overflow := "auto", style := "display:block;width:100%;height:100%", div(id := "term1")).render
-                )
-            }
-          }: js.Function
-        )
+        def qtab(container: Container, componentState: js.Dictionary[scalajs.js.Any]): js.Any = {
+          container.getElement().append(qBox)
+        }
+
+        queryLayout.get.registerComponent("query_table", GLUtil.componentFactory(qtab))
+
+        def qcli(container: Container, componentState: js.Dictionary[scalajs.js.Any]) = {
+          container
+            .getElement()
+            .append(
+              span(overflow := "auto", style := "display:block;width:100%;height:100%", div(id := "term1")).render
+            )
+        }
+        queryLayout.get.registerComponent("query_cli", GLUtil.componentFactory(qcli))
         queryLayout.get.init()
         openCliTab(st: SymbolTable)
 

@@ -27,7 +27,7 @@
 package org.sireum.awas
 
 import facades._
-import org.scalajs.dom.html.{Anchor, Div, Table, TableDataCell, TableRow}
+import org.scalajs.dom.html.{Anchor, Div, Table, TableCell, TableRow}
 import org.scalajs.dom.raw.{SVGAElement, SVGElement, SVGPolygonElement}
 import org.scalajs.dom.svg.Defs
 import org.scalajs.dom.{raw => _, _}
@@ -60,13 +60,11 @@ object SecViolations {
         if (si.isDefined) si.get.setActiveContentItem(vi)
       } else {
         if (!violationsRegistered) {
-          gl.get.registerComponent("violation", {
-            (container: Container, componentState: js.Dictionary[scalajs.js.Any]) =>
-              {
-                val termDom = div(id := "violations-window", style := "display:block;width:100%;height:100%").render
-                container.getElement().append(termDom)
-              }
-          }: js.Function)
+          def comp(container: Container, componentState: js.Dictionary[scalajs.js.Any]): js.Any = {
+            val termDom = div(id := "violations-window", style := "display:block;width:100%;height:100%").render
+            container.getElement().append(termDom)
+          }
+          gl.get.registerComponent("violation", GLUtil.componentFactory(comp))
           violationsRegistered = true
         }
         gl.get.root.contentItems(0).addChild(Views.violationsConfig())
@@ -91,11 +89,11 @@ object SecViolations {
             highlight(collectorToUris(apply().getSecInfoFlow.getViolatingPaths()(vp)), "#78c0a8")
           }
 
-          val td1 = render[TableDataCell](td(verticalAlign := "middle", paddingLeft := "10"))
+          val td1 = render[TableCell](td(verticalAlign := "middle", paddingLeft := "10"))
 
           td1.appendChild(violationButton)
 
-          val td2 = render[TableDataCell](td(verticalAlign := "middle", span(vp)))
+          val td2 = render[TableCell](td(verticalAlign := "middle", span(vp)))
 
           val tr = JSutil.create[TableRow]("tr")
           tr.appendChild(td1)
@@ -165,7 +163,9 @@ class SecViolationsImpl() extends SecViolations {
     .getProvidedSecType()
     .values
     .toSet
-    .map { pc: ResourceUri => (pc, typeColor(pc)) }
+    .map { pc: ResourceUri =>
+      (pc, typeColor(pc))
+    }
     .toMap
 
   private val violationColor: IMap[ResourceUri, String] = secInfoFlow
@@ -209,8 +209,7 @@ class SecViolationsImpl() extends SecViolations {
     } else {
       val g = secInfoFlow.getLattice().getDot
       println(g)
-      val svg = templateContent(raw(GraphViz.Viz(g)))
-        .querySelectorAll("svg")(0).asInstanceOf[SVGElement]
+      val svg = templateContent(raw(GraphViz.Viz(g))).querySelectorAll("svg")(0).asInstanceOf[SVGElement]
 
       //getColorDefs("lattice").foreach(defs => svg.appendChild(defs))
 

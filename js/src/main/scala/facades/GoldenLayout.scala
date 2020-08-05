@@ -34,25 +34,34 @@ import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.scalajs.js.annotation.JSGlobal
 
-
 @js.native
 @JSGlobal
-class GoldenLayout(configuration: js.Dictionary[js.Any],
-                   container: JQuery) extends js.Object {
-  var isInitialised : Boolean = js.native
-  var root : ContentItem = js.native
+class GoldenLayout(configuration: js.Dictionary[js.Any], container: JQuery) extends js.Object {
+  var isInitialised: Boolean = js.native
+  var root: ContentItem = js.native
   var eventHub: EventEmitter = js.native
   //var container : JQuery = js.native
 
-
   def selectItem(contentItem: ContentItem): Nothing = js.native
-  def registerComponent(name : String, component: js.Function): Nothing = js.native
+
+  def registerComponent(name: String, component: js.Dynamic): Nothing =
+    js.native
   def init(): Nothing = js.native
-  def updateSize(width: UndefOr[Int], height: UndefOr[Int]) : Nothing = js.native
-  def on(event : String, callBack: js.Function): Nothing = js.native
+  def updateSize(width: UndefOr[Int], height: UndefOr[Int]): Nothing = js.native
+  def on(event: String, callBack: js.Function): Nothing = js.native
   def destroy(): Nothing = js.native
   def toConfig(): scalajs.js.Dictionary[js.Any] = js.native
   def getComponent(name: String): js.Dynamic = js.native
+}
+
+object GLUtil {
+
+  def componentFactory(comp: (Container, js.Dictionary[scalajs.js.Any]) => js.Any): js.Dynamic = {
+    class Component(container: Container, componentState: js.Dictionary[scalajs.js.Any]) extends js.Object {
+      comp(container, componentState)
+    }
+    js.constructorOf[Component]
+  }
 }
 
 @js.native
@@ -85,7 +94,7 @@ trait ContentItem extends js.Object {
 
   def setActiveContentItem(contentItem: ContentItem): js.Dynamic = js.native
 
-  def setSize(width : Int, height: Int) : Nothing = js.native
+  def setSize(width: Int, height: Int): Nothing = js.native
 
   def setTitle(title: String): Nothing = js.native
 
@@ -104,7 +113,7 @@ trait ContentItem extends js.Object {
 
 @js.native
 trait Container extends js.Object {
-  def getElement(): JQuery= js.native
+  def getElement(): JQuery = js.native
 
   def on(event: String, callBack: js.Function): js.UndefOr[Nothing] = js.native
 

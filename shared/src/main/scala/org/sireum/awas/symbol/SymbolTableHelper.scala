@@ -27,11 +27,11 @@
 
 package org.sireum.awas.symbol
 
+import org.sireum.awas.ast.Node
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
 
 object SymbolTableHelper {
-
 
   //TODO: In future if we are supporting models defined in more than one file
   //      use the below defined map to record the dependency between files
@@ -135,6 +135,10 @@ object SymbolTableHelper {
     t.isDefined && isFlow(t.get)
   }
 
+  def isVirtual(uri: ResourceUri): Boolean = {
+    getUriType(uri).split("-").last == VIRTUAL_PORT_TYPE
+  }
+
   //dot separated canonical resource name, TODO: rewrite later with the model name
   def getUriFromString(st: SymbolTable, completeName: String): Option[ResourceUri] = {
     val cmlist = completeName.split('.')
@@ -194,8 +198,7 @@ object SymbolTableHelper {
   }
 
   //TODO: Add connection virtual port to st during symbol mining
-  def getPortId(st: SymbolTable, elemUri: ResourceUri, portUri: ResourceUri)
-  : Option[String] = {
+  def getPortId(st: SymbolTable, elemUri: ResourceUri, portUri: ResourceUri): Option[String] = {
     if (elemUri.startsWith(CONNECTION_TYPE)) {
       Some(portUri.split(ID_SEPARATOR).last)
     } else {
@@ -232,7 +235,7 @@ object SymbolTableHelper {
       name.tail.foreach { id =>
         if (interUri.isDefined &&
           (interUri.get.startsWith(COMPONENT_TYPE) ||
-            interUri.get.startsWith(CONNECTION_TYPE))) {
+          interUri.get.startsWith(CONNECTION_TYPE))) {
           if (interUri.get.startsWith(COMPONENT_TYPE)) {
             interUri = st.componentTable(interUri.get).getUriFromSymbol(id)
           } else {
@@ -295,8 +298,7 @@ object SymbolTableHelper {
     result
   }
 
-  def sortCompLevelOrder(st: SymbolTable, components: ISeq[ResourceUri])
-  : ISeq[ResourceUri] = {
+  def sortCompLevelOrder(st: SymbolTable, components: ISeq[ResourceUri]): ISeq[ResourceUri] = {
     var result = ilistEmpty[ResourceUri]
     if (components.forall(c => getUriType(c) == COMPONENT_TYPE)) {
       result = getComponentsLevelOrder(st).toList
@@ -306,5 +308,20 @@ object SymbolTableHelper {
     }
   }
 
+  def uri2Node(uri: ResourceUri, st: SymbolTable): Option[Node] = {
+    val uriType = getUriType(uri)
+    uriType match {
+      case COMPONENT_TYPE => Some(st.componentTable(uri).componentDecl)
+      case CONNECTION_TYPE => Resource.getParentUri(uri).map(it => st.componentTable(it).connection(uri))
+      case PORT_IN_TYPE => Resource.getParentUri(uri).flatMap(it => st.componentTable(it).port(uri))
+      case PORT_OUT_TYPE => Resource.getParentUri(uri).flatMap(it => st.componentTable(it).port(uri))
+      case FLOW_TYPE =>
+        Resource
+          .getParentUri(uri)
+          .filter(u => getUriType(u) == COMPONENT_TYPE)
+          .flatMap(it => st.componentTable(it).flowDecl(uri))
+      case ERROR_TYPE => Resource.getParentUri(uri).map(it => st.typeTable(it).enumElement(uri))
+      case _ => None
+    }
+  }
 }
-

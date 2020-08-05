@@ -1,28 +1,28 @@
 /*
-*
-* Copyright (c) 2019, Robby, Kansas State University
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* 1. Redistributions of source code must retain the above copyright notice, this
-*    list of conditions and the following disclaimer.
-* 2. Redistributions in binary form must reproduce the above copyright notice,
-*    this list of conditions and the following disclaimer in the documentation
-*    and/or other materials provided with the distribution.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ *
+ * Copyright (c) 2019, Robby, Kansas State University
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 package org.sireum.awas.AliranAman
 
@@ -33,24 +33,25 @@ import org.sireum.awas.graph.{AwasEdge, SlangGraphImpl}
 import org.sireum.awas.reachability.PortReachability
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
-import org.sireum.message.{Position, Reporter}
+import org.sireum.message.{Position, Reporter, ReporterImpl}
 import org.sireum.util._
 import org.sireum.{$Slang, $internal, ISZ, ST}
 
 //plan :
 
 object SecInfoFlowAnalysis {
-  var st : Option[SymbolTable] = None
-  var res : Option[SecInfoFlowAnalysis] = None
+  var st: Option[SymbolTable] = None
+  var res: Option[SecInfoFlowAnalysis] = None
+
   def apply(): SecInfoFlowAnalysis = {
-    if(st.isDefined) {
-      if(st != SymbolTable.getTable) {
+    if (st.isDefined) {
+      if (st != SymbolTable.getTable) {
         st = SymbolTable.getTable
-        res = Some(new SecInfoFlowAnalysisImpl(st.get)(new Reporter(ISZ())))
+        res = Some(new SecInfoFlowAnalysisImpl(st.get)(new ReporterImpl(ISZ())))
       }
     } else {
       st = SymbolTable.getTable
-      res = Some(new SecInfoFlowAnalysisImpl(st.get)(new Reporter(ISZ())))
+      res = Some(new SecInfoFlowAnalysisImpl(st.get)(new ReporterImpl(ISZ())))
     }
     res.get
   }
@@ -199,7 +200,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
           forwardFrom = forwardFrom + curr
           seen = seen + curr
         } else {
-          val succ = if(H.isInPort(curr) && FlowNode.getNode(curr).isDefined) {
+          val succ = if (H.isInPort(curr) && FlowNode.getNode(curr).isDefined) {
             val curPortNode = FlowNode.getNode(curr).get
             curPortNode.getOwner.getSuccessorPorts(curr).ports
           } else pr.getSuccessor(curr)
@@ -215,9 +216,9 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
     val cacheRes = res
     //println(forwardFrom)
     if (forwardFrom.nonEmpty) {
-      var workList3 = ivectorEmpty[(ResourceUri, String)]++
+      var workList3 = ivectorEmpty[(ResourceUri, String)] ++
         forwardFrom.map(it => (it, res(it))) //++
-        //providedTypes
+      //providedTypes
 
       while (workList3.nonEmpty) {
         val curr = workList3.head
@@ -426,32 +427,34 @@ class LatticeImpl(st: SymbolTable, reporter: Reporter) extends Lattice with Latt
   private var graphAttributes = ivectorEmpty[ST] :+ st"""rankdir=BT"""
 
   private var toDot: () => String = () => {
-    val nST: ISZ[ST] = ISZ((for (e <- graph.nodes) yield st"""${nodeToDot(e)}""").toSeq.sortWith((lt1, lt2) =>
-      lt1.render < lt2.render): _*)
+    val nST: ISZ[ST] = ISZ(
+      (for (e <- graph.nodes) yield st"""${nodeToDot(e)}""").toSeq.sortWith((lt1, lt2) => lt1.render < lt2.render): _*
+    )
     val eST: ISZ[ST] =
-      ISZ[ST]((for (e <- graph.edges.toSeq) yield st""" "${e.source.id}" -> "${e.target.id}" """).sortWith((e1, e2) => e1.render < e2.render): _*)
+      ISZ[ST](
+        (for (e <- graph.edges.toSeq)
+          yield st""" "${e.source.id}" -> "${e.target.id}" """).sortWith((e1, e2) => e1.render < e2.render): _*
+      )
 
     val r =
       st"""digraph "Lattice" {
-          |
+      |
       |  ${(graphAttributes, "\n")}
-          |
+      |
       |  ${(nST, "\n")}
-          |
+      |
       |  ${(eST, "\n")}
-          |
+      |
       |}"""
     r.render.value
   }
 
   private var nodeToDot = (n: LNode) => {
-    st""" "${n.id}" [label="${
-      if (n.id != Lattice.TOP || n.id != Lattice.BOT) {
-        SymbolTableHelper.uri2IdString(n.id)
-      } else n.id
-    }" ${(if (n.id == Lattice.TOP) "rank=max" else if (n.id == Lattice.BOT) "rank=min" else "")} shape="box"] """
+    st""" "${n.id}" [label="${if (n.id != Lattice.TOP || n.id != Lattice.BOT) {
+      SymbolTableHelper.uri2IdString(n.id)
+    } else
+      n.id}" ${(if (n.id == Lattice.TOP) "rank=max" else if (n.id == Lattice.BOT) "rank=min" else "")} shape="box"] """
   }
-
 
   override def getDot: String = toDot()
 
@@ -550,7 +553,11 @@ class LatticeImpl(st: SymbolTable, reporter: Reporter) extends Lattice with Latt
       val otherSucc = graph.getSuccessorNodes(src) - tgt
       if (graph.forwardReach(otherSucc.toSet).contains(tgt)) {
 
-        reporter.error(org.sireum.None[Position], "Lattice Well-formedness Error", src.id + " is child of "+tgt.id+ " in more than one way")
+        reporter.error(
+          org.sireum.None[Position],
+          "Lattice Well-formedness Error",
+          src.id + " is child of " + tgt.id + " in more than one way"
+        )
         graph.removeEdge(src, tgt)
       }
     }
