@@ -948,13 +948,6 @@ Query Language Grammar
 Known Issues
 ************
 
-* Integration with the declarative model
-
-  - Solution in development:
-
-    1. Capturing the source location from the instance model into the Awas graphs
-       
-
 * High page load time: Currently, the graph rendering and the graph cycles are computed
   during the page load and when enabling or disabling the ``View
   binding edges``. Therefore, for a large model, this may take a while to compute
