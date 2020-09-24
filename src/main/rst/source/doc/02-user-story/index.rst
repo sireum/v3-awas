@@ -445,8 +445,47 @@ Query 2
    :align: center	   
    :width: 100%
    :alt: Backward from recv_status
-   
-   
+
+Forward and Backward Analysis in OSATE
+======================================
+
+Along with the visualizer, Awas is also integrated with the AADL
+instance diagram. OSATE can generate different kinds of AADL diagrams,
+among them instance diagram shows a specific composition of the
+components in the system. 
+
+
+.. raw:: html
+ 
+   The Awas plugin provides these icons <img src="../../_static/osate_awas_buttons.png" alt="Awas-icons"style="width:8%"> 
+   in the AADL diagram views. They correspond to the forward reachability, backward reachability and erase results. The user can 
+   select a component or port in the AADL instance diagram and on clicking the forward or backward reachability icon, the Awas 
+   computes the reachability and highlights it on the instance diagram. 
+
+.. image:: aadl_uas_awas.png
+   :align: center
+   :width: 100%
+   :alt: Awas result on AADL instance diagram
+
+The above image show the result of performing a forward reachability
+from the ``send_map`` port in the ``GND`` component. Awas computes
+port level reachiability and highlights the connections and ports that
+are reachabile form the ``send_map``.  AADL allows user to open the
+subcomponents by right clicking on the corresponding component and
+clicking show contents. 
+
+.. image:: aadl_uav_awas_full.png
+   :align: center
+   :width: 100%
+   :alt: Awas result on expanded AADL instance diagram
+
+AADL diagrams allows precise customizations of the diagram by hiding
+or showing to get only the interested parts of the system to be
+displayed. Similar to the forward reachability, bacaward reachability
+can be performed from any port or component in the instance diagram.
+The user can export the diagram along with the result of the
+reachability in to images to include it in other reports.
+
 Dependency Analysis Using Queries
 =================================
 

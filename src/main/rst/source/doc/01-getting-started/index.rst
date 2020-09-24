@@ -157,15 +157,15 @@ Building Sireum Awas Jar
      
      .. code:: bash
 	     
-	git clone --recursive https://github.com/sireum/v3.git
-	sireum-v3 git clone https://github.com:sireum/air.git sireum-v3/aadl/ir
+	git clone --recursive https://github.com/sireum/v3.git sireum-v3 
+        git clone https://github.com:sireum/air.git sireum-v3/aadl/ir
 	
    - Using SSH:
      
      .. code:: bash
 	     
-	git clone --recursive git@github.com:sireum/v3.git
-	sireum-v3 git clone git@github.com:sireum/air.git sireum-v3/aadl/ir
+	git clone --recursive git@github.com:sireum/v3.git sireum-v3 
+        git clone git@github.com:sireum/air.git sireum-v3/aadl/ir
 
 2. From the parent directory of ``sireum-v3`` from the previous
    step, clone the awas repository
