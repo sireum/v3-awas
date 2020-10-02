@@ -46,7 +46,7 @@ class QueryInter(st: SymbolTable) {
 //          result.foreach(it => println(it._1))
           if (m.queryStmt.forall(qs => qs.qName.value == st.systemDecl.compName.value)) {
             reporter.error(
-              org.sireum.None[Position],
+              org.sireum.None[Position](),
               org.sireum.String("Parse Error"),
               org.sireum.String(
                 "Query name " +
@@ -65,7 +65,7 @@ class QueryInter(st: SymbolTable) {
     } catch {
       case e: Throwable => {
         e.printStackTrace()
-        reporter.error(org.sireum.None[Position], "Exception", e.getMessage)
+        reporter.error(org.sireum.None[Position](), "Exception", e.getMessage)
         (result, reporter)
       }
     }

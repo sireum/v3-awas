@@ -37,7 +37,7 @@ object Resource {
 
   //TODO: Refactor this, to restrict the exposure of resourceInfo,
   // use of private is a temp fix
-  private[Resource] val resourceInfo = MIdMap[Node, Resource]
+  private[Resource] val resourceInfo = MIdMap[Node, Resource]()
 
   private[Resource] val resourceUri = mmapEmpty[String, Resource]
 
@@ -117,7 +117,7 @@ object Resource {
   }
 
   def reset(): Unit = {
-    resourceInfo.retain((_,_) => false)
+    resourceInfo.filterInPlace((_,_) => false)
     resourceUri.clear()
   }
 
@@ -202,7 +202,7 @@ trait Resource {
   def uri(uriType: String,
           paths: ISeq[String],
           uri: ResourceUri,
-          isDef: Boolean)
+          isDef: Boolean): Unit
 
   def toUri : ResourceUri
 

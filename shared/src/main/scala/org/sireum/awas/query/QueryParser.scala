@@ -34,6 +34,7 @@ import shapeless.HNil
 
 import scala.language.implicitConversions
 import scala.util.{Failure, Success}
+import scala.language.postfixOps
 
 class QueryParser(val input : ParserInput) extends Parser {
 
@@ -57,7 +58,7 @@ class QueryParser(val input : ParserInput) extends Parser {
   }
 
   def expr : Rule1[QueryExpr] = rule {
-    (&(!Keywords) ~ pexpr ~ WS ~ optional(expression_conjuctor)) |
+    (&(Rule.unary_!() ~ Keywords) ~ pexpr ~ WS ~ optional(expression_conjuctor)) |
       ((atomic("reach" ~ WSMust) ~ reachExprs) ~ WS ~ optional(expression_conjuctor)) |
       (fail("a reach expression or a canonical aadl identifier") ~> (() => {
         var t: QueryExpr = null
@@ -191,26 +192,26 @@ class QueryParser(val input : ParserInput) extends Parser {
   }
 
   def ID: Rule1[Id] = rule {
-    ((!(atomic(Keywords) ~ (WhitespaceChar | Newline | "//" | "/*"))
+    ((Rule.unary_!() ~ (atomic(Keywords) ~ (WhitespaceChar | Newline | "//" | "/*"))
       ~ capture((CharPredicate.Alpha ~ zeroOrMore(CharPredicate.AlphaNum | '_')).named("identifier")))
     ~> ((x : String) => Id(x)))
   }
 
   def COMMENT = rule {
-    "*/" ~ capture(zeroOrMore(!"*/" ~ ANY))
+    "*/" ~ capture(zeroOrMore(Rule.unary_!() ~ "*/" ~ ANY))
   }
 
-  def MultilineComment: Rule0 = rule { "/*" ~ zeroOrMore(MultilineComment | !"*/" ~ ANY) ~ "*/" }
+  def MultilineComment: Rule0 = rule { "/*" ~ zeroOrMore(MultilineComment | Rule.unary_!() ~ "*/" ~ ANY) ~ "*/" }
   def Comment: Rule0 = rule {
     MultilineComment |
-      "//" ~ zeroOrMore(!Newline ~ ANY) ~ (Newline | EOI)
+      "//" ~ zeroOrMore(Rule.unary_!() ~ Newline ~ ANY) ~ (Newline | EOI)
   }
 
   def WhitespaceChar = rule { "\u0020" | "\u0009" }
   def Newline = rule { "\r\n" | "\n" }
 
   def LINE_COMMENT = rule {
-    "//" ~ capture(zeroOrMore(!anyOf("\r\n") ~ ANY))
+    "//" ~ capture(zeroOrMore(Rule.unary_!() ~ anyOf("\r\n") ~ ANY))
   }
 
 //  def Keywords = rule {
@@ -244,7 +245,7 @@ object QueryParser {
         val error = queryParser.formatError(parseError)
         //        reporter.error(org.sireum.Option.none[Position](),
         //          org.sireum.String("Parse Error"), org.sireum.String(error))
-        val pos = FlatPos(org.sireum.Option.none[org.sireum.String],
+        val pos = FlatPos(org.sireum.Option.none[org.sireum.String](),
           org.sireum.U32(1), org.sireum.U32(1),
           org.sireum.U32(parseError.position.line),
           org.sireum.U32(parseError.position.column), org.sireum.U32(0), org.sireum.U32(0))

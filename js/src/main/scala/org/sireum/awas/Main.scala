@@ -27,15 +27,18 @@
 
 package org.sireum.awas
 
+
 import facades._
+import org.scalajs.dom
 import org.scalajs.dom.ext._
-import org.scalajs.dom.html.{Anchor, Button, Div, Input, Table}
-import org.scalajs.dom.raw.{Node, SVGElement}
+import org.scalajs.dom.html.{Anchor, Button, Div, Input, Span, Table}
+import org.scalajs.dom.raw.{MessageEvent, Node, SVGElement, WebSocket}
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
-import org.sireum.awas.ast.AwasSerializer
+import org.sireum.awas.ast.{AwasSerializer, Model}
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.flow._
+import org.sireum.awas.peti.{AwasHash, Ping, Pong, Protocol, ProtocolSerializer}
 import org.sireum.awas.query.QueryInter
 import org.sireum.awas.reachability.{ErrorReachabilityImpl, PortReachabilityImpl}
 import org.sireum.awas.slang.Aadl2Awas
@@ -47,10 +50,14 @@ import org.sireum.util.{imapEmpty, _}
 import scalatags.Text.all.{div, id, label, _}
 import scalatags.Text.svgTags.attr
 import scalatags.Text.tags2.nav
+import upickle.default._
 
+import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import scala.scalajs.js.timers.SetTimeoutHandle
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.util.{Failure, Success}
 
 @JSExportTopLevel("Main")
 object Main {
@@ -62,6 +69,7 @@ object Main {
   var selectedUris: ISet[ResourceUri] = isetEmpty[ResourceUri]
   var clickCounter = 0
   var timer: Option[SetTimeoutHandle] = None
+  //var model: Option[Model] = None
   var gl: Option[GoldenLayout] = None
   var qI: Option[QueryInter] = None
   var st: Option[SymbolTable] = None
@@ -190,111 +198,128 @@ object Main {
     gl.get.root.setTitle(systemName)
   }
 
+  def getAwasModel : Future[Option[Model]] = {
+    if (js.typeOf(js.Dynamic.global.json) != "undefined") {
+      val x = Future{Aadl2Awas.apply(GraphQuery.json.get)}
+      x
+    } else if (js.typeOf(js.Dynamic.global.awas) != "undefined") {
+      val y = Future{AwasSerializer.unapply(GraphQuery.awas.get)}
+      y
+    } else {
+      //get model from the server
+      val z = PetiConnHandler()
+      z
+    }
+  }
+
+  def loadGL(model : Option[Model]) = {
+    val mainBox : Element = $[Element]("#main-container")
+    val mainDiv : Element = $[Element]("#view")
+//    val mainDiv = render[Div](Views.mainPage())
+//    val mainBox: Element = mainDiv.querySelector("#main-container")
+    if (model.isDefined) {
+      val reporter = new ConsoleTagReporter()
+      st = Some(SymbolTable(model.get)(reporter))
+      val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = true)
+      val config = Views.getInitLayout(st.get.systemDecl.compName.value, st.get.system)
+      gl = Some(new GoldenLayout(config, jQuery(mainBox)))
+      if (gl.isDefined) {
+        buildGraphWindow()
+        computeHeight(gl.get)
+        gl.get.root.element(0).previousSibling.asInstanceOf[Element].classList.remove("is-active")
+        //
+        val queryButton = mainDiv.querySelector("#query-button")
+        val clearButton = mainDiv.querySelector("#clear-button")
+        val forwardButton = mainDiv.querySelector("#forward-button")
+        val backwardButton = mainDiv.querySelector("#backward-button")
+        val secViolationButton = mainDiv.querySelector("#sec-violation-button").asInstanceOf[Button]
+
+        if (SettingsView.currentConfig.viewErrors == Errors.Types) {
+          if (secViolationButton.style.display == "none") {
+            secViolationButton.removeAttribute("style")
+          }
+        } else {
+          secViolationButton.style.display = "none"
+        }
+
+        secViolationButton.onclick = (_: MouseEvent) => {
+          SecViolations.openWindow(st.get)
+        }
+
+        queryButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+          QueryCli.openQueryCli(st.get, systemGraph)
+        }
+
+        clearButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+          clearAll(selections.keySet)
+        }
+
+        forwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+          forwardButtonAction(selections.keySet, st.get)
+        }
+
+        backwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
+          backwardButtonAction(selections.keySet, st.get)
+        }
+
+        val burger = mainDiv.querySelector(".burger")
+        burger.addEventListener("click", { (_: MouseEvent) =>
+        {
+          val target = burger.asInstanceOf[AWASHTMLElement].dataset("target")
+          val targetElem = mainDiv.querySelector("#" + target)
+          burger.classList.toggle("is-active")
+          targetElem.classList.toggle("is-active")
+          computeHeight(gl.get)
+        }
+        }: js.Function1[MouseEvent, _])
+
+        if (js.typeOf(js.Dynamic.global.queries) != "undefined") {
+          QueryCli.openQueryCli(st.get, systemGraph)
+          qI.get.evalQueryFile(GraphQuery.queries.toString)
+          updateTable(qI.get.getQueries, qI.get.getResults)
+        }
+        QuickView.quickView()
+      }
+    } else {
+
+      $[Div]("#body").style.height =
+        s"${window.innerHeight - $[Div]("#header").clientHeight - $[Div]("#footer").clientHeight}px"
+      mainBox.appendChild(render(p("Failed to load the model")))
+    }
+  }
+
   @JSExport
   def main(): Unit = {
-    //var model = Aadl2Awas.apply(GraphQuery.json)
-    val t = js.typeOf(js.Dynamic.global.awas)
-    println(t)
-    var model = if (js.typeOf(js.Dynamic.global.json) != "undefined") {
-      Aadl2Awas.apply(GraphQuery.json.get)
-    } else if (js.typeOf(js.Dynamic.global.awas) != "undefined") {
-      AwasSerializer.unapply(GraphQuery.awas.get)
-    } else {
-      None
-    }
+
+
 
     //if(model.isEmpty) {
     // var model = AwasSerializer.unapply(GraphQuery.awas)
     //}
 //    val xx = GraphQuery.queries
 
-    if (model.isDefined) {
-      val reporter = new ConsoleTagReporter()
-      st = Some(SymbolTable(model.get)(reporter))
+    //val systemSvg = graph2Svg(systemGraph)
 
-      val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = true)
+    //val subsvgs = subgraphs.map(x => (x._1, graph2Svg(x._2)))
 
-      //val systemSvg = graph2Svg(systemGraph)
-
-      //val subsvgs = subgraphs.map(x => (x._1, graph2Svg(x._2)))
-
-      val mainDiv = render[Div](Views.mainPage())
-
-      val config = Views.getInitLayout(st.get.systemDecl.compName.value, st.get.system)
-
-      val mainBox: Element = mainDiv.querySelector("#main-container")
-
-      val body = mainDiv.querySelector("#body")
-      val settingsView = render[Div](Views.quickView())
-      SettingsView.preProcess(settingsView)
-      body.insertBefore(settingsView, mainBox)
-
-      gl = Some(new GoldenLayout(config, jQuery(mainBox)))
-
-      var res = imapEmpty[Node, String]
-
-      document.onreadystatechange = (_: Event) => {
-        document.body.appendChild(mainDiv)
-        if (document.readyState == "complete" && gl.isDefined) {
-          buildGraphWindow()
-          computeHeight(gl.get)
-//
-          val queryButton = mainDiv.querySelector("#query-button")
-          val clearButton = mainDiv.querySelector("#clear-button")
-          val forwardButton = mainDiv.querySelector("#forward-button")
-          val backwardButton = mainDiv.querySelector("#backward-button")
-          val secViolationButton = mainDiv.querySelector("#sec-violation-button").asInstanceOf[Button]
-
-          if (SettingsView.currentConfig.viewErrors == Errors.Types) {
-            if (secViolationButton.style.display == "none") {
-              secViolationButton.removeAttribute("style")
-            }
-          } else {
-            secViolationButton.style.display = "none"
+    val mainDiv = render[Div](Views.mainPage())
+    val mainBox: Element = mainDiv.querySelector("#main-container")
+    val body = mainDiv.querySelector("#body")
+    val settingsView = render[Div](Views.quickView())
+    SettingsView.preProcess(settingsView)
+    body.insertBefore(settingsView, mainBox)
+    var res = imapEmpty[Node, String]
+    document.onreadystatechange = (_: Event) => {
+      document.body.appendChild(mainDiv)
+      if (document.readyState == "complete") {
+        val model : Future[Option[Model]] = getAwasModel
+         model onComplete {
+          case Success(m) => loadGL(m)
+          case Failure(t) => {
+            $[Span]("#loader-msg").innerText = "Failed to load the model: \n"+ t.getMessage
           }
-
-          secViolationButton.onclick = (_: MouseEvent) => {
-            SecViolations.openWindow(st.get)
-          }
-
-          queryButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            QueryCli.openQueryCli(st.get, systemGraph)
-          }
-
-          clearButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            clearAll(selections.keySet)
-          }
-
-          forwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            forwardButtonAction(selections.keySet, st.get)
-          }
-
-          backwardButton.asInstanceOf[Anchor].onclick = (_: MouseEvent) => {
-            backwardButtonAction(selections.keySet, st.get)
-          }
-
-          val burger = mainDiv.querySelector(".burger")
-          burger.addEventListener("click", { (_: MouseEvent) =>
-            {
-              val target = burger.asInstanceOf[AWASHTMLElement].dataset("target")
-              val targetElem = mainDiv.querySelector("#" + target)
-              burger.classList.toggle("is-active")
-              targetElem.classList.toggle("is-active")
-              computeHeight(gl.get)
-            }
-          }: js.Function1[MouseEvent, _])
-
-          if (js.typeOf(js.Dynamic.global.queries) != "undefined") {
-            QueryCli.openQueryCli(st.get, systemGraph)
-            qI.get.evalQueryFile(GraphQuery.queries.toString)
-            updateTable(qI.get.getQueries, qI.get.getResults)
-          }
-          QuickView.quickView()
         }
       }
-
-    } else {
-      document.body.appendChild(render(p("Failed to load the model")))
     }
   }
 

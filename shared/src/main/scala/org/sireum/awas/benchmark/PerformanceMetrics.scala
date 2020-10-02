@@ -46,7 +46,7 @@ object PerformanceMetrics {
         //        }
         //        println(r)
         r
-      }.seq.mkString(", ")
+      }.mkString(", ")
 
       q.split("=").head + " = " + t
     }

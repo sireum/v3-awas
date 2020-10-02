@@ -28,7 +28,7 @@ package org.sireum.awas.util
 
 import org.sireum.ISZ
 
-import scala.tools.nsc.interpreter.JList
+import java.util.{List => JList}
 
 object AwasJvmUtil {
 

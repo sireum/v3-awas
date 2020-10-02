@@ -29,7 +29,7 @@ package org.sireum.awas.graph
 
 import org.sireum.Graph
 import org.sireum.ops.GraphOps
-import org.sireum.util.{CSet, isetEmpty, ilistEmpty}
+import org.sireum.util.{CSet, ISet, ilistEmpty, isetEmpty}
 
 
 class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
@@ -68,12 +68,12 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
   //    isetEmpty[Seq[Node]]
   //  }
 
-  override def getEdge(n1: Node, n2: Node): CSet[Edge] =
+  override def getEdge(n1: Node, n2: Node): ISet[Edge] =
     graph.edges(n1, n2).elements.flatMap(getEdgeData).toSet
 
-  override def getEdges(n: Node): CSet[Edge] = getIncomingEdges(n) union getOutgoingEdges(n)
+  override def getEdges(n: Node): ISet[Edge] = getIncomingEdges(n) union getOutgoingEdges(n)
 
-  override def getIncomingEdges(node: Node): CSet[Edge] = {
+  override def getIncomingEdges(node: Node): ISet[Edge] = {
     if (graph.nodes.get(node).nonEmpty) {
       val inEdges = graph.incomingEdges.get(graph.nodes.get(node).get).map { x =>
         x.elements.elements.flatMap(t => getEdgeData(t.toEdge(graph.nodes.keys)))
@@ -88,7 +88,7 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     }
   }
 
-  override def getOutgoingEdges(node: Node): CSet[Edge] = {
+  override def getOutgoingEdges(node: Node): ISet[Edge] = {
     if (graph.nodes.get(node).nonEmpty) {
       val outEdges = graph.outgoingEdges.get(graph.nodes.get(node).get).map { x =>
         x.elements.elements.flatMap(t => getEdgeData(t.toEdge(graph.nodes.keys)))
@@ -103,7 +103,7 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     }
   }
 
-  override def getSuccessorNodes(node: Node): CSet[Node] = {
+  override def getSuccessorNodes(node: Node): ISet[Node] = {
     if (graph.nodes.get(node).nonEmpty) {
       val t = graph.outgoingEdges.get(graph.nodes.get(node).get).map(
         _.elements.elements.map(t => graph.nodesInverse(t.dest)))
@@ -113,7 +113,7 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     }
   }
 
-  override def getPredecessorNodes(node: Node): CSet[Node] = {
+  override def getPredecessorNodes(node: Node): ISet[Node] = {
     if (graph.nodes.get(node).nonEmpty) {
       val t = graph.incomingEdges.get(graph.nodes.get(node).get).map(
         _.elements.elements.map(t => graph.nodesInverse(t.source)))
@@ -151,11 +151,11 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
     cycles.getOrElse(ilistEmpty)
   }
 
-  override def forwardReach(criteria: Set[Node]): CSet[Node] = {
+  override def forwardReach(criteria: Set[Node]): ISet[Node] = {
     GraphOps(graph).forwardReach(org.sireum.ISZ(criteria.toSeq: _ *)).elements.toSet
   }
 
-  override def backwardReach(criteria: Set[Node]): CSet[Node] = {
+  override def backwardReach(criteria: Set[Node]): ISet[Node] = {
     GraphOps(graph).backwardReach(org.sireum.ISZ(criteria.toSeq: _ *)).elements.toSet
   }
 

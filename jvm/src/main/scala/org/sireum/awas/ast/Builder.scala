@@ -320,7 +320,7 @@ final class Builder private() {
         val text = ctx.STRING().getText
         StringInit(text.substring(1, text.length - 1).intern()) at ctx
       case ctx: RecordContext => RecordInit(build(ctx.name()), ctx.ID().map(t => buildId(t) ->
-        build(ctx.init(ctx.ID().indexOf(t))))(breakOut): IMap[Id, Init]) at ctx
+        build(ctx.init(ctx.ID().indexOf(t)))).toMap: IMap[Id, Init]) at ctx
       case ctx: NameRefContext => NameRefInit(build(ctx.name()),
         if (ctx.ID() != null) Some(buildId(ctx.ID())) else None) at ctx
       case ctx: NoneContext => NoneInit(build(ctx.`type`())) at ctx
@@ -336,7 +336,7 @@ final class Builder private() {
     }
   }
 
-  import scala.collection.JavaConverters._
+  import scala.jdk.CollectionConverters._
   import scala.language.implicitConversions
 
   @inline

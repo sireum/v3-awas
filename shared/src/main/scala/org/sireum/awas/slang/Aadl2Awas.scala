@@ -73,11 +73,11 @@ final class Aadl2Awas private () {
   }
 
   def build(smfType: SmfType): TypeDecl = {
-    LatticeDecl(buildId(smfType.typeName.name.elements.last.value), if (smfType.parentType.nonEmpty) {
-      Node.emptySeq :+ Name(Node.emptySeq :+ buildId(smfType.parentType.get.name.elements.last.value))
-    } else {
-      Node.emptySeq
-    })
+    LatticeDecl(buildId(smfType.typeName.name.elements.last.value), smfType.parentType.map(buildParent).elements.toVector)
+  }
+
+  def buildParent(name : ir.Name) : Name = {
+    Name(Node.emptySeq :+ buildId(name.name.elements.last.value))
   }
 
   def build(errorLib: ir.Emv2Library): TypeDecl = {

@@ -52,14 +52,14 @@ object Visualizer {
     val graphVarPath = "/min/graphVar.js"
 
     def extractFromZip(zis : ZipInputStream): Unit = {
-      Stream.continually(zis.getNextEntry).takeWhile(_ != null).foreach { file =>
+      LazyList.continually(zis.getNextEntry).takeWhile(_ != null).foreach { file =>
         val fileName = outputDirLoc + "/" + file.getName.substring(zipFolderName.length)
         if(file.isDirectory) {
           Files.createDirectories(Paths.get(fileName))
         } else {
           val fout = new FileOutputStream(fileName)
           val buffer = new Array[Byte](1024)
-          Stream.continually(zis.read(buffer)).takeWhile(_ != -1).foreach(fout.write(buffer, 0, _))
+          LazyList.continually(zis.read(buffer)).takeWhile(_ != -1).foreach(fout.write(buffer, 0, _))
         }
       }
     }

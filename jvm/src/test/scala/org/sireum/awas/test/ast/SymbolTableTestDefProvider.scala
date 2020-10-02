@@ -44,7 +44,7 @@ final class SymbolTableTestDefProvider(tf: TestFramework)
   val resultsDir: FileResourceUri = toFilePath(fileUri(this.getClass, makePath("..", "results", "st")))
   val expectedDir: FileResourceUri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "st")))
 
-  val generateExpected = false
+  val generateExpected = true
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>

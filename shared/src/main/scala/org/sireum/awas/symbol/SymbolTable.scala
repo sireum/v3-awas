@@ -266,8 +266,8 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
   }
 
   override def computeDeployment() : Unit = {
-    tables.forwardDeployment ++= componentTable(this.system).deployments.groupBy(_._1).mapValues(_.map(_._2).toSet)
-    tables.backwardDeployment ++= componentTable(this.system).deployments.map(x => (x._2, x._1)).groupBy(_._1).mapValues(_.map(_._2).toSet)
+    tables.forwardDeployment ++= componentTable(this.system).deployments.groupBy(_._1).view.mapValues(_.map(_._2).toSet)
+    tables.backwardDeployment ++= componentTable(this.system).deployments.map(x => (x._2, x._1)).groupBy(_._1).view.mapValues(_.map(_._2).toSet)
   }
 
   override def removeDeployments() : Unit = {

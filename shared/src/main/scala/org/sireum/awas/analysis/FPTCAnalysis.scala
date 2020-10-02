@@ -556,7 +556,7 @@ class StateReachAnalysis(st: SymbolTable) {
     val pred = errorUris.flatMap(e => er.getPredDetailed(portUri, e))
     val portError: Map[ResourceUri, ISet[ResourceUri]] = pred.flatMap(_.tuples).filter(it =>
       !store.contains(it._1) || !store(it._1).contains(it._2))
-      .groupBy(_._1).mapValues(_.map(_._2)) + (portUri -> errorUris)
+      .groupBy(_._1).view.mapValues(_.map(_._2)).toMap + (portUri -> errorUris)
     Collector(
       pred.flatMap(_.graph),
       portError,
@@ -573,7 +573,7 @@ class StateReachAnalysis(st: SymbolTable) {
     val succs = errorUris.flatMap(e => er.getSuccDetailed(portUri, e))
     val portError: Map[ResourceUri, ISet[ResourceUri]] = succs.flatMap(_.tuples).filter(it =>
       !store.contains(it._1) || !store(it._1).contains(it._2))
-      .groupBy(_._1).mapValues(_.map(_._2)) + (portUri -> errorUris)
+      .groupBy(_._1).view.mapValues(_.map(_._2)).toMap + (portUri -> errorUris)
 
     Collector(
       succs.flatMap(_.graph),

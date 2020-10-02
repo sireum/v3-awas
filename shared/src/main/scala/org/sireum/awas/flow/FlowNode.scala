@@ -60,7 +60,7 @@ trait FlowNode extends BasicNode[FlowGraph[FlowNode, FlowNode.Edge]] {
 }
 
 trait FptcNodeUpdate {
-  def addFptcPropagation(port: ResourceUri, error_type: ResourceUri)
+  def addFptcPropagation(port: ResourceUri, error_type: ResourceUri): Unit
 }
 
 object FlowNode {

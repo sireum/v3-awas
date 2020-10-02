@@ -31,15 +31,15 @@ package org.sireum.awas.util;
 public class JavaConverters {
 
     public static <T> java.util.Set<T> toJavaSet(scala.collection.Set<T> scalaSet) {
-        return scala.collection.JavaConverters.setAsJavaSet(scalaSet);
+        return scala.jdk.CollectionConverters.SetHasAsJava(scalaSet).asJava();
     }
 
     public static <K, V> java.util.Map<K, V> toJavaMap(scala.collection.Map<K, V> scalaMap) {
-        return scala.collection.JavaConverters.mapAsJavaMap(scalaMap);
+        return scala.jdk.CollectionConverters.MapHasAsJava(scalaMap).asJava();
     }
 
     public static <T> java.util.List<T> toJavaList(scala.collection.Seq<T> scalaSeq) {
-        return scala.collection.JavaConverters.seqAsJavaList(scalaSeq);
+        return scala.jdk.CollectionConverters.SeqHasAsJava(scalaSeq).asJava();
     }
 
     public static <T> java.util.Optional<T> toJavaOptional(scala.Option<T> option) {

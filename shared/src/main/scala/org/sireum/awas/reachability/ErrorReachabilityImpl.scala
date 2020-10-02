@@ -212,7 +212,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
     var result = false
     val errors = res.getOrElseUpdate(port, msetEmpty[ResourceUri])
     if (!errors.contains(error)) {
-      res(port) = res(port) + error
+      res(port) = res(port).addOne(error)
       result = true
     }
     result
@@ -480,7 +480,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
                               currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]] = {
     previousError((currentPort, currentError)).flatMap(_.tuples)
-      .groupBy(_._1).mapValues(_.map(_._2))
+      .groupBy(_._1).view.mapValues(_.map(_._2)).toMap
   }
 
   override def getPredDetailed(currentPort: ResourceUri,
@@ -493,7 +493,7 @@ class ErrorReachabilityImpl[Node](st: SymbolTable) extends
                             currentError: ResourceUri)
   : IMap[ResourceUri, ISet[ResourceUri]] = {
     nextError((currentPort, currentError)).flatMap(_.tuples)
-      .groupBy(_._1).mapValues(_.map(_._2))
+      .groupBy(_._1).view.mapValues(_.map(_._2)).toMap
   }
 
   def getSuccDetailed(currentPort: ResourceUri,

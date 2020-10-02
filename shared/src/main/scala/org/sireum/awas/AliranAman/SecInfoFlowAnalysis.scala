@@ -550,11 +550,11 @@ class LatticeImpl(st: SymbolTable, reporter: Reporter) extends Lattice with Latt
     edges.foreach { edge =>
       val src = edge.source
       val tgt = edge.target
-      val otherSucc = graph.getSuccessorNodes(src) - tgt
+      val otherSucc = graph.getSuccessorNodes(src) -  tgt
       if (graph.forwardReach(otherSucc.toSet).contains(tgt)) {
 
         reporter.error(
-          org.sireum.None[Position],
+          org.sireum.None[Position](),
           "Lattice Well-formedness Error",
           src.id + " is child of " + tgt.id + " in more than one way"
         )

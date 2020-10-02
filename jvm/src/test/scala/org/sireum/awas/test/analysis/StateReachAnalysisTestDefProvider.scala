@@ -94,7 +94,7 @@ final class StateReachAnalysisTestDefProvider(tf: TestFramework) extends TestDef
 //        Resource.reset
 //        st = SymbolTable(updatedModel)
 val graph = FlowGraph(m, st, false)
-        val lines = Source.fromFile(name).getLines
+        val lines = Source.fromFile(name).getLines()
         lines.foreach { line =>
           val state = line2state(line, st)
           val res = StateReachAnalysis.getReachability(state, st)

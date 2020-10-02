@@ -35,39 +35,44 @@ import scala.scalajs.js
 
 object Views {
 
-  def getInitLayout(title: String, inGraph: String, canPop: Boolean = false): js.Dictionary[scalajs.js.Any] = js.Dictionary(
-    ("settings", js.Dictionary(
-      if (canPop) ("popoutWholeStack", true) else ("popoutWholeStack", false),
-      if (canPop) ("showPopoutIcon", true) else ("showPopoutIcon", false),
-      ("showCloseIcon", false))),
-    (
-      "content",
-      js.Array(
+  def getInitLayout(title: String, inGraph: String, canPop: Boolean = false): js.Dictionary[scalajs.js.Any] =
+    js.Dictionary(
+      (
+        "settings",
         js.Dictionary(
-          ("type", "stack"),
-          (
-            "content",
-            js.Array(
-              js.Dictionary(
-                ("title", title),
-                ("type", "component"),
-                ("componentName", "system"),
-                ("id", inGraph),
-                (
-                  "componentState",
-                  js.Dictionary[scalajs.js.Any](
-                    ("graph", inGraph),
-                    ("isTD", SettingsView.currentConfig.rankDir == RankDir.TB)
-                  )
-                ),
-                ("isClosable", false)
+          if (canPop) ("popoutWholeStack", true) else ("popoutWholeStack", false),
+          if (canPop) ("showPopoutIcon", true) else ("showPopoutIcon", false),
+          ("showCloseIcon", false)
+        )
+      ),
+      (
+        "content",
+        js.Array(
+          js.Dictionary(
+            ("type", "stack"),
+            (
+              "content",
+              js.Array(
+                js.Dictionary(
+                  ("title", title),
+                  ("type", "component"),
+                  ("componentName", "system"),
+                  ("id", inGraph),
+                  (
+                    "componentState",
+                    js.Dictionary[scalajs.js.Any](
+                      ("graph", inGraph),
+                      ("isTD", SettingsView.currentConfig.rankDir == RankDir.TB)
+                    )
+                  ),
+                  ("isClosable", false)
+                )
               )
             )
           )
         )
       )
     )
-  )
 
   def childConfig(title: String, graph: ResourceUri): js.Dictionary[scalajs.js.Any] = js.Dictionary(
     ("title", title),
@@ -77,9 +82,7 @@ object Views {
     ("componentState", js.Dictionary(("graph", graph), ("isTD", SettingsView.currentConfig.rankDir == RankDir.TB)))
   )
 
-  def popoutRoot(): js.Dictionary[scalajs.js.Any] = js.Dictionary(
-    ("type", "stack")
-  )
+  def popoutRoot(): js.Dictionary[scalajs.js.Any] = js.Dictionary(("type", "stack"))
 
   def cliConfig(): js.Dictionary[scalajs.js.Any] = js.Dictionary(
     ("title", "Awas Query"),
@@ -89,12 +92,8 @@ object Views {
     ("componentState", js.Dictionary(("name", "awascli")))
   )
 
-  def violationsConfig(): js.Dictionary[scalajs.js.Any] = js.Dictionary(
-    ("title", "Violations"),
-    ("type", "component"),
-    ("componentName", "violation"),
-    ("id", "violation")
-  )
+  def violationsConfig(): js.Dictionary[scalajs.js.Any] =
+    js.Dictionary(("title", "Violations"), ("type", "component"), ("componentName", "violation"), ("id", "violation"))
 
   def queryCliConfig = js.Dictionary(
     (
@@ -137,7 +136,6 @@ object Views {
     )
   )
 
-
   def mainPage(): Frag = {
     //    val temp: Seq[(String, String)] = GraphQuery.queryExp.toSeq
     div(
@@ -176,7 +174,10 @@ object Views {
                   cls := "navbar-item",
                   div(
                     cls := "field is-grouped",
-                    p(cls := "control", a(cls := "button is-outlined", id := "sec-violation-button", span("Violations"))),
+                    p(
+                      cls := "control",
+                      a(cls := "button is-outlined", id := "sec-violation-button", span("Violations"))
+                    ),
                     p(cls := "control", a(cls := "button is-outlined", id := "forward-button", span("Forward"))),
                     p(cls := "control", a(cls := "button is-outlined", id := "backward-button", span("Backward"))),
                     p(cls := "control", a(cls := "button is-outlined", id := "clear-button", span("Clear"))),
@@ -209,7 +210,12 @@ object Views {
         padding := "0%",
         // backgroundColor := "white",
         style := "display:inherit", //quickView(),
-        div(id := "main-container", width := "100%", height := "100%")
+        div(
+          id := "main-container",
+          width := "100%",
+          height := "100%",
+          div(cls := "pageloader is-active", span(id :="loader-msg", cls := "title", "loading..."))
+        )
       ),
       //      div(cls := "container",
       //        div(cls := "tile is-ancestor",
@@ -250,35 +256,32 @@ object Views {
     div(
       id := "stpa",
       cls := "container",
-      tag("section")(cls := "hero is-light is-fullheight",
-        div(cls := "hero-head", id := "header",
-          nav(cls := "level",
-            div(cls := "level-item has-text-centered",
+      tag("section")(
+        cls := "hero is-light is-fullheight",
+        div(
+          cls := "hero-head",
+          id := "header",
+          nav(
+            cls := "level",
+            div(
+              cls := "level-item has-text-centered",
               paddingTop := "2%",
-              h1(
-                cls := "title is-1",
-                id := "title",
-                textAlign := "center",
-                "STPA Report"
-              )
+              h1(cls := "title is-1", id := "title", textAlign := "center", "STPA Report")
             )
-
           )
         ),
         hr(cls := "hr", backgroundColor := "black"),
-        div(cls := "hero-body", alignItems := "flex-start",
-          div(id := "body")
-        ),
+        div(cls := "hero-body", alignItems := "flex-start", div(id := "body")),
         hr(cls := "hr", backgroundColor := "black"),
-        div(cls := "hero-foot",
-          nav(id := "foot", cls := "level", p(
-            cls := "level-item has-text-centered",
-            span("SAnToS Laboratory, Kansas State University")
-          )
+        div(
+          cls := "hero-foot",
+          nav(
+            id := "foot",
+            cls := "level",
+            p(cls := "level-item has-text-centered", span("SAnToS Laboratory, Kansas State University"))
           )
         )
       )
-
     )
   }
 
@@ -286,35 +289,32 @@ object Views {
     div(
       id := "stpa",
       cls := "container",
-      tag("section")(cls := "hero is-light is-fullheight",
-        div(cls := "hero-head", id := "header",
-          nav(cls := "level",
-            div(cls := "level-item has-text-centered",
+      tag("section")(
+        cls := "hero is-light is-fullheight",
+        div(
+          cls := "hero-head",
+          id := "header",
+          nav(
+            cls := "level",
+            div(
+              cls := "level-item has-text-centered",
               paddingTop := "2%",
-              h1(
-                cls := "title is-1",
-                id := "title",
-                textAlign := "center",
-                "ISO 14971 Report"
-              )
+              h1(cls := "title is-1", id := "title", textAlign := "center", "ISO 14971 Report")
             )
-
           )
         ),
         hr(cls := "hr", backgroundColor := "black"),
-        div(cls := "hero-body", alignItems := "flex-start",
-          div(id := "body", cls := "container")
-        ),
+        div(cls := "hero-body", alignItems := "flex-start", div(id := "body", cls := "container")),
         hr(cls := "hr", backgroundColor := "black"),
-        div(cls := "hero-foot",
-          nav(id := "foot", cls := "level", p(
-            cls := "level-item has-text-centered",
-            span("SAnToS Laboratory, Kansas State University")
-          )
+        div(
+          cls := "hero-foot",
+          nav(
+            id := "foot",
+            cls := "level",
+            p(cls := "level-item has-text-centered", span("SAnToS Laboratory, Kansas State University"))
           )
         )
       )
-
     )
   }
 
@@ -439,82 +439,81 @@ object Views {
       border := "0",
       borderSpacing := "0",
       col(width := "10%"),
-      thead(
-        th(cls := "is-5", "Name"),
-        th("Expression")
-      )
+      thead(th(cls := "is-5", "Name"), th("Expression"))
     )
 
   def quickView(): Frag = div(
-      id := "quickviewDefault",
-      cls := "quickview",
-      header(
-        cls := "quickview-header is-primary",
-        p(cls := "title", b("View Options"))
-        //span(cls := "delete", attr("data-dismiss") := "quickview")
-      ),
+    id := "quickviewDefault",
+    cls := "quickview",
+    header(
+      cls := "quickview-header is-primary",
+      p(cls := "title", b("View Options"))
+      //span(cls := "delete", attr("data-dismiss") := "quickview")
+    ),
+    div(
+      cls := "quickview-body",
       div(
-        cls := "quickview-body",
+        cls := "quickview-block",
         div(
-          cls := "quickview-block",
+          cls := "section", //div(cls:="notification is-white",
           div(
-            cls := "section", //div(cls:="notification is-white",
+            cls := "field",
+            label(cls := "label", "Orientation"),
             div(
-              cls := "field",
-              label(cls := "label", "Orientation"),
-              div(
-                cls := "control",
-                label(cls := "radio", input(`type` := "radio", id := "std", " Top-Down ")),
-                label(cls := "radio", input(`type` := "radio", id := "slr", " Left-Right "))
-              )
-            ),
-            div(
-              cls := "field",
-              label(cls := "label", "View simple connections"),
-              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "sconn")))
-            ),
+              cls := "control",
+              label(cls := "radio", input(`type` := "radio", id := "std", " Top-Down ")),
+              label(cls := "radio", input(`type` := "radio", id := "slr", " Left-Right "))
+            )
+          ),
+          div(
+            cls := "field",
+            label(cls := "label", "View simple connections"),
+            div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "sconn")))
+          ),
 //            div(
 //              cls := "field",
 //              label(cls := "label", "View ports"),
 //              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vports")))
 //            ),
+          div(
+            cls := "field",
+            label(cls := "label", "View flows"),
+            div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vflows")))
+          ),
+          div(
+            cls := "field",
+            label(cls := "label", "View errors"),
             div(
-              cls := "field",
-              label(cls := "label", "View flows"),
-              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vflows")))
-            ),
-            div(
-              cls := "field",
-              label(cls := "label", "View errors"),
-              div(
-                cls := "control",
-                label(cls := "radio", input(`type` := "radio", id := "eNone", " None ")),
-                label(cls := "radio", input(`type` := "radio", id := "eErrors", " EMv2 Errors ")),
-                label(cls := "radio", input(`type` := "radio", id := "eTypes", " Security Types "))
-              )
-            ),
-            div(
-              cls := "field",
-              label(cls := "label", "View binding edges"),
-              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vbind")))
-            ),
-            div(
-              cls := "field is-grouped is-grouped-centered",
-              p(
-                cls := "control",
-                a(cls := "button is-primary", id := "settings_apply", attr("data-dismiss") := "quickview", "Apply")
-              ),
-              p(
-                cls := "control",
-                a(cls := "button is-light", id := "settings_cancel", attr("data-dismiss") := "quickview", "Cancel")
-              )
-            ),
-            div(id := "lattice", display.none,
-              div(id := "lattice-title", cls := "is-divider", attr("data-content") := "Lattice"),
+              cls := "control",
+              label(cls := "radio", input(`type` := "radio", id := "eNone", " None ")),
+              label(cls := "radio", input(`type` := "radio", id := "eErrors", " EMv2 Errors ")),
+              label(cls := "radio", input(`type` := "radio", id := "eTypes", " Security Types "))
             )
+          ),
+          div(
+            cls := "field",
+            label(cls := "label", "View binding edges"),
+            div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vbind")))
+          ),
+          div(
+            cls := "field is-grouped is-grouped-centered",
+            p(
+              cls := "control",
+              a(cls := "button is-primary", id := "settings_apply", attr("data-dismiss") := "quickview", "Apply")
+            ),
+            p(
+              cls := "control",
+              a(cls := "button is-light", id := "settings_cancel", attr("data-dismiss") := "quickview", "Cancel")
+            )
+          ),
+          div(
+            id := "lattice",
+            display.none,
+            div(id := "lattice-title", cls := "is-divider", attr("data-content") := "Lattice"),
           )
         )
-      ),
-      footer(cls := "quickview-footer")
-    )
+      )
+    ),
+    footer(cls := "quickview-footer")
+  )
 }

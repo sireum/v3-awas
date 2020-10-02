@@ -115,7 +115,7 @@ object RandomColor extends Function0[String] {
 
     for (a <- 0 to 20) {
       val stop = document.createElementNS(namespaceURI, "stop")
-      stop.setAttribute("offset", (a * 5) + "%")
+      stop.setAttribute("offset", (a * 5).toString + "%")
       stop.setAttribute("style", "stop-color:" + sortedColors(a % sortedColors.length) + ";stop-opacity:1")
       gradient.appendChild(stop)
     }

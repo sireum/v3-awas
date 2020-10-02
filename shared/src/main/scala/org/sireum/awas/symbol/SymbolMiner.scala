@@ -73,7 +73,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     //      case md: Model =>
     if (m.fileUriOpt.isDefined) {
       val r = Resource(H.MODEL_TYPE, parentRes, m.fileUriOpt.get, None, m)
-      st.declaredSymbols(m.fileUriOpt.get) = msetEmpty + r.toUri
+      st.declaredSymbols(m.fileUriOpt.get) = msetEmpty.addOne(r.toUri)
       stp.modelMap(r.toUri) = m
       parentRes = r
     } else {
