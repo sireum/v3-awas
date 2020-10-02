@@ -68,11 +68,11 @@ object Resource {
   }
 
   def useDefResolve(use: Node, defn: Node): Unit = {
-    require(resourceInfo.get(defn).isDefined, "node definition :"+PrettyPrinter.print(defn)+" must have an associated resource")
+    require(resourceInfo.toMap().contains(defn), "node definition :" + PrettyPrinter.print(defn) + " must have an associated resource")
     val defResource = resourceInfo(defn)
-    resourceInfo(use) = ResourceBean(defResource.uriType,
+    resourceInfo.put(use, ResourceBean(defResource.uriType,
       defResource.uriPaths, defResource.uri,
-      Some(false))
+      Some(false)))
     resourceUri(resourceInfo(use).toUri.split(':').last) = resourceInfo(defn)
 
   }
@@ -110,14 +110,14 @@ object Resource {
             n: Option[Node] = None): Resource = {
     val res = ResourceBean(uriType, uriPath, uri, isDef)
     if (n.isDefined) {
-      resourceInfo(n.get) = res
+      resourceInfo.put(n.get, res)
     }
     resourceUri(res.toUri.split(":").last) = res
     res
   }
 
   def reset(): Unit = {
-    resourceInfo.filterInPlace((_,_) => false)
+    resourceInfo.clear()
     resourceUri.clear()
   }
 

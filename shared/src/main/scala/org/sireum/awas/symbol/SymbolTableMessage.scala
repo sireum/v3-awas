@@ -103,8 +103,8 @@ object SymbolTableMessage {
   : ErrorTag = {
     val KIND = "Symbol Checker"
     val message = template.format(info)
-    val locInfo = model.nodeLocMap.getOrElse(node,
-      LocationInfoErrorMessage("", 0, 0, 0, 0, 0, 0, ""))
+    val locInfo = if (model.nodeLocMap.containsKey(node)) model.nodeLocMap.get(node) else
+      LocationInfoErrorMessage("", 0, 0, 0, 0, 0, 0, "")
     if (model.fileUriOpt.isDefined) {
 
       FileLocationInfoErrorMessage(KIND,
