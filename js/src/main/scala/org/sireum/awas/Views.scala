@@ -136,6 +136,23 @@ object Views {
     )
   )
 
+  def popUp(title: String,
+            msg: String,
+            okBtnMsg: String,
+            cancelBtnMsg: String): Frag = {
+    div(id := "updateMdlDlg", cls := "model",
+      div(cls := "modal-background"),
+      div(cls := "modal-card-head",
+        p(cls := "modal-card-title", title),
+        button(cls := "delete", aria.label := "close")
+      ), div(cls := "modal-card-body", msg),
+      footer(cls := "modal-card-foot",
+        button(id := "popUpOk", cls := "button is-success", okBtnMsg),
+        button(id := "popUpCancel", cls := "button", cancelBtnMsg)
+      )
+    )
+  }
+
   def mainPage(): Frag = {
     //    val temp: Seq[(String, String)] = GraphQuery.queryExp.toSeq
     div(
@@ -214,7 +231,7 @@ object Views {
           id := "main-container",
           width := "100%",
           height := "100%",
-          div(cls := "pageloader is-active", span(id :="loader-msg", cls := "title", "loading..."))
+          div(id := "loading", cls := "pageloader is-active", span(id := "loader-msg", cls := "title", "loading..."))
         )
       ),
       //      div(cls := "container",
@@ -442,30 +459,34 @@ object Views {
       thead(th(cls := "is-5", "Name"), th("Expression"))
     )
 
+
   def quickView(): Frag = div(
     id := "quickviewDefault",
     cls := "quickview",
     header(
       cls := "quickview-header is-primary",
-      p(cls := "title", b("View Options"))
+      p(cls := "title", b("Settings"))
       //span(cls := "delete", attr("data-dismiss") := "quickview")
     ),
     div(
       cls := "quickview-body",
       div(
         cls := "quickview-block",
+        div(cls := "tabs",
+          ul(li(cls := "is-active", a(id := "views-tab", "View Options")), li(a(id := "conn-tab", "Connection")))),
         div(
           cls := "section", //div(cls:="notification is-white",
-          div(
-            cls := "field",
-            label(cls := "label", "Orientation"),
+          div(id := "view-options",
             div(
-              cls := "control",
-              label(cls := "radio", input(`type` := "radio", id := "std", " Top-Down ")),
-              label(cls := "radio", input(`type` := "radio", id := "slr", " Left-Right "))
-            )
-          ),
-          div(
+              cls := "field",
+              label(cls := "label", "Orientation"),
+              div(
+                cls := "control",
+                label(cls := "radio", input(`type` := "radio", id := "std", " Top-Down ")),
+                label(cls := "radio", input(`type` := "radio", id := "slr", " Left-Right "))
+              )
+            ),
+            div(
             cls := "field",
             label(cls := "label", "View simple connections"),
             div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "sconn")))
@@ -490,10 +511,47 @@ object Views {
               label(cls := "radio", input(`type` := "radio", id := "eTypes", " Security Types "))
             )
           ),
-          div(
-            cls := "field",
-            label(cls := "label", "View binding edges"),
-            div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vbind")))
+            div(
+              cls := "field",
+              label(cls := "label", "View binding edges"),
+              div(cls := "control", label(cls := "checkbox", input(`type` := "checkbox", id := "vbind")))
+            ),
+            div(
+              id := "lattice",
+              display.none,
+              div(id := "lattice-title", cls := "is-divider", attr("data-content") := "Lattice"),
+            )), div(id := "server-options", display.none,
+            div(cls := "field is-horizontal",
+              div(cls := "field-label", style := "flex-grow: 4",
+                label(cls := "label", "Server")),
+              div(cls := "field-body", div(cls := "field", p(cls := "control is-expanded", "localhost")))
+            ),
+            div(cls := "field is-horizontal",
+              div(cls := "field-label", style := "flex-grow: 4", label(cls := "label", "Port")),
+              div(cls := "field-body", div(cls := "field", p(cls := "control is-expanded", "8080")))
+            ),
+            div(cls := "field is-horizontal",
+              div(cls := "field-label", style := "flex-grow: 4", label(cls := "label", "Connection status")),
+              div(cls := "field-body", div(cls := "field", p(cls := "control is-expanded", id := "connStatus", "Not connected")))
+            ),
+            div(cls := "field is-horizontal",
+              div(cls := "field-label", style := "flex-grow: 4", label(cls := "label", "Would you like to")),
+              div(cls := "field-body",
+                div(cls := "control",
+                  p(cls := "control is-expanded",
+                    a(cls := "button is-success is-rounded is-small", id := "connDis", b("Connect")))))
+            ),
+            div(cls := "field is-horizontal",
+              div(cls := "field-label", style := "flex-grow: 4",
+                label(cls := "label", "Highlight instance model")),
+              div(cls := "field-body",
+                div(cls := "control", paddingTop := ".2rem",
+                  div(cls := "field", label(cls := "control is-expanded", input(`type` := "checkbox", id := "hinstmdl")))))
+            )
+            //            div(cls:="field is-horizontal",
+            //              div(cls:="field-label is-normal"),
+            //              div(cls:="field-body")
+            //            ),
           ),
           div(
             cls := "field is-grouped is-grouped-centered",
@@ -505,14 +563,13 @@ object Views {
               cls := "control",
               a(cls := "button is-light", id := "settings_cancel", attr("data-dismiss") := "quickview", "Cancel")
             )
-          ),
-          div(
-            id := "lattice",
-            display.none,
-            div(id := "lattice-title", cls := "is-divider", attr("data-content") := "Lattice"),
           )
+
         )
+
+
       )
+
     ),
     footer(cls := "quickview-footer")
   )

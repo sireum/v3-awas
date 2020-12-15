@@ -27,13 +27,15 @@
 package org.sireum.awas
 
 import org.scalajs.dom
-import org.scalajs.dom.html.{Anchor, Div, Input}
-import org.scalajs.dom.raw.MouseEvent
+import org.scalajs.dom.html.{Anchor, Button, Div, Input}
+import org.scalajs.dom.raw.{Event, MouseEvent}
 import org.sireum.awas.witness.{Errors, JSON, RankDir, SvgGenConfig}
 import org.sireum.common.JSutil.$
 import org.sireum.{B, F, T}
 import scalatags.JsDom.styles.display
 import scalatags.generic._
+
+import scala.scalajs.js
 
 object SettingsView {
   val key = "AWAS-WV-SETTINGS"
@@ -44,19 +46,49 @@ object SettingsView {
     else SvgGenConfig.defaultConfig
 
   def preProcess(settingsNode: Div): Unit = {
+    val viewsTab = $[Anchor](settingsNode, "#views-tab")
+    val connectionsTab = $[Anchor](settingsNode, "#conn-tab")
+    val viewBody = $[Div](settingsNode, "#view-options")
+    val connectionBody = $[Div](settingsNode, "#server-options")
+
+    //view elements
     val tdNode = $[Input](settingsNode, "#std")
     val lrNode = $[Input](settingsNode, "#slr")
     val conn = $[Input](settingsNode, "#sconn")
-//    val ports = $[Input](settingsNode, "#vports")
+    //    val ports = $[Input](settingsNode, "#vports")
     val flows = $[Input](settingsNode, "#vflows")
     //    val errors = $[Input](settingsNode, "#verrors")
     val eNone = $[Input](settingsNode, "#eNone")
     val eErrors = $[Input](settingsNode, "#eErrors")
     val eTypes = $[Input](settingsNode, "#eTypes")
     val bind = $[Input](settingsNode, "#vbind")
+
+    //connection elements
+    val connStatus = $[Input](settingsNode, "#connStatus")
+    val connButton = $[Button](settingsNode, "#connDis")
+    val highlightInstMdl = $[Input](settingsNode, "#hinstmdl")
+
     val apply = $[Anchor](settingsNode, "#settings_apply")
     val cancel = $[Anchor](settingsNode, "#settings_cancel")
     val lattice = $[Div](settingsNode, "#lattice")
+
+    viewsTab.onclick = (_: MouseEvent) => {
+      if (viewBody.style.display == display.none.v) {
+        viewBody.setAttribute("style", "display: block;")
+        connectionBody.setAttribute("style", "display: none;")
+        connectionsTab.parentElement.classList.remove("is-active")
+        viewsTab.parentElement.classList.add("is-active")
+      }
+    }
+
+    connectionsTab.onclick = (_: MouseEvent) => {
+      if (connectionBody.style.display == display.none.v) {
+        connectionBody.setAttribute("style", "display: block;")
+        viewBody.setAttribute("style", "display: none;")
+        viewsTab.parentElement.classList.remove("is-active")
+        connectionsTab.parentElement.classList.add("is-active")
+      }
+    }
 
     tdNode.onclick = (_: MouseEvent) => {
       if (tdNode.checked) {
@@ -114,6 +146,33 @@ object SettingsView {
       eTypes.checked = true
     }
 
+
+    dom.window.setInterval({ () => {
+      if (PetiConnHandler.isConnectionAlive) {
+        connStatus.innerText = "Connected"
+        connButton.firstElementChild.innerText = "Disconnect"
+        connButton.classList.remove("is-success")
+        connButton.classList.add("is-danger")
+      } else {
+        connStatus.innerText = "Not connected"
+        connButton.firstElementChild.innerText = "Connect"
+        connButton.classList.remove("is-danger")
+        connButton.classList.add("is-success")
+      }
+    }
+    }: js.Function0[Any], 1000)
+
+    connButton.onclick = (_: MouseEvent) => {
+      if (connButton.firstElementChild.innerText == "Disconnect") {
+        PetiConnHandler.disconnect()
+      } else {
+        PetiConnHandler.reconnect()
+      }
+    }
+
+    if (currentConfig.highlightInstMdl) highlightInstMdl.checked = true
+
+
     if (currentConfig.viewFlows) flows.checked = true
     if (currentConfig.bindings) bind.checked = true
 
@@ -129,7 +188,8 @@ object SettingsView {
           B(flows.checked),
           B(bind.checked),
           F,
-          F
+          F,
+          B(highlightInstMdl.checked)
         )
 
         if (currentConfig != config) {

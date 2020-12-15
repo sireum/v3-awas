@@ -58,7 +58,7 @@ class QueryParser(val input : ParserInput) extends Parser {
   }
 
   def expr : Rule1[QueryExpr] = rule {
-    (&(Rule.unary_!() ~ Keywords) ~ pexpr ~ WS ~ optional(expression_conjuctor)) |
+    (&(Keywords.unary_!) ~ pexpr ~ WS ~ optional(expression_conjuctor)) |
       ((atomic("reach" ~ WSMust) ~ reachExprs) ~ WS ~ optional(expression_conjuctor)) |
       (fail("a reach expression or a canonical aadl identifier") ~> (() => {
         var t: QueryExpr = null
@@ -192,26 +192,29 @@ class QueryParser(val input : ParserInput) extends Parser {
   }
 
   def ID: Rule1[Id] = rule {
-    ((Rule.unary_!() ~ (atomic(Keywords) ~ (WhitespaceChar | Newline | "//" | "/*"))
+    (((atomic(Keywords) ~ (WhitespaceChar | Newline | "//" | "/*")).unary_!
       ~ capture((CharPredicate.Alpha ~ zeroOrMore(CharPredicate.AlphaNum | '_')).named("identifier")))
-    ~> ((x : String) => Id(x)))
+      ~> ((x: String) => Id(x)))
   }
 
   def COMMENT = rule {
-    "*/" ~ capture(zeroOrMore(Rule.unary_!() ~ "*/" ~ ANY))
+    "*/" ~ capture(zeroOrMore("*/".unary_! ~ ANY))
   }
 
-  def MultilineComment: Rule0 = rule { "/*" ~ zeroOrMore(MultilineComment | Rule.unary_!() ~ "*/" ~ ANY) ~ "*/" }
+  def MultilineComment: Rule0 = rule {
+    "/*" ~ zeroOrMore(MultilineComment | "*/".unary_! ~ ANY) ~ "*/"
+  }
+
   def Comment: Rule0 = rule {
     MultilineComment |
-      "//" ~ zeroOrMore(Rule.unary_!() ~ Newline ~ ANY) ~ (Newline | EOI)
+      "//" ~ zeroOrMore(Newline.unary_! ~ ANY) ~ (Newline | EOI)
   }
 
   def WhitespaceChar = rule { "\u0020" | "\u0009" }
   def Newline = rule { "\r\n" | "\n" }
 
   def LINE_COMMENT = rule {
-    "//" ~ capture(zeroOrMore(Rule.unary_!() ~ anyOf("\r\n") ~ ANY))
+    "//" ~ capture(zeroOrMore(noneOf("\r\n") ~ ANY))
   }
 
 //  def Keywords = rule {
@@ -287,7 +290,9 @@ object QueryParser {
       "q = reach paths to x",
       "q = x:m",
       "q = a intersect b",
-      "q = a - b"
+      "q = a - b",
+      "modelFile' = nonsense",
+      """//tTest"""
     )
 
     input.foreach { query =>

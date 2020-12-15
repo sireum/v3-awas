@@ -3,6 +3,7 @@ package org.sireum.awas.peti
 import org.sireum.awas.ast
 import org.sireum.awas.collector.Collector
 import org.sireum.awas.util.AwasUtil.ResourceUri
+import org.sireum.util.{IMap, ISet}
 import upickle.default.{macroRW, ReadWriter => RW}
 
 sealed trait Protocol
@@ -11,7 +12,7 @@ object Protocol {
   implicit def rw: RW[Protocol] = RW.merge(Ping.rw,
     Pong.rw, ReqModel.rw, AwasModel.rw, RequestHash.rw,
     AwasHash.rw, Query.rw, QueryResults.rw, QueryRow.rw,
-    Msg.rw, Error.rw, FindDef.rw, FindDia.rw)
+    Msg.rw, Error.rw, FindDef.rw, FindDia.rw, Highlight.rw, Clear.rw)
 }
 
 case class Ping() extends Protocol
@@ -80,13 +81,25 @@ object FindDia {
   implicit def rw: RW[FindDia] = macroRW
 }
 
-case class Msg(msg : String) extends Protocol
+case class Highlight(urisColor: IMap[String, String]) extends Protocol
+
+object Highlight {
+  implicit def rw: RW[Highlight] = macroRW
+}
+
+case class Clear(uris: ISet[String]) extends Protocol
+
+object Clear {
+  implicit def rw: RW[Clear] = macroRW
+}
+
+case class Msg(msg: String) extends Protocol
 
 object Msg {
   implicit def rw: RW[Msg] = macroRW
 }
 
-case class Error(msg : String) extends Protocol
+case class Error(msg: String) extends Protocol
 
 object Error {
   implicit def rw: RW[Error] = macroRW

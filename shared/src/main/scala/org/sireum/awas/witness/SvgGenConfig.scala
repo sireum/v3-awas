@@ -41,8 +41,9 @@ import org.sireum._
                               viewFlows: B,
                               bindings: B,
                               behaviors: B,
-                              states: B
-)
+                              states: B,
+                              highlightInstMdl: B
+                            )
 
 @enum object RankDir {
   'TB
@@ -60,10 +61,10 @@ import org.sireum._
 object SvgGenConfig {
 
   def defaultConfig: SvgGenConfig = {
-    SvgGenConfig(RankDir.TB, F, T, Errors.None, T, F, F, F)
+    SvgGenConfig(RankDir.TB, F, T, Errors.None, T, F, F, F, F)
   }
 
   def defaultErrorConfig: SvgGenConfig = {
-    SvgGenConfig(RankDir.TB, F, T, Errors.Errors, T, F, F, F)
+    SvgGenConfig(RankDir.TB, F, T, Errors.Errors, T, F, F, F, F)
   }
 }

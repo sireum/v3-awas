@@ -167,7 +167,7 @@ public class AwasGraphImpl implements AwasGraph {
 
     public Map<String, Collector> queryEvaluator(String query) throws Exception {
         List<Message> jl = new ArrayList<Message>();
-        final IS<Z, Message> isz = AwasJvmUtil.isz(jl);
+        //final IS<Z, Message> isz = AwasJvmUtil.isz(jl);
         //Reporter reporter = Reporter$.MODULE$.apply(isz);
 
         final Tuple2<ListMap<String, org.sireum.awas.collector.Collector>, Reporter> queryRes = new QueryInter(st).evalCmd(query);

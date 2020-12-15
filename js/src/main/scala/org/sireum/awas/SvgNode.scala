@@ -27,7 +27,7 @@
 
 package org.sireum.awas
 
-import org.scalajs.dom.MouseEvent
+import org.scalajs.dom.{Event, MouseEvent}
 import org.scalajs.dom.html.Anchor
 import org.sireum.awas.SvgNodeType.SvgNodeType
 import org.sireum.awas.flow.FlowNode
@@ -187,10 +187,17 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
     getNodeType
     node.onclick = (_: MouseEvent) => Main.cellClicked(getUri, st)
 
-    node.addEventListener("touchstart", {(e: MouseEvent) =>
+    node.oncontextmenu = (e: Event) => {
+      if (PetiConnHandler.isConnected) {
+        e.preventDefault()
+        PetiConnHandler.findSource(getUri)
+      }
+    }
+
+    node.addEventListener("touchstart", { (e: MouseEvent) =>
       e.preventDefault()
       Main.cellClicked(getUri, st)
-    }:js.Function1[MouseEvent, _])
+    }: js.Function1[MouseEvent, _])
     if (!SettingsView.currentConfig.simpleConn &&
       getUri.startsWith(H.CONNECTION_TYPE) &&
       FlowNode.getNode(getUri).isDefined &&

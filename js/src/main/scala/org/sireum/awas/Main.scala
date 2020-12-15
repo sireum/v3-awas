@@ -220,13 +220,13 @@ object Main {
     if (model.isDefined) {
       val reporter = new ConsoleTagReporter()
       st = Some(SymbolTable(model.get)(reporter))
-      val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = true)
+      val systemGraph = FlowGraph(model.get, st.get, includeBindingEdges = SettingsView.currentConfig.bindings)
       val config = Views.getInitLayout(st.get.systemDecl.compName.value, st.get.system)
       gl = Some(new GoldenLayout(config, jQuery(mainBox)))
       if (gl.isDefined) {
         buildGraphWindow()
         computeHeight(gl.get)
-        gl.get.root.element(0).previousSibling.asInstanceOf[Element].classList.remove("is-active")
+        $[Div](mainBox, "#loading").classList.remove("is-active")
         //
         val queryButton = mainDiv.querySelector("#query-button")
         val clearButton = mainDiv.querySelector("#clear-button")
@@ -353,7 +353,8 @@ object Main {
               SettingsView.currentConfig.viewFlows,
               SettingsView.currentConfig.bindings,
               SettingsView.currentConfig.behaviors,
-              SettingsView.currentConfig.states
+              SettingsView.currentConfig.states,
+              SettingsView.currentConfig.highlightInstMdl
             ),
             st.get
           )
@@ -382,7 +383,8 @@ object Main {
               SettingsView.currentConfig.viewFlows,
               SettingsView.currentConfig.bindings,
               SettingsView.currentConfig.behaviors,
-              SettingsView.currentConfig.states
+              SettingsView.currentConfig.states,
+              SettingsView.currentConfig.highlightInstMdl
             ),
             st.get
           )
@@ -433,7 +435,7 @@ object Main {
     if (clickCounter == 1) {
       timer = Some(scalajs.js.timers.setTimeout(200) {
         if (selections.keySet.contains(tempUri)) {
-          clear(tempUri)
+          clearAll(isetEmpty + tempUri)
         } else {
           highlight(imapEmpty + (tempUri -> true), "#1878c0")
           if (H.isFlow(tempUri)) {
@@ -496,11 +498,17 @@ object Main {
     if (selections.contains(uri)) {
       selections = selections - uri
     }
+
+
     false
   }
 
   def clearAll(uris: ISet[String]): Boolean = {
     uris.foreach(clear)
+    if (SettingsView.currentConfig.highlightInstMdl.value) {
+      //println("calling peti clear")
+      PetiConnHandler.clear(uris)
+    }
     false
   }
 
@@ -587,8 +595,13 @@ object Main {
   }
 
   def highlight(uris: IMap[String, Boolean], color: String): Boolean = {
+
     selections = selections ++ uris.map(it => (it._1, (it._2, color)))
     uris.foreach(u => if (uriNodeMap.keySet.contains(u._1)) uriNodeMap(u._1).foreach(_.select(u._2, color)))
+    if (SettingsView.currentConfig.highlightInstMdl.value) {
+      println("calling peti highlight")
+      PetiConnHandler.highlight(uris, color)
+    }
     false
   }
 
