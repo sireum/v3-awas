@@ -2,9 +2,9 @@ digraph "component:$$AWAS#PCAModel" {
 
   rankdir=TB
 
-   "component:$$AWAS$PCAModel#App" [label="{In Port|<etco2>etco2|<spo2>spo2|<rr>rr} |component\nApp|{Out Port|<pump_cmd>pump_cmd} ",  shape="record"] 
-   "component:$$AWAS$PCAModel#Capnography" [label="{In Port|<breath>breath} |component\nCapnography|{Out Port|<etco2>etco2|<resp_rate>resp_rate} ",  shape="record"] 
-   "component:$$AWAS$PCAModel#Patient" [label="{In Port|<vein>vein} |component\nPatient|{Out Port|<exhalation>exhalation|<fingerclip>fingerclip} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#App" [label="{In Port|<etco2>etco2|<rr>rr|<spo2>spo2} |component\nApp|{Out Port|<pump_cmd>pump_cmd} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#Capnography" [label="{In Port|<breath>breath} |component\nCapnography|{Out Port|<resp_rate>resp_rate|<etco2>etco2} ",  shape="record"] 
+   "component:$$AWAS$PCAModel#Patient" [label="{In Port|<vein>vein} |component\nPatient|{Out Port|<fingerclip>fingerclip|<exhalation>exhalation} ",  shape="record"] 
    "component:$$AWAS$PCAModel#PulseOx" [label="{In Port|<refracted_light>refracted_light} |component\nPulseOx|{Out Port|<spo2>spo2} ",  shape="record"] 
    "component:$$AWAS$PCAModel#Pump" [label="{In Port|<cmd>cmd} |component\nPump|{Out Port|<drug>drug} ",  shape="record"] 
    "connection:$$AWAS$PCAModel#a1" [label="{In Port|<in>in} |connection\na1|{Out Port|<out>out} ",  shape="record"] 

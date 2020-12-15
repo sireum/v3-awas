@@ -2,8 +2,8 @@ digraph "component:$$AWAS#Root_one_reference_Instance" {
 
   rankdir=TB
 
-   "component:$$AWAS$Root_one_reference_Instance#Sub1" [label="{In Port|<sub_in>sub_in|<sub_port_IN>sub_port_IN} |component\nSub1|{Out Port|<sub_out>sub_out|<sub_port_OUT>sub_port_OUT} ",  shape="record"] 
-   "component:$$AWAS$Root_one_reference_Instance#Sub2" [label="{In Port|<sub_in>sub_in|<sub_port_IN>sub_port_IN} |component\nSub2|{Out Port|<sub_port_OUT>sub_port_OUT|<sub_out>sub_out} ",  shape="record"] 
+   "component:$$AWAS$Root_one_reference_Instance#Sub1" [label="{In Port|<sub_port_IN>sub_port_IN|<sub_in>sub_in} |component\nSub1|{Out Port|<sub_port_OUT>sub_port_OUT|<sub_out>sub_out} ",  shape="record"] 
+   "component:$$AWAS$Root_one_reference_Instance#Sub2" [label="{In Port|<sub_in>sub_in|<sub_port_IN>sub_port_IN} |component\nSub2|{Out Port|<sub_out>sub_out|<sub_port_OUT>sub_port_OUT} ",  shape="record"] 
    "connection:$$AWAS$Root_one_reference_Instance#comp_to_comp_BACKWARD" [label="{In Port|<in>in} |connection\ncomp_to_comp_BACKWARD|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Root_one_reference_Instance#comp_to_comp_FORWARD" [label="{In Port|<in>in} |connection\ncomp_to_comp_FORWARD|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Root_one_reference_Instance#system_to_comp_in" [label="{In Port|<in>in} |connection\nsystem_to_comp_in|{Out Port|<out>out} ",  shape="record"] 

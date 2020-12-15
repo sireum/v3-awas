@@ -2,7 +2,7 @@ digraph "component:$$AWAS#Root_three_references_Instance" {
 
   rankdir=TB
 
-   "component:$$AWAS$Root_three_references_Instance#Sub" [label="{In Port|<sub_port_IN>sub_port_IN|<sub_in>sub_in} |component\nSub|{Out Port|<sub_out>sub_out|<sub_port_OUT>sub_port_OUT} ",  shape="record"] 
+   "component:$$AWAS$Root_three_references_Instance#Sub" [label="{In Port|<sub_in>sub_in|<sub_port_IN>sub_port_IN} |component\nSub|{Out Port|<sub_port_OUT>sub_port_OUT|<sub_out>sub_out} ",  shape="record"] 
    "connection:$$AWAS$Root_three_references_Instance#system_to_comp_in" [label="{In Port|<in>in} |connection\nsystem_to_comp_in|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Root_three_references_Instance#system_to_comp_out" [label="{In Port|<in>in} |connection\nsystem_to_comp_out|{Out Port|<out>out} ",  shape="record"] 
    "port-in:$$AWAS$Root_three_references_Instance#root_in" [label="{In Port|<root_in>root_in}", rank="source", shape="record"] 

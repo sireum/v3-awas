@@ -2,9 +2,9 @@ digraph "component:$$AWAS#UAS_Impl_Instance" {
 
   rankdir=TB
 
-   "component:$$AWAS$UAS_Impl_Instance#GND" [label="{In Port|<RFA_bus_access_IN>RFA_bus_access_IN|<recv_status>recv_status} |component\nGND|{Out Port|<send_map>send_map|<RFA_bus_access_OUT>RFA_bus_access_OUT} ",  shape="record"] 
-   "component:$$AWAS$UAS_Impl_Instance#RFB" [label="{In Port|<bindings_IN>bindings_IN|<ACCESS_IN>ACCESS_IN} |component\nRFB|{Out Port|<bindings_OUT>bindings_OUT|<ACCESS_OUT>ACCESS_OUT} ",  shape="record"] 
-   "component:$$AWAS$UAS_Impl_Instance#UAV" [label="{In Port|<recv_map>recv_map|<RFA_bus_access_IN>RFA_bus_access_IN} |component\nUAV|{Out Port|<RFA_bus_access_OUT>RFA_bus_access_OUT|<send_status>send_status} ",  shape="record"] 
+   "component:$$AWAS$UAS_Impl_Instance#GND" [label="{In Port|<RFA_bus_access_IN>RFA_bus_access_IN|<recv_status>recv_status} |component\nGND|{Out Port|<RFA_bus_access_OUT>RFA_bus_access_OUT|<send_map>send_map} ",  shape="record"] 
+   "component:$$AWAS$UAS_Impl_Instance#RFB" [label="{In Port|<ACCESS_IN>ACCESS_IN|<bindings_IN>bindings_IN} |component\nRFB|{Out Port|<ACCESS_OUT>ACCESS_OUT|<bindings_OUT>bindings_OUT} ",  shape="record"] 
+   "component:$$AWAS$UAS_Impl_Instance#UAV" [label="{In Port|<RFA_bus_access_IN>RFA_bus_access_IN|<recv_map>recv_map} |component\nUAV|{Out Port|<send_status>send_status|<RFA_bus_access_OUT>RFA_bus_access_OUT} ",  shape="record"] 
    "connection:$$AWAS$UAS_Impl_Instance#bac1_BACKWARD" [label="{In Port|<in>in} |connection\nbac1_BACKWARD|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$UAS_Impl_Instance#bac1_FORWARD" [label="{In Port|<in>in} |connection\nbac1_FORWARD|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$UAS_Impl_Instance#bac2_BACKWARD" [label="{In Port|<in>in} |connection\nbac2_BACKWARD|{Out Port|<out>out} ",  shape="record"] 

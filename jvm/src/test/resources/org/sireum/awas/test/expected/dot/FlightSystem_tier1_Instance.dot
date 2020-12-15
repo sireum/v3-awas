@@ -2,7 +2,7 @@ digraph "component:$$AWAS#FlightSystem_tier1_Instance" {
 
   rankdir=TB
 
-   "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" [label="{In Port|<operatorCommand>operatorCommand|<position>position|<powersupply>powersupply} |component\nAutoFlightGuidance|{Out Port|<AFGOutput>AFGOutput} ",  shape="record"] 
+   "component:$$AWAS$FlightSystem_tier1_Instance#AutoFlightGuidance" [label="{In Port|<powersupply>powersupply|<operatorCommand>operatorCommand|<position>position} |component\nAutoFlightGuidance|{Out Port|<AFGOutput>AFGOutput} ",  shape="record"] 
    "component:$$AWAS$FlightSystem_tier1_Instance#FSpowersupply" [label="{In Port|} |component\nFSpowersupply|{Out Port|<power>power} ",  shape="record"] 
    "component:$$AWAS$FlightSystem_tier1_Instance#FlightControl" [label="{In Port|<guidanceCommands>guidanceCommands|<powersupply>powersupply} |component\nFlightControl|{Out Port|<flightSurfaceControl>flightSurfaceControl} ",  shape="record"] 
    "component:$$AWAS$FlightSystem_tier1_Instance#GPS" [label="{In Port|<satelliteSignal>satelliteSignal} |component\nGPS|{Out Port|<location>location} ",  shape="record"] 

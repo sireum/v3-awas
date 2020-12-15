@@ -6,7 +6,7 @@ digraph "component:$$AWAS#Simple_Comm_routing_table_Instance" {
    "component:$$AWAS$Simple_Comm_routing_table_Instance#bob" [label="{In Port|<receive_Port_IN>receive_Port_IN} |component\nbob|{Out Port|<receive_Port_OUT>receive_Port_OUT} ",  shape="record"] 
    "component:$$AWAS$Simple_Comm_routing_table_Instance#eve" [label="{In Port|<receive>receive} |component\neve|{Out Port|<send>send} ",  shape="record"] 
    "component:$$AWAS$Simple_Comm_routing_table_Instance#mallory" [label="{In Port|<receive_Port_IN>receive_Port_IN} |component\nmallory|{Out Port|<receive_Port_OUT>receive_Port_OUT} ",  shape="record"] 
-   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [label="{In Port|<socket3_IN>socket3_IN|<socket1_IN>socket1_IN|<socket4_IN>socket4_IN|<socket2_IN>socket2_IN} |component\nrouter|{Out Port|<socket2_OUT>socket2_OUT|<socket3_OUT>socket3_OUT|<socket4_OUT>socket4_OUT|<socket1_OUT>socket1_OUT} ",  shape="record"] 
+   "component:$$AWAS$Simple_Comm_routing_table_Instance#router" [label="{In Port|<socket1_IN>socket1_IN|<socket3_IN>socket3_IN|<socket2_IN>socket2_IN|<socket4_IN>socket4_IN} |component\nrouter|{Out Port|<socket1_OUT>socket1_OUT|<socket2_OUT>socket2_OUT|<socket4_OUT>socket4_OUT|<socket3_OUT>socket3_OUT} ",  shape="record"] 
    "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_receive" [label="{In Port|<in>in} |connection\nalice_receive|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Simple_Comm_routing_table_Instance#alice_send" [label="{In Port|<in>in} |connection\nalice_send|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Simple_Comm_routing_table_Instance#bob_receive" [label="{In Port|<in>in} |connection\nbob_receive|{Out Port|<out>out} ",  shape="record"] 

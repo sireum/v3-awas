@@ -2,13 +2,13 @@ digraph "component:$$AWAS#Isolette" {
 
   rankdir=TB
 
-   "component:$$AWAS$Isolette#Air" [label="{In Port|<from_infant>from_infant|<from_heater>from_heater} |component\nAir|{Out Port|<to_sensor>to_sensor|<to_infant>to_infant} ",  shape="record"] 
+   "component:$$AWAS$Isolette#Air" [label="{In Port|<from_heater>from_heater|<from_infant>from_infant} |component\nAir|{Out Port|<to_sensor>to_sensor|<to_infant>to_infant} ",  shape="record"] 
    "component:$$AWAS$Isolette#HeatSource" [label="{In Port|<on_heater>on_heater} |component\nHeatSource|{Out Port|<heater_output>heater_output} ",  shape="record"] 
    "component:$$AWAS$Isolette#Infant" [label="{In Port|<heat_in>heat_in} |component\nInfant|{Out Port|<heat_out>heat_out} ",  shape="record"] 
    "component:$$AWAS$Isolette#Nurse" [label="{In Port|<monitor>monitor} |component\nNurse|{Out Port|<set_params>set_params} ",  shape="record"] 
-   "component:$$AWAS$Isolette#OperatorInterface" [label="{In Port|<settings_in>settings_in|<feedback_in>feedback_in} |component\nOperatorInterface|{Out Port|<feedback_out>feedback_out|<settings_out>settings_out} ",  shape="record"] 
+   "component:$$AWAS$Isolette#OperatorInterface" [label="{In Port|<feedback_in>feedback_in|<settings_in>settings_in} |component\nOperatorInterface|{Out Port|<settings_out>settings_out|<feedback_out>feedback_out} ",  shape="record"] 
    "component:$$AWAS$Isolette#TempSensor" [label="{In Port|<air_heat>air_heat} |component\nTempSensor|{Out Port|<air_temp>air_temp} ",  shape="record"] 
-   "component:$$AWAS$Isolette#Thermostat" [label="{In Port|<settings>settings|<sensed_temp>sensed_temp} |component\nThermostat|{Out Port|<feedback>feedback|<heater_ctrl>heater_ctrl} ",  shape="record"] 
+   "component:$$AWAS$Isolette#Thermostat" [label="{In Port|<settings>settings|<sensed_temp>sensed_temp} |component\nThermostat|{Out Port|<heater_ctrl>heater_ctrl|<feedback>feedback} ",  shape="record"] 
    "connection:$$AWAS$Isolette#h1" [label="{In Port|<in>in} |connection\nh1|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Isolette#h2" [label="{In Port|<in>in} |connection\nh2|{Out Port|<out>out} ",  shape="record"] 
    "connection:$$AWAS$Isolette#i1" [label="{In Port|<in>in} |connection\ni1|{Out Port|<out>out} ",  shape="record"] 

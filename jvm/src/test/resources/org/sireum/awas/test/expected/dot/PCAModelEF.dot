@@ -2,9 +2,9 @@ digraph "component:$$AWAS#PCAModelEF" {
 
   rankdir=TB
 
-   "component:$$AWAS$PCAModelEF#App" [label="{In Port|<rr>rr|<etco2>etco2|<spo2>spo2} |component\nApp|{Out Port|<pump_cmd>pump_cmd} ",  shape="record"] 
+   "component:$$AWAS$PCAModelEF#App" [label="{In Port|<etco2>etco2|<spo2>spo2|<rr>rr} |component\nApp|{Out Port|<pump_cmd>pump_cmd} ",  shape="record"] 
    "component:$$AWAS$PCAModelEF#Capnography" [label="{In Port|<breath>breath} |component\nCapnography|{Out Port|<resp_rate>resp_rate|<etco2>etco2} ",  shape="record"] 
-   "component:$$AWAS$PCAModelEF#Patient" [label="{In Port|<vein>vein} |component\nPatient|{Out Port|<fingerclip>fingerclip|<exhalation>exhalation} ",  shape="record"] 
+   "component:$$AWAS$PCAModelEF#Patient" [label="{In Port|<vein>vein} |component\nPatient|{Out Port|<exhalation>exhalation|<fingerclip>fingerclip} ",  shape="record"] 
    "component:$$AWAS$PCAModelEF#PulseOx" [label="{In Port|<refracted_light>refracted_light} |component\nPulseOx|{Out Port|<spo2>spo2} ",  shape="record"] 
    "component:$$AWAS$PCAModelEF#Pump" [label="{In Port|<cmd>cmd} |component\nPump|{Out Port|<drug>drug} ",  shape="record"] 
    "connection:$$AWAS$PCAModelEF#a1" [label="{In Port|<in>in} |connection\na1|{Out Port|<out>out} ",  shape="record"] 
