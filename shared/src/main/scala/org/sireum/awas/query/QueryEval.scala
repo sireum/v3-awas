@@ -27,6 +27,7 @@
 
 package org.sireum.awas.query
 
+import org.sireum.awas.benchmark.Timer
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper.{ReachAnalysisStage, _}
 import org.sireum.awas.collector.{Collector, CollectorImpl, Operator, ResultType}
@@ -41,11 +42,25 @@ import org.sireum.util.{ISet, _}
 object QueryEval {
   type Result = ILinkedMap[String, Collector]
 
-  def apply(m: Model, st: SymbolTable): Result = {
-    new QueryEval(st).eval(m)
+  private var qe: Option[QueryEval] = None
+
+  def setup(st: SymbolTable): Unit = {
+    qe = Some(new QueryEval(st))
   }
 
-  def apply(st : SymbolTable, qExpr : QueryExpr) : Collector = {
+  def clear(): Unit = {
+    qe = None
+  }
+
+  def apply(m: Model, st: SymbolTable): Result = {
+    if (qe.isDefined) {
+      qe.get.eval(m)
+    } else {
+      new QueryEval(st).eval(m)
+    }
+  }
+
+  def apply(st: SymbolTable, qExpr: QueryExpr): Collector = {
     new QueryEval(st).eval(qExpr)
   }
 
@@ -79,7 +94,9 @@ final class QueryEval(st: SymbolTable) {
     eval(m, ilinkedMapEmpty[String, Collector])
   }
 
-  def eval(m : Model, env: ILinkedMap[String, Collector]): QueryEval.Result = {
+  val er = ErrorReachability(st)
+
+  def eval(m: Model, env: ILinkedMap[String, Collector]): QueryEval.Result = {
     result = env
     m.queryStmt.foreach {
       q =>
@@ -287,7 +304,7 @@ final class QueryEval(st: SymbolTable) {
     if (source.hasErrors || target.hasErrors) {
       source.union(target)
     } else {
-      val er = ErrorReachability(st)
+      //      val er = ErrorReachability(st)
       val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
         if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
       } else if (source.getResultType.isDefined) {
@@ -361,7 +378,7 @@ final class QueryEval(st: SymbolTable) {
     if (source.hasErrors || target.hasErrors) {
       source.union(target)
     } else {
-      val er = ErrorReachability(st)
+      //      val er = ErrorReachability(st)
       val resType = if (source.getResultType.isDefined && target.getResultType.isDefined) {
         if (source.getResultType.get < target.getResultType.get) source.getResultType else target.getResultType
       } else if (source.getResultType.isDefined) {
@@ -425,7 +442,7 @@ final class QueryEval(st: SymbolTable) {
   }
 
   def reach(criterion: Collector, isForward: Boolean): Collector = {
-    val er = ErrorReachability(st)
+    //    val er = ErrorReachability(st)
     if (criterion.hasErrors) {
       criterion
     } else {

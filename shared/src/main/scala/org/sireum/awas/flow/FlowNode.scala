@@ -28,7 +28,7 @@
 package org.sireum.awas.flow
 
 
-import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.collector.{Collector, FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.symbol.{FlowTableData, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
@@ -49,6 +49,8 @@ trait FlowNode extends BasicNode[FlowGraph[FlowNode, FlowNode.Edge]] {
   // the following methods unions component and connection
   def getFlows: IMap[ResourceUri, FlowTableData]
 
+  def getFlowReach(flow: ResourceUri): Option[Collector]
+
   def getPortsFromFlows(flowUri: ResourceUri): Set[ResourceUri]
 
   def getFlowsFromPort(portUri: ResourceUri): Set[ResourceUri]
@@ -61,6 +63,8 @@ trait FlowNode extends BasicNode[FlowGraph[FlowNode, FlowNode.Edge]] {
 
 trait FptcNodeUpdate {
   def addFptcPropagation(port: ResourceUri, error_type: ResourceUri): Unit
+
+  def updateFlowCache(flow: ResourceUri, result: Collector): Unit
 }
 
 object FlowNode {

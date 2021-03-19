@@ -51,7 +51,9 @@ class QueryParser(val input : ParserInput) extends Parser {
 
   def modelFile = rule {model ~ EOI}
 
-  def model: Rule1[Model] = rule { oneOrMore(query_statement) ~> ((x: Seq[QueryStmt]) => Model(x.toVector)) }
+  def model: Rule1[Model] = rule {
+    oneOrMore(query_statement) ~> ((x: Seq[QueryStmt]) => Model(x.toVector))
+  }
 
   def query_statement: Rule1[QueryStmt] = rule {
     (WS ~ ID ~ WS ~ ('=' | fail("\'=\'")) ~!~ WS ~ expr ~ WS) ~> ((x, y) => QueryStmt(x, y))

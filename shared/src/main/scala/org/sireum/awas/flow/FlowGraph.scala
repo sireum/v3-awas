@@ -29,7 +29,7 @@ package org.sireum.awas.flow
 
 import org.sireum.ST
 import org.sireum.awas.ast.Model
-import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.collector.{Collector, FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.graph.{AwasEdge, AwasGraph, AwasGraphUpdate}
 import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.Resource._
@@ -65,6 +65,10 @@ trait FlowGraph[Node, Edge <: AwasEdge[Node]] extends AwasGraph[Node, Edge] {
   def getInPortNodes: ISet[FlowNode]
 
   def getOutPortNodes: ISet[FlowNode]
+
+  def forwardPortReach(port: ResourceUri): Collector
+
+  def backwardPortReach(port: ResourceUri): Collector
 
   //  def getAllPathsNodes(source: FlowNode, sink: FlowNode): Set[Seq[FlowNode]]
   //
@@ -163,8 +167,8 @@ object FlowEdgeImpl {
 object FlowGraph {
   val H = SymbolTableHelper
 
-  private var edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
-
+  private var bindEdgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
+  private var accessEdgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
 
   //  def apply(modelFile: FileResourceUri): Option[FlowGraph[FlowNode, FlowEdge[FlowNode]]] = {
   //    import org.sireum.util.jvm.FileUtil._
@@ -273,7 +277,7 @@ object FlowGraph {
 
   def apply(m: Model, st: SymbolTable, includeBindingEdges: Boolean): FlowGraph[FlowNode, FlowEdge[FlowNode]] = {
     FlowNode.newPool()
-    edgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
+    bindEdgesRemoved = imapEmpty[ResourceUri, IMap[FlowNode.Edge, (ResourceUri, ResourceUri)]]
     val systemST = st.componentTable(st.system)
     val result = buildGraph(systemST, st)
     if (includeBindingEdges) {
@@ -298,7 +302,7 @@ object FlowGraph {
 
   def removeBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
 
-    if (!edgesRemoved.contains(graph.getUri)) {
+    if (!bindEdgesRemoved.contains(graph.getUri)) {
       val ports = graph.nodes.flatMap(_.ports)
 
       val bindPorts = ports.filter(
@@ -311,8 +315,8 @@ object FlowGraph {
       val bindEdges = bindPorts.flatMap(graph.getEdgeForPort)
       val edgePorts = bindEdges.map(it => it -> (it.sourcePort.get, it.targetPort.get)).toMap
 
-      edgesRemoved = edgesRemoved +
-        (graph.getUri -> (edgesRemoved.getOrElse(graph.getUri, imapEmpty[FlowNode.Edge, (ResourceUri, ResourceUri)]) ++ edgePorts))
+      bindEdgesRemoved = bindEdgesRemoved +
+        (graph.getUri -> (bindEdgesRemoved.getOrElse(graph.getUri, imapEmpty[FlowNode.Edge, (ResourceUri, ResourceUri)]) ++ edgePorts))
       bindEdges.foreach(it => graph.removeEdge(it.source, it.target))
       graph.reComputeCycles()
     }
@@ -321,17 +325,50 @@ object FlowGraph {
 
   def addBindings(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
 
-    if (edgesRemoved.keySet.contains(graph.getUri)) {
-      val edgePorts = edgesRemoved(graph.getUri)
+    if (bindEdgesRemoved.keySet.contains(graph.getUri)) {
+      val edgePorts = bindEdgesRemoved(graph.getUri)
       edgePorts.keySet.foreach { e =>
         graph.addEdge(e.source, e.target, e)
         graph.addEdgePortRelation(e, edgePorts(e)._1, edgePorts(e)._2)
         graph.addPortEdge(edgePorts(e)._1, e)
         graph.addPortEdge(edgePorts(e)._2, e)
       }
-      edgesRemoved = edgesRemoved - graph.getUri
+      bindEdgesRemoved = bindEdgesRemoved - graph.getUri
       graph.reComputeCycles()
     }
   }
 
+  def removeAccess(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+
+    if (!accessEdgesRemoved.contains(graph.getUri)) {
+      val ports = graph.nodes.flatMap(_.ports)
+
+      val accessPorts = ports.filter(
+        it => it.split(H.ID_SEPARATOR).last == Aadl2Awas.ACCESS_IN_PORT ||
+          it.split(H.ID_SEPARATOR).last == Aadl2Awas.ACCESS_OUT_PORT)
+
+      val accessEdges = accessPorts.flatMap(graph.getEdgeForPort)
+      val edgePorts = accessEdges.map(it => it -> (it.sourcePort.get, it.targetPort.get)).toMap
+
+      accessEdgesRemoved = accessEdgesRemoved +
+        (graph.getUri -> (accessEdgesRemoved.getOrElse(graph.getUri, imapEmpty[FlowNode.Edge, (ResourceUri, ResourceUri)]) ++ edgePorts))
+      accessEdges.foreach(it => graph.removeEdge(it.source, it.target))
+      graph.reComputeCycles()
+    }
+  }
+
+  def addAccess(graph: FlowGraph[FlowNode, FlowNode.Edge] with FlowGraphUpdate[FlowNode, FlowNode.Edge]): Unit = {
+
+    if (accessEdgesRemoved.keySet.contains(graph.getUri)) {
+      val edgePorts = accessEdgesRemoved(graph.getUri)
+      edgePorts.keySet.foreach { e =>
+        graph.addEdge(e.source, e.target, e)
+        graph.addEdgePortRelation(e, edgePorts(e)._1, edgePorts(e)._2)
+        graph.addPortEdge(edgePorts(e)._1, e)
+        graph.addPortEdge(edgePorts(e)._2, e)
+      }
+      accessEdgesRemoved = accessEdgesRemoved - graph.getUri
+      graph.reComputeCycles()
+    }
+  }
 }

@@ -29,7 +29,7 @@ package org.sireum.awas.flow
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
-import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.collector.{Collector, FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.flow.FlowNode.Edge
 import org.sireum.awas.graph._
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
@@ -240,12 +240,14 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
     }
   }
 
+  //if the port has port node then return the port node only,
+  // else return the node in this graph containing the port
   def getNode(uri: ResourceUri): Option[FlowNode] = {
     if (uri.startsWith(H.COMPONENT_TYPE) ||
       uri.startsWith(H.CONNECTION_TYPE) ||
       (FlowNode.getNode(uri).isDefined &&
-      Resource.getParentUri(uri).isDefined &&
-      Resource.getParentUri(uri).get == this.getUri)) {
+        Resource.getParentUri(uri).isDefined &&
+        Resource.getParentUri(uri).get == this.getUri)) {
       FlowNode.getNode(uri)
     } else {
       portNodeMap.get(uri)
@@ -486,9 +488,72 @@ class FlowGraphImpl(uri: ResourceUri, st: SymbolTable)
       }
     }
   }
+
   override def reComputeCycles(): Unit = superClass.reComputeCycles()
 
   override def forwardReach(criteria: Set[FlowNode]): CSet[FlowNode] = ???
 
   override def backwardReach(criteria: Set[FlowNode]): CSet[FlowNode] = ???
+
+  override def forwardPortReach(port: ResourceUri): Collector = {
+    var result = isetEmpty[ResourceUri]
+    var worklist = ilistEmpty[ResourceUri]
+    var resGraphs = isetEmpty[FlowGraph[FlowNode, FlowEdge[FlowNode]]]
+    var resEdges = isetEmpty[Edge]
+    var resError = isetEmpty[Tag]
+    var resFlows = isetEmpty[ResourceUri]
+
+    if (H.isPort(port)) {
+      worklist = worklist :+ port
+    } else {
+      resError += errorMessageGen(MISSING_CRITERIA, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
+    }
+
+    while (worklist.nonEmpty) {
+      val current = worklist.head
+      if (!result.contains(current)) {
+        val temp = getSuccessorPorts(current)
+        worklist = worklist ++ temp.ports
+        resEdges = resEdges ++ temp.edges
+        resFlows = resFlows ++ temp.flows
+        resError = resError ++ temp.errors
+        resGraphs = resGraphs ++ temp.graph
+      }
+      worklist = worklist.tail
+      result += current
+    }
+
+    Collector(resGraphs, result, resFlows, resEdges, true, isetEmpty, resError)
+  }
+
+  override def backwardPortReach(port: ResourceUri): Collector = {
+    var result = isetEmpty[ResourceUri]
+    var worklist = ilistEmpty[ResourceUri]
+    var resGraphs = isetEmpty[FlowGraph[FlowNode, FlowEdge[FlowNode]]]
+    var resEdges = isetEmpty[Edge]
+    var resError = isetEmpty[Tag]
+    var resFlows = isetEmpty[ResourceUri]
+
+    if (H.isPort(port)) {
+      worklist = worklist :+ port
+    } else {
+      resError += errorMessageGen(MISSING_CRITERIA, H.uri2CanonicalName(port), ReachAnalysisStage.Port)
+    }
+
+    while (worklist.nonEmpty) {
+      val current = worklist.head
+      if (!result.contains(current)) {
+        val temp = getPredecessorPorts(current)
+        worklist = worklist ++ temp.ports
+        resEdges = resEdges ++ temp.edges
+        resFlows = resFlows ++ temp.flows
+        resError = resError ++ temp.errors
+        resGraphs = resGraphs ++ temp.graph
+      }
+      worklist = worklist.tail
+      result += current
+    }
+
+    Collector(resGraphs, result, resFlows, resEdges, true, isetEmpty, resError)
+  }
 }

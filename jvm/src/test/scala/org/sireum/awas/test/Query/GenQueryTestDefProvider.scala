@@ -2,11 +2,9 @@ package org.sireum.awas.test.Query
 
 import java.nio.file.Paths
 
-import org.sireum.awas.ast.{AwasSerializer, Builder}
+import org.sireum.awas.ast.AwasSerializer
 import org.sireum.awas.benchmark.{PerformanceMetrics, TimerImpl}
 import org.sireum.awas.flow.FlowGraph
-import org.sireum.awas.query.{QueryEval, QueryParser}
-import org.sireum.awas.slang.Aadl2Awas
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils.{extensor, makePath, writeResult}
 import org.sireum.message.{Reporter, ReporterImpl}
@@ -14,7 +12,7 @@ import org.sireum.test.{EqualTest, TestDef, TestDefProvider, TestFramework}
 import org.sireum.util.{AccumulatingTagReporter, FileResourceUri, ISeq, Uri}
 import org.sireum.util.jvm.FileUtil.{fileUri, filename, listFiles, readFile, toFilePath, toUri}
 
-final class BenchmarkTestDefProvider(tf: TestFramework) extends TestDefProvider {
+class GenQueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val testDirs = Seq(
     makePath("..", "example", "benchmark")
     //    makePath("..", "example", "sscate")
@@ -24,6 +22,7 @@ final class BenchmarkTestDefProvider(tf: TestFramework) extends TestDefProvider 
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "benchmark")))
 
   val generateExpected = true
+
 
   override def testDefs: ISeq[TestDef] = {
     val files = testDirs.flatMap { d =>
@@ -39,10 +38,7 @@ final class BenchmarkTestDefProvider(tf: TestFramework) extends TestDefProvider 
       val inputFileName = filename(x)
       println(inputFileName)
       val fileWithOutExt = extensor(inputFileName).toString
-
-
-
-      val outputFileName = fileWithOutExt + ".txt"
+      val outputFileName = fileWithOutExt + ".aq"
 
       writeResult(outputFileName,
         QueryResultPrinter(x, readFile(x)._1), expectedDir, resultsDir, generateExpected)
@@ -65,7 +61,7 @@ final class BenchmarkTestDefProvider(tf: TestFramework) extends TestDefProvider 
         implicit val reporter: Reporter = new ReporterImpl(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
         val graph = FlowGraph(m, st, true)
-        PerformanceMetrics(st, 29, 30, new TimerImpl())
+        PerformanceMetrics(st, 29, 10, new TimerImpl())
     }
   }
 }

@@ -42,6 +42,9 @@ import org.sireum.util.{ILinkedSet, ISet, _}
 class PortReachabilityImpl[Node](st: SymbolTable)
   extends BasicReachabilityImpl(st) with PortReachability[FlowNode] {
 
+  private var cache = imapEmpty[ResourceUri, Collector]
+  private val useCache = true
+
   private var sccValidCache = imapEmpty[ISet[ResourceUri], (ISet[ResourceUri], Boolean)]
 
   override def forwardPortReach(criterion: FlowNode): Collector =
@@ -53,16 +56,23 @@ class PortReachabilityImpl[Node](st: SymbolTable)
   override def forwardPortReach(criterion: ResourceUri): Collector =
     portReach(isetEmpty[ResourceUri] + criterion, isForward = true)
 
-  def nextPorts(port: ResourceUri): ISet[FlowCollector] = {
+  def nextPorts(port: ResourceUri, climbDown: Boolean): ISet[FlowCollector] = {
     if (H.isInPort(port) && FlowNode.getNode(port).isDefined) {
       //two cases 1. part of two graphs or, 2. just one graph
       val portNode = FlowNode.getNode(port).get
-      var succ = isetEmpty + portNode.getOwner.getSuccessorPorts(port)
+      var succ = if (climbDown) isetEmpty + portNode.getOwner.getSuccessorPorts(port) else {
+        if (st.componentTable(portNode.getOwner.getUri).getFlowsFromPort(port).isEmpty) {
+          isetEmpty + portNode.getOwner.getSuccessorPorts(port)
+        } else {
+          isetEmpty[FlowCollector]
+        }
+      } //sub graph succ
       if (FlowNode.getNode(portNode.getOwner.getUri).isDefined) {
-        succ = succ + FlowNode.getNode(portNode.getOwner.getUri).get.getOwner.getSuccessorPorts(port)
+        succ = succ + FlowNode.getNode(portNode.getOwner.getUri).get.getOwner.getSuccessorPorts(port) //parent graph succ
       }
       succ
     } else if(H.isOutPort(port) && st.forwardDeployment(port).nonEmpty) {
+      //bindings/deployment next port
       val succPorts = st.forwardDeployment(port)
       succPorts.flatMap { sp =>
         val nodeUri = Resource.getParentUri(sp)
@@ -128,8 +138,50 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     }
   }
 
+  def flowReach(flow: ResourceUri): Collector = {
+    if (useCache && cache.contains(flow)) {
+      cache(flow)
+    } else {
+      val res = if (Resource.getParentUri(flow).isDefined &&
+        H.uri2TypeString(Resource.getParentUri(flow).get) == H.COMPONENT_TYPE) {
+        val cst = st.componentTable(Resource.getParentUri(flow).get)
+        if (FlowNode.getNode(cst.componentUri).isDefined &&
+          FlowNode.getNode(cst.componentUri).get.getSubGraph.isDefined) {
+          val forward = if (cst.flow(flow).fromPortUri.isDefined &&
+            FlowNode.getNode(cst.flow(flow).fromPortUri.get).isDefined) {
+            val graph = FlowNode.getNode(cst.flow(flow).fromPortUri.get).get.getOwner
+            graph.forwardPortReach(cst.flow(flow).fromPortUri.get)
+          } else {
+            Collector.buildEmpty()
+          }
+          val backward = if (cst.flow(flow).toPortUri.isDefined &&
+            FlowNode.getNode(cst.flow(flow).toPortUri.get).isDefined) {
+            val graph = FlowNode.getNode(cst.flow(flow).toPortUri.get).get.getOwner
+            graph.backwardPortReach(cst.flow(flow).fromPortUri.get)
+          } else {
+            Collector.buildEmpty()
+          }
+          val result = if (forward == Collector.buildEmpty()) {
+            backward
+          } else if (backward == Collector.buildEmpty()) {
+            forward
+          } else {
+            forward.intersect(backward)
+          }
+          result
+        } else {
+          Collector.buildEmpty()
+        }
+      } else {
+        Collector.buildEmpty()
+      }
+      cache = cache + (flow -> res)
+      res
+    }
+  }
+
   def portReach(criteria: ISet[ResourceUri], isForward: Boolean): Collector = {
-    var result = isetEmpty[ResourceUri]
+    var resPorts = isetEmpty[ResourceUri]
     var worklist = ilistEmpty[ResourceUri]
     var resGraphs = isetEmpty[Graph]
     var resEdges = isetEmpty[Edge]
@@ -144,10 +196,12 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       }
     }
 
+    val climbDown = st.hasDeployments()
+
     while (worklist.nonEmpty) {
       val current = worklist.head
-      if (!result.contains(current)) {
-        val temp = if (isForward) nextPorts(current) else previousPorts(current)
+      if (!resPorts.contains(current)) {
+        val temp = if (isForward) nextPorts(current, climbDown) else previousPorts(current)
         worklist = worklist ++ temp.flatMap(_.ports)
         resEdges = resEdges ++ temp.flatMap(_.edges)
         resFlows = resFlows ++ temp.flatMap(_.flows)
@@ -155,10 +209,19 @@ class PortReachabilityImpl[Node](st: SymbolTable)
         resGraphs = resGraphs ++ temp.flatMap(_.graph)
       }
       worklist = worklist.tail
-      result += current
+      resPorts += current
     }
 
-    Collector(resGraphs, result, resFlows, resEdges, isForward, criteria, resError)
+    var result = Collector(resGraphs, resPorts, resFlows, resEdges, isForward, criteria, resError)
+    var worklist2 = resFlows.toList
+    while (worklist2.nonEmpty) {
+      val cFlow = worklist2.head
+      worklist2 = worklist2.tail
+      val next = flowReach(cFlow)
+      worklist2 = worklist2 ++ next.getFlows
+      result = result.union(next)
+    }
+    result
   }
 
   override def backwardPortReach(criterion: FlowNode): Collector =
@@ -510,9 +573,9 @@ def computeSimplePaths(
       val currentPath: ILinkedSet[ResourceUri] = workList.head
       val currPort = currentPath.last
       if (currPort != target) {
-        val nexts = nextPorts(currPort).foldLeft(
+        val nexts = nextPorts(currPort, true).foldLeft(
           FlowCollector(isetEmpty[Graph], isetEmpty[ResourceUri], isetEmpty[Edge], isetEmpty[ResourceUri],
-          isetEmpty[Tag])
+            isetEmpty[Tag])
         )(_.union(_))
 
         nexts.ports.foreach { np =>
@@ -555,15 +618,15 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
 
           val port = pathList(i)
           val nextPort = pathList(i + 1)
-          val next = nextPorts(pathList(i)).foldLeft(
-          FlowCollector(
-            isetEmpty[Graph],
-            isetEmpty[ResourceUri],
-            isetEmpty[Edge],
-            isetEmpty[ResourceUri],
-            isetEmpty[Tag]
-          )
-        )(_.union(_))
+          val next = nextPorts(pathList(i), true).foldLeft(
+            FlowCollector(
+              isetEmpty[Graph],
+              isetEmpty[ResourceUri],
+              isetEmpty[Edge],
+              isetEmpty[ResourceUri],
+              isetEmpty[Tag]
+            )
+          )(_.union(_))
           val cflows = getNodesFromPort(port).flatMap(_.getFlows).toMap
           flows = flows ++ next.flows.filter(
           f =>
@@ -643,7 +706,7 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
     while(worklist.nonEmpty) {
       val curr = worklist.head
       if(initPorts.contains(curr)) {
-        val next = nextPorts(curr).flatMap(_.ports)
+        val next = nextPorts(curr, true).flatMap(_.ports)
         next.intersect(initPorts).foreach{n =>
           if(uriPNMap.get(curr).isDefined && uriPNMap.get(n).isDefined) {
             val srcPN = uriPNMap(curr)
@@ -787,13 +850,13 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
           )
           .toMap
 
-      val complexPath = pathCycles.flatMap { pc =>
+      val complexPath = pathCycles.flatMap(pc => {
         val cycles = pc._2.flatMap(cyc => cyclePortsToCollector(cyc._2, cyc._1))
         if (cycles.nonEmpty)
           Some(pc._1.union(cycles.foldLeft(Collector(st))((x, y) => x.union(y))))
         else
           None
-      }
+      })
 
       val filteredPaths = (complexPath.toSet union simplePathNone.getPaths).filter(
         cp =>
@@ -998,11 +1061,11 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
   //    result
   //  }
   override def getSuccessor(currentPort: ResourceUri): ISet[ResourceUri] = {
-    nextPorts(currentPort).flatMap(_.ports)
+    nextPorts(currentPort, true).flatMap(_.ports)
   }
 
   override def getSuccDetailed(currentPort: ResourceUri): ISet[FlowCollector] = {
-    nextPorts(currentPort)
+    nextPorts(currentPort, true)
   }
 
   override def getPredecessor(currentPort: ResourceUri): ISet[ResourceUri] = {

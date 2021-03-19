@@ -94,13 +94,15 @@ trait SymbolTable {
 
   def uris(file: FileResourceUri): MSet[ResourceUri]
 
-  def computeDeployment() : Unit
+  def computeDeployment(): Unit
 
-  def removeDeployments() : Unit
+  def removeDeployments(): Unit
 
-  def forwardDeployment(uri : ResourceUri) : ISet[ResourceUri]
+  def hasDeployments(): Boolean
 
-  def backwardDeployment(uri : ResourceUri) : ISet[ResourceUri]
+  def forwardDeployment(uri: ResourceUri): ISet[ResourceUri]
+
+  def backwardDeployment(uri: ResourceUri): ISet[ResourceUri]
 
   def compTypeDecl(compUri: ResourceUri): Set[ResourceUri]
 
@@ -289,6 +291,7 @@ case class STProducer(var systemUri: Option[ResourceUri] = None,
       tables.backwardDeployment.getOrElse(uri, isetEmpty)
   }
 
+  override def hasDeployments(): Boolean = tables.forwardDeployment.nonEmpty && tables.backwardDeployment.nonEmpty
 }
 
 object STProducer {

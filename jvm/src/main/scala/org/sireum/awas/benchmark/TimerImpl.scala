@@ -10,13 +10,15 @@ class TimerImpl extends Timer {
   var lastTime : Long = 0
 
   override def startTimer(): Unit = {
-    lastTime = Calendar.getInstance().getTimeInMillis
+    lastTime = System.nanoTime() //Calendar.getInstance().getTimeInMillis
   }
 
   override def endGetTime(): Long = {
-    val res = Calendar.getInstance().getTimeInMillis - lastTime
+    // val res = Calendar.getInstance().getTimeInMillis - lastTime
+    val res = System.nanoTime() - lastTime
+
     lastTime = 0
-    res
+    (res / 1000).toLong
   }
 
   override def createTimer(): Timer = new TimerImpl()

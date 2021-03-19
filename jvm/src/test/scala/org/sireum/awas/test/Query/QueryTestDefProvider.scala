@@ -58,7 +58,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     val filesEqual = files.filter { p =>
       true
-//          p.toLowerCase.contains("pca_pulseox")
+//          p.toLowerCase.contains("three_reference")
     }
 
     filesEqual.toVector.map { x =>

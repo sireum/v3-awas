@@ -9,23 +9,23 @@ import scala.util.Random
 object GenQueries {
 
   val H = SymbolTableHelper
-  val r : Random = new scala.util.Random(314)
+  val r: Random = new scala.util.Random(314)
 
 
-  def apply(st : SymbolTable, count : Int) : IList[String] = {
-    var res = ilistEmpty[String]
-    res = res ++ genForwardNode(st, count)
-    res = res ++ genBackwardNode(st, count)
-    res = res ++ genSourceTargetNode(st, count)
-    res = res ++ genSourceTargetNodePath(st, count)
-    res = res ++ genForwardPort(st, count)
-    res = res ++ genBackwardPort(st, count)
-    res = res ++ genSourceTargetPort(st, count)
-    res = res ++ genSourceTargetPortPath(st, count)
+  def apply(st: SymbolTable, count: Int): IList[IList[String]] = {
+    var res = ilistEmpty[IList[String]]
+    res = res :+ genForwardNode(st, count)
+    res = res :+ genBackwardNode(st, count)
+    res = res :+ genSourceTargetNode(st, count)
+    res = res :+ genSourceTargetNodePath(st, count)
+    res = res :+ genForwardPort(st, count)
+    res = res :+ genBackwardPort(st, count)
+    res = res :+ genSourceTargetPort(st, count)
+    res = res :+ genSourceTargetPortPath(st, count)
     res
   }
 
-  def genForwardNode(st : SymbolTable, count : Int) : IList[String] = {
+  def genForwardNode(st: SymbolTable, count: Int): IList[String] = {
     val queryName = "forward_node_"
     val queryPre = "reach forward "
     val nodes = FlowNode.getGraphs.flatMap(_.nodes).filter(_.getResourceType != NodeType.PORT).toList.sortBy(_.getUri)

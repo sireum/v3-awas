@@ -1,16 +1,15 @@
 package org.sireum.awas.benchmark
 
 import org.sireum.awas.ast.Model
-import org.sireum.awas.flow.{FlowNode, NodeType}
-import org.sireum.awas.symbol.SymbolTable
-
+import org.sireum.awas.flow.{FlowGraph, FlowNode, NodeType}
+import org.sireum.awas.symbol.{ComponentTable, SymbolTable, SymbolTableHelper}
 
 
 object ModelStatInfo {
 
-  def apply(st : SymbolTable) : ModelInfo = {
+  def apply(st: SymbolTable): ModelInfo = {
     val graphs = FlowNode.getGraphs.size
-    val height = 0 //todo
+    val height = computeHeight(st)
     val comps = FlowNode.getGraphs.flatMap(_.nodes).count(_.isComponent)
     val conns = FlowNode.getGraphs.flatMap(_.nodes).count(_.getResourceType == NodeType.CONNECTION)
     val ports = FlowNode.getGraphs.flatMap(_.nodes).flatMap(_.ports).size
@@ -21,7 +20,17 @@ object ModelStatInfo {
     ModelInfo(graphs, height, comps, conns, ports, nodes, edges, flows)
   }
 
+  def computeHeight(st: SymbolTable): Int = {
+    height(st, st.componentTable(st.system), 0)
+  }
 
+  def height(st: SymbolTable, cst: ComponentTable, h: Int): Int = {
+    if (cst.subComponents.nonEmpty) {
+      cst.subComponents.map(c => height(st, st.componentTable(c), h + 1)).max
+    } else {
+      h
+    }
+  }
 
 }
 

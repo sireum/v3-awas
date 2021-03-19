@@ -3,19 +3,21 @@ package org.sireum.awas.benchmark
 import org.sireum.awas.query.{QueryEval, QueryParser}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.message.{Reporter, ReporterImpl}
+import org.sireum.util._
 
+import scala.collection.immutable.ListMap
 import scala.collection.parallel.immutable.ParVector
 import scala.concurrent.{Await, ExecutionContext, Future, duration}
 import scala.concurrent.duration._
 import scala.concurrent.duration.{Duration, FiniteDuration}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Random, Success}
 import scala.language.postfixOps
 
 object PerformanceMetrics {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  def apply(st: SymbolTable, count: Int, timer: Timer): String = {
+  def apply(st: SymbolTable, count: Int, times: Int, timer: Timer): String = {
 
     var res = "#graphs, #height, #components, #connections, #ports, #nodes, #edges, #flows" + "\n"
 
@@ -30,28 +32,58 @@ object PerformanceMetrics {
 
     val queries = GenQueries(st, count)
 
-    res = res + queries.mkString("\n")
+    res = res + queries.map(m => m.mkString("\n")).mkString("\n")
 
-    val x = queries.map { q =>
-      var exes = ""
-      val v = Vector.range(0, 10)
-      val t = v.flatMap { k =>
-        // val m = TimeoutFuture[String](FiniteDuration(60, duration.MILLISECONDS), st, q, timer) (queryEval)
-        val r = runWithTimeout(100, st, q, timer.createTimer())(queryEval)
-
-        //        var r = ""
-        //        m.onComplete {
-        //          case Success(value) => r = r + value
-        //          case Failure(e) => r = r + "timeout"
-        //        }
-        //        println(r)
-        r
-      }.mkString(", ")
-
-      q.split("=").head + " = " + t
+    val queRes = queries.map { seg =>
+      var segRes = seg.map(q => (q.split("=").head, ilistEmpty[String])).to(ListMap)
+      val v = Vector.range(0, times)
+      val t = v.foreach { k =>
+        QueryEval.setup(st)
+        Random.shuffle(seg).foreach { q =>
+          val qname = q.split("=").head
+          val r = if (segRes(qname).isEmpty || segRes(qname).last != "timeout") {
+            runWithTimeout(10000, st, q, timer.createTimer())(queryEval)
+          } else {
+            None
+          }
+          segRes = segRes + (qname -> segRes(qname).:+(r.getOrElse("timeout")))
+        }
+        QueryEval.clear()
+      }
+      segRes.foreach { sr =>
+        if (sr._2.contains("timeout")) {
+          segRes = segRes + (sr._1 -> sr._2.:+("timeout"))
+        } else {
+          val avg = (sr._2.map(it => it.toInt).sum) / sr._2.length
+          segRes = segRes + (sr._1 -> sr._2.:+(avg.toString))
+        }
+      }
+      segRes
     }
-    res = res + x.mkString("\n")
-    res
+
+    printer(queRes)
+
+    //    val x = queries.map { q =>
+    //      var exes = ""
+    //      val v = Vector.range(0, 10)
+    //      val t = v.flatMap { k =>
+    //        // val m = TimeoutFuture[String](FiniteDuration(60, duration.MILLISECONDS), st, q, timer) (queryEval)
+    //        val r = runWithTimeout(100, st, q, timer.createTimer())(queryEval)
+    //
+    //        //        var r = ""
+    //        //        m.onComplete {
+    //        //          case Success(value) => r = r + value
+    //        //          case Failure(e) => r = r + "timeout"
+    //        //        }
+    //        //        println(r)
+    //        r
+    //      }.mkString(", ")
+    //
+    //      //q.split("=").head +
+    //        " = " + t
+    //    }
+    //    res = res + x.mkString("\n")
+    //    res
   }
 
   def queryEval(st: SymbolTable, query: String, timer: Timer): String = {
@@ -77,5 +109,9 @@ object PerformanceMetrics {
     } catch {
       case e: Exception => None
     }
+  }
+
+  def printer(qres: IList[ILinkedMap[String, IList[String]]]): String = {
+    qres.map { qr => qr.map { q => q._1 + " = " + q._2.mkString(", ") }.mkString("\n") }.mkString("\n\n")
   }
 }

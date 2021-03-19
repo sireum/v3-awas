@@ -40,13 +40,15 @@ class BasicReachabilityImpl(st: SymbolTable)
   extends BasicReachability[FlowNode] {
   type Graph = FlowGraph[FlowNode, FlowEdge[FlowNode]]
   val H = SymbolTableHelper
+  private var cache = imapEmpty[FlowNode, ISet[Graph]]
+  private val useCache = true
 
   /**
-    * Returns the forward reachability/slice for the set of criterion
-    *
-    * @param criterion Set of graph nodes to which reachability is computed
-    * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
-    */
+   * Returns the forward reachability/slice for the set of criterion
+   *
+   * @param criterion Set of graph nodes to which reachability is computed
+   * @return a [[ISet]] of reached nodes or empty set, in case nothing to be reached
+   */
   override def forwardReachSetNode(criterion: Set[FlowNode]): Collector = {
     reach(criterion, isForward = true)
   }
@@ -142,10 +144,27 @@ class BasicReachabilityImpl(st: SymbolTable)
 
   private def getAllSubGraphs(given: ISet[FlowNode]): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
     var result = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
+    `given`.foreach { n =>
+      if (useCache) {
+        if (cache.contains(n)) {
+          result = result ++ cache(n)
+        } else {
+          cache = cache + (n -> computeSubGraphs(n))
+          result = result ++ cache(n)
+        }
+      } else {
+        result = result ++ computeSubGraphs(n)
+      }
+    }
+    result
+  }
+
+  private def computeSubGraphs(node: FlowNode): ISet[Graph] = {
+    var result = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
     var workList = ilistEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
-    workList = workList ++ given.flatMap(_.getSubGraph)
-
-
+    if (node.getSubGraph.isDefined) {
+      workList = workList :+ node.getSubGraph.get
+    }
     while (workList.nonEmpty) {
       val current = workList.head
       result = result + current
@@ -314,7 +333,7 @@ class BasicReachabilityImpl(st: SymbolTable)
 
       val complexPaths: ISeq[Collector] = pathCycleMap.flatMap { it =>
         if (it._2.nonEmpty) {
-          Some(collector.Collector(
+          ilistEmpty[Collector].:+(collector.Collector(
             graphs = it._1.getGraphs,
             nodes = it._1.getNodes union it._2,
             ports = isetEmpty[ResourceUri],
@@ -323,8 +342,8 @@ class BasicReachabilityImpl(st: SymbolTable)
             flows = isetEmpty[ResourceUri],
             criteria = isetEmpty[ResourceUri] + source.getUri + target.getUri, true,
             error = isetEmpty[Tag]))
-        } else None
-      }.toVector
+        } else ilistEmpty[Collector]
+      }.toSeq
 
       Collector(
         pathNodes.getGraphs,

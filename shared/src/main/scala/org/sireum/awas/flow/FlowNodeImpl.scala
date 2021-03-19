@@ -29,12 +29,12 @@ package org.sireum.awas.flow
 
 import org.sireum.awas.collector
 import org.sireum.awas.collector.CollectorErrorHelper._
-import org.sireum.awas.collector.{FlowCollector, FlowErrorNextCollector}
+import org.sireum.awas.collector.{Collector, FlowCollector, FlowErrorNextCollector}
 import org.sireum.awas.graph.{AwasEdgeFactory, AwasGraph}
 import org.sireum.awas.symbol.{FlowTableData, Resource, SymbolTable, SymbolTableHelper}
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.util._
-import upickle.default.{ReadWriter => RW, macroRW}
+import upickle.default.{macroRW, ReadWriter => RW}
 
 
 
@@ -47,6 +47,7 @@ final class FlowNodeImpl(uri: ResourceUri,
 
   self: FlowNode =>
 
+  private var flowCache = imapEmpty[ResourceUri, Collector]
   private type Edge = FlowEdge[FlowNode]
 
   //  override val H = SymbolTableHelper
@@ -183,7 +184,7 @@ final class FlowNodeImpl(uri: ResourceUri,
       //we know, if we are performing a forward analysis,
       // and calculating intra flow(this method), then given port is input
       if (isForward) result ++= outPorts else result ++= inPorts
-      if (getResourceType == H.COMPONENT_TYPE) {
+      if (getResourceType == NodeType.COMPONENT) {
         errors = errors + warningMessageGen(FLOW_INFO_MISSING, H.uri2CanonicalName(uri), ReachAnalysisStage.Port)
       }
 
@@ -366,6 +367,12 @@ final class FlowNodeImpl(uri: ResourceUri,
 
   override def getSubGraph: Option[FlowGraph[FlowNode, Edge]] = {
     subGraph
+  }
+
+  override def getFlowReach(flow: ResourceUri): Option[Collector] = flowCache.get(flow)
+
+  override def updateFlowCache(flow: ResourceUri, result: Collector): Unit = {
+    flowCache = flowCache + ((flow, result))
   }
 }
 
