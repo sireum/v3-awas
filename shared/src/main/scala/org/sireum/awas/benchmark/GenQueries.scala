@@ -9,11 +9,12 @@ import scala.util.Random
 object GenQueries {
 
   val H = SymbolTableHelper
-  val r: Random = new scala.util.Random(314)
+  var r: Random = new scala.util.Random(314)
 
 
   def apply(st: SymbolTable, count: Int): IList[IList[String]] = {
     var res = ilistEmpty[IList[String]]
+    r = new scala.util.Random(314)
     res = res :+ genForwardNode(st, count)
     res = res :+ genBackwardNode(st, count)
     res = res :+ genSourceTargetNode(st, count)
@@ -30,11 +31,11 @@ object GenQueries {
     val queryPre = "reach forward "
     val nodes = FlowNode.getGraphs.flatMap(_.nodes).filter(_.getResourceType != NodeType.PORT).toList.sortBy(_.getUri)
     val size = nodes.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri)))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(2).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genBackwardNode(st : SymbolTable, count : Int) : IList[String] = {
@@ -42,11 +43,11 @@ object GenQueries {
     val queryPre = "reach backward "
     val nodes = FlowNode.getGraphs.flatMap(_.nodes).filter(_.getResourceType != NodeType.PORT).toList.sortBy(_.getUri)
     val size = nodes.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri)))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(2).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genSourceTargetNode(st : SymbolTable, count : Int) : IList[String] = {
@@ -54,12 +55,12 @@ object GenQueries {
     val queryPre = "reach from "
     val nodes = FlowNode.getGraphs.flatMap(_.nodes).filter(_.getResourceType != NodeType.PORT).toList.sortBy(_.getUri)
     val size = nodes.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri) +
-        " to "+ H.uri2CanonicalName(nodes(r.nextInt(size)).getUri))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri) +
+        " to " + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri)))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(3).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genSourceTargetNodePath(st : SymbolTable, count : Int) : IList[String] = {
@@ -67,12 +68,12 @@ object GenQueries {
     val queryPre = "reach paths from "
     val nodes = FlowNode.getGraphs.flatMap(_.nodes).filter(_.getResourceType != NodeType.PORT).toList.sortBy(_.getUri)
     val size = nodes.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri) +
-        " to "+ H.uri2CanonicalName(nodes(r.nextInt(size)).getUri))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri) +
+        " to " + H.uri2CanonicalName(nodes(r.nextInt(size)).getUri)))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(2).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genForwardPort(st : SymbolTable, count : Int) : IList[String] = {
@@ -80,11 +81,11 @@ object GenQueries {
     val queryPre = "reach forward "
     val ports = FlowNode.getGraphs.flatMap(_.nodes).flatMap(_.ports).toList
     val size = ports.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(ports(r.nextInt(size))))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(ports(r.nextInt(size)))))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(2).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genBackwardPort(st : SymbolTable, count : Int) : IList[String] = {
@@ -92,11 +93,11 @@ object GenQueries {
     val queryPre = "reach backward "
     val ports = FlowNode.getGraphs.flatMap(_.nodes).flatMap(_.ports).toList
     val size = ports.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(ports(r.nextInt(size))))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(ports(r.nextInt(size)))))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(2).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genSourceTargetPort(st : SymbolTable, count : Int) : IList[String] = {
@@ -104,12 +105,12 @@ object GenQueries {
     val queryPre = "reach from "
     val ports = FlowNode.getGraphs.flatMap(_.nodes).flatMap(_.ports).toList
     val size = ports.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(ports(r.nextInt(size))) +
-        " to "+ H.uri2CanonicalName(ports(r.nextInt(size))))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(ports(r.nextInt(size))) +
+        " to " + H.uri2CanonicalName(ports(r.nextInt(size)))))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(3).toInt).map(it => it._1 + " = " + it._2)
   }
 
   def genSourceTargetPortPath(st : SymbolTable, count : Int) : IList[String] = {
@@ -117,12 +118,12 @@ object GenQueries {
     val queryPre = "reach paths from "
     val ports = FlowNode.getGraphs.flatMap(_.nodes).flatMap(_.ports).toList
     val size = ports.size
-    var res = isetEmpty[String]
+    var res = isetEmpty[(String, String)]
     for (i <- 0 to count) {
-      res = res + (queryName + i + " = " + queryPre + H.uri2CanonicalName(ports(r.nextInt(size))) +
-        " to "+ H.uri2CanonicalName(ports(r.nextInt(size))))
+      res = res + ((queryName + i, queryPre + H.uri2CanonicalName(ports(r.nextInt(size))) +
+        " to " + H.uri2CanonicalName(ports(r.nextInt(size)))))
     }
-    res.toList
+    res.toList.sortBy(_._1.split('_')(2).toInt).map(it => it._1 + " = " + it._2)
   }
 
 }

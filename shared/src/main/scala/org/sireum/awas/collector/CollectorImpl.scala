@@ -465,13 +465,14 @@ case class CollectorImpl(graphs: ISet[ResourceUri] = isetEmpty[ResourceUri],
       var res = isetEmpty[ResourceUri]
       val sd = ErrorReachability(SymbolTable.getTable.get).getSuccDetailed(currentPort)
       sd.foreach { fc =>
-        if (fc.flows.nonEmpty && getFlows.intersect(fc.flows).nonEmpty) {
-          res = res ++ fc.ports.intersect(getPorts)
-        }
-
-        if (fc.edges.nonEmpty && getEdges.intersect(fc.edges).nonEmpty) {
-          res = res ++ fc.ports.intersect(getPorts)
-        }
+        //        if (fc.flows.nonEmpty && getFlows.intersect(fc.flows).nonEmpty) {
+        //          res = res ++ fc.ports.intersect(getPorts)
+        //        }
+        //
+        //        if (fc.edges.nonEmpty && getEdges.intersect(fc.edges).nonEmpty) {
+        //          res = res ++ fc.ports.intersect(getPorts)
+        //        }
+        res = res ++ fc.ports.intersect(getPorts)
       }
       res
     } else

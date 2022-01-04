@@ -72,7 +72,7 @@ object QueryCli {
               "resize", { () =>
                 {
                   if (queryLayout.isDefined) {
-                    queryLayout.get.updateSize(scalajs.js.undefined, scalajs.js.undefined)
+                    queryLayout.get.updateSize()
                   }
                 }
                 container.on("close", { () =>

@@ -229,8 +229,8 @@ object Views {
         style := "display:inherit", //quickView(),
         div(
           id := "main-container",
-          width := "100%",
           height := "100%",
+          width := "100%",
           div(id := "loading", cls := "pageloader is-active", span(id := "loader-msg", cls := "title", "loading..."))
         )
       ),

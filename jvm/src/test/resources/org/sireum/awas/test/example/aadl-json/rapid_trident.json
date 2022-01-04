@@ -1,0 +1,2661 @@
+{
+  "type": "Aadl",
+  "components": [
+    {
+      "type": "Component",
+      "identifier": {
+        "type": "Name",
+        "name": [
+          "RapidTrident_impl_Instance"
+        ],
+        "pos": {
+          "type": "Some",
+          "value": {
+            "type": "Position",
+            "uriOpt": {
+              "type": "Some",
+              "value": "\/mils-example\/RapidTrident.aadl"
+            },
+            "beginLine": 46,
+            "beginColumn": 2,
+            "endLine": 58,
+            "endColumn": 24,
+            "offset": 733,
+            "length": 391
+          }
+        }
+      },
+      "category": {
+        "type": "ComponentCategory",
+        "value": "System"
+      },
+      "classifier": {
+        "type": "None"
+      },
+      "features": [
+      ],
+      "subComponents": [
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "scrubber"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 50,
+                "beginColumn": 4,
+                "endLine": 50,
+                "endColumn": 30,
+                "offset": 843,
+                "length": 26
+              }
+            }
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "Device"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "RapidTrident::Scrubber"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber",
+                  "plan_in"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 40,
+                    "beginColumn": 4,
+                    "endLine": 40,
+                    "endColumn": 33,
+                    "offset": 601,
+                    "length": 29
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.0\/@featureInstance.0"
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber",
+                  "plan_out"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 41,
+                    "beginColumn": 4,
+                    "endLine": 41,
+                    "endColumn": 35,
+                    "offset": 634,
+                    "length": 31
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.0\/@featureInstance.1"
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+            {
+              "type": "Flow",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber",
+                  "clean"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 43,
+                    "beginColumn": 4,
+                    "endLine": 43,
+                    "endColumn": 41,
+                    "offset": 677,
+                    "length": 37
+                  }
+                }
+              },
+              "kind": {
+                "type": "FlowKind",
+                "value": "Path"
+              },
+              "source": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "scrubber",
+                    "plan_in"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 40,
+                      "beginColumn": 4,
+                      "endLine": 40,
+                      "endColumn": 33,
+                      "offset": 601,
+                      "length": 29
+                    }
+                  }
+                }
+              },
+              "sink": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "scrubber",
+                    "plan_out"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 41,
+                      "beginColumn": 4,
+                      "endLine": 41,
+                      "endColumn": 35,
+                      "offset": 634,
+                      "length": 31
+                    }
+                  }
+                }
+              },
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.0\/@flowSpecification.0"
+            }
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                ],
+                "propagations": [
+                ],
+                "flows": [
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                },
+                "properties": [
+                ]
+              }
+            },
+            {
+              "type": "Annex",
+              "name": "smf",
+              "clause": {
+                "type": "SmfClause",
+                "classification": [
+                ],
+                "declass": [
+                ]
+              }
+            }
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.0"
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "us_army"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 48,
+                "beginColumn": 4,
+                "endLine": 48,
+                "endColumn": 28,
+                "offset": 793,
+                "length": 24
+              }
+            }
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "System"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "RapidTrident::USArmy"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army",
+                  "weather"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 11,
+                    "beginColumn": 4,
+                    "endLine": 11,
+                    "endColumn": 26,
+                    "offset": 185,
+                    "length": 22
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.1\/@featureInstance.0"
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army",
+                  "plan"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 9,
+                    "beginColumn": 4,
+                    "endLine": 9,
+                    "endColumn": 30,
+                    "offset": 121,
+                    "length": 26
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.1\/@featureInstance.1"
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army",
+                  "plan_recv"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 10,
+                    "beginColumn": 4,
+                    "endLine": 10,
+                    "endColumn": 34,
+                    "offset": 151,
+                    "length": 30
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.1\/@featureInstance.2"
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                ],
+                "propagations": [
+                ],
+                "flows": [
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                },
+                "properties": [
+                ]
+              }
+            },
+            {
+              "type": "Annex",
+              "name": "smf",
+              "clause": {
+                "type": "SmfClause",
+                "classification": [
+                  {
+                    "type": "SmfClassification",
+                    "portName": {
+                      "type": "Name",
+                      "name": [
+                        "RapidTrident_impl_Instance",
+                        "us_army",
+                        "plan"
+                      ],
+                      "pos": {
+                        "type": "Some",
+                        "value": {
+                          "type": "Position",
+                          "uriOpt": {
+                            "type": "Some",
+                            "value": "\/mils-example\/RapidTrident.aadl"
+                          },
+                          "beginLine": 9,
+                          "beginColumn": 4,
+                          "endLine": 9,
+                          "endColumn": 30,
+                          "offset": 121,
+                          "length": 26
+                        }
+                      }
+                    },
+                    "typeName": {
+                      "type": "Name",
+                      "name": [
+                        "RapidTrident_impl_Instance",
+                        "us_army",
+                        "High"
+                      ],
+                      "pos": {
+                        "type": "Some",
+                        "value": {
+                          "type": "Position",
+                          "uriOpt": {
+                            "type": "Some",
+                            "value": "\/mils-example\/SecurityPolicy.aadl"
+                          },
+                          "beginLine": 5,
+                          "beginColumn": 3,
+                          "endLine": 5,
+                          "endColumn": 30,
+                          "offset": 105,
+                          "length": 27
+                        }
+                      }
+                    }
+                  }
+                ],
+                "declass": [
+                ]
+              }
+            }
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.1"
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "nato"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 49,
+                "beginColumn": 4,
+                "endLine": 49,
+                "endColumn": 22,
+                "offset": 821,
+                "length": 18
+              }
+            }
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "System"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "RapidTrident::NATO"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "nato",
+                  "plan"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 21,
+                    "beginColumn": 4,
+                    "endLine": 21,
+                    "endColumn": 29,
+                    "offset": 311,
+                    "length": 25
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "In"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.2\/@featureInstance.0"
+            },
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "nato",
+                  "plan_ack"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 22,
+                    "beginColumn": 4,
+                    "endLine": 22,
+                    "endColumn": 34,
+                    "offset": 340,
+                    "length": 30
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "EventDataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.2\/@featureInstance.1"
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                ],
+                "propagations": [
+                ],
+                "flows": [
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                },
+                "properties": [
+                ]
+              }
+            },
+            {
+              "type": "Annex",
+              "name": "smf",
+              "clause": {
+                "type": "SmfClause",
+                "classification": [
+                  {
+                    "type": "SmfClassification",
+                    "portName": {
+                      "type": "Name",
+                      "name": [
+                        "RapidTrident_impl_Instance",
+                        "nato",
+                        "plan"
+                      ],
+                      "pos": {
+                        "type": "Some",
+                        "value": {
+                          "type": "Position",
+                          "uriOpt": {
+                            "type": "Some",
+                            "value": "\/mils-example\/RapidTrident.aadl"
+                          },
+                          "beginLine": 21,
+                          "beginColumn": 4,
+                          "endLine": 21,
+                          "endColumn": 29,
+                          "offset": 311,
+                          "length": 25
+                        }
+                      }
+                    },
+                    "typeName": {
+                      "type": "Name",
+                      "name": [
+                        "RapidTrident_impl_Instance",
+                        "nato",
+                        "Medium"
+                      ],
+                      "pos": {
+                        "type": "Some",
+                        "value": {
+                          "type": "Position",
+                          "uriOpt": {
+                            "type": "Some",
+                            "value": "\/mils-example\/SecurityPolicy.aadl"
+                          },
+                          "beginLine": 4,
+                          "beginColumn": 3,
+                          "endLine": 4,
+                          "endColumn": 29,
+                          "offset": 76,
+                          "length": 26
+                        }
+                      }
+                    }
+                  }
+                ],
+                "declass": [
+                ]
+              }
+            }
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.2"
+        },
+        {
+          "type": "Component",
+          "identifier": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "weather"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 51,
+                "beginColumn": 4,
+                "endLine": 51,
+                "endColumn": 29,
+                "offset": 873,
+                "length": 25
+              }
+            }
+          },
+          "category": {
+            "type": "ComponentCategory",
+            "value": "System"
+          },
+          "classifier": {
+            "type": "Some",
+            "value": {
+              "type": "Classifier",
+              "name": "RapidTrident::Weather"
+            }
+          },
+          "features": [
+            {
+              "type": "FeatureEnd",
+              "identifier": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "weather",
+                  "today"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 31,
+                    "beginColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 25,
+                    "offset": 474,
+                    "length": 21
+                  }
+                }
+              },
+              "direction": {
+                "type": "Direction",
+                "value": "Out"
+              },
+              "category": {
+                "type": "FeatureCategory",
+                "value": "DataPort"
+              },
+              "classifier": {
+                "type": "None"
+              },
+              "properties": [
+              ],
+              "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.3\/@featureInstance.0"
+            }
+          ],
+          "subComponents": [
+          ],
+          "connections": [
+          ],
+          "connectionInstances": [
+          ],
+          "properties": [
+          ],
+          "flows": [
+          ],
+          "modes": [
+          ],
+          "annexes": [
+            {
+              "type": "Annex",
+              "name": "Emv2",
+              "clause": {
+                "type": "Emv2Clause",
+                "libraries": [
+                ],
+                "propagations": [
+                ],
+                "flows": [
+                ],
+                "componentBehavior": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Emv2BehaviorSection",
+                    "events": [
+                    ],
+                    "transitions": [
+                    ],
+                    "propagations": [
+                    ]
+                  }
+                },
+                "properties": [
+                ]
+              }
+            },
+            {
+              "type": "Annex",
+              "name": "smf",
+              "clause": {
+                "type": "SmfClause",
+                "classification": [
+                  {
+                    "type": "SmfClassification",
+                    "portName": {
+                      "type": "Name",
+                      "name": [
+                        "RapidTrident_impl_Instance",
+                        "weather",
+                        "today"
+                      ],
+                      "pos": {
+                        "type": "Some",
+                        "value": {
+                          "type": "Position",
+                          "uriOpt": {
+                            "type": "Some",
+                            "value": "\/mils-example\/RapidTrident.aadl"
+                          },
+                          "beginLine": 31,
+                          "beginColumn": 4,
+                          "endLine": 31,
+                          "endColumn": 25,
+                          "offset": 474,
+                          "length": 21
+                        }
+                      }
+                    },
+                    "typeName": {
+                      "type": "Name",
+                      "name": [
+                        "RapidTrident_impl_Instance",
+                        "weather",
+                        "Low"
+                      ],
+                      "pos": {
+                        "type": "Some",
+                        "value": {
+                          "type": "Position",
+                          "uriOpt": {
+                            "type": "Some",
+                            "value": "\/mils-example\/SecurityPolicy.aadl"
+                          },
+                          "beginLine": 3,
+                          "beginColumn": 3,
+                          "endLine": 3,
+                          "endColumn": 14,
+                          "offset": 62,
+                          "length": 11
+                        }
+                      }
+                    }
+                  }
+                ],
+                "declass": [
+                ]
+              }
+            }
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@componentInstance.3"
+        }
+      ],
+      "connections": [
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "c2"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 54,
+                "beginColumn": 4,
+                "endLine": 54,
+                "endColumn": 45,
+                "offset": 963,
+                "length": 41
+              }
+            }
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 50,
+                    "beginColumn": 4,
+                    "endLine": 50,
+                    "endColumn": 30,
+                    "offset": 843,
+                    "length": 26
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "scrubber",
+                    "plan_out"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 41,
+                      "beginColumn": 4,
+                      "endLine": 41,
+                      "endColumn": 35,
+                      "offset": 634,
+                      "length": 31
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "nato"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 49,
+                    "beginColumn": 4,
+                    "endLine": 49,
+                    "endColumn": 22,
+                    "offset": 821,
+                    "length": 18
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "nato",
+                    "plan"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 21,
+                      "beginColumn": 4,
+                      "endLine": 21,
+                      "endColumn": 29,
+                      "offset": 311,
+                      "length": 25
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "scrubber",
+                "plan_out -> nato",
+                "plan"
+              ],
+              "pos": {
+                "type": "None"
+              }
+            }
+          ],
+          "properties": [
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@connectionInstance.0\/@connectionReference.0"
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "c1"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 53,
+                "beginColumn": 4,
+                "endLine": 53,
+                "endColumn": 47,
+                "offset": 916,
+                "length": 43
+              }
+            }
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 48,
+                    "beginColumn": 4,
+                    "endLine": 48,
+                    "endColumn": 28,
+                    "offset": 793,
+                    "length": 24
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "us_army",
+                    "plan"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 9,
+                      "beginColumn": 4,
+                      "endLine": 9,
+                      "endColumn": 30,
+                      "offset": 121,
+                      "length": 26
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 50,
+                    "beginColumn": 4,
+                    "endLine": 50,
+                    "endColumn": 30,
+                    "offset": 843,
+                    "length": 26
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "scrubber",
+                    "plan_in"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 40,
+                      "beginColumn": 4,
+                      "endLine": 40,
+                      "endColumn": 33,
+                      "offset": 601,
+                      "length": 29
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "us_army",
+                "plan -> scrubber",
+                "plan_in"
+              ],
+              "pos": {
+                "type": "None"
+              }
+            }
+          ],
+          "properties": [
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@connectionInstance.1\/@connectionReference.0"
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "c3"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 55,
+                "beginColumn": 4,
+                "endLine": 55,
+                "endColumn": 48,
+                "offset": 1008,
+                "length": 44
+              }
+            }
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "nato"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 49,
+                    "beginColumn": 4,
+                    "endLine": 49,
+                    "endColumn": 22,
+                    "offset": 821,
+                    "length": 18
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "nato",
+                    "plan_ack"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 22,
+                      "beginColumn": 4,
+                      "endLine": 22,
+                      "endColumn": 34,
+                      "offset": 340,
+                      "length": 30
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 48,
+                    "beginColumn": 4,
+                    "endLine": 48,
+                    "endColumn": 28,
+                    "offset": 793,
+                    "length": 24
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "us_army",
+                    "plan_recv"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 10,
+                      "beginColumn": 4,
+                      "endLine": 10,
+                      "endColumn": 34,
+                      "offset": 151,
+                      "length": 30
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "nato",
+                "plan_ack -> us_army",
+                "plan_recv"
+              ],
+              "pos": {
+                "type": "None"
+              }
+            }
+          ],
+          "properties": [
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@connectionInstance.2\/@connectionReference.0"
+        },
+        {
+          "type": "Connection",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "c4"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 56,
+                "beginColumn": 4,
+                "endLine": 56,
+                "endColumn": 46,
+                "offset": 1056,
+                "length": 42
+              }
+            }
+          },
+          "src": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "weather"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 51,
+                    "beginColumn": 4,
+                    "endLine": 51,
+                    "endColumn": 29,
+                    "offset": 873,
+                    "length": 25
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "weather",
+                    "today"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 31,
+                      "beginColumn": 4,
+                      "endLine": 31,
+                      "endColumn": 25,
+                      "offset": 474,
+                      "length": 21
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "Out"
+                }
+              }
+            }
+          ],
+          "dst": [
+            {
+              "type": "EndPoint",
+              "component": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 48,
+                    "beginColumn": 4,
+                    "endLine": 48,
+                    "endColumn": 28,
+                    "offset": 793,
+                    "length": 24
+                  }
+                }
+              },
+              "feature": {
+                "type": "Some",
+                "value": {
+                  "type": "Name",
+                  "name": [
+                    "RapidTrident_impl_Instance",
+                    "us_army",
+                    "weather"
+                  ],
+                  "pos": {
+                    "type": "Some",
+                    "value": {
+                      "type": "Position",
+                      "uriOpt": {
+                        "type": "Some",
+                        "value": "\/mils-example\/RapidTrident.aadl"
+                      },
+                      "beginLine": 11,
+                      "beginColumn": 4,
+                      "endLine": 11,
+                      "endColumn": 26,
+                      "offset": 185,
+                      "length": 22
+                    }
+                  }
+                }
+              },
+              "direction": {
+                "type": "Some",
+                "value": {
+                  "type": "Direction",
+                  "value": "In"
+                }
+              }
+            }
+          ],
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "isBiDirectional": false,
+          "connectionInstances": [
+            {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "weather",
+                "today -> us_army",
+                "weather"
+              ],
+              "pos": {
+                "type": "None"
+              }
+            }
+          ],
+          "properties": [
+          ],
+          "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/\/@connectionInstance.3\/@connectionReference.0"
+        }
+      ],
+      "connectionInstances": [
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "scrubber.plan_out -> nato.plan"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 54,
+                "beginColumn": 4,
+                "endLine": 54,
+                "endColumn": 45,
+                "offset": 963,
+                "length": 41
+              }
+            }
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "scrubber"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 50,
+                  "beginColumn": 4,
+                  "endLine": 50,
+                  "endColumn": 30,
+                  "offset": 843,
+                  "length": 26
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber",
+                  "plan_out"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 41,
+                    "beginColumn": 4,
+                    "endLine": 41,
+                    "endColumn": 35,
+                    "offset": 634,
+                    "length": 31
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "nato"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 49,
+                  "beginColumn": 4,
+                  "endLine": 49,
+                  "endColumn": 22,
+                  "offset": 821,
+                  "length": 18
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "nato",
+                  "plan"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 21,
+                    "beginColumn": 4,
+                    "endLine": 21,
+                    "endColumn": 29,
+                    "offset": 311,
+                    "length": 25
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "c2"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 54,
+                    "beginColumn": 4,
+                    "endLine": 54,
+                    "endColumn": 45,
+                    "offset": 963,
+                    "length": 41
+                  }
+                }
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 46,
+                    "beginColumn": 2,
+                    "endLine": 58,
+                    "endColumn": 24,
+                    "offset": 733,
+                    "length": 391
+                  }
+                }
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "us_army.plan -> scrubber.plan_in"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 53,
+                "beginColumn": 4,
+                "endLine": 53,
+                "endColumn": 47,
+                "offset": 916,
+                "length": 43
+              }
+            }
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "us_army"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 48,
+                  "beginColumn": 4,
+                  "endLine": 48,
+                  "endColumn": 28,
+                  "offset": 793,
+                  "length": 24
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army",
+                  "plan"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 9,
+                    "beginColumn": 4,
+                    "endLine": 9,
+                    "endColumn": 30,
+                    "offset": 121,
+                    "length": 26
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "scrubber"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 50,
+                  "beginColumn": 4,
+                  "endLine": 50,
+                  "endColumn": 30,
+                  "offset": 843,
+                  "length": 26
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "scrubber",
+                  "plan_in"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 40,
+                    "beginColumn": 4,
+                    "endLine": 40,
+                    "endColumn": 33,
+                    "offset": 601,
+                    "length": 29
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "c1"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 53,
+                    "beginColumn": 4,
+                    "endLine": 53,
+                    "endColumn": 47,
+                    "offset": 916,
+                    "length": 43
+                  }
+                }
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 46,
+                    "beginColumn": 2,
+                    "endLine": 58,
+                    "endColumn": 24,
+                    "offset": 733,
+                    "length": 391
+                  }
+                }
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "nato.plan_ack -> us_army.plan_recv"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 55,
+                "beginColumn": 4,
+                "endLine": 55,
+                "endColumn": 48,
+                "offset": 1008,
+                "length": 44
+              }
+            }
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "nato"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 49,
+                  "beginColumn": 4,
+                  "endLine": 49,
+                  "endColumn": 22,
+                  "offset": 821,
+                  "length": 18
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "nato",
+                  "plan_ack"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 22,
+                    "beginColumn": 4,
+                    "endLine": 22,
+                    "endColumn": 34,
+                    "offset": 340,
+                    "length": 30
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "us_army"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 48,
+                  "beginColumn": 4,
+                  "endLine": 48,
+                  "endColumn": 28,
+                  "offset": 793,
+                  "length": 24
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army",
+                  "plan_recv"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 10,
+                    "beginColumn": 4,
+                    "endLine": 10,
+                    "endColumn": 34,
+                    "offset": 151,
+                    "length": 30
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "c3"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 55,
+                    "beginColumn": 4,
+                    "endLine": 55,
+                    "endColumn": 48,
+                    "offset": 1008,
+                    "length": 44
+                  }
+                }
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 46,
+                    "beginColumn": 2,
+                    "endLine": 58,
+                    "endColumn": 24,
+                    "offset": 733,
+                    "length": 391
+                  }
+                }
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        },
+        {
+          "type": "ConnectionInstance",
+          "name": {
+            "type": "Name",
+            "name": [
+              "RapidTrident_impl_Instance",
+              "weather.today -> us_army.weather"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/RapidTrident.aadl"
+                },
+                "beginLine": 56,
+                "beginColumn": 4,
+                "endLine": 56,
+                "endColumn": 46,
+                "offset": 1056,
+                "length": 42
+              }
+            }
+          },
+          "src": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "weather"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 51,
+                  "beginColumn": 4,
+                  "endLine": 51,
+                  "endColumn": 29,
+                  "offset": 873,
+                  "length": 25
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "weather",
+                  "today"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 31,
+                    "beginColumn": 4,
+                    "endLine": 31,
+                    "endColumn": 25,
+                    "offset": 474,
+                    "length": 21
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "Out"
+              }
+            }
+          },
+          "dst": {
+            "type": "EndPoint",
+            "component": {
+              "type": "Name",
+              "name": [
+                "RapidTrident_impl_Instance",
+                "us_army"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/RapidTrident.aadl"
+                  },
+                  "beginLine": 48,
+                  "beginColumn": 4,
+                  "endLine": 48,
+                  "endColumn": 28,
+                  "offset": 793,
+                  "length": 24
+                }
+              }
+            },
+            "feature": {
+              "type": "Some",
+              "value": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "us_army",
+                  "weather"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 11,
+                    "beginColumn": 4,
+                    "endLine": 11,
+                    "endColumn": 26,
+                    "offset": 185,
+                    "length": 22
+                  }
+                }
+              }
+            },
+            "direction": {
+              "type": "Some",
+              "value": {
+                "type": "Direction",
+                "value": "In"
+              }
+            }
+          },
+          "kind": {
+            "type": "ConnectionKind",
+            "value": "Port"
+          },
+          "connectionRefs": [
+            {
+              "type": "ConnectionReference",
+              "name": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance",
+                  "c4"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 56,
+                    "beginColumn": 4,
+                    "endLine": 56,
+                    "endColumn": 46,
+                    "offset": 1056,
+                    "length": 42
+                  }
+                }
+              },
+              "context": {
+                "type": "Name",
+                "name": [
+                  "RapidTrident_impl_Instance"
+                ],
+                "pos": {
+                  "type": "Some",
+                  "value": {
+                    "type": "Position",
+                    "uriOpt": {
+                      "type": "Some",
+                      "value": "\/mils-example\/RapidTrident.aadl"
+                    },
+                    "beginLine": 46,
+                    "beginColumn": 2,
+                    "endLine": 58,
+                    "endColumn": 24,
+                    "offset": 733,
+                    "length": 391
+                  }
+                }
+              },
+              "isParent": true
+            }
+          ],
+          "properties": [
+          ]
+        }
+      ],
+      "properties": [
+      ],
+      "flows": [
+      ],
+      "modes": [
+      ],
+      "annexes": [
+        {
+          "type": "Annex",
+          "name": "Emv2",
+          "clause": {
+            "type": "Emv2Clause",
+            "libraries": [
+            ],
+            "propagations": [
+            ],
+            "flows": [
+            ],
+            "componentBehavior": {
+              "type": "Some",
+              "value": {
+                "type": "Emv2BehaviorSection",
+                "events": [
+                ],
+                "transitions": [
+                ],
+                "propagations": [
+                ]
+              }
+            },
+            "properties": [
+            ]
+          }
+        },
+        {
+          "type": "Annex",
+          "name": "smf",
+          "clause": {
+            "type": "SmfClause",
+            "classification": [
+            ],
+            "declass": [
+            ]
+          }
+        }
+      ],
+      "uriFrag": "platform:\/resource\/mils-example\/instances\/RapidTrident_RapidTrident_impl_Instance.aaxl2#\/"
+    }
+  ],
+  "annexLib": [
+    {
+      "type": "SmfLibrary",
+      "types": [
+        {
+          "type": "SmfType",
+          "typeName": {
+            "type": "Name",
+            "name": [
+              "Low"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/SecurityPolicy.aadl"
+                },
+                "beginLine": 3,
+                "beginColumn": 3,
+                "endLine": 3,
+                "endColumn": 14,
+                "offset": 62,
+                "length": 11
+              }
+            }
+          },
+          "parentType": [
+          ]
+        },
+        {
+          "type": "SmfType",
+          "typeName": {
+            "type": "Name",
+            "name": [
+              "Medium"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/SecurityPolicy.aadl"
+                },
+                "beginLine": 4,
+                "beginColumn": 3,
+                "endLine": 4,
+                "endColumn": 29,
+                "offset": 76,
+                "length": 26
+              }
+            }
+          },
+          "parentType": [
+            {
+              "type": "Name",
+              "name": [
+                "Low"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/SecurityPolicy.aadl"
+                  },
+                  "beginLine": 3,
+                  "beginColumn": 3,
+                  "endLine": 3,
+                  "endColumn": 14,
+                  "offset": 62,
+                  "length": 11
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "SmfType",
+          "typeName": {
+            "type": "Name",
+            "name": [
+              "High"
+            ],
+            "pos": {
+              "type": "Some",
+              "value": {
+                "type": "Position",
+                "uriOpt": {
+                  "type": "Some",
+                  "value": "\/mils-example\/SecurityPolicy.aadl"
+                },
+                "beginLine": 5,
+                "beginColumn": 3,
+                "endLine": 5,
+                "endColumn": 30,
+                "offset": 105,
+                "length": 27
+              }
+            }
+          },
+          "parentType": [
+            {
+              "type": "Name",
+              "name": [
+                "Medium"
+              ],
+              "pos": {
+                "type": "Some",
+                "value": {
+                  "type": "Position",
+                  "uriOpt": {
+                    "type": "Some",
+                    "value": "\/mils-example\/SecurityPolicy.aadl"
+                  },
+                  "beginLine": 4,
+                  "beginColumn": 3,
+                  "endLine": 4,
+                  "endColumn": 29,
+                  "offset": 76,
+                  "length": 26
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dataComponents": [
+  ]
+}

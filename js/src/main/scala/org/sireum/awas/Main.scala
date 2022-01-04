@@ -36,6 +36,7 @@ import org.scalajs.dom.raw.{MessageEvent, Node, SVGElement, WebSocket}
 import org.scalajs.dom.{raw => _, _}
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.ast.{AwasSerializer, Model}
+import org.sireum.awas.benchmark.PerformanceMetrics
 import org.sireum.awas.collector.{Collector, ResultType}
 import org.sireum.awas.flow._
 import org.sireum.awas.peti.{AwasHash, Ping, Pong, Protocol, ProtocolSerializer}
@@ -63,6 +64,7 @@ import scala.util.{Failure, Success}
 object Main {
   //  val Amaran: Nothing = $.amaran
   val H = SymbolTableHelper
+  val BENCHMARK = false
 
   var uriNodeMap: IMap[String, ISet[SvgNode]] = imapEmpty[String, ISet[SvgNode]]
   var selections: IMap[String, (Boolean, String)] = imapEmpty[String, (Boolean, String)]
@@ -137,7 +139,7 @@ object Main {
         //        }
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options("30", svg.parentNode.asInstanceOf[Element])))
       }
     }
     false
@@ -171,7 +173,8 @@ object Main {
         container.getElement().append(breadCrumbs).append(svgDiv)
         new SVGPanZoom(asvg, Options(asvg.parentNode.asInstanceOf[Element]))
       }
-      container.getElement().attr("display", "inline-block;")
+      println(computeHeight(gl.get))
+      container.getElement().attr("display", "inline-block;") //.height(computeHeight(gl.get))
     }
 
     //println(js.constructorOf(comp))
@@ -279,6 +282,12 @@ object Main {
           updateTable(qI.get.getQueries, qI.get.getResults)
         }
         QuickView.quickView()
+        if (BENCHMARK) {
+          val data = PerformanceMetrics(st.get, 29, 30, new JSTimerImpl(), scalajs.concurrent.JSExecutionContext.Implicits.queue)
+          val filename = st.get.systemDecl.compName.value + "txt"
+          val blob = new Blob(js.Array(data), BlobPropertyBag("text/plain;charset=utf-8"))
+          FileSaver.saveAs(blob, filename)
+        }
       }
     } else {
 
@@ -395,14 +404,16 @@ object Main {
     }
   }
 
-  def computeHeight(gl: GoldenLayout): Unit = {
+  def computeHeight(gl: GoldenLayout): Double = {
     val totalHeight = window.innerHeight
     val headHeight = $[Div]("#header").clientHeight
     val footHeight = $[Div]("#footer").clientHeight
     val bodyHeight = totalHeight - (headHeight + footHeight)
     val graph = $[Div]("#body")
+
     graph.style.height = s"${bodyHeight}px"
-    gl.updateSize(scalajs.js.undefined, scalajs.js.undefined)
+    gl.updateSize()
+    bodyHeight
   }
 
   def getPortErrorFromFlow(

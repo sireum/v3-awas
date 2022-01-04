@@ -1,0 +1,46 @@
+types
+  lattice Low
+
+  lattice Medium extends Low
+
+  lattice High extends Medium
+
+system  RapidTrident_impl_Instance
+
+    sub-components {
+      nato
+        ports
+          in plan
+          out plan_ack
+        security
+          plan = Medium
+
+      scrubber
+        ports
+          in plan_in
+          out plan_out
+        flows
+          clean : plan_in -> plan_out
+
+      us_army
+        ports
+          in weather
+          out plan
+          in plan_recv
+        security
+          plan = High
+
+      weather
+        ports
+          out today
+        security
+          today = Low
+    }
+    connections
+      c2 : scrubber.plan_out -> nato.plan
+
+      c1 : us_army.plan -> scrubber.plan_in
+
+      c3 : nato.plan_ack -> us_army.plan_recv
+
+      c4 : weather.today -> us_army.weather

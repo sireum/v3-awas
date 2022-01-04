@@ -27,7 +27,7 @@
 package org.sireum.awas.AliranAman
 
 import org.sireum.awas.AliranAman.Lattice.{LEdge, LNode}
-import org.sireum.awas.collector.Collector
+import org.sireum.awas.collector.{Collector, FlowCollector}
 import org.sireum.awas.flow.FlowNode
 import org.sireum.awas.graph.{AwasEdge, SlangGraphImpl}
 import org.sireum.awas.reachability.PortReachability
@@ -113,27 +113,45 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
   }
 
   private def getDeclass(
-    currPort: ResourceUri,
-    nextPort: ResourceUri,
-    flows: ISet[ResourceUri]
-  ): Option[(Option[ResourceUri], ResourceUri)] = {
-    var correctFlow: Option[ResourceUri] = None
-    flows.foreach { flow =>
-      if (correctFlow.isEmpty) {
-        val compUri = H.findComponentUri(flow, st)
-        if (compUri.isDefined) {
-          val cst = st.componentTable(compUri.get)
-          if (cst.getPortsFromFlows(flow).contains(nextPort)) {
-            correctFlow = Some(flow)
-          }
+                          currPort: ResourceUri,
+                          nextPort: ResourceUri,
+                          flows: ISet[ResourceUri]
+                        ): Option[(Option[ResourceUri], ResourceUri)] = {
+    if (currPort.contains("FLT")) {
+      println("filter comp")
+    }
+    var res: Option[(Option[ResourceUri], ResourceUri)] = None
+    flows.foreach { f =>
+      if (Resource.getParentUri(currPort).isDefined &&
+        H.getUriType(Resource.getParentUri(currPort).get) == H.COMPONENT_TYPE) {
+        val cst = st.componentTable(Resource.getParentUri(currPort).get)
+        if (cst.declass(f).isDefined
+          && cst.getPortsFromFlows(f).contains(nextPort)) {
+          res = cst.declass(f)
         }
       }
     }
-    if (correctFlow.isDefined) {
-      val cst = st.componentTable(H.findComponentUri(correctFlow.get, st).get)
-      cst.declass(correctFlow.get)
+    res
+  }
+
+  private def filterRefined(port: ResourceUri, succs: ISet[FlowCollector])
+  : ISet[FlowCollector] = {
+    val parentUri = Resource.getParentUri(port)
+    //succs.foreach(println)
+    if (H.isInPort(port) &&
+      parentUri.isDefined &&
+      FlowNode.getNode(parentUri.get).isDefined &&
+      FlowNode.getNode(parentUri.get).get.getSubGraph.isDefined) {
+      val g = FlowNode.getNode(parentUri.get).get.getSubGraph.get
+      var res = isetEmpty[FlowCollector]
+      succs.foreach { s =>
+        if (s.ports.flatMap(Resource.getParentUri).flatMap(FlowNode.getNode).map(_.getOwner).contains(g)) {
+          res = res + s
+        }
+      }
+      res
     } else {
-      None
+      succs
     }
   }
 
@@ -143,7 +161,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
     val sysGraph = FlowNode.getGraph(st.system)
     val nodes = getStartingNodes(st.system)
 
-    val ports = nodes.flatMap(_.inPorts)
+    val ports = nodes.flatMap(_.ports)
 
     //step 1: From the set of provided, perform a forward fixpoint, such that
     //        LUB is computed at each meet(meaning low can flow to high)
@@ -156,15 +174,30 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
 
       val succ = pr.getSuccDetailed(curr._1)
 
-      succ.foreach { sp =>
+      filterRefined(curr._1, succ).foreach { sp =>
+        //going through only refined paths
+        // TODO: may have to compute declass based on sub-system declass
         sp.ports.foreach { p =>
           val declass = getDeclass(curr._1, p, sp.flows)
           if (res.contains(p)) {
+            if (declass.isDefined) {
+              println("res contains p :" + p)
+            }
             if (providedTypes.contains(p)) {
               // dont overwrite it
             } else {
               val t1 = if (declass.isDefined) {
-                lattice.LUB(isetEmpty + res(p) + declass.get._2)
+                //lattice.LUB(isetEmpty + res(p) + declass.get._2)
+                //declass is breaking LUB
+                if (declass.get._1.isDefined) {
+                  if (declass.get._1.get == curr._2) {
+                    lattice.LUB(isetEmpty + res(p) + declass.get._2)
+                  } else {
+                    lattice.LUB(isetEmpty + res(p) + curr._2)
+                  }
+                } else {
+                  lattice.LUB(isetEmpty + res(p) + declass.get._2)
+                }
               } else {
                 lattice.LUB(isetEmpty + res(p) + curr._2)
               }
@@ -174,7 +207,20 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
               }
             }
           } else {
-            val nt = if (declass.isDefined) { declass.get._2 } else curr._2
+            if (declass.isDefined) {
+              println("res not contains p :" + p)
+            }
+            val nt = if (declass.isDefined) {
+              if (declass.get._1.isDefined) {
+                if (declass.get._1.get == curr._2) {
+                  declass.get._2
+                } else {
+                  curr._2
+                }
+              } else {
+                declass.get._2
+              }
+            } else curr._2
             res = res + (p -> nt)
             workList1 = workList1 :+ (p, nt)
           }
@@ -219,7 +265,6 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
       var workList3 = ivectorEmpty[(ResourceUri, String)] ++
         forwardFrom.map(it => (it, res(it))) //++
       //providedTypes
-
       while (workList3.nonEmpty) {
         val curr = workList3.head
         val succ = pr.getPredecessor(curr._1)
@@ -281,7 +326,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
   }
 
   def getViolatingPaths(): ILinkedMap[String, Collector] = {
-    if (violatingPaths.isDefined) {
+    if (violatingPaths.isDefined && violatingPaths.get.nonEmpty) {
       violatingPaths.get
     } else {
       var result = ilinkedMapEmpty[String, Collector]
@@ -292,7 +337,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
         workList4 = workList4 ++ pr.getPredecessor(v)
         while (workList4.nonEmpty) {
           val curr = workList4.head
-          seen2 = seen2 + curr
+
           if (providedTypes.keySet.contains(curr)) {
             sources = sources + curr
           } else {
@@ -300,6 +345,7 @@ class SecInfoFlowAnalysisImpl(st: SymbolTable)(reporter: Reporter) extends SecIn
               workList4 = workList4 ++ pr.getPredecessor(curr)
             }
           }
+          seen2 = seen2 + curr
           workList4 = workList4.tail
         }
 

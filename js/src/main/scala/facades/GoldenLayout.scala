@@ -46,11 +46,17 @@ class GoldenLayout(configuration: js.Dictionary[js.Any], container: JQuery) exte
 
   def registerComponent(name: String, component: js.Dynamic): Nothing =
     js.native
+
   def init(): Nothing = js.native
-  def updateSize(width: UndefOr[Int], height: UndefOr[Int]): Nothing = js.native
+
+  def updateSize(width: UndefOr[Int] = scalajs.js.undefined, height: UndefOr[Int] = scalajs.js.undefined): Nothing = js.native
+
   def on(event: String, callBack: js.Function): Nothing = js.native
+
   def destroy(): Nothing = js.native
+
   def toConfig(): scalajs.js.Dictionary[js.Any] = js.native
+
   def getComponent(name: String): js.Dynamic = js.native
 }
 
@@ -94,7 +100,7 @@ trait ContentItem extends js.Object {
 
   def setActiveContentItem(contentItem: ContentItem): js.Dynamic = js.native
 
-  def setSize(width: Int, height: Int): Nothing = js.native
+  //def setSize(width: Int, height: Int): Nothing = js.native
 
   def setTitle(title: String): Nothing = js.native
 

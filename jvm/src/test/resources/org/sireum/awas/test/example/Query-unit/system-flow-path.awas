@@ -1,0 +1,6 @@
+system query_flow_path
+    ports
+      in inPort
+      out outPort
+    flows
+      f1 : inPort -> outPort

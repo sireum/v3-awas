@@ -70,6 +70,9 @@ class PortReachabilityImpl[Node](st: SymbolTable)
       if (FlowNode.getNode(portNode.getOwner.getUri).isDefined) {
         succ = succ + FlowNode.getNode(portNode.getOwner.getUri).get.getOwner.getSuccessorPorts(port) //parent graph succ
       }
+      if (portNode.getOwner.getUri == st.system) {
+        succ = succ + portNode.getOwner.getSuccessorPorts(port)
+      }
       succ
     } else if(H.isOutPort(port) && st.forwardDeployment(port).nonEmpty) {
       //bindings/deployment next port
@@ -99,16 +102,22 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     }
   }
 
-  def previousPorts(port: ResourceUri): ISet[FlowCollector] = {
-    if (Resource.getParentUri(port).isDefined) {
-      Resource.getParentUri(port).get
-    }
+  def previousPorts(port: ResourceUri, climbDown: Boolean): ISet[FlowCollector] = {
     if (H.isOutPort(port) && FlowNode.getNode(port).isDefined) {
       //two cases 1. part of 2 graphs or, 2. just one graph
       val portNode = FlowNode.getNode(port).get
-      var pred = isetEmpty + portNode.getOwner.getPredecessorPorts(port)
+      var pred = if (climbDown) isetEmpty + portNode.getOwner.getPredecessorPorts(port) else {
+        if (st.componentTable(portNode.getOwner.getUri).getFlowsFromPort(port).isEmpty) {
+          isetEmpty + portNode.getOwner.getPredecessorPorts(port)
+        } else {
+          isetEmpty[FlowCollector]
+        }
+      }
       if (FlowNode.getNode(portNode.getOwner.getUri).isDefined) {
         pred = pred + FlowNode.getNode(portNode.getOwner.getUri).get.getOwner.getPredecessorPorts(port)
+      }
+      if (portNode.getOwner.getUri == st.system) {
+        pred = pred + portNode.getOwner.getPredecessorPorts(port)
       }
       pred
     } else if(H.isInPort(port) && st.backwardDeployment(port).nonEmpty) {
@@ -157,7 +166,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
           val backward = if (cst.flow(flow).toPortUri.isDefined &&
             FlowNode.getNode(cst.flow(flow).toPortUri.get).isDefined) {
             val graph = FlowNode.getNode(cst.flow(flow).toPortUri.get).get.getOwner
-            graph.backwardPortReach(cst.flow(flow).fromPortUri.get)
+            graph.backwardPortReach(cst.flow(flow).toPortUri.get)
           } else {
             Collector.buildEmpty()
           }
@@ -201,7 +210,7 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     while (worklist.nonEmpty) {
       val current = worklist.head
       if (!resPorts.contains(current)) {
-        val temp = if (isForward) nextPorts(current, climbDown) else previousPorts(current)
+        val temp = if (isForward) nextPorts(current, climbDown) else previousPorts(current, climbDown)
         worklist = worklist ++ temp.flatMap(_.ports)
         resEdges = resEdges ++ temp.flatMap(_.edges)
         resFlows = resFlows ++ temp.flatMap(_.flows)
@@ -213,13 +222,15 @@ class PortReachabilityImpl[Node](st: SymbolTable)
     }
 
     var result = Collector(resGraphs, resPorts, resFlows, resEdges, isForward, criteria, resError)
-    var worklist2 = resFlows.toList
-    while (worklist2.nonEmpty) {
-      val cFlow = worklist2.head
-      worklist2 = worklist2.tail
-      val next = flowReach(cFlow)
-      worklist2 = worklist2 ++ next.getFlows
-      result = result.union(next)
+    if (!climbDown) {
+      var worklist2 = resFlows.toList
+      while (worklist2.nonEmpty) {
+        val cFlow = worklist2.head
+        worklist2 = worklist2.tail
+        val next = flowReach(cFlow)
+        worklist2 = worklist2 ++ next.getFlows
+        result = result.union(next)
+      }
     }
     result
   }
@@ -1069,11 +1080,11 @@ def getSimplePath(paths: ISet[ILinkedSet[ResourceUri]], src: ResourceUri, dst: R
   }
 
   override def getPredecessor(currentPort: ResourceUri): ISet[ResourceUri] = {
-    previousPorts(currentPort).flatMap(_.ports)
+    previousPorts(currentPort, true).flatMap(_.ports)
   }
 
   override def getPredDetailed(currentPort: ResourceUri): ISet[FlowCollector] = {
-    previousPorts(currentPort)
+    previousPorts(currentPort, true)
   }
 
   def reachSimplePath(source: ResourceUri, target: ResourceUri, isRefined: Boolean

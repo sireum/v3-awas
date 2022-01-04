@@ -73,9 +73,9 @@ object STPA {
 
   @JSExport
   def main(): Unit = {
-    var model = if (GraphQuery.json.isDefined) {
+    var model = if (js.typeOf(js.Dynamic.global.json) != "undefined") {
       Aadl2Awas.apply(GraphQuery.json.get)
-    } else if (GraphQuery.awas.isDefined) {
+    } else if (js.typeOf(js.Dynamic.global.awas) != "undefined") {
       AwasSerializer.unapply(GraphQuery.awas.get)
     } else {
       None
@@ -113,7 +113,7 @@ object STPA {
         val asvg = Util.graph2Svg(systemGraph.getUri, SvgGenConfig.defaultConfig, st.get)
         val svgDiv = render[Div](div(height := "100%", div(cls := "tempSvg")))
         svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
-        new SVGPanZoom(asvg, Options(svgDiv))
+        new SVGPanZoom(asvg, Options("30", svgDiv))
         body.appendChild(svgDiv)
         body.appendChild(getCausalScenario(st.get, ""))
       } else if(isISO14971) {
@@ -130,7 +130,7 @@ object STPA {
         val config = Views.getInitLayout(st.get.systemDecl.compName.value, st.get.system, canPop = true)
         SettingsView.setStoredSettings(SvgGenConfig.defaultErrorConfig)
         Main.gl = Some(new GoldenLayout(config, jQuery(graphDiv)))
-        Main.gl.get.updateSize(scalajs.js.undefined, scalajs.js.undefined)
+        Main.gl.get.updateSize()
         body.appendChild(graphDiv)
 
 

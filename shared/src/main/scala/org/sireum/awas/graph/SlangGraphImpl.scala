@@ -28,6 +28,7 @@
 package org.sireum.awas.graph
 
 import org.sireum.Graph
+import org.sireum.Graph.Edge
 import org.sireum.ops.GraphOps
 import org.sireum.util.{CSet, ISet, ilistEmpty, isetEmpty}
 
@@ -40,9 +41,16 @@ class SlangGraphImpl[Node, Edge <: AwasEdge[Node]]
 
   def getEdgeData(e: Graph.Edge[Node, Edge]): Option[Edge] = {
     e match {
-      case Graph.Edge.Data(s, d, ed) => Some(ed)
-      case _ => None
+      case value: Edge.Data[Node, Edge] =>
+        Some(value.getData)
+      case _ =>
+        None
     }
+    //
+    //    e match {
+    //      case Graph.Edge.Data(s, d, ed) => Some(ed)
+    //      case _ => None
+    //    }
   }
 
   var graph: Graph[Node, Edge] = Graph.empty[Node, Edge]

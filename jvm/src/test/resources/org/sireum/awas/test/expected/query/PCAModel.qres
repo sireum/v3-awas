@@ -96,6 +96,13 @@ connection:$$AWAS$PCAModel#s3 }
  -------------- 
 spo2_reach
  -------------- 
+Warning: 
+
+Missing flow relationships for node 'PCAModel.App'
+Missing flow relationships for node 'PCAModel.PulseOx'
+Missing flow relationships for node 'PCAModel.Patient'
+Missing flow relationships for node 'PCAModel.Capnography'
+Missing flow relationships for node 'PCAModel.Pump'
 { port-in-virtual:$$AWAS$PCAModel$a1#in, 
 port-in-virtual:$$AWAS$PCAModel$app1#in, 
 port-in-virtual:$$AWAS$PCAModel$p1#in, 

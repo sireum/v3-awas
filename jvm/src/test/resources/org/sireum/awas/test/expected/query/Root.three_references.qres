@@ -43,6 +43,11 @@ port-out:$$AWAS$Root_three_references_Instance$Sub$sub_proc#proc_out }
  -------------- 
 q3
  -------------- 
+Warning: 
+
+Missing flow relationships for node 'Root_three_references_Instance.Sub'
+Missing flow relationships for node 'Root_three_references_Instance.Sub.sub_proc'
+Missing flow relationships for node 'Root_three_references_Instance.Sub.sub_proc.thread1'
 { port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$child_to_parent#in, 
 port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$parent_to_child#in, 
 port-in-virtual:$$AWAS$Root_three_references_Instance$Sub$sub_proc$proc_to_thread_BACKWARD#in, 

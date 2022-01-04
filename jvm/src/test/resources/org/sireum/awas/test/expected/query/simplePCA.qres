@@ -1,5 +1,9 @@
 q2
  -------------- 
+Warning: 
+
+Missing flow relationships for node 'simplePCA.app'
+Missing flow relationships for node 'simplePCA.pulse_ox'
 { port-in-virtual:$$AWAS$simplePCA$cmd#in, 
 port-in-virtual:$$AWAS$simplePCA$infuse#in, 
 port-in-virtual:$$AWAS$simplePCA$read#in, 

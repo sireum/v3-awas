@@ -241,30 +241,42 @@ final class PrettyPrinter(sb: StringBuilder) {
     }
 
     if(compd.flows.nonEmpty) {
-      printIndent(localIndent+1)
+      printIndent(localIndent + 1)
       sb.append("flows")
       println()
-      print(compd.flows.head, localIndent+2)
-      for(cf <- compd.flows.tail) {
+      print(compd.flows.head, localIndent + 2)
+      for (cf <- compd.flows.tail) {
         println()
-        print(cf, localIndent+2)
+        print(cf, localIndent + 2)
       }
       println()
     }
 
-    if(compd.transitions.isDefined) {
-      printIndent(localIndent+1)
-      sb.append("transitions")
+    if (compd.declass.nonEmpty) {
+      printIndent(localIndent + 1)
+      sb.append("declassifications")
       println()
-      print(compd.transitions.get, localIndent+2)
+      print(compd.declass.head, localIndent + 2)
+      for (d <- compd.declass.tail) {
+        println()
+        print(d, localIndent + 2)
+      }
       println()
     }
 
-    if(compd.behaviour.isDefined) {
-      printIndent(localIndent+1)
+    if (compd.transitions.isDefined) {
+      printIndent(localIndent + 1)
+      sb.append("transitions")
+      println()
+      print(compd.transitions.get, localIndent + 2)
+      println()
+    }
+
+    if (compd.behaviour.isDefined) {
+      printIndent(localIndent + 1)
       sb.append("behavior")
       println()
-      print(compd.behaviour.get, localIndent+2)
+      print(compd.behaviour.get, localIndent + 2)
       println()
     }
 
@@ -693,6 +705,19 @@ final class PrettyPrinter(sb: StringBuilder) {
           sb.append("}")
         }
     }
+  }
+
+  def print(d: Declass, indent: Natural): Unit = {
+    printIndent(indent)
+    print(d.fid)
+    sb.append(" : ")
+    if (d.fromDomain.isEmpty) {
+      sb.append("*")
+    } else {
+      print(d.fromDomain.get)
+    }
+    sb.append(" -> ")
+    print(d.toDomain)
   }
 
   def print(f: CFlow, indent: Natural): Unit = {

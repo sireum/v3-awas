@@ -403,7 +403,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
     val errors = if (isFrom) flow.fromE else flow.toE
     var res: (Option[ResourceUri], ISet[ResourceUri]) = (None, isetEmpty[ResourceUri])
     if (port.isDefined) {
-      val fromP = ctp.ports.find(p => p.split(H.ID_SEPARATOR).last == port.get.value)
+      val fromP = ctp.ports.find(p => p.split(H.ID_SEPARATOR).last.equals(port.get.value))
       if (fromP.isDefined) {
         Resource.useDefResolve(port.get, ctp.port(fromP.get).get)
         ctp.tables.flowPortRelation.getOrElseUpdate(fromP.get, msetEmpty[ResourceUri]) += fr
@@ -723,7 +723,7 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
           Some(parentRes.toUri)
         }
         val compSt =
-          if (fcompUri.get == parentCT.componentUri) parentCT
+          if (fcompUri.get.equals(parentCT.componentUri)) parentCT
           else st.componentSymbolTable(fcompUri.get)
         val fportUri = compSt.getUriFromSymbol(connDecl.fromPort.value)
 
@@ -1083,9 +1083,12 @@ class ModelElemMiner(stp: STProducer) //extends STProducer
       Some(parentCST.componentUri)
     }
     if (fcompUri.isDefined) {
-      val fcomp =
-        if (fcompUri.get == parentCST.componentUri) parentCST
-        else stp.componentTable(fcompUri.get)
+      //scalajs bug not comparing String alias with ==
+      //      println(fcompUri.get)
+      //      println(parentCST.componentUri)
+      val fcomp = if (fcompUri.get.equals(parentCST.componentUri.toString)) {
+        parentCST
+      } else stp.componentTable(fcompUri.get)
 
       if (comp.isDefined) {
         Resource.useDefResolve(comp.get, fcomp.componentDecl)

@@ -209,10 +209,15 @@ object SettingsView {
   def showOrHideLegend(lattice: Div, toShow: Boolean): Unit = {
     if (toShow) {
       lattice.setAttribute("style", "display: block; text-align: center;")
-      if(lattice.lastElementChild == null) {
+      if (lattice.lastElementChild == null) {
         lattice.appendChild(SecViolations.apply().getLattice)
-      } else if (!lattice.lastElementChild.isEqualNode(SecViolations.apply().getLattice)) {
-        lattice.appendChild(SecViolations.apply().getLattice)
+      } else {
+        //        val l = SecViolations.apply().getLattice
+        //        if (!lattice.lastElementChild.isEqualNode(l)) {
+        //          lattice.appendChild(SecViolations.apply().getLattice)
+        //        }
+        lattice.removeChild(lattice.lastElementChild)
+        lattice.setAttribute("style", "display: none;")
       }
     } else {
       lattice.removeChild(lattice.lastElementChild)

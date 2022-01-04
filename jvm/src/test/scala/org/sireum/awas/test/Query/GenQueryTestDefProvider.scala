@@ -3,7 +3,7 @@ package org.sireum.awas.test.Query
 import java.nio.file.Paths
 
 import org.sireum.awas.ast.AwasSerializer
-import org.sireum.awas.benchmark.{PerformanceMetrics, TimerImpl}
+import org.sireum.awas.benchmark.{GenQueries, PerformanceMetrics, TimerImpl}
 import org.sireum.awas.flow.FlowGraph
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.TestUtils.{extensor, makePath, writeResult}
@@ -21,7 +21,7 @@ class GenQueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
   val resultsDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "results", "benchmark")))
   val expectedDir: Uri = toFilePath(fileUri(this.getClass, makePath("..", "expected", "benchmark")))
 
-  val generateExpected = true
+  val generateExpected = false
 
 
   override def testDefs: ISeq[TestDef] = {
@@ -61,7 +61,8 @@ class GenQueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
         implicit val reporter: Reporter = new ReporterImpl(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
         val graph = FlowGraph(m, st, true)
-        PerformanceMetrics(st, 29, 10, new TimerImpl())
+        GenQueries(st, 29).map(m => m.mkString("\n")).mkString("\n")
+      //PerformanceMetrics(st, 29, 10, new TimerImpl())
     }
   }
 }

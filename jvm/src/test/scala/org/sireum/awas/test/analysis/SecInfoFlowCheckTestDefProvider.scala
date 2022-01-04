@@ -52,7 +52,7 @@ class SecInfoFlowCheckTestDefProvider(tf: TestFramework) extends TestDefProvider
       //      p.toLowerCase.contains("pcashutoff") ||
       //        p.toLowerCase.contains("isolette") ||
       //        p.toLowerCase.contains("abcloop")  ||
-            p.toLowerCase.contains("case_sw")
+            p.toLowerCase.contains("rapid_")
 //      true
     }
 

@@ -31,8 +31,14 @@ final class BenchmarkTestDefProvider(tf: TestFramework) extends TestDefProvider 
     }
 
     val filesEqual = files.filter { p =>
-      true
-      //          p.toLowerCase.contains("pca_pulseox")
+      //false // do not run bench mark for CI
+      //      !(p.toLowerCase.contains("open-pca-latest") ||
+      //        p.toLowerCase.contains("isolette") ||
+      //        p.toLowerCase.contains("uxas") ||
+      //        p.toLowerCase.contains("wbs"))
+      //p.toLowerCase.contains("uav")
+      //true
+      false
     }
 
     filesEqual.toVector.map { x =>
@@ -64,8 +70,8 @@ final class BenchmarkTestDefProvider(tf: TestFramework) extends TestDefProvider 
       case Some(m) =>
         implicit val reporter: Reporter = new ReporterImpl(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
-        val graph = FlowGraph(m, st, true)
-        PerformanceMetrics(st, 29, 30, new TimerImpl())
+        val graph = FlowGraph(m, st, false)
+        PerformanceMetrics(st, 29, 30, new TimerImpl(), scala.concurrent.ExecutionContext.Implicits.global)
     }
   }
 }

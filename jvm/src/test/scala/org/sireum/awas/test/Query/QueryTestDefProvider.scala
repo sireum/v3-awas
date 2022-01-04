@@ -58,7 +58,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
 
     val filesEqual = files.filter { p =>
       true
-//          p.toLowerCase.contains("three_reference")
+      //p.toLowerCase.contains("pca_pulseox")
     }
 
     filesEqual.toVector.map { x =>
@@ -89,6 +89,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
     Builder(Some(relativeUri.toString), model) match {
       case None => "Failed to build the model"
       case Some(m) =>
+
         implicit val reporter: Reporter = new ReporterImpl(org.sireum.ISZ())
         val st = SymbolTable(m)(new AccumulatingTagReporter())
         val graph = FlowGraph(m, st, true)
@@ -99,7 +100,7 @@ final class QueryTestDefProvider(tf: TestFramework) extends TestDefProvider {
           }
           case Some(q) =>
             val res = QueryEval(q, st)
-            var result = ""
+            var result = "" //AwasSerializer(m) + "\n\n"
             res.foreach { r =>
               result += r._1
               result += "\n -------------- \n"
