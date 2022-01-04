@@ -45,9 +45,12 @@ import org.sireum.ops.ISZOps
 import org.sireum.util.MessageTag
 import scalatags.Text.all._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+//import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.scalajs.js
+
+import org.scalajs.macrotaskexecutor.MacrotaskExecutor.Implicits._
+
 
 object QueryCli {
 

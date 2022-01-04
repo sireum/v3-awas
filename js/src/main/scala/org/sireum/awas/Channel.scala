@@ -1,4 +1,4 @@
-package org.sireum.awas
+/*package org.sireum.awas
 
 import scala.concurrent.{Future, Promise}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,3 +25,4 @@ class Channel[T](init: (T => Unit) => Unit) {
     p.future
   }
 }
+*/

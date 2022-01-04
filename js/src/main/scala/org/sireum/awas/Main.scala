@@ -139,7 +139,7 @@ object Main {
         //        }
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options("30", svg.parentNode.asInstanceOf[Element])))
+        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
       }
     }
     false

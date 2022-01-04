@@ -113,7 +113,7 @@ object STPA {
         val asvg = Util.graph2Svg(systemGraph.getUri, SvgGenConfig.defaultConfig, st.get)
         val svgDiv = render[Div](div(height := "100%", div(cls := "tempSvg")))
         svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
-        new SVGPanZoom(asvg, Options("30", svgDiv))
+        new SVGPanZoom(asvg, Options(svgDiv))
         body.appendChild(svgDiv)
         body.appendChild(getCausalScenario(st.get, ""))
       } else if(isISO14971) {
