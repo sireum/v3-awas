@@ -1,0 +1,55 @@
+name: CI
+
+on: [push]
+
+jobs:
+
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: V3 Checkout
+        run: |
+          git clone --recursive https://github.com/sireum/v3.git sireum-v3
+      - name: Runtime Checkout
+        run: |
+          git clone https://github.com:sireum/air.git sireum-v3/aadl/ir
+          cd sireum-v3
+          ln -s ../ ./awas
+      - name: Cache Java
+        id: cache-java
+        uses: actions/cache@v2
+        with:
+          path: sireum-v3/platform/java
+          key: ${{ runner.os }}-${{ hashFiles('sireum-v3/bin/prelude.sh') }}-java
+      - name: Cache Z3
+        id: cache-z3
+        uses: actions/cache@v2
+        with:
+          path: sireum-v3/apps/z3
+          key: ${{ runner.os }}-${{ hashFiles('sireum-v3/bin/prelude.sh') }}-z3
+      - name: Cache Scala
+        id: cache-scala
+        uses: actions/cache@v2
+        with:
+          path: sireum-v3/platform/scala
+          key: ${{ runner.os }}-${{ hashFiles('sireum-v3/bin/prelude.sh') }}-scala
+      - name: Cache Node
+        id: cache-node
+        uses: actions/cache@v2
+        with:
+          path: sireum-v3/platform/node
+          key: ${{ runner.os }}-${{ hashFiles('sireum-v3/bin/prelude.sh') }}-node
+      - name: Cache sbt
+        id: cache-sbt
+        uses: actions/cache@v2
+        with:
+          path: sireum-v3/platform/sbt
+          key: ${{ runner.os }}-${{ hashFiles('sireum-v3/bin/prelude.sh') }}-sbt
+      - name: Test
+        run: |
+          cd $GITHUB_WORKSPACE/sireum-v3
+          git submodule update --init --recursive
+          bin/sbt-launch.sh clean test:compile
+          SIREUM_PARALLEL_BUILD=false bin/sbt-launch.sh 'project awas-jvm' test
