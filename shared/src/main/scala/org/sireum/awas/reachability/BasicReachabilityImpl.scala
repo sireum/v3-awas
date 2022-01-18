@@ -142,7 +142,7 @@ class BasicReachabilityImpl(st: SymbolTable)
       criteria.map(_.getUri), resError)
   }
 
-  private def getAllSubGraphs(given: ISet[FlowNode]): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
+  private def getAllSubGraphs(`given`: ISet[FlowNode]): ISet[FlowGraph[FlowNode, FlowNode.Edge]] = {
     var result = isetEmpty[FlowGraph[FlowNode, FlowNode.Edge]]
     `given`.foreach { n =>
       if (useCache) {

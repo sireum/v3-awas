@@ -333,7 +333,7 @@ object One {
 
 //final case class Variable(id : Id) extends One
 
-final case class Fault(enum: Name) extends One
+final case class Fault(`enum`: Name) extends One
 
 object Fault {
   implicit def rw: RW[Fault] = macroRW

@@ -30,17 +30,13 @@ package facades
 import org.scalajs.dom.{Element, Node}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSGlobal}
+import scala.scalajs.js.annotation.{JSGlobal, JSGlobalScope, JSName}
+import org.scalajs.dom.{Blob, Node}
+import org.scalajs.jquery.JQuery
 
-//
-//import org.scalajs.dom.{Blob, Node}
-//import org.scalajs.jquery.JQuery
-//
-//import scala.language.implicitConversions
-//import scala.runtime.java8.JFunction1$mcDD$sp
-//import scala.scalajs.js
-//import scala.scalajs.js.annotation.JSGlobalScope
-//import js.JSConverters._
+import scala.runtime.java8.JFunction1$mcDD$sp
+import scala.scalajs.js
+import js.JSConverters._
 
 //@js.native
 //trait SvgPanZoom extends JQuery {
@@ -52,51 +48,64 @@ import scala.scalajs.js.annotation.{JSGlobal}
 //
 //  implicit def jq2svgPanZoom(jq: JQuery): SvgPanZoom = jq.asInstanceOf[SvgPanZoom]
 //}
-//
-//
-//object SvgHelper {
-//  val opt  : js.Dictionary[js.Any] = js.Dictionary(
-//    ("viewportSelector", ".svg-pan-zoom_viewport'"),
-//    ("panEnabled", true),
-//    ("controlIconsEnabled", true),
-//    ("zoomEnabled", true),
-//    ("dblClickZoomEnabled", false),
-//    ("mouseWheelZoomEnabled", true),
-//    ("preventMouseEventsDefault", true),
-//    ("zoomScaleSensitivity", 0.5),
-//    ("minZoom", 0.5),
-//    ("maxZoom", 10),
-//    ("fit", 10),
-//    ("contain", false),
-//    ("center", true),
-//    ("refreshRate", "auto")
-//
-//  )
-//}
+
+
+@js.native
+@JSGlobal("svgPanZoom")
+class SvgPanZoom(svg: Element, options: js.Dictionary[js.Any] = SvgHelper.opt) extends js.Object {
+  //def zoomIn(): Unit = js.native
+
+  def enableControlIcons(): SvgPanZoom = js.native
+
+  def disableDblClickZoom(): SvgPanZoom = js.native
+
+  def setMaxZoom(value: Int): SvgPanZoom = js.native
+}
+
+object SvgHelper {
+  val opt: js.Dictionary[js.Any] = js.Dictionary(
+    ("viewportSelector", ".svg-pan-zoom_viewport'"),
+    ("panEnabled", true),
+    ("controlIconsEnabled", true),
+    ("zoomEnabled", true),
+    ("dblClickZoomEnabled", false),
+    ("mouseWheelZoomEnabled", true),
+    ("preventMouseEventsDefault", true),
+    ("zoomScaleSensitivity", 0.5),
+    ("minZoom", 0.5),
+    ("maxZoom", 10),
+    ("fit", 10),
+    ("contain", false),
+    ("center", true),
+    ("refreshRate", "auto")
+
+  )
+}
+
 //
 //@js.native
 //@JSGlobalScope
 
 
-@js.native
-@JSGlobal
-class SVGPanZoom(svg: Element, options: Options) extends js.Object {
-  def zoomIn(): Unit = js.native
-}
-
-object Options {
-
-  def apply(eventMagnet: Element, limits: String = "100"): Options = {
-    js.Dynamic.literal(limits = limits, eventMagnet = eventMagnet).asInstanceOf[Options]
-  }
-}
-
-@js.native
-trait Options extends js.Object {
-  var initialViewBox: js.Object = js.native
-  var animationTime: Int = js.native
-  var limits: String = js.native
-  var eventMagnet: Element = js.native
-  var zoom: js.Dynamic = js.native
-  var pan: js.Dynamic = js.native
-}
+//@js.native
+//@JSGlobal
+//class SVGPanZoom(svg: Element, options: Options) extends js.Object {
+//  def zoomIn(): Unit = js.native
+//}
+//
+//object Options {
+//
+//  def apply(eventMagnet: Element, limits: String = "100"): Options = {
+//    js.Dynamic.literal(limits = limits, eventMagnet = eventMagnet).asInstanceOf[Options]
+//  }
+//}
+//
+//@js.native
+//trait Options extends js.Object {
+//  var initialViewBox: js.Object = js.native
+//  var animationTime: Int = js.native
+//  var limits: String = js.native
+//  var eventMagnet: Element = js.native
+//  var zoom: js.Dynamic = js.native
+//  var pan: js.Dynamic = js.native
+//}

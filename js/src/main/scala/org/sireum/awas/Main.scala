@@ -139,7 +139,9 @@ object Main {
         //        }
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
+        //        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg))
+        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+
       }
     }
     false
@@ -171,9 +173,10 @@ object Main {
         val svgDiv = render[Div](div(height := "97%", div(cls := "tempSvg")))
         svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
         container.getElement().append(breadCrumbs).append(svgDiv)
-        new SVGPanZoom(asvg, Options(asvg.parentNode.asInstanceOf[Element]))
+
+        //new SvgPanZoom(asvg)
       }
-      println(computeHeight(gl.get))
+
       container.getElement().attr("display", "inline-block;") //.height(computeHeight(gl.get))
     }
 
@@ -230,6 +233,7 @@ object Main {
         buildGraphWindow()
         computeHeight(gl.get)
         $[Div](mainBox, "#loading").classList.remove("is-active")
+        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
         //
         val queryButton = mainDiv.querySelector("#query-button")
         val clearButton = mainDiv.querySelector("#clear-button")
@@ -368,7 +372,9 @@ object Main {
             st.get
           )
         )
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
+        //        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg))
+        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+
         compState.update("isTD", true)
       }
     }
@@ -398,7 +404,9 @@ object Main {
             st.get
           )
         )
-        $$[SVGElement]("svg").foreach(svg => new SVGPanZoom(svg, Options(svg.parentNode.asInstanceOf[Element])))
+        //        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg))
+        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+
         compState.update("isTD", false)
       }
     }

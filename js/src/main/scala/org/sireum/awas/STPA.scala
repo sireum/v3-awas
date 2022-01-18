@@ -26,10 +26,10 @@
 
 package org.sireum.awas
 
-import facades.{GoldenLayout, GraphQuery, Options, SVGPanZoom}
+import facades.{GoldenLayout, GraphQuery, SvgPanZoom}
 import org.scalajs.dom.{Element, Event, document}
 import org.scalajs.dom.html.{Anchor, Div, Table, TableCell, TableRow}
-import org.scalajs.dom.raw.{MouseEvent, MutationObserver, MutationObserverInit, MutationRecord}
+import org.scalajs.dom.raw.{MouseEvent, MutationObserver, MutationObserverInit, MutationRecord, SVGElement}
 import org.scalajs.jquery.jQuery
 import org.sireum.awas.Main.{H, buildGraphWindow, clearAll, collectorToUris, gl, highlight, st}
 import org.sireum.awas.STPA.pss
@@ -113,8 +113,8 @@ object STPA {
         val asvg = Util.graph2Svg(systemGraph.getUri, SvgGenConfig.defaultConfig, st.get)
         val svgDiv = render[Div](div(height := "100%", div(cls := "tempSvg")))
         svgDiv.replaceChild(asvg, svgDiv.querySelector(".tempSvg"))
-        new SVGPanZoom(asvg, Options(svgDiv))
         body.appendChild(svgDiv)
+        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
         body.appendChild(getCausalScenario(st.get, ""))
       } else if(isISO14971) {
         val hs = getAllHazSituations(st.get)

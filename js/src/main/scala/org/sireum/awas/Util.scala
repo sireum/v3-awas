@@ -25,7 +25,7 @@
  */
 
 package org.sireum.awas
-import facades.{GraphViz, Options, SVGPanZoom}
+import facades.{GraphViz, SvgPanZoom}
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.{Anchor, Input}
 import org.scalajs.dom.raw.SVGElement
@@ -35,7 +35,7 @@ import org.sireum.awas.flow.{FlowEdge, FlowGraph, FlowGraphUpdate, FlowNode}
 import org.sireum.awas.symbol.SymbolTable
 import org.sireum.awas.util.AwasUtil.ResourceUri
 import org.sireum.awas.witness.{Errors, RankDir, SvgGenConfig, SvgGenerator}
-import org.sireum.common.JSutil.templateContent
+import org.sireum.common.JSutil.{$$, templateContent}
 import org.sireum.util.{IMap, ISet, imapEmpty, isetEmpty}
 import scalatags.Text.all.raw
 
@@ -126,7 +126,7 @@ object Util {
       val old_svg = svgs(gk)
       val new_svg = Util.graph2Svg(gk, svgGenConfig, st.get)
       old_svg.parentNode.replaceChild(new_svg, old_svg)
-      new SVGPanZoom(new_svg, Options(new_svg.parentNode.asInstanceOf[Element]))
+      $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
       resetOrientationRadio()
     }
 
