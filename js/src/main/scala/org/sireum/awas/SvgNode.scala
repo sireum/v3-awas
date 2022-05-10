@@ -29,6 +29,7 @@ package org.sireum.awas
 
 import org.scalajs.dom.{Event, MouseEvent}
 import org.scalajs.dom.html.Anchor
+import org.scalajs.dom.svg.{G, SVG}
 import org.sireum.awas.SvgNodeType.SvgNodeType
 import org.sireum.awas.flow.FlowNode
 import org.sireum.awas.symbol.{Resource, SymbolTable, SymbolTableHelper}
@@ -119,6 +120,12 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
 
   private def edgeSelectionColor: String = _edgeSelectionColor
 
+  //TODO: will be used in search and focus logic
+  private val top = node.getBoundingClientRect().top
+  private val left = node.getBoundingClientRect().left
+  private val right = node.getBoundingClientRect().right
+  private val bottom = node.getBoundingClientRect().bottom
+
   private def edgeSelectionColor_=(value: String): Unit = {
     _edgeSelectionColor = value
   }
@@ -186,7 +193,7 @@ class SvgNodeImpl(node: Anchor, st: SymbolTable) extends SvgNode with SvgNodeUpd
   private def processNode(): Unit = {
     getNodeType
     node.onclick = (_: MouseEvent) => Main.cellClicked(getUri, st)
-
+    node.parentNode.asInstanceOf[G].setAttribute("shape-rendering", "optimizeSpeed")
     node.oncontextmenu = (e: Event) => {
       if (PetiConnHandler.isConnected) {
         e.preventDefault()

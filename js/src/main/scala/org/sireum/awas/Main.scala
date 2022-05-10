@@ -27,7 +27,6 @@
 
 package org.sireum.awas
 
-
 import facades._
 import org.scalajs.dom
 import org.scalajs.dom.ext._
@@ -62,7 +61,6 @@ import scala.util.{Failure, Success}
 
 @JSExportTopLevel("Main")
 object Main {
-  //  val Amaran: Nothing = $.amaran
   val H = SymbolTableHelper
   val BENCHMARK = false
 
@@ -95,7 +93,7 @@ object Main {
                 cls := "breadcrumb has-arrow-separator is-medium",
                 attr("aria-label") := "breadcrumbs",
                 ul(for (path <- paths) yield {
-                  li(a(href := "#", onclick := "openGraphTab(\"" + ancestors(paths.indexOf(path)) + "\")", path))
+                  li(a(href := uri, onclick := "openGraphTab(\"" + ancestors(paths.indexOf(path)) + "\")", path))
                 })
               )
             )
@@ -128,7 +126,6 @@ object Main {
 
         //gl.get.root.contentItems(0).setActiveContentItem(ci)
       } else {
-        println(gl.get.root.contentItems(0).isComponent)
         //        if(gl.get.root.contentItems(0).isComponent) {
         //          val ci = gl.get.root.contentItems(0)
         //          gl.get.root.removeChild(ci, true)
@@ -140,7 +137,8 @@ object Main {
         gl.get.root.contentItems(0).addChild(Views.childConfig(uri.split(H.ID_SEPARATOR).last, uri))
         val temp = selections
         //        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg))
-        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+        $$[SVGElement]("svg")
+          .foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
 
       }
     }
@@ -180,7 +178,6 @@ object Main {
       container.getElement().attr("display", "inline-block;") //.height(computeHeight(gl.get))
     }
 
-    //println(js.constructorOf(comp))
     gl.get.registerComponent("system", GLUtil.componentFactory(comp))
     gl.get.init()
     gl.get.eventHub.on("highlight", { (uris: IMap[String, Boolean], color: String) =>
@@ -196,7 +193,6 @@ object Main {
     }: js.Function)
     gl.get.on("windowClosed", { () =>
       {
-        println("window close triggered")
         openGraphTab(st.get.system)
       }
     }: js.Function)
@@ -204,12 +200,16 @@ object Main {
     gl.get.root.setTitle(systemName)
   }
 
-  def getAwasModel : Future[Option[Model]] = {
+  def getAwasModel: Future[Option[Model]] = {
     if (js.typeOf(js.Dynamic.global.json) != "undefined") {
-      val x = Future{Aadl2Awas.apply(GraphQuery.json.get)}
+      val x = Future {
+        Aadl2Awas.apply(GraphQuery.json.get)
+      }
       x
     } else if (js.typeOf(js.Dynamic.global.awas) != "undefined") {
-      val y = Future{AwasSerializer.unapply(GraphQuery.awas.get)}
+      val y = Future {
+        AwasSerializer.unapply(GraphQuery.awas.get)
+      }
       y
     } else {
       //get model from the server
@@ -218,11 +218,23 @@ object Main {
     }
   }
 
-  def loadGL(model : Option[Model]) = {
-    val mainBox : Element = $[Element]("#main-container")
-    val mainDiv : Element = $[Element]("#view")
-//    val mainDiv = render[Div](Views.mainPage())
-//    val mainBox: Element = mainDiv.querySelector("#main-container")
+  def focus(uris: Option[String]): Unit = {
+    if (uris.isDefined) {
+      selections = upickle.default.read[IMap[String, (Boolean, String)]](uris.get)
+      selections.foreach(
+        u => if (uriNodeMap.keySet.contains(u._1)) uriNodeMap(u._1).foreach(_.select(u._2._1, u._2._2))
+      )
+      //open graph tabs
+      val graphs = selections.keySet.flatMap(FlowNode.getNode).map(_.getOwner)
+      graphs.foreach(it => openGraphTab(it.getUri))
+    }
+  }
+
+  def loadGL(model: Option[Model]) = {
+    val mainBox: Element = $[Element]("#main-container")
+    val mainDiv: Element = $[Element]("#view")
+    //    val mainDiv = render[Div](Views.mainPage())
+    //    val mainBox: Element = mainDiv.querySelector("#main-container")
     if (model.isDefined) {
       val reporter = new ConsoleTagReporter()
       st = Some(SymbolTable(model.get)(reporter))
@@ -233,14 +245,20 @@ object Main {
         buildGraphWindow()
         computeHeight(gl.get)
         $[Div](mainBox, "#loading").classList.remove("is-active")
-        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
-        //
+        $$[SVGElement]("svg")
+          .foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+        val sp = new dom.experimental.URL(dom.window.location.href)
+        val uris = if (sp.searchParams.has("focus")) Some(sp.searchParams.get("focus")) else None
+        focus(uris)
+        //          sp.set("focus", tempUri)
+        println(dom.window.location.search)
         val queryButton = mainDiv.querySelector("#query-button")
         val clearButton = mainDiv.querySelector("#clear-button")
         val forwardButton = mainDiv.querySelector("#forward-button")
         val backwardButton = mainDiv.querySelector("#backward-button")
         val secViolationButton = mainDiv.querySelector("#sec-violation-button").asInstanceOf[Button]
-
+        //        val baseUrl = BaseUrl.fromWindowOrigin
+        //        val router = Router(baseUrl, routerConfig)
         if (SettingsView.currentConfig.viewErrors == Errors.Types) {
           if (secViolationButton.style.display == "none") {
             secViolationButton.removeAttribute("style")
@@ -270,8 +288,7 @@ object Main {
         }
 
         val burger = mainDiv.querySelector(".burger")
-        burger.addEventListener("click", { (_: MouseEvent) =>
-        {
+        burger.addEventListener("click", { (_: MouseEvent) => {
           val target = burger.asInstanceOf[AWASHTMLElement].dataset("target")
           val targetElem = mainDiv.querySelector("#" + target)
           burger.classList.toggle("is-active")
@@ -287,14 +304,14 @@ object Main {
         }
         QuickView.quickView()
         if (BENCHMARK) {
-          val data = PerformanceMetrics(st.get, 29, 30, new JSTimerImpl(), scalajs.concurrent.JSExecutionContext.Implicits.queue)
+          val data =
+            PerformanceMetrics(st.get, 29, 30, new JSTimerImpl(), scalajs.concurrent.JSExecutionContext.Implicits.queue)
           val filename = st.get.systemDecl.compName.value + "txt"
           val blob = new Blob(js.Array(data), BlobPropertyBag("text/plain;charset=utf-8"))
           FileSaver.saveAs(blob, filename)
         }
       }
     } else {
-
       $[Div]("#body").style.height =
         s"${window.innerHeight - $[Div]("#header").clientHeight - $[Div]("#footer").clientHeight}px"
       mainBox.appendChild(render(p("Failed to load the model")))
@@ -303,8 +320,6 @@ object Main {
 
   @JSExport
   def main(): Unit = {
-
-
 
     //if(model.isEmpty) {
     // var model = AwasSerializer.unapply(GraphQuery.awas)
@@ -325,11 +340,11 @@ object Main {
     document.onreadystatechange = (_: Event) => {
       document.body.appendChild(mainDiv)
       if (document.readyState == "complete") {
-        val model : Future[Option[Model]] = getAwasModel
-         model onComplete {
+        val model: Future[Option[Model]] = getAwasModel
+        model onComplete {
           case Success(m) => loadGL(m)
           case Failure(t) => {
-            $[Span]("#loader-msg").innerText = "Failed to load the model: \n"+ t.getMessage
+            $[Span]("#loader-msg").innerText = "Failed to load the model: \n" + t.getMessage
           }
         }
       }
@@ -373,7 +388,8 @@ object Main {
           )
         )
         //        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg))
-        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+        $$[SVGElement]("svg")
+          .foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
 
         compState.update("isTD", true)
       }
@@ -405,7 +421,8 @@ object Main {
           )
         )
         //        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg))
-        $$[SVGElement]("svg").foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
+        $$[SVGElement]("svg")
+          .foreach(svg => new SvgPanZoom(svg).enableControlIcons().disableDblClickZoom().setMaxZoom(200))
 
         compState.update("isTD", false)
       }
@@ -457,6 +474,7 @@ object Main {
           clearAll(isetEmpty + tempUri)
         } else {
           highlight(imapEmpty + (tempUri -> true), "#1878c0")
+
           if (H.isFlow(tempUri)) {
             val reso = Resource.getParentUri(tempUri)
             if (reso.isDefined && FlowNode.getNode(reso.get).isDefined) {
@@ -499,6 +517,9 @@ object Main {
           FlowNode.getNode(tempUri).get.getSubGraph.isDefined) {
           val subGraphUri = FlowNode.getNode(tempUri).get.getSubGraph.get.getUri
           openGraphTab(subGraphUri)
+          //          val routes: Router.Routes = {
+          //
+          //          }
         }
         clickCounter = 0
       }
@@ -517,17 +538,18 @@ object Main {
     if (selections.contains(uri)) {
       selections = selections - uri
     }
-
-
     false
   }
 
   def clearAll(uris: ISet[String]): Boolean = {
     uris.foreach(clear)
     if (SettingsView.currentConfig.highlightInstMdl.value) {
-      //println("calling peti clear")
+
       PetiConnHandler.clear(uris)
     }
+    val sp = new dom.experimental.URL(dom.window.location.href)
+    sp.searchParams.set("focus", upickle.default.write[IMap[String, (Boolean, String)]](selections))
+    dom.window.history.replaceState("*", "", sp.href)
     false
   }
 
@@ -616,9 +638,17 @@ object Main {
   def highlight(uris: IMap[String, Boolean], color: String): Boolean = {
 
     selections = selections ++ uris.map(it => (it._1, (it._2, color)))
+
+    val sp = new dom.experimental.URL(dom.window.location.href)
+    val uris_url = upickle.default.write[IMap[String, (Boolean, String)]](selections)
+    if (uris_url.length < 2048) {
+      sp.searchParams.set("focus", uris_url)
+      dom.window.history.replaceState("*", "", sp.href)
+    }
+
     uris.foreach(u => if (uriNodeMap.keySet.contains(u._1)) uriNodeMap(u._1).foreach(_.select(u._2, color)))
     if (SettingsView.currentConfig.highlightInstMdl.value) {
-      println("calling peti highlight")
+
       PetiConnHandler.highlight(uris, color)
     }
     false
